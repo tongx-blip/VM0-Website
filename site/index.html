@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>More done. Same team. | Okou</title>
+<meta name="description" content="Okou is an AI employee: give it a job, not a prompt. It connects to the tools you already use and does the work across marketing, sales, engineering, and operations, under your control.">
+<link rel="icon" href="assets/okou-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?r=42">
+</head>
+<body>
+
+<!-- ─────────────── announce bar ─────────────── -->
+<aside class="announce" aria-label="Announcement">
+  <p>An AI employee for the whole team.</p>
+  <a href="#outputs">See what it ships <span aria-hidden="true">→</span></a>
+</aside>
+
+<!-- ─────────────── floating nav ─────────────── -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top">
+    <img src="assets/okou-icon.svg" alt="">
+    <span>OKOU</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#outputs">Features</a>
+    <a href="#workflows">Solutions</a>
+    <a href="#workflows">Templates</a>
+    <a href="#control">Resources</a>
+    <a href="#proof">Pricing</a>
+  </nav>
+  <div class="nav__auth">
+    <a class="nav__signin" href="#cta">Sign in</a>
+    <a class="btn btn--dark btn--sm" href="#cta">Sign up</a>
+  </div>
+  <button class="nav__burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+</header>
+
+<main id="top">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="panel hero" id="hero">
+  <div class="hero__grid">
+
+    <div class="hero__lead" data-reveal="mask" data-in>
+      <h1 class="display">
+        <span class="line">More done.</span>
+        <span class="line">Same team.</span>
+      </h1>
+    </div>
+
+    <div class="hero__center reveal" data-in>
+      <p class="serif-lead">The <mark class="mark mark--pink">AI employee</mark> for the whole team.</p>
+      <div class="hero__cta">
+        <a class="btn btn--dark btn--lg" href="#cta">Get started for free</a>
+        <a class="btn btn--ghost btn--lg" href="#cta"><img src="assets/mockup/slack.svg" alt="">Add to Slack</a>
+      </div>
+    </div>
+
+    <div class="hero__tail reveal" data-in>
+      <h2 class="display display--tail" id="rotator">
+        <span class="rot is-on"><span class="line">Give it a job,</span><span class="line">not a prompt.</span></span>
+        <span class="rot"><span class="line">Move the team</span><span class="line">forward.</span></span>
+        <span class="rot"><span class="line">Cut the cost,</span><span class="line">not the team.</span></span>
+        <span class="rot"><span class="line">Ten times more,</span><span class="line">half the grind.</span></span>
+        <span class="rot"><span class="line">What one knows,</span><span class="line">everyone runs.</span></span>
+      </h2>
+    </div>
+
+    <p class="hero__body reveal" data-in>
+      Okou is an AI employee: give it a job, not a prompt. It connects to the tools you already
+      use and does the work across marketing, sales, engineering, and operations, under your control.
+    </p>
+
+  </div>
+</section>
+
+<!-- ═══════════════ 01 / OUTPUTS ═══════════════ -->
+<section class="panel" id="outputs">
+  <p class="chip reveal">Outputs</p>
+
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Achieve more with the</span>
+    <span class="line">team you <mark class="mark mark--tan">already have.</mark></span>
+  </h2>
+
+  <p class="section-body reveal">
+    Hire it into a role, not a task. Okou proposes the workflows, runs the recurring ones on its
+    own, and does the rest when you ask.
+  </p>
+
+  <p class="sentence reveal" id="scene-line">
+    <mark class="mark mark--tan">Okou</mark> builds
+    Maya’s <span class="inline-ic">🛍️</span> storefront.
+  </p>
+
+  <!-- product mock: workspace + chat -->
+  <div class="scenes" id="scenes" data-reveal="scale">
+      <div class="scenes__tabs" role="tablist"><button class="scenes__tab is-on" role="tab" data-scene="marketing" aria-selected="true">Storefront Launch</button><button class="scenes__tab" role="tab" data-scene="ads" aria-selected="false">Ad Campaign</button><button class="scenes__tab" role="tab" data-scene="sales" aria-selected="false">Lead Scoring</button><button class="scenes__tab" role="tab" data-scene="engineering" aria-selected="false">Incident Triage</button><button class="scenes__tab" role="tab" data-scene="product" aria-selected="false">Spec Writing</button><button class="scenes__tab" role="tab" data-scene="ops" aria-selected="false">Team Digest</button><button class="scenes__tab" role="tab" data-scene="leadership" aria-selected="false">Board Deck</button></div>
+      <div class="scenes__stage">
+        <div class="scene is-on" data-scene="marketing" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-drive_marketing.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Drive</b><i>Brand brief read from the shared folder</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/gmail.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Gmail</b><i>Launch announcement drafted, unsent</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/chat-artifact.png" alt="An Okou run for marketing" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-aurelle-storefront.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-aurelle-storefront.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/marketing-v2.png" alt="Aurelle storefront preview" loading="lazy"><span class="acard__txt"><b>Aurelle storefront</b><i>Open the live page &#8599;</i></span></a></aside>
+        </div>
+        <div class="scene" data-scene="ads" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-analytics.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Analytics</b><i>10,220 sessions reviewed across three pages</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/meta-ads.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Meta Ads</b><i>$183 budget shift drafted for approval</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/ads.png" alt="An Okou run for automated ad planning" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://weekly-ad-operator-dashboard.sites.vm7.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">weekly-ad-operator-dashboard.sites.vm7.io</span></span><img class="acard__img" src="assets/artifacts/ads-v1.png" alt="Weekly Ad Operator Dashboard preview" loading="lazy"><span class="acard__txt"><b>Weekly Ad Operator Dashboard</b><i>Draft plan &middot; open the live dashboard &#8599;</i></span></a></aside>
+        </div>
+        <div class="scene" data-scene="sales" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-sheet.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Sheets</b><i>12 leads written with fit score and tier</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/hubspot.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>HubSpot</b><i>Tier A contacts queued for owner review</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/sales.png" alt="An Okou run for sales" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-lead-priority.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-lead-priority.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/sales-v2.png" alt="Lead Prioritization preview" loading="lazy"><span class="acard__txt"><b>Lead Prioritization</b><i>Open the live page &#8599;</i></span></a></aside>
+        </div>
+        <div class="scene" data-scene="engineering" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/sentry.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Sentry</b><i>1,111 events pulled and grouped by cause</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/github_marketing.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>GitHub</b><i>Issues opened for the 2 over threshold</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/engineering.png" alt="An Okou run for engineering" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-incident-triage.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-incident-triage.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/engineering-v2.png" alt="Incident Triage Report preview" loading="lazy"><span class="acard__txt"><b>Incident Triage Report</b><i>Open the live page &#8599;</i></span></a></aside>
+        </div>
+        <div class="scene" data-scene="product" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/notion.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Notion</b><i>Spec filed in the product database</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/linear.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Linear</b><i>Six backlog issues linked to the theme</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/product.png" alt="An Okou run for product" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-export-spec.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-export-spec.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/product-v2.png" alt="Bulk CSV Export Spec preview" loading="lazy"><span class="acard__txt"><b>Bulk CSV Export Spec</b><i>Open the live page &#8599;</i></span></a></aside>
+        </div>
+        <div class="scene" data-scene="ops" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic acard__ic--slack"><img src="assets/connectors/slack.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Slack</b><i>Digest posted to #team every Monday</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/google-calendar.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Calendar</b><i>Recurring trigger, Mondays 09:00</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/ops.png" alt="An Okou run for team ops" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-weekly-report.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-weekly-report.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/ops-v2.png" alt="Weekly Team Report preview" loading="lazy"><span class="acard__txt"><b>Weekly Team Report</b><i>Open the live page &#8599;</i></span></a></aside>
+        </div>
+        <div class="scene" data-scene="leadership" role="tabpanel">
+          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-sheet.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Sheets</b><i>Quarter numbers pulled from the finance sheet</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/google-calendar.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Calendar</b><i>Rebuilt the night before every board meeting</i></span></article></aside>
+          <div class="scene__ui"><img class="scene__shot" src="assets/product/leadership.png" alt="An Okou run for leadership" width="2880" height="1800" loading="lazy"></div>
+          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-q3-board-deck.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-q3-board-deck.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/deck-v3.png" alt="Q3 board deck preview" loading="lazy"><span class="acard__txt"><b>Q3 board deck</b><i>8 slides &middot; open the live deck &#8599;</i></span></a></aside>
+        </div>
+      </div>
+    </div>
+
+  <!-- metrics -->
+  <ul class="metrics" data-reveal="stagger">
+    <li><b data-count="2 hrs">2 hrs</b><span>Brief to first draft</span></li>
+    <li><b data-count="8+">8+</b><span>Assets shipped</span></li>
+    <li><b data-count="14 hrs">14 hrs</b><span>Hours returned</span></li>
+  </ul>
+  <p class="footnote reveal">Illustrative metrics for now. Replace with verified customer outcomes.</p>
+  <p class="linkline reveal"><a href="#workflows">Explore the workflow behind this <span aria-hidden="true">→</span></a></p>
+
+  <!-- marquees -->
+  <p class="section-body section-body--tight reveal">
+    1,000+ connectors for the tools you already use, plus our own APIs and a model picker.
+    Far more arrives built in than you get with Codex or Claude Code, and Okou reaches all of
+    it the same way — less to wire up, less to install.
+  </p>
+
+  <div class="marquee reveal" data-speed="46">
+    <div class="marquee__track">
+      <span class="tag"><svg viewBox="0 0 24 24" class="tag__ic"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg>Web search</span>
+      <span class="tag"><svg viewBox="0 0 24 24" class="tag__ic"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>People search</span>
+      <span class="tag"><img src="assets/connectors/firecrawl.svg" alt="" width="24" height="24">Firecrawl scraping</span>
+      <span class="tag"><img src="assets/connectors/anthropic.svg" alt="" width="24" height="24">Claude Opus 5</span>
+      <span class="tag"><img src="assets/connectors/anthropic.svg" alt="" width="24" height="24">Claude Fable 5</span>
+      <span class="tag"><img src="assets/connectors/openai.svg" alt="" width="24" height="24">GPT 5.6</span>
+      <span class="tag"><img src="assets/connectors/openai.svg" alt="" width="24" height="24">gpt-image-2</span>
+      <span class="tag"><img src="assets/connectors/deepseek.svg" alt="" width="24" height="24">DeepSeek V4</span>
+      <span class="tag"><img src="assets/connectors/google.svg" alt="" width="24" height="24">Veo 3.1</span>
+      <span class="tag"><img src="assets/connectors/fal_marketing.svg" alt="" width="24" height="24">FLUX Pro</span>
+      <span class="tag"><img src="assets/connectors/elevenlabs.svg" alt="" width="24" height="24">ElevenLabs</span>
+      <span class="tag"><img src="assets/connectors/minimax.svg" alt="" width="24" height="24">MiniMax</span>
+      <span class="tag"><img src="assets/connectors/heygen.svg" alt="" width="24" height="24">HeyGen</span>
+    </div>
+  </div>
+
+  <div class="marquee reveal" data-speed="62" data-dir="rev">
+    <div class="marquee__track">
+      <span class="tag"><img src="assets/connectors/axiom.svg" alt="" width="24" height="24">Axiom</span>
+      <span class="tag"><img src="assets/connectors/ahref.svg" alt="" width="24" height="24">Ahrefs</span>
+      <span class="tag"><img src="assets/connectors/airtable.svg" alt="" width="24" height="24">Airtable</span>
+      <span class="tag"><img src="assets/connectors/gmail.svg" alt="" width="24" height="24">Gmail</span>
+      <span class="tag"><img src="assets/connectors/google-sheet.svg" alt="" width="24" height="24">Google Sheets</span>
+      <span class="tag"><img src="assets/connectors/notion.svg" alt="" width="24" height="24">Notion</span>
+      <span class="tag"><img src="assets/connectors/docusign.svg" alt="" width="24" height="24">DocuSign</span>
+      <span class="tag"><img src="assets/connectors/linear.svg" alt="" width="24" height="24">Linear</span>
+      <span class="tag"><img src="assets/connectors/google-calendar.svg" alt="" width="24" height="24">Google Calendar</span>
+      <span class="tag"><img src="assets/connectors/intercom.svg" alt="" width="24" height="24">Intercom</span>
+      <span class="tag"><img src="assets/connectors/deel.svg" alt="" width="24" height="24">Deel</span>
+      <span class="tag"><img src="assets/connectors/hubspot.svg" alt="" width="24" height="24">HubSpot</span>
+      <span class="tag"><img src="assets/connectors/dropbox.svg" alt="" width="24" height="24">Dropbox</span>
+      <span class="tag"><img src="assets/connectors/sentry.svg" alt="" width="24" height="24">Sentry</span>
+      <span class="tag"><img src="assets/connectors/figma.svg" alt="" width="24" height="24">Figma</span>
+      <span class="tag"><img src="assets/connectors/vercel.svg" alt="" width="24" height="24">Vercel</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 02 / SHARED WORKFLOWS ═══════════════ -->
+<section class="panel" id="workflows">
+  <p class="chip reveal">Shared workflows</p>
+
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Every workflow your team</span>
+    <span class="line">builds is an <mark class="mark mark--purple">asset it keeps.</mark></span>
+  </h2>
+
+  <p class="section-body reveal">
+    One person works out how a job should get done. That becomes a workflow the rest of the team
+    can run, and the workspace keeps it.
+  </p>
+
+  <p class="sentence reveal">
+    One chat becomes <mark class="mark mark--purple">something the whole team runs.</mark>
+  </p>
+
+  <p class="section-body section-body--tight reveal">
+    The work still happens in an ordinary chat. The workflow is what is left behind afterwards,
+    and every one your team keeps makes the next job shorter.
+  </p>
+
+  <!-- sticky 4-step ladder -->
+  <div class="ladder" id="ladder">
+    <div class="ladder__rail">
+      <ol class="ladder__steps">
+        <li class="step is-active" data-step="1">
+          <span class="step__n">1</span>
+          <div>
+            <h3>Run</h3>
+            <p>Someone asks for a piece of work the way they would ask a colleague, without
+               spelling out the steps. Okou works out the angle and does the job in the open.</p>
+          </div>
+        </li>
+        <li class="step" data-step="2">
+          <span class="step__n">2</span>
+          <div>
+            <h3>Save</h3>
+            <p>Okou offers to keep the run once it sees the job repeat. The instructions it
+               followed and the tools it reached for are saved with it, in the team&rsquo;s list.</p>
+          </div>
+        </li>
+        <li class="step" data-step="3">
+          <span class="step__n">3</span>
+          <div>
+            <h3>Hand over</h3>
+            <p>The workflow belongs to the workspace, not to one person. A teammate runs it from
+               chat or from Slack without rebuilding any of the setup.</p>
+          </div>
+        </li>
+        <li class="step" data-step="4">
+          <span class="step__n">4</span>
+          <div>
+            <h3>Automate</h3>
+            <p>Put it on a schedule or a trigger, and the work starts arriving before anyone has
+               to ask for it.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="ladder__stage">
+      <div class="wfstage is-on" data-step="1">
+            <div class="absui">
+              <div class="absui__bar"><i></i><i></i><i></i><span>October newsletter</span></div>
+              <div class="absui__body absui__body--chat">
+                <p class="absui__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
+                <div class="absui__stream">
+                  <p>I&rsquo;ll start from what actually shipped since the last send, then look at which of the last three newsletters got read.</p>
+                  <p>Six things shipped. The send that opened with a customer story did far better than the changelog-style ones, so I&rsquo;ll lead with the Notion sync and keep the rest as a short list underneath.</p>
+                  <p>Subject lines, body copy and the segment are drafted. It goes to you as a draft in Resend, not to the list.</p>
+                </div>
+                <p class="absui__live"><span class="absui__ldots"><i></i><i></i><i></i></span>Piecing things together&hellip;</p>
+              </div>
+              <div class="absui__composer"><span>Type your next message&hellip;</span><span class="absui__stop"></span></div>
+            </div>
+          </div>
+          <div class="wfstage" data-step="2">
+            <div class="absui flowui">
+              <div class="flowui__top">
+                <span class="flowui__agent"><img src="assets/okou-icon.svg" alt="" width="20" height="20"></span>
+                <span>October newsletter</span>
+              </div>
+              <div class="flowui__grid">
+                <section class="flowchat" aria-label="Chat with Okou">
+                  <p class="flowchat__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
+                  <div class="flowchat__reply">
+                    <span class="flowchat__avatar"><img src="assets/okou-icon.svg" alt="" width="22" height="22"></span>
+                    <div class="flowchat__answer">
+                      <p class="flowchat__worked">Okou <span>&middot; Worked for 2m</span></p>
+                      <p>The draft is ready in Resend. This is the third month you have asked for it the same way, so I can keep the process for next time.</p>
+                      <article class="flowsave">
+                        <div class="flowsave__head">
+                          <span><b>Monthly product newsletter</b><i>Ready to save</i></span>
+                          <em>Workflow</em>
+                        </div>
+                        <p>Linear releases &rarr; open-rate check &rarr; newsletter draft in Resend</p>
+                        <div class="flowsave__actions"><span class="flowsave__primary">Save workflow</span><span>Not now</span></div>
+                      </article>
+                    </div>
+                  </div>
+                  <div class="flowchat__composer"><span>Ask me anything&hellip;</span><span class="flowchat__send" aria-hidden="true">&uarr;</span></div>
+                </section>
+                <section class="flowlist" aria-label="Team workflows">
+                  <div class="flowlist__head">
+                    <span><b>Workflows</b><i>A reusable SOP for a task</i></span>
+                    <em>+ Create in chat</em>
+                  </div>
+                  <p class="flowlist__filters"><span class="is-on">All</span><span>Automated</span><span>Manual</span></p>
+                  <ul class="flowlist__items">
+                    <li class="is-new"><span><b>Monthly product newsletter</b><i>Draft in Resend &middot; 4 steps</i></span><em>Just saved</em></li>
+                    <li><span><b>Weekly team digest</b><i>Automated</i></span><em>Mon 09:00</em></li>
+                    <li><span><b>Morning error triage</b><i>Automated</i></span><em>Daily 08:30</em></li>
+                  </ul>
+                  <p class="flowlist__note">Saved to the team&rsquo;s workspace</p>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div class="wfstage" data-step="3"><div class="slackui reveal" id="slackui">
+        <div class="slackui__side"><p class="slackui__team">vm0 <b>&#9662;</b></p><p class="slackui__grp">Channels</p><ul class="slackui__list"><li class="slackui__ch is-on" data-ch="content"><i>#</i>newsletter</li><li class="slackui__ch" data-ch="marketing"><i>#</i>marketing-and-community</li><li class="slackui__ch" data-ch="bugs"><i>#</i>bug-report</li><li class="slackui__ch" data-ch="customer"><i>#</i>customer</li></ul></div>
+        <div class="slackui__main"><div class="slackui__pane" data-ch="marketing"><div class="slackui__head"><b># marketing-and-community</b><span>12 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--m">M</span><div>
+              <p class="slackui__meta"><b>Ming</b><time>4:15 PM</time></p>
+              <p class="slackui__text"><span class="slackui__mention">@Okou</span> what is the general CPC for AI product campaigns</p></div></div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>4:16 PM</time></p>
+              <p class="slackui__text">General CPC benchmarks for AI product campaigns vary by channel.</p>
+              <ul class="slackui__bullets">
+                <li><b>Search:</b> AI tools $3 to $8, high-intent keywords $5 to $15+.</li>
+                <li><b>LinkedIn:</b> $8 to $15, expensive but high-quality leads.</li>
+                <li><b>X:</b> $0.50 to $3.</li>
+                <li><b>Meta:</b> $1.50 to $5 for tech audiences.</li>
+              </ul>
+              <p class="slackui__reacts"><span class="slackui__react">&#128200; 3</span><span class="slackui__react">&#128077; 2</span></p></div></div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--m">M</span><div>
+              <p class="slackui__meta"><b>Ming</b><time>4:18 PM</time></p>
+              <p class="slackui__text">cc <span class="slackui__mention">@Ethan</span> <span class="slackui__mention">@Scarlett</span> &mdash; a click really is expensive.</p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #marketing-and-community<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="bugs"><div class="slackui__head"><b># bug-report</b><span>8 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:00 AM</time></p>
+              <p class="slackui__ctx"><span>&#128337;</span> Scheduled &middot; every weekday at 09:00</p>
+              <div class="slackui__attach slackui__attach--red">
+                <p class="slackui__attitle">2 causes crossed the 50-event threshold</p>
+                <p class="slackui__attext"><b>Stripe webhook TypeError</b> &middot; 208 events &middot; new this week<br>
+                  <b>CSV export RangeError</b> &middot; 74 events &middot; new this week</p>
+                <p class="slackui__fields"><span><i>Total events</i>1,111</span><span><i>Root causes</i>8</span><span><i>Top group</i>42.6%</span></p>
+              </div>
+              <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open issues</button><button class="slackui__btn">View full triage</button><button class="slackui__btn">Snooze</button></p></div></div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--l">L</span><div>
+              <p class="slackui__meta"><b>Linghan</b><time>9:06 AM</time></p>
+              <p class="slackui__text">taking the webhook one &#9995;</p>
+              <p class="slackui__reacts"><span class="slackui__react">&#128064; 4</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #bug-report<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="customer"><div class="slackui__head"><b># customer</b><span>24 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--s">S</span><div>
+              <p class="slackui__meta"><b>Scarlett</b><time>2:41 PM</time></p>
+              <p class="slackui__text"><span class="slackui__mention">@Okou</span> customers keep asking for bulk export &mdash; write the spec and drop it here</p></div></div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>2:44 PM</time></p>
+              <p class="slackui__text">41 asks last month, 23 of them from paying accounts. One page, with the current workaround and the open questions.</p>
+              <div class="slackui__file">
+                <span class="slackui__fileic">DOC</span>
+                <span class="slackui__filetxt"><b>Bulk export spec</b><i>Google Doc &middot; 1 page &middot; shared in #customer</i></span>
+              </div>
+              <p class="slackui__thread">5 replies <em>Last reply 12 minutes ago</em></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #customer<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane is-on" data-ch="content"><div class="slackui__head"><b># newsletter</b><span>9 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:02 AM</time></p>
+              <p class="slackui__ctx"><span>&#128337;</span> Monthly product newsletter &middot; 1st of the month at 09:00</p>
+              <div class="slackui__attach">
+                <p class="slackui__attitle">October newsletter is drafted in Resend</p>
+                <p class="slackui__attext">Six things shipped since the September send. It opens on the <b>Notion sync</b> with a customer line, and the rest sits underneath as a short list.</p>
+                <p class="slackui__fields"><span><i>Audience</i>4,182</span><span><i>Segment</i>Product users</span><span><i>Open rate, last 3</i>38%</span></p>
+              </div>
+              <div class="slackui__file">
+                <span class="slackui__fileic">HTML</span>
+                <span class="slackui__filetxt"><b>october-newsletter</b><i>Draft in Resend &middot; audience attached &middot; not sent</i></span>
+              </div>
+              <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open in Resend</button><button class="slackui__btn">Edit copy</button><button class="slackui__btn">Send now</button></p></div></div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--m">M</span><div>
+              <p class="slackui__meta"><b>Ming</b><time>9:14 AM</time></p>
+              <p class="slackui__text">subject B reads better. sending after standup &mdash; nobody had to write it this month.</p>
+              <p class="slackui__reacts"><span class="slackui__react">&#128200; 5</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #newsletter<span class="slackui__send">&#10148;</span></div></div></div>
+      </div></div>
+          <div class="wfstage" data-step="4">
+            <div class="absui">
+              <div class="absui__bar"><i></i><i></i><i></i><span>Workflows</span></div>
+              <div class="absui__body">
+                <p class="absui__sub">A reusable SOP for a task. Run, edit, or automate it.</p>
+                <p class="absui__filters"><span class="is-on">Automated</span><span>Manual</span><span>Private</span><span>Public</span><em>&#8645; Next run</em></p>
+                <ul class="absui__wfs">
+                  <li><span class="absui__wfn">Monthly product newsletter</span><span class="absui__tag">Automated</span><em>1st, 09:00</em></li>
+                  <li><span class="absui__wfn">Weekly team digest</span><span class="absui__tag">Automated</span><em>Mon 09:00</em></li>
+                  <li><span class="absui__wfn">Morning error triage</span><span class="absui__tag">Automated</span><em>Daily 08:30</em></li>
+                </ul>
+                <p class="absui__note">The work starts arriving before anyone has to ask for it.</p>
+              </div>
+            </div>
+          </div>
+
+  <p class="note reveal">
+    Shared context, personal permissions. What a workflow may reach stays tied to the person running it.
+  </p>
+</section>
+
+<!-- ═══════════════ 03 / AT ONCE ═══════════════ -->
+<section class="panel" id="parallel">
+  <p class="chip reveal">At once</p>
+
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Okou opens a chat</span>
+    <span class="line">for <mark class="mark mark--tan">every task.</mark></span>
+  </h2>
+
+  <p class="section-body reveal">
+    Nothing waits in line, and nobody sits watching ten task queues. You ask once and come back
+    when it is done.
+  </p>
+
+  <div class="a2a reveal">
+
+    <p class="a2a__step">You ask once</p>
+    <p class="a2a__ask">Get everything ready for Thursday&rsquo;s launch.</p>
+
+    <span class="a2a__stem" aria-hidden="true"></span>
+
+    <p class="a2a__hub"><span class="a2a__av">O</span>Okou<em>core agent</em></p>
+
+    <span class="a2a__stem a2a__stem--long" aria-hidden="true"></span>
+
+    <div class="a2a__stage">
+      <p class="a2a__label">Four tasks, each in its own chat</p>
+      <ul class="a2a__row">
+      <li class="a2a__card">
+        <p class="a2a__t">Landing page</p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm">O</span>Okou</p>
+        <p class="a2a__st"><span class="a2a__dot is-run"></span>Building the page</p>
+      </li>
+      <li class="a2a__card">
+        <p class="a2a__t">Launch newsletter</p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub">W</span>Writer<em>sub-agent</em></p>
+        <p class="a2a__st"><span class="a2a__dot is-run"></span>Drafting the copy</p>
+      </li>
+      <li class="a2a__card">
+        <p class="a2a__t">CRM refresh</p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub">R</span>Revenue<em>sub-agent</em></p>
+        <p class="a2a__st"><span class="a2a__dot is-done"></span>Done, 412 records</p>
+      </li>
+      <li class="a2a__card">
+        <p class="a2a__t">Launch deck</p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm">O</span>Okou</p>
+        <p class="a2a__st"><span class="a2a__dot is-run"></span>Pulling the numbers</p>
+      </li>
+      </ul>
+    </div>
+
+    <span class="a2a__return" aria-hidden="true"></span>
+    <p class="a2a__back">Each chat reports back as its task finishes</p>
+
+  </div>
+
+  <p class="note reveal">
+    Nothing here runs on your computer, so nothing stops when it sleeps, loses wifi or gets
+    shut down mid-task.
+  </p>
+</section>
+
+<!-- ═══════════════ 04 / CONTROL ═══════════════ -->
+<section class="panel" id="control">
+  <p class="chip reveal">Control</p>
+
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Everything stays</span>
+    <span class="line">under <mark class="mark mark--red">your control.</mark></span>
+  </h2>
+
+  <p class="section-body reveal">
+    Decide what each Agent and each workflow can read, change, and approve. Permissions follow
+    the person, not the automation.
+  </p>
+
+  <div class="control" data-reveal="stagger">
+    <div class="control__col">
+      <article class="feat">
+        <h3>Granular permissions</h3>
+        <p>Grant access one connector and one action at a time, per Agent. Nothing is reachable
+           because something else already had it.</p>
+      </article>
+      <article class="feat">
+        <h3>Approval gates</h3>
+        <p>Sensitive writes wait for an explicit approval instead of running on their own.</p>
+      </article>
+    </div>
+
+    <div class="control__stage">
+      <div class="perms reveal">
+        <p class="perms__crumb">Agents <i>/</i> Okou</p>
+        <div class="perms__head">
+          <span class="perms__ava"><img src="assets/okou-icon.svg" alt="" width="22" height="22"></span>
+          <span class="perms__id"><b>Okou</b><i>Your AI teammate, tuned to you</i></span>
+        </div>
+        <p class="perms__tabs"><span class="is-on">Authorization</span><span>Profile</span><span>Instructions</span></p>
+        <ul class="perms__list">
+          <li>
+            <img src="assets/connectors/google-drive_marketing.svg" alt="" width="24" height="24">
+            <span class="perms__what"><b>Google Drive</b><i>Read files in a shared folder</i></span>
+            <em class="state state--ok">Allowed</em>
+          </li>
+          <li>
+            <img src="assets/connectors/gmail.svg" alt="" width="24" height="24">
+            <span class="perms__what"><b>Gmail</b><i>Save a draft</i></span>
+            <em class="state state--ok">Allowed</em>
+          </li>
+          <li>
+            <img src="assets/connectors/gmail.svg" alt="" width="24" height="24">
+            <span class="perms__what"><b>Gmail</b><i>Send mail</i></span>
+            <em class="state state--wait">Denied</em>
+          </li>
+          <li>
+            <img src="assets/connectors/notion.svg" alt="" width="24" height="24">
+            <span class="perms__what"><b>Notion</b><i>Add content to a page</i></span>
+            <em class="state state--ok">Allowed</em>
+          </li>
+          <li>
+            <img src="assets/connectors/slack.svg" alt="" class="perms__slack">
+            <span class="perms__what"><b>Slack</b><i>Post to a channel</i></span>
+            <em class="state state--ok">Allowed</em>
+          </li>
+          <li>
+            <img src="assets/connectors/github_marketing.svg" alt="" width="24" height="24">
+            <span class="perms__what"><b>GitHub</b><i>Open a pull request</i></span>
+            <em class="state state--off">Not granted</em>
+          </li>
+        </ul>
+        <p class="perms__note">Every action a run takes is checked against this agent’s list before it leaves the
+          sandbox. Okou can draft the mail, but it cannot send it.</p>
+      </div>
+    </div>
+
+    <div class="control__col">
+      <article class="feat">
+        <h3>Isolated execution</h3>
+        <p>Each run gets its own microVM, and it is destroyed when the run finishes.</p>
+      </article>
+      <article class="feat">
+        <h3>Credentials stay out of the run</h3>
+        <p>Tokens are injected at the network layer, so the Agent never reads them.</p>
+      </article>
+      <article class="feat">
+        <h3>Traceable by default</h3>
+        <p>Every run keeps an activity trail you can replay after the fact.</p>
+      </article>
+    </div>
+  </div>
+
+  <p class="linkline reveal"><a href="#cta">Read how security works <span aria-hidden="true">→</span></a></p>
+</section>
+
+<!-- ═══════════════ 04 / POSITIONING ═══════════════ -->
+<section class="panel" id="positioning">
+  <p class="chip reveal">Positioning</p>
+
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Different from every</span>
+    <span class="line"><mark class="mark mark--tan">alternative</mark> you have tried.</span>
+  </h2>
+
+  <div class="versus" data-reveal="stagger">
+    <article class="vs">
+      <p class="vs__label"><img src="assets/connectors/openai.svg" alt="" width="24" height="24">vs. Codex</p>
+      <h3>Several AIs get more done at once.</h3>
+      <p>Codex helps one person with one coding task. Okou divides the work between several AIs, so different jobs move forward at the same time and your whole team can work together in one place.</p>
+    </article>
+    <article class="vs">
+      <p class="vs__label"><img src="assets/connectors/openai.svg" alt="" width="24" height="24">vs. ChatGPT</p>
+      <h3>Does the work, not just the thinking.</h3>
+      <p>ChatGPT gives you an answer to paste somewhere. Okou is connected to the tools, so the
+         answer arrives as a shipped artifact with an activity trail behind it.</p>
+    </article>
+    <article class="vs">
+      <p class="vs__label"><img src="assets/connectors/zapier.svg" alt="" width="24" height="24">vs. Zapier</p>
+      <h3>A doer with context, not a trigger.</h3>
+      <p>Zapier runs the rule you wrote. Okou reads the goal, picks the tools, and handles the
+         multi-step work in between.</p>
+    </article>
+    <article class="vs">
+      <p class="vs__label"><img src="assets/connectors/anthropic.svg" alt="" width="24" height="24">vs. Claude Code</p>
+      <h3>Built for shared work, not one terminal.</h3>
+      <p>Claude Code lives on one engineer’s machine. Okou runs in the cloud, connects to the
+         team’s tools, and turns one person’s know-how into shared capability.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════ 05 / PROOF ═══════════════ -->
+<section class="panel" id="proof">
+  <p class="chip reveal">Proof</p>
+
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Small teams are shipping</span>
+    <span class="line">above their <mark class="mark mark--pink">weight.</mark></span>
+  </h2>
+
+  <p class="section-body reveal">
+    Replace these sample cards with approved customers, quotes, and verified outcomes.
+  </p>
+
+  <div class="proof" data-reveal="stagger">
+    <figure class="quote">
+      <p class="quote__tag">Sample proof</p>
+      <blockquote>“A website, analytics, and a portfolio started with a few runs instead of a
+        weeks-long project.”</blockquote>
+      <figcaption>
+        <span><b>Solo founder</b><i>1-person team · Website + analytics setup</i></span>
+      </figcaption>
+    </figure>
+    <figure class="quote">
+      <p class="quote__tag">Sample proof</p>
+      <blockquote>“The CRM stays current, and the next follow-up is ready before the conversation
+        goes cold.”</blockquote>
+      <figcaption>
+        <span><b>Growth operator</b><i>1,500+ prospects managed · Research + outreach</i></span>
+      </figcaption>
+    </figure>
+    <figure class="quote">
+      <p class="quote__tag">Sample proof</p>
+      <blockquote>“Our small studio can take on more of the work without turning every project
+        into another hire.”</blockquote>
+      <figcaption>
+        <span><b>Creator &amp; course operator</b><i>85k+ followers · Content + operations</i></span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="panel panel--cta" id="cta">
+  <p class="chip reveal">For high-agency teams</p>
+  <h2 class="display display--center" data-reveal="mask">
+    <span class="line">Make your team’s</span>
+    <span class="line">expertise <mark class="mark mark--tan">self-running.</mark></span>
+  </h2>
+  <p class="section-body reveal">
+    Turn the way your best people work into capacity the whole team can call on, with control
+    over every action.
+  </p>
+  <p class="cta__btns reveal">
+    <a class="btn btn--dark btn--lg" href="#top">Get started for free</a>
+    <a class="btn btn--ghost btn--lg" href="#top"><img src="assets/mockup/slack.svg" alt="">Add to Slack</a>
+  </p>
+</section>
+
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="footer__badge"><img src="assets/okou-icon.svg" alt="Okou"></div>
+  <h2 class="display display--center footer__line" data-reveal="mask">
+    <span class="line">Delegate more</span>
+    <span class="line">to Okou.</span>
+  </h2>
+  <p class="footer__disclaimer">
+    Okou runs on large language models, so verify important outputs. The AI agent inside the Slack
+    app requires a paid Slack plan. @mentions and direct messages work on all Slack plans.
+  </p>
+  <ul class="footer__links">
+    <li><a href="#top">Status</a></li>
+    <li><a href="#top">Support</a></li>
+    <li><a href="#top">Terms of Use</a></li>
+    <li><a href="#top">Privacy Policy</a></li>
+    <li><a href="#top">Consent Preferences</a></li>
+  </ul>
+  <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
+</footer>
+
+<!-- ─────────────── sticky chat bar ─────────────── -->
+<aside class="chatbar" id="chatbar" aria-label="Ask Okou">
+  <span class="chatbar__ph" id="chatPh">Draft the Q3 campaign brief</span>
+  <button class="chatbar__go" aria-label="Send"><span aria-hidden="true">↑</span></button>
+</aside>
+
+<script src="app.js?r=42"></script>
+</body>
+</html>

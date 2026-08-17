@@ -1,0 +1,11 @@
+# local review artifacts
+shots/
+tmp-live/
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
