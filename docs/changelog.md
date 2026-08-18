@@ -5,6 +5,30 @@ failure modes are the useful part.
 
 ---
 
+## v45 — the reach region, compressed · 2026-08-18
+
+Feedback: the capability wall takes far too much of the page — the ask was a
+different *way of showing* these, not a flattened list of all of them; the
+connector logos keep changing and it is not clear how; divide them better, show
+them more efficiently, and be more considered about the typography.
+
+- **~430px → ~275px** at 1440, and 624px → 440px at 390.
+- **Treatment now follows identity.** Models and built-in APIs keep icon + name,
+  because four models share two vendor marks and the name is what identifies
+  them. Connectors are **logo tiles only**, with the brand name on `alt` — the
+  logo already identifies them, and the names were costing two thirds of the
+  height for nothing.
+- **The models grid flows by column**, two rows, so each vendor keeps its models
+  in one column (Claude Opus / Claude Fable, GPT 5.6 / gpt-image-2) instead of
+  scattering them across a row-filled grid.
+- **The cycling is gone.** One chip flipping every 2.4s read as an unexplained
+  flicker on a list nobody can click. Items keep their staggered entrance and
+  then hold still.
+- Twenty connector tiles now fit on one row at 1440; the grids fall to two
+  columns below 900px and stay there.
+
+Result: 0 axe violations, 0 page-level borders, no horizontal scroll 390–1920.
+
 ## v44 — orange controls, a one-line hero statement, and the capability wall · 2026-08-18
 
 Feedback: the hero's middle line must never wrap; the hero paragraph is too big;

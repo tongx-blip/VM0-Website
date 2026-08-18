@@ -101,12 +101,12 @@ card interiors are still left-aligned.
 document.querySelectorAll('#rotator .rot')[3].classList.add('is-on');   // the longest
 ```
 
-- The capability wall has no hover affordance, and the cycling band never shows
-  a duplicate name:
+- The "what Okou reaches" region has no hover affordance and nothing that loops,
+  it stays compact, and every logo tile is named for screen readers:
 
 ```js
-const c = [...document.querySelectorAll('#wallConnectors .cap')].map(x => x.textContent.trim());
-c.length === new Set(c).size   // must be true, at any moment
+Math.round(document.querySelector('.cat').getBoundingClientRect().height)   // ~275 at 1440
+[...document.querySelectorAll('.cat__logo img')].every(i => i.alt)          // true
 ```
 
 ## 5. Type scale

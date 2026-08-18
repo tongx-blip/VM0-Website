@@ -238,32 +238,37 @@ Shapes: default 16:10 · `--wide` 16:9 · `--band` 21:6 · `--square` 1:1. Three
 live right now: the hero product screen, a comparison graphic in Positioning, and
 a customer-logo strip in Proof.
 
-## 11. The capability wall
+## 11. What Okou reaches
 
-The models / built-in APIs / connectors region (`#outputs`) is three labelled
-bands of chips, not a marquee:
+The models / APIs / connectors region in `#outputs`. Three families, three
+treatments, each chosen by **what actually identifies the thing**:
 
-```html
-<div class="wall">
-  <div class="wall__group">
-    <p class="wall__label">Models</p>
-    <ul class="wall__grid" data-reveal="stagger"> <li class="cap">…</li> </ul>
-  </div>
-  … Built-in APIs … Connectors (id="wallConnectors") …
-</div>
+| Family | Treatment | Why |
+|---|---|---|
+| Models | icon + name, aligned grid | four models share two vendor marks, so the name is the identifier |
+| Built-in APIs | icon + name, one row | three items, same reason |
+| Connectors | logo tiles only, name on `alt` | the logo *is* the identifier; names would triple the height for nothing |
+
+```css
+.cat__grid{                       /* models: column flow, two rows, so each  */
+  grid-auto-flow:column;          /* vendor keeps its models in one column   */
+  grid-template-rows:repeat(2, auto);
+  width:max-content; margin-inline:auto;
+}
+.cat__logo{ width:44px; height:44px; border-radius:var(--r-btn); }
 ```
 
-Rules that make it work:
+Rules:
 
-- **No hover affordance.** These chips are not links and nothing happens when
-  they are clicked, so they get no lift, no colour change, no cursor.
-- **The connectors band cycles instead.** Every 2.4s one chip flips
-  (`rotateX(78deg)` + fade, 260ms) to a connector from a pool held in `app.js`,
-  and the outgoing one returns to the pool. A guard keeps any name from
-  appearing twice. Reduced motion switches it off entirely.
-- **Chips arrive family by family**, 34ms apart, so the three groups read as
-  three groups.
-- Grids cap at `56rem` (`--wide`: `72rem`) so the rows stay scannable.
-
-The pool lives in `site/app.js` and points at real files in
-`assets/connectors/`. Adding a connector = one entry, no markup change.
+- **Icon-only for the long list is what keeps it compact.** The point of the
+  region is the paragraph's "1,000+", not a catalogue. Listing every connector
+  with its name cost 430px of page for no extra meaning; this is ~275px.
+- **Nothing here is a link**, so nothing gets a hover state, a cursor or a
+  pointer affordance.
+- **Nothing loops.** An earlier build cycled one connector chip every 2.4s;
+  it read as an unexplained flicker. Items get the staggered entrance (30ms
+  apart, family by family) and then hold still.
+- Below 900px the grids fall to two columns and stay there — one column doubles
+  the height and gains nothing.
+- Every logo tile carries the brand name in `alt`, so the icon-only row is still
+  readable to a screen reader.

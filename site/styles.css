@@ -2568,7 +2568,7 @@ h3{ font-family:var(--fd); }
 
 /* wide figures span the ledger too */
 /* figures, data and card grids reach across all twelve columns */
-.scenes,.wall,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
+.scenes,.cat,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
   grid-column:1 / 13;
 }
 
@@ -2854,63 +2854,109 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* ─────────────── 12. the capability wall ───────────────
-   Three families — models, built-in APIs, connectors — each a labelled
-   band of chips. Not a marquee: these are not links, nothing happens
-   when you click them, so they get no hover affordance and no motion
-   that implies one. The connectors band quietly cycles instead: one
-   chip at a time flips to another connector from the catalogue, which
-   is what "1,000+" actually looks like. */
-.wall{
+/* ─────────────── 12. what Okou reaches ───────────────
+   Three families, three treatments, chosen by what actually
+   identifies the thing:
+
+     Models          the NAME identifies it (four models share two
+                     vendor marks), so: icon + name, on an aligned grid
+     Built-in APIs   same, three of them, one row
+     Connectors      the LOGO identifies it, so: logo tiles only, with
+                     the name on the alt attribute
+
+   Icon-only for the long list is what makes this compact — the point
+   of the region is the paragraph's "1,000+", not a catalogue. Nothing
+   here is a link, so nothing has a hover state, and nothing animates
+   on a loop. */
+.cat{
   display:flex; flex-direction:column;
-  gap:clamp(30px, 3.4vw, 52px);
-  margin-top:clamp(34px, 3.8vw, 56px);
+  gap:clamp(22px, 2.4vw, 34px);
+  margin-top:clamp(28px, 3vw, 44px);
 }
 
-.wall__label{
-  margin:0 0 clamp(12px, 1.4vw, 18px);
+.cat__label{
+  margin:0 0 clamp(12px, 1.3vw, 16px);
   font-family:var(--fm); font-weight:500;
   font-size:var(--t-mono); letter-spacing:.18em; text-transform:uppercase;
   color:var(--ink-mute); text-align:center;
 }
 
-.wall__grid{
+/* names, on a grid so the columns line up instead of ragging */
+/* column flow, two rows: each vendor keeps its models in one column
+   (Claude Opus / Claude Fable, GPT 5.6 / gpt-image-2, …) */
+.cat__grid{
+  display:grid;
+  grid-auto-flow:column;
+  grid-template-rows:repeat(2, auto);
+  gap:11px clamp(14px, 1.8vw, 26px);
+  width:max-content; max-width:100%;
+  margin:0 auto; padding:0;
+}
+
+.cat__grid--three{
+  grid-auto-flow:row;
+  grid-template-rows:none;
+  grid-template-columns:repeat(3, auto);
+  column-gap:clamp(22px, 2.6vw, 40px);
+}
+
+.cat__item{
+  display:flex; align-items:center; gap:10px;
+  min-width:0;
+  font-family:var(--fm); font-weight:500;
+  font-size:var(--t-mono); letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); white-space:nowrap;
+}
+
+.cat__item img{ width:18px; height:18px; flex:none; }
+
+.cat__ic{
+  width:16px; height:16px; flex:none;
+  fill:none; stroke:var(--ink-soft); stroke-width:1.8; stroke-linecap:round;
+}
+
+/* logos, on a strict tile rhythm */
+.cat__logos{
   display:flex; flex-wrap:wrap; justify-content:center;
   gap:10px;
-  margin:0 auto; padding:0;
-  max-width:56rem;
+  max-width:70rem; margin:0 auto; padding:0;
 }
 
-.wall__grid--wide{ max-width:72rem; }
-
-.cap{
-  display:inline-flex; align-items:center; gap:9px;
-  padding:10px 16px;
-  border:0; border-radius:var(--r-pill);
+.cat__logo{
+  width:44px; height:44px;
+  display:grid; place-items:center;
+  border-radius:var(--r-btn);
   background:var(--wash-2);
-  font-family:var(--fm); font-weight:500;
-  font-size:var(--t-mono); letter-spacing:.07em; text-transform:uppercase;
-  color:var(--ink-soft);
-  white-space:nowrap;
-  transform-origin:50% 50%;
-  transition:opacity 260ms var(--e-out), transform 260ms var(--e-out);
 }
 
-#outputs .cap{ background:var(--paper); }
+#outputs .cat__logo{ background:var(--paper); }
 
-.cap img{ width:17px; height:17px; }
+.cat__logo img{ width:22px; height:22px; }
 
-.cap__ic{
-  width:15px; height:15px; flex:none;
-  fill:none; stroke:var(--ink-soft); stroke-width:1.8;
-  stroke-linecap:round;
+
+@media (max-width:900px){
+  .cat__grid,.cat__grid--three{
+    grid-auto-flow:row;
+    grid-template-rows:none;
+    grid-template-columns:repeat(2, auto);
+    justify-content:center;
+    column-gap:clamp(20px, 4vw, 40px);
+  }
+
 }
 
-/* the flip: only the connectors band, one chip at a time */
-.cap.is-out{ opacity:0; transform:rotateX(78deg) scale(.96); }
+@media (max-width:430px){
+  /* two columns all the way down: one column doubles the height for
+     no gain, and the longest name still fits at 390 */
+  .cat__item{ font-size:10.5px; letter-spacing:.04em; gap:8px; }
 
-/* the chips arrive family by family, quickly — 34ms apart, not 70 */
-.wall__grid[data-reveal="stagger"] > *{ transition-delay:calc(var(--ci, 0) * 34ms); }
+  .cat__item img{ width:16px; height:16px; }
+
+  .cat__grid,.cat__grid--three{ column-gap:14px; }
+
+  .cat__logo{ width:40px; height:40px; }
+
+}
 
 
 /* ─────────────── 13. ladder: a spine with a progress fill ─────────────── */
@@ -3436,7 +3482,6 @@ h3{ font-family:var(--fd); }
   [data-reveal="stagger"] > *{ opacity:1 !important; transform:none !important; }
   .mark{ background-size:100% .14em; }
   .nav{ transform:translate(-50%, 0); }
-  .cap.is-out{ opacity:1 !important; transform:none !important; }
 }
 /* ─────────────── 21. no outlines on our own surfaces ───────────────
    The component layer above still boxes its panels in a hairline. On
