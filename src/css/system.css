@@ -139,7 +139,7 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 .hero__body,.section-body,.section-body--tight,.note,.footnote,
 .linkline a,.quote figcaption,.footer__disclaimer,.footer__links,
 .footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,
-.metrics li,.marquee,.scenes__tabs,.step,.nav,.panel,
+.metrics li,.scenes__tabs,.step,.nav,.panel,
 .perms__list,.chatbar,.a2a__ask{
   border:0;
 }
@@ -407,7 +407,7 @@ h3{ font-family:var(--fd); }
 
 /* wide figures span the ledger too */
 /* figures, data and card grids reach across all twelve columns */
-.scenes,.marquee,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
+.scenes,.reach,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
   grid-column:1 / 13;
 }
 
@@ -635,29 +635,86 @@ h3{ font-family:var(--fd); }
   color:var(--ink-mute);
 }
 
-/* ─────────────── 12. marquee: bleeds to the screen edge ─────────────── */
-.marquee{
-  padding:10px 0;
-  border:0;
+/* ─────────────── 12. what Okou reaches ───────────────
+   One statement at a time instead of a paragraph: the copy is long,
+   so motion carries it rather than the page. Words rise in sequence,
+   the numbers and the claims warm into the accent, and the statement
+   swaps every 6.5s. Both statements stay in the DOM, so nothing is
+   hidden from a screen reader and reduced motion simply shows both.
+
+   Under it, two rails of marks — logos only, no names, no hover:
+   none of them is a link, and the logo is the whole point. The rails
+   are inset from the container and fade at both ends rather than
+   running into the page edge. */
+.reach{
+  margin-top:clamp(30px, 3.4vw, 48px);
+  padding-inline:clamp(12px, 4.5vw, 90px);
+}
+
+/* the rotating statement */
+.reach__stage{
+  position:relative;
+  display:grid; place-items:center;      /* short statements stay centred in
+                                            the height the longest one needs */
+  max-width:min(100%, 54ch); margin:0 auto;
+  min-height:3.9em;
+  text-align:center;
+}
+.reach__line{
+  grid-area:1 / 1;
+  font-family:var(--fd); font-weight:600;
+  font-size:clamp(19px, 1.95vw, 27px);
+  line-height:1.34; letter-spacing:-.018em;
+  color:var(--ink);
+  pointer-events:none;
+}
+.reach__line.is-on{ pointer-events:auto; }
+.reach__line .w{
+  display:inline-block;
+  opacity:0; transform:translateY(.46em);
+  transition:opacity 460ms var(--e-out), transform 460ms var(--e-out);
+  transition-delay:calc(var(--wi, 0) * 22ms);
+}
+.reach__line.is-on .w{ opacity:1; transform:none; }
+.reach__line.is-out .w{
+  opacity:0; transform:translateY(-.34em);
+  transition-duration:300ms;
+  transition-delay:calc(var(--wi, 0) * 9ms);
+}
+/* the highlight lands after the words have settled */
+.reach__line .mark{ transition:color 520ms var(--e-out); }
+
+/* the rails */
+.rail{
+  margin-top:clamp(38px, 4.4vw, 68px);
   overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
-          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+          mask-image:linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
 }
-.marquee:first-of-type{ margin-top:26px; }
-.marquee__track{ display:flex; gap:10px; width:max-content; }
-.tag{
-  display:inline-flex; align-items:center; gap:9px;
-  padding:10px 16px;
-  border:0;
+.rail + .rail{ margin-top:clamp(12px, 1.4vw, 18px); }
+.rail__track{
+  display:flex; gap:clamp(10px, 1.1vw, 16px);
+  width:max-content;
+  animation:railslide var(--dur, 54s) linear infinite paused;
+}
+.rail.is-in .rail__track{ animation-play-state:running; }
+.rail[data-dir="rev"] .rail__track{ animation-direction:reverse; }
+@keyframes railslide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
+
+.logo{
+  width:clamp(46px, 4.2vw, 58px);
+  height:clamp(46px, 4.2vw, 58px);
+  flex:none;
+  display:grid; place-items:center;
+  border-radius:clamp(12px, 1.1vw, 16px);
   background:var(--wash-2);
-  font-size:var(--t-mono); letter-spacing:.07em;
-  color:var(--ink-soft); white-space:nowrap;
-  transition:color var(--t-hover) var(--e-snap),
-             transform var(--t-hover) var(--e-snap),
-             box-shadow var(--t-hover) var(--e-snap);
 }
-.tag img{ width:17px; height:17px; }
-.tag__ic{ width:15px; height:15px; stroke:var(--ink-soft); }
+#outputs .logo{ background:var(--paper); }
+.logo img{
+  width:clamp(24px, 2.1vw, 30px);
+  height:clamp(24px, 2.1vw, 30px);
+  object-fit:contain;
+}
 
 /* ─────────────── 13. ladder: a spine with a progress fill ─────────────── */
 .ladder{
@@ -975,13 +1032,6 @@ h3{ font-family:var(--fd); }
 }
 [data-reveal="scale"].is-in{ opacity:1; transform:none; }
 
-/* the marquee only runs while it is on screen, and pauses on hover */
-.marquee__track{ animation:slide var(--dur,46s) linear infinite paused; }
-.marquee.is-in .marquee__track{ animation-play-state:running; }
-.marquee[data-dir="rev"] .marquee__track{ animation-direction:reverse; }
-.marquee:hover .marquee__track{ animation-play-state:paused; }   /* pause is not a link affordance */
-@keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
-
 /* the scene cards re-play on every tab switch, from their own side */
 .scene.is-on .acard{ animation:acardIn 520ms var(--e-out) both; animation-delay:calc(var(--i) * .08s); }
 .scene__side--l .acard{ --from:-14px; }
@@ -1065,6 +1115,13 @@ h3{ font-family:var(--fd); }
   [data-reveal="stagger"] > *{ opacity:1 !important; transform:none !important; }
   .mark{ background-size:100% .14em; }
   .nav{ transform:translate(-50%, 0); }
+  /* the rails hold still, and nothing is hidden behind a rotation:
+     both statements are shown, stacked */
+  .rail__track{ animation:none !important; }
+  .reach__stage{ display:block; min-height:0; }
+  .reach__line{ position:static; }
+  .reach__line + .reach__line{ margin-top:.7em; }
+  .reach__line .w{ opacity:1 !important; transform:none !important; }
 }
 
 /* ─────────────── 21. no outlines on our own surfaces ───────────────

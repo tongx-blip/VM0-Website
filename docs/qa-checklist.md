@@ -101,14 +101,15 @@ card interiors are still left-aligned.
 document.querySelectorAll('#rotator .rot')[3].classList.add('is-on');   // the longest
 ```
 
-- The two rails in "what Okou reaches" run only while on screen, and their chips
-  have no hover affordance:
+- The rails in "what Okou reaches" run only while on screen, stay inset from the
+  container, and carry no hover affordance. The rotating statement must not
+  change the block height when it swaps:
 
 ```js
-[...document.querySelectorAll('.marquee')].map(m =>
-  m.classList.contains('is-in') + '/' +
-  getComputedStyle(m.querySelector('.marquee__track')).animationPlayState)
-// on screen -> "true/running";  off screen -> "false/paused"
+[...document.querySelectorAll('.rail')].map(r =>
+  r.classList.contains('is-in') + '/' +
+  getComputedStyle(r.querySelector('.rail__track')).animationPlayState)
+Math.round(document.querySelector('.rail').getBoundingClientRect().x)  // > 100 at 1440
 ```
 
 ## 5. Type scale

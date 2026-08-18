@@ -6,6 +6,32 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-18 · the reach region: logos only, one statement at a time
+
+Feedback: could it be logos only, like the reference? The logo wall should not
+run to both edges — leave some padding. The text is too close to the logos, and
+could be bigger. Highlight the important numbers and keywords. And since there
+is a lot of text, could it rotate — solve it with motion instead of writing it
+all out at once.
+
+- **Rails are logo-only.** Tiles `clamp(46px, 4.2vw, 58px)`, no names, no hover.
+  34 unique marks across two rails, none repeated inside a rail.
+- **Inset, not edge-to-edge**: `padding-inline: clamp(12px, 4.5vw, 90px)` plus a
+  mask fade at both ends. At 1440 that is 125px of air on each side.
+- **The paragraph became a rotating statement**: one sentence at a time,
+  16.5px → `clamp(19px, 1.95vw, 27px)`, words rising 22ms apart, swapping every
+  6.5s. Both statements share one grid cell so the box is as tall as the longest
+  and nothing shifts on swap.
+- **One highlight per statement** — `1,000+` and `Far more`. The first pass
+  highlighted three phrases and turned half the sentence orange.
+- Gap from statement to rails: `clamp(38px, 4.4vw, 68px)` on top of the centred
+  stage, so the two no longer crowd each other.
+- Reduced motion stacks both statements and freezes the rails; both are in the
+  DOM regardless, so nothing is hidden from a screen reader.
+
+Region height 306px at 1440. 0 axe violations, 0 page-level borders, no
+horizontal scroll 390–1920.
+
 ## 2026-08-18 · the reach region, reverted to the two scrolling rows
 
 Feedback: *"不成啊，这效果太差了。要不先退回之前两行滚动的那个版本吧。"*

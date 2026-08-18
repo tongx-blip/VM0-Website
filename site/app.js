@@ -78,13 +78,79 @@
     requestAnimationFrame(frame);
   }
 
-  /* ── 3. marquee: duplicate the track once, set its duration ─── */
-  doc.querySelectorAll('.marquee').forEach(function (m) {
-    var track = m.querySelector('.marquee__track');
+  /* ── 3. the reach block ──────────────────────────────────────
+     Rails: duplicate each track once so the loop is seamless.
+     Statement: split into words so they can rise in sequence, then
+     swap statements on a timer. Both statements stay in the DOM. */
+  doc.querySelectorAll('.rail').forEach(function (r) {
+    var track = r.querySelector('.rail__track');
     if (!track) return;
     track.innerHTML += track.innerHTML;
-    track.style.setProperty('--dur', (m.dataset.speed || 46) + 's');
+    track.style.setProperty('--dur', (r.dataset.speed || 54) + 's');
   });
+
+  var stage = doc.getElementById('reachStage');
+  if (stage) {
+    var lines = [].slice.call(stage.querySelectorAll('.reach__line'));
+
+    // wrap every word, keeping <mark> elements intact
+    lines.forEach(function (line) {
+      (function walk(node) {
+        [].slice.call(node.childNodes).forEach(function (n) {
+          if (n.nodeType === 3) {
+            if (!n.textContent.trim()) return;
+            var frag = doc.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach(function (part) {
+              if (!part) return;
+              if (!part.trim()) { frag.appendChild(doc.createTextNode(part)); return; }
+              var w = doc.createElement('span');
+              w.className = 'w';
+              w.textContent = part;
+              frag.appendChild(w);
+            });
+            node.replaceChild(frag, n);
+          } else if (n.nodeType === 1) {
+            walk(n);
+          }
+        });
+      })(line);
+      [].slice.call(line.querySelectorAll('.w')).forEach(function (w, i) {
+        w.style.setProperty('--wi', i);
+      });
+    });
+
+    var litAfter = function (line) {
+      var words = line.querySelectorAll('.w').length;
+      window.setTimeout(function () {
+        line.querySelectorAll('.mark').forEach(function (m) { m.classList.add('is-lit'); });
+      }, 180 + words * 22);
+    };
+
+    if (reduce) {
+      lines.forEach(function (l) {
+        l.classList.add('is-on');
+        l.querySelectorAll('.mark').forEach(function (m) { m.classList.add('is-lit'); });
+      });
+    } else {
+      litAfter(lines[0]);
+      var li = 0;
+      window.setInterval(function () {
+        if (document.hidden || lines.length < 2) return;
+        var out = lines[li];
+        out.classList.remove('is-on');
+        out.classList.add('is-out');
+        window.setTimeout(function () {
+          out.classList.remove('is-out');
+          out.querySelectorAll('.mark').forEach(function (m) { m.classList.remove('is-lit'); });
+        }, 620);
+        li = (li + 1) % lines.length;
+        window.setTimeout(function () {
+          lines[li].classList.add('is-on');
+          litAfter(lines[li]);
+        }, 420);
+      }, 6500);
+    }
+  }
 
   /* ── 4. one scroll loop: header state + step ladder ─────────── */
   var nav = doc.getElementById('nav');

@@ -240,24 +240,35 @@ a customer-logo strip in Proof.
 
 ## 11. What Okou reaches
 
-Two full-bleed scrolling rails under the section paragraph: models and built-in
-APIs on the first, connectors on the second, opposite directions, 46s and 62s.
-Chips are `.tag` — icon + name, pill, no border.
+A rotating statement over two rails of marks.
+
+**The statement.** The copy for this region is long, so motion carries it instead
+of the page: one sentence at a time, `clamp(19px, 1.95vw, 27px)` display face,
+centred on a `54ch` measure. Words rise in sequence (22ms apart), the numbers
+warm into the accent once they have settled, and the statement swaps every 6.5s.
 
 ```css
-.marquee{ margin-inline:calc(-1 * var(--edge)); overflow:hidden;
-          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
-.marquee__track{ animation:slide var(--dur) linear infinite paused; }
-.marquee.is-in .marquee__track{ animation-play-state:running; }
+.reach__stage{ display:grid; place-items:center; min-height:3.9em; }
+.reach__line{ grid-area:1 / 1; }           /* both share one cell, so the box
+                                              is as tall as the longest and
+                                              nothing shifts on swap */
+.reach__line .w{ transition-delay:calc(var(--wi) * 22ms); }
 ```
 
-- The rails only animate while on screen, and pause on hover.
-- **The chips have no hover affordance** — nothing there is a link. Pausing the
-  rail is a reading aid, not a click cue.
-- `app.js` duplicates each track once so the loop is seamless; `data-speed` sets
-  the duration and `data-dir="rev"` reverses the second rail.
+Both statements stay in the DOM — nothing is hidden from a screen reader — and
+reduced motion simply stacks them and stops the rails.
 
-Two redesigns of this region were tried and reverted (2026-08-18): a labelled
-three-family "wall" of chips (430px tall) and a compact grid with logo-only
-connector tiles (276px). Both were rejected as worse than the rails, which cost
-114px. Before rebuilding it again, agree the direction first.
+**Highlight only the numbers.** One `<mark>` per statement, on the figure or the
+claim that carries it (`1,000+`, `Far more`). Highlighting three phrases in a
+two-line sentence turns half the sentence orange and stops meaning anything.
+
+**The rails.** Logos only — no names, no hover, nothing clickable. Tiles are
+`clamp(46px, 4.2vw, 58px)` with the section's opposite ground, and the rails are
+**inset** (`padding-inline: clamp(12px, 4.5vw, 90px)` on `.reach`) with a mask
+fade at both ends, rather than running into the page edge. `app.js` duplicates
+each track once for a seamless loop; `data-speed` sets the duration and
+`data-dir="rev"` reverses the second rail. No mark appears twice within a rail.
+
+Two earlier redesigns of this region were reverted (2026-08-18): a labelled
+three-family wall of named chips, and a compact grid with logo-only connector
+tiles. Agree the direction before rebuilding it again.
