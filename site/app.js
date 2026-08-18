@@ -86,12 +86,27 @@
      Rails: duplicate each track once so the loop is seamless.
      Statement: split into words so they can rise in sequence, then
      swap statements on a timer. Both statements stay in the DOM. */
+  var RAIL_PX_PER_SEC = 26;          // one speed for every rail
+  var railTracks = [];
   doc.querySelectorAll('.rail').forEach(function (r) {
     var track = r.querySelector('.rail__track');
     if (!track) return;
     track.innerHTML += track.innerHTML;
-    track.style.setProperty('--dur', (r.dataset.speed || 54) + 's');
+    railTracks.push(track);
   });
+  function timeRails() {
+    railTracks.forEach(function (track) {
+      // the keyframe travels -50% of the track, i.e. exactly one copy of the
+      // content. Duration = that distance / speed, so rails with different
+      // numbers of logos still move at the same rate.
+      var distance = track.scrollWidth / 2;
+      if (!distance) return;
+      track.style.setProperty('--dur', (distance / RAIL_PX_PER_SEC).toFixed(2) + 's');
+    });
+  }
+  timeRails();
+  window.addEventListener('resize', timeRails, { passive: true });
+  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(timeRails).catch(function () {});
 
   var stage = doc.getElementById('reachStage');
   if (stage) {

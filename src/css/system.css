@@ -398,7 +398,6 @@ h3{ font-family:var(--fd); }
    Prose inside a card stays left-aligned; only the section's own
    voice is centred. Nothing else is allowed to invent a layout. */
 .panel > *{ grid-column:1 / 13; }
-.panel > .chip,
 .panel > .display,
 .panel > .sentence,
 .panel > .section-body,
@@ -409,6 +408,11 @@ h3{ font-family:var(--fd); }
   justify-self:center;
   text-align:center;
   width:100%;
+}
+.panel > .chip{
+  justify-self:center;
+  width:max-content;          /* a pill hugs its label — never width:100% */
+  max-width:100%;
 }
 .panel > .display{ max-width:20ch; }
 .panel > .sentence{ max-width:24ch; }
@@ -794,6 +798,10 @@ h3{ font-family:var(--fd); }
   height:clamp(24px, 2.1vw, 30px);
   object-fit:contain;
 }
+/* these marks ship with heavy internal padding in their own SVG, so at the
+   same box size they read smaller than everything else */
+.logo img[src*="slack"]{ transform:scale(1.34); }
+.logo img[src*="notion"]{ transform:scale(1.06); }
 
 /* ─────────────── 13. ladder: a spine with a progress fill ─────────────── */
 .ladder{
@@ -1463,3 +1471,12 @@ h3{ font-family:var(--fd); }
   .nav__links a:hover .roll__t + .roll__t,
   .nav__signin:hover .roll__t + .roll__t{ transform:translateY(100%); }
 }
+
+/* ── brand marks never stretch ─────────────────────────────────────
+   Several connector SVGs are not square (Gmail is 4:3). Anywhere we
+   put one in a fixed box it has to letterbox, not squash. */
+.acard__ic img,.perms__list img,.vs__label img,.logo img,.cat__logo img,
+.tag img,.btn img{
+  object-fit:contain;
+}
+.perms__list img{ align-self:center; }

@@ -85,3 +85,40 @@
     .filter(el => parseFloat(getComputedStyle(el).opacity) < 0.9);
   return hidden.length ? hidden.map(el => el.className) : 'PASS — all content visible';
 })()
+
+/* ── 6. THE OBVIOUS-BUG SWEEP — the checks that exist because something
+      shipped looking plainly wrong. Run this every time. ───────────── */
+(() => {
+  const out = [];
+
+  // a pill must hug its label: `width:100%` from the composition rule once
+  // stretched every section tag across the whole section
+  [...document.querySelectorAll('.panel > .chip')].forEach(c => {
+    const w = c.getBoundingClientRect().width;
+    if (w > 320) out.push('tag stretched: "' + c.textContent.trim() + '" ' + Math.round(w) + 'px');
+  });
+
+  // both rails must travel at the same speed, not the same duration
+  const rates = [...document.querySelectorAll('.rail__track')].map(t => {
+    const d = parseFloat(getComputedStyle(t).animationDuration);
+    return d ? (t.scrollWidth / 2) / d : 0;
+  });
+  if (rates.length === 2 && Math.abs(rates[0] - rates[1]) > 2)
+    out.push('rails differ in speed: ' + rates.map(r => r.toFixed(1) + 'px/s').join(' vs '));
+
+  // no brand mark may be squashed (several connector SVGs are not square)
+  document.querySelectorAll('img').forEach(i => {
+    if (!i.naturalWidth || !i.getClientRects().length) return;
+    const r = i.getBoundingClientRect();
+    const nat = i.naturalWidth / i.naturalHeight, got = r.width / r.height;
+    if (getComputedStyle(i).objectFit === 'fill' && Math.abs(nat - got) / nat > 0.12)
+      out.push('squashed: ' + (i.getAttribute('src') || '').split('/').pop());
+  });
+
+  // a mark with heavy internal padding reads smaller than its neighbours
+  const inks = [...document.querySelectorAll('.logo img')].map(i => i.getBoundingClientRect().width);
+  if (inks.length && Math.max(...inks) / Math.min(...inks) > 1.6)
+    out.push('logo box sizes diverge: ' + Math.min(...inks) + '–' + Math.max(...inks));
+
+  return out.length ? out : 'PASS — no obvious visual bugs';
+})()

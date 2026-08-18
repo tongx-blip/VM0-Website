@@ -6,6 +6,32 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-18 · three visual bugs that screenshots would have caught
+
+Feedback: the Slack mark is too small, the two logo rows run at different
+speeds, and the tag above every heading is plainly broken.
+
+- **The section tag stretched the full width of its section.** The composition
+  rule sets `width:100%` on `.panel > .chip` — correct for a centred text block,
+  wrong once the eyebrow became a pill, and it out-specifies the pill's own
+  `width:max-content`. Tags are 86–220px now instead of 1320.
+- **The rails had matching durations, not matching speeds.** 54s and 72s over
+  tracks of 878px and 1617px is 26px/s against 26px/s only by accident — it was
+  not. `app.js` now derives each duration from its own track width
+  (`RAIL_PX_PER_SEC = 26`), so both rails travel at the same rate whatever they
+  contain.
+- **Slack read small**: its SVG carries ~30% internal padding, so at an equal box
+  it looks smaller than every neighbour. Scaled 1.34 (Notion 1.06) to sit
+  optically level.
+- Found while sweeping: **Gmail's mark was being squashed** (4:3 natural, drawn
+  in a square box with `object-fit:fill`). Every brand mark now letterboxes.
+
+All four are invisible to the accessibility audit and to layout measurements —
+they only show up by looking. Added `tools/audit.js` §6, an obvious-bug sweep
+that checks tag width, rail speed parity, squashed marks and diverging logo
+sizes, plus a QA-gate note: **screenshot a section head and every figure before
+publishing.**
+
 ## 2026-08-18 · tags, a softer horizon, and the token sweep
 
 - **The closing illustration** gets a long dissolve at its top edge

@@ -112,6 +112,25 @@ document.querySelectorAll('#rotator .rot')[3].classList.add('is-on');   // the l
 Math.round(document.querySelector('.rail').getBoundingClientRect().x)  // > 100 at 1440
 ```
 
+## 4e. The obvious-bug sweep
+
+`tools/audit.js` §6. Four checks that exist because each of these shipped:
+
+- **A tag stretched across its whole section.** `.panel > .chip` inherits
+  `width:100%` from the composition rule, which beats a pill's
+  `width:max-content`. Any tag wider than ~320px is a bug.
+- **Two rails with the same duration but different track lengths** move at
+  different speeds. Duration is computed from track width in `app.js`
+  (`RAIL_PX_PER_SEC`); the two rates must match.
+- **A squashed brand mark.** Several connector SVGs are not square (Gmail is
+  4:3); any of them in a fixed box needs `object-fit:contain`.
+- **A mark that reads small.** Slack and Notion ship with heavy internal padding
+  and need a compensating `transform:scale()` to sit optically level.
+
+None of these fail an accessibility audit or a layout measurement — they are
+only visible by looking. **Take a screenshot of a section head and of every
+figure before publishing.**
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the
