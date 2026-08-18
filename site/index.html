@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=b3023a6e">
+<link rel="stylesheet" href="styles.css?r=1368d9b4">
 </head>
 <body>
 
@@ -20,14 +20,14 @@
     <span>OKOU</span>
   </a>
   <nav class="nav__links">
-    <a href="#outputs">Features</a>
-    <a href="#workflows">Solutions</a>
-    <a href="#workflows">Templates</a>
-    <a href="#control">Resources</a>
-    <a href="#proof">Pricing</a>
+    <a href="#outputs"><span class="roll"><span class="roll__t">Features</span><span class="roll__t" aria-hidden="true">Features</span></span></a>
+    <a href="#workflows"><span class="roll"><span class="roll__t">Solutions</span><span class="roll__t" aria-hidden="true">Solutions</span></span></a>
+    <a href="#workflows"><span class="roll"><span class="roll__t">Templates</span><span class="roll__t" aria-hidden="true">Templates</span></span></a>
+    <a href="#control"><span class="roll"><span class="roll__t">Resources</span><span class="roll__t" aria-hidden="true">Resources</span></span></a>
+    <a href="#proof"><span class="roll"><span class="roll__t">Pricing</span><span class="roll__t" aria-hidden="true">Pricing</span></span></a>
   </nav>
   <div class="nav__auth">
-    <a class="nav__signin" href="#cta">Sign in</a>
+    <a class="nav__signin" href="#cta"><span class="roll"><span class="roll__t">Sign in</span><span class="roll__t" aria-hidden="true">Sign in</span></span></a>
     <a class="btn btn--dark btn--sm" href="#cta">Sign up</a>
   </div>
   <button class="nav__burger" id="burger" aria-label="Menu"><span></span><span></span></button>
@@ -90,14 +90,11 @@
     <span class="line">team you <mark class="mark mark--tan">already have.</mark></span>
   </h2>
 
-  <p class="section-body reveal">
+  <p class="section-body reveal" id="sceneCopy">
+    <span class="scene-lead" id="scene-line">Okou builds Maya’s
+      <span class="inline-ic">🛍️</span> <mark class="mark is-lit">storefront</mark>.</span>
     Hire it into a role, not a task. Okou proposes the workflows, runs the recurring ones on its
     own, and does the rest when you ask.
-  </p>
-
-  <p class="sentence reveal" id="scene-line">
-    <mark class="mark mark--tan">Okou</mark> builds
-    Maya’s <span class="inline-ic">🛍️</span> storefront.
   </p>
 
   <!-- product mock: workspace + chat -->
@@ -143,12 +140,18 @@
     </div>
 
   <!-- metrics -->
-  <ul class="metrics" data-reveal="stagger">
-    <li><b data-count="2 hrs">2 hrs</b><span>Brief to first draft</span></li>
-    <li><b data-count="8+">8+</b><span>Assets shipped</span></li>
-    <li><b data-count="14 hrs">14 hrs</b><span>Hours returned</span></li>
-  </ul>
-  <p class="footnote reveal">Illustrative metrics for now. Replace with verified customer outcomes.</p>
+  <div class="figures reveal">
+    <ul class="metrics" data-reveal="stagger">
+      <li><b><i data-count="2">2</i><em>hrs</em></b><span>Brief to first draft</span></li>
+      <li><b><i data-count="8">8</i><em>+</em></b><span>Assets shipped</span></li>
+      <li><b><i data-count="14">14</i><em>hrs</em></b><span>Hours returned</span></li>
+    </ul>
+    <p class="footnote">Illustrative metrics for now. Replace with verified customer outcomes.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ REACH ═══════════════ -->
+<section class="panel panel--card" id="reach">
   <!-- what Okou reaches: one statement at a time, then the marks -->
   <div class="reach reveal">
     <p class="reach__stage" id="reachStage">
@@ -694,6 +697,6 @@
   <button class="chatbar__go" aria-label="Send"><span aria-hidden="true">↑</span></button>
 </aside>
 
-<script src="app.js?r=47a4ab13"></script>
+<script src="app.js?r=bd9293ff"></script>
 </body>
 </html>

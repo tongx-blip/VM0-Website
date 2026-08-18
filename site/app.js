@@ -29,7 +29,7 @@
   });
 
   /* ── 1. one observer for every on-screen entrance ──────────── */
-  var watched = doc.querySelectorAll('.reveal, [data-reveal], .marquee, .mark');
+  var watched = doc.querySelectorAll('.reveal, [data-reveal], .rail, .mark');
 
   function enter(el) {
     el.classList.add('is-in');
@@ -38,6 +38,7 @@
       window.setTimeout(function () { el.classList.add('is-lit'); }, 240);
     }
     if (el.hasAttribute('data-count')) countUp(el);
+    el.querySelectorAll('[data-count]').forEach(countUp);
   }
 
   if ('IntersectionObserver' in window && !reduce) {
@@ -45,7 +46,8 @@
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
         enter(e.target);
-        if (!e.target.classList.contains('marquee')) io.unobserve(e.target);
+        // the rails keep their observer: they pause again off screen
+        if (!e.target.classList.contains('rail')) io.unobserve(e.target);
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
     watched.forEach(function (el) { io.observe(el); });
@@ -53,7 +55,9 @@
     watched.forEach(function (el) {
       el.classList.add('is-in');
       el.classList.add('is-lit');
-      if (el.hasAttribute('data-count')) el.textContent = el.dataset.count;
+      el.querySelectorAll('[data-count]').forEach(function (c) {
+        c.textContent = c.dataset.count;
+      });
     });
   }
 
@@ -119,35 +123,18 @@
       });
     });
 
-    var litAfter = function (line) {
-      var words = line.querySelectorAll('.w').length;
-      window.setTimeout(function () {
-        line.querySelectorAll('.mark').forEach(function (m) { m.classList.add('is-lit'); });
-      }, 180 + words * 22);
-    };
-
     if (reduce) {
-      lines.forEach(function (l) {
-        l.classList.add('is-on');
-        l.querySelectorAll('.mark').forEach(function (m) { m.classList.add('is-lit'); });
-      });
+      lines.forEach(function (l) { l.classList.add('is-on'); });
     } else {
-      litAfter(lines[0]);
       var li = 0;
       window.setInterval(function () {
         if (document.hidden || lines.length < 2) return;
         var out = lines[li];
         out.classList.remove('is-on');
         out.classList.add('is-out');
-        window.setTimeout(function () {
-          out.classList.remove('is-out');
-          out.querySelectorAll('.mark').forEach(function (m) { m.classList.remove('is-lit'); });
-        }, 620);
+        window.setTimeout(function () { out.classList.remove('is-out'); }, 620);
         li = (li + 1) % lines.length;
-        window.setTimeout(function () {
-          lines[li].classList.add('is-on');
-          litAfter(lines[li]);
-        }, 420);
+        window.setTimeout(function () { lines[li].classList.add('is-on'); }, 420);
       }, 6500);
     }
   }
@@ -298,11 +285,21 @@
       ops:        ['sends', 'Noah’s', '🗂️', 'Monday digest.'],
       leadership: ['rebuilds', 'Dana’s', '📊', 'board deck.']
     };
+    var writeLead = function (key) {
+      if (!line || !LINES[key]) return;
+      var p = LINES[key];
+      var noun = p[3].replace(/\.$/, '');
+      line.innerHTML = 'Okou ' + p[0] + ' ' + p[1] +
+        ' <span class="inline-ic">' + p[2] + '</span> ' +
+        '<mark class="mark is-lit">' + noun + '</mark>.';
+    };
     var show = function (key) {
-      if (line && LINES[key]) {
-        var p = LINES[key];
-        line.innerHTML = '<mark class="mark mark--tan is-lit">Okou</mark> ' + p[0] +
-          ' ' + p[1] + ' <span class="inline-ic">' + p[2] + '</span> ' + p[3];
+      if (line) {
+        line.classList.add('is-swapping');
+        window.setTimeout(function () {
+          writeLead(key);
+          line.classList.remove('is-swapping');
+        }, reduce ? 0 : 240);
       }
       tabs.forEach(function (t) {
         var on = t.dataset.scene === key;

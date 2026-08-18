@@ -69,6 +69,13 @@
   activeStep: document.querySelector('.step.is-active')?.dataset.step,
   activeStage: document.querySelector('.wfstage.is-on')?.dataset.step,
   navStuck: document.getElementById('nav').classList.contains('is-stuck'),
+  rails: [...document.querySelectorAll('.rail')].map(r =>
+    r.classList.contains('is-in') + '/' +
+    getComputedStyle(r.querySelector('.rail__track')).animationPlayState +
+    '/' + getComputedStyle(r.querySelector('.rail__track')).animationDirection),
+  // on screen every rail must read  true/running  — and the two must differ
+  // in direction. A rail that is not in the observer's selector list stays
+  // paused forever and reads as a frozen row.
 }))()
 
 /* ── 5. REDUCED MOTION — nothing may stay invisible when the choreography

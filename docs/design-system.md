@@ -161,13 +161,51 @@ like `#outputs .scenes__tab{background:var(--paper)}` out-specifies
 
 **Floating header** — `position:fixed`, centred, `width:min(100vw - 24px, 1320px)`,
 `grid-template-columns:1fr auto 1fr` → logo left, nav centred, actions right.
-Blurred translucent paper, 14px radius, no border, soft shadow. Sits at the top
-of the page; past `scrollY > 28` it gains `.is-stuck` (56px tall, more opaque,
+**Solid paper**, 16px radius, no border, a three-layer shadow. A translucent
+blurred bar read as "already hidden" against a light page; solid plus depth is
+what gives it presence. Past `scrollY > 28` it gains `.is-stuck` (56px tall,
 deeper shadow). Under 960px it becomes flex with `order`: logo · actions ·
-burger. There is no announce strip — it was removed 2026-08-18.
+burger.
+
+**The label roll** (learned from clay.com): every nav label is duplicated, the
+pair sits in a `overflow:clip` box one line tall, and on hover both move up by
+100% — the visible copy leaves, the duplicate arrives **in the accent**, 460ms
+on `--e-out`.
+
+```html
+<a href="#outputs"><span class="roll">
+  <span class="roll__t">Features</span>
+  <span class="roll__t" aria-hidden="true">Features</span>
+</span></a>
+```
+
+The duplicate is `aria-hidden`, so the label is announced once. Reduced motion
+holds the first copy in place. The primary button answers with a press
+(`translateY(-1px) scale(1.015)`), never a colour change.
 
 **Composer** (`.chatbar`) — fixed bottom-right pill, blurred paper, ink send
 button that warms to accent, hides itself when the footer is in view.
+
+## 7b. Cards on a grey page
+
+The page ground is `--wash`. A section is either a white band on it, or a
+**card** — used where the content is a self-contained object:
+
+```css
+.panel--card{
+  --card-gap:clamp(12px, 1.8vw, 26px);
+  margin-inline:var(--card-gap);
+  margin-block:clamp(10px, 1.4vw, 22px);              /* grey shows around it */
+  padding-inline:max(20px, calc(var(--edge) - var(--card-gap)));
+  background:var(--paper);
+  border-radius:clamp(20px, 2.2vw, 34px);
+  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 26px 64px -44px rgba(12,15,18,.3);
+}
+```
+
+The inline padding subtracts the card's own margin so the content still lands on
+the same 1320 measure as an uncarded section. `#reach` is the first card;
+`.figures` (the metrics block) is the same idea at component scale.
 
 ## 8. Sections
 

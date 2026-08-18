@@ -342,23 +342,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   color:var(--ink-mute);
 }
 
-
-/* ─────────────── marquee ─────────────── */
-.marquee{
-  margin-top:0;
-  padding:14px 0;
-  border-bottom:1px solid var(--hairline);
-  overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
-          mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
-}
-
-.marquee:first-of-type{ margin-top:28px; border-top:1px solid var(--hairline); }
-
-.marquee[data-dir="rev"] .marquee__track{ animation-direction:reverse; }
-
-.marquee:hover .marquee__track{ animation-play-state:paused; }
-
 @keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
 
 
@@ -1483,10 +1466,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 .perms__list code{ border-radius:8px; }
 
 
-/* the model and connector marquees carry no rules */
-.marquee,.marquee:first-of-type{ border-top:0; border-bottom:0; }
-
-
 /* the endpoint line stays on one line — a wrapped path reads as broken */
 .perms__what i{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
@@ -2207,7 +2186,7 @@ a.acard .acard__txt i{ color:var(--ink); }
 html{ scroll-behavior:smooth; scroll-padding-top:120px; }
 
 body{
-  background:var(--paper);
+  background:var(--wash);
   color:var(--ink-soft);
   font-family:var(--fb);
   font-size:var(--t-body);
@@ -2363,8 +2342,10 @@ h3{ font-family:var(--fd); }
   transition:color 620ms var(--e-out);
 }
 
-.mark.is-lit{ color:var(--accent-solid); font-weight:700; }
+.mark.is-lit{ color:var(--accent-solid); }
 
+/* never change the weight of an emphasised phrase: the glyph widths
+   change with it and the line reflows in the middle of the animation */
 .display .mark.is-lit{ color:var(--accent); }
 
 /* the mid-section statement is already the loudest type on the ground;
@@ -2389,11 +2370,11 @@ h3{ font-family:var(--fd); }
   align-items:center;
   gap:16px;
   margin:0; padding:0 10px 0 20px;
-  background:rgba(255,255,255,.84);
-  -webkit-backdrop-filter:blur(18px) saturate(1.6);
-          backdrop-filter:blur(18px) saturate(1.6);
-  border:0; border-radius:14px;
-  box-shadow:0 1px 3px rgba(12,15,18,.05), 0 18px 40px -24px rgba(12,15,18,.3);
+  background:var(--paper);
+  border:0; border-radius:16px;
+  box-shadow:0 1px 2px rgba(12,15,18,.06),
+             0 10px 24px -14px rgba(12,15,18,.22),
+             0 30px 60px -40px rgba(12,15,18,.34);
   transform:translate(-50%, 0);
   transition:transform var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
@@ -2404,8 +2385,10 @@ h3{ font-family:var(--fd); }
 .nav.is-stuck{
   height:56px;
   transform:translate(-50%, 0);
-  background:rgba(255,255,255,.95);
-  box-shadow:0 1px 3px rgba(12,15,18,.06), 0 22px 46px -26px rgba(12,15,18,.4);
+  background:var(--paper);
+  box-shadow:0 1px 2px rgba(12,15,18,.07),
+             0 12px 26px -14px rgba(12,15,18,.26),
+             0 34px 66px -40px rgba(12,15,18,.42);
 }
 
 .nav__logo{
@@ -2442,7 +2425,7 @@ h3{ font-family:var(--fd); }
              background var(--t-hover) var(--e-snap);
 }
 
-.nav__links a:hover{ color:var(--ink); background:var(--wash); }
+.nav__links a:hover{ color:var(--ink); background:transparent; }
 
 .nav__auth{
   justify-self:end;
@@ -2458,7 +2441,7 @@ h3{ font-family:var(--fd); }
   transition:color var(--t-hover) var(--e-snap), background var(--t-hover) var(--e-snap);
 }
 
-.nav__signin:hover{ color:var(--ink); background:var(--wash); }
+.nav__signin:hover{ color:var(--ink); background:transparent; }
 
 
 /* ─────────────── 6. buttons ─────────────── */
@@ -2572,14 +2555,30 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* grounds do the separating: no two neighbours share one ground, and a
-   surface always takes the opposite ground of the section it sits on */
-/* strict alternation, in page order: hero · outputs · workflows · parallel ·
-   control · positioning · proof · (cta + footer, ink). Two neighbours must
-   never share a ground — it is the only thing separating them. */
-#outputs,#parallel,#positioning{ background:var(--wash); }
+/* The page ground is light grey. A section is either a white band on it,
+   or — where the content is a self-contained object — a white CARD
+   floating on it. Sections that used to be "wash" now simply show the
+   page ground, so the alternation reads exactly as before.
+   Order: hero · outputs · [reach card] · workflows · parallel · control ·
+   positioning · proof · (cta + footer, ink). Two neighbours must never
+   share a ground — it is the only thing separating them. */
+#outputs,#parallel,#positioning{ background:transparent; }
 
 #workflows,#control,#proof{ background:var(--paper); }
+
+
+/* ── a section as one object on the grey page ── */
+.panel--card{
+  --card-gap:clamp(12px, 1.8vw, 26px);
+  margin-inline:var(--card-gap);
+  margin-block:clamp(10px, 1.4vw, 22px);   /* grey shows above and below */
+  padding-inline:max(20px, calc(var(--edge) - var(--card-gap)));
+  padding-block:clamp(52px, 5.4vw, 84px);
+  background:var(--paper);
+  border-radius:clamp(20px, 2.2vw, 34px);
+  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 26px 64px -44px rgba(12,15,18,.3);
+  overflow:hidden;
+}
 
 .panel{ border-top:0; }
 /* surfaces are always paper; the shadow carries them on a paper ground
@@ -2865,7 +2864,6 @@ h3{ font-family:var(--fd); }
    are inset from the container and fade at both ends rather than
    running into the page edge. */
 .reach{
-  margin-top:clamp(30px, 3.4vw, 48px);
   padding-inline:clamp(12px, 4.5vw, 90px);
 }
 
@@ -2906,8 +2904,9 @@ h3{ font-family:var(--fd); }
   transition-delay:calc(var(--wi, 0) * 9ms);
 }
 
-/* the highlight lands after the words have settled */
-.reach__line .mark{ transition:color 520ms var(--e-out); }
+/* here the phrase is already orange as it rises — no warm-up, no
+   weight change, so the words never reflow */
+.reach__line .mark{ color:var(--accent-solid); font-weight:inherit; transition:none; }
 
 
 /* the rails */
@@ -2942,7 +2941,6 @@ h3{ font-family:var(--fd); }
   background:var(--wash-2);
 }
 
-#outputs .logo{ background:var(--paper); }
 
 .logo img{
   width:clamp(24px, 2.1vw, 30px);
@@ -3650,6 +3648,153 @@ h3{ font-family:var(--fd); }
   .cta__scene{ width:190%; height:clamp(150px, 44vw, 260px); }
 
   .panel--cta{ padding-bottom:clamp(170px, 48vw, 300px); }
+
+}
+
+
+/* ================================================================
+   23. the outputs section: one title, a tab-driven lead, and the
+   figures as an object
+   ================================================================ */
+
+/* the per-tab claim is the first sentence of the paragraph, not a
+   second headline. It carries more weight than the sentence after it,
+   and it swaps when the tab does. */
+.scene-lead{
+  color:var(--ink);
+  font-weight:600;
+}
+
+.scene-lead .inline-ic{ font-size:.85em; }
+
+.scene-lead.is-swapping{
+  opacity:0;
+  transform:translateY(-.22em);
+}
+
+.scene-lead{
+  display:inline-block;
+  transition:opacity 240ms var(--e-out), transform 240ms var(--e-out);
+}
+
+#sceneCopy{ min-height:4.4em; }
+        /* the lead is one or two lines;
+                                          reserve both so the tabs below
+                                          never move when it swaps */
+
+/* the three figures and their note read as one object on the page */
+.figures{
+  grid-column:1 / 13;
+  margin-top:clamp(44px, 5vw, 72px);
+  padding:clamp(30px, 3.4vw, 52px) clamp(20px, 3vw, 48px) clamp(22px, 2.4vw, 34px);
+  background:var(--paper);
+  border-radius:clamp(16px, 1.8vw, 26px);
+  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 22px 54px -40px rgba(12,15,18,.26);
+}
+
+.figures .metrics{
+  margin:0;
+  grid-column:auto;
+  gap:clamp(20px, 2.4vw, 40px);
+}
+
+.figures .metrics li{ align-items:center; text-align:center; }
+
+
+/* numeral and unit are two sizes, so the figure reads as a quantity
+   rather than a slab of type */
+.metrics b{
+  display:flex; align-items:baseline; justify-content:center; gap:.14em;
+  font-family:var(--fd);
+  color:var(--ink);
+}
+
+.metrics b i{
+  font-style:normal; font-weight:700;
+  font-size:clamp(34px, 4vw, 56px);
+  line-height:1; letter-spacing:-.045em;
+  font-variant-numeric:tabular-nums;
+}
+
+.metrics b em{
+  font-style:normal; font-weight:600;
+  font-size:clamp(16px, 1.6vw, 22px);
+  line-height:1.1; letter-spacing:-.02em;
+  color:var(--ink-mute);
+}
+
+.metrics span{
+  margin-top:clamp(8px, 1vw, 12px);
+  font-size:var(--t-mono); letter-spacing:.13em;
+  color:var(--ink-mute);
+}
+
+
+/* the note belongs to the figures, so it sits with them */
+.figures .footnote{
+  margin:clamp(20px, 2.4vw, 32px) auto 0;
+  max-width:52ch;
+  text-align:center;
+  font-size:10.5px; letter-spacing:.1em;
+  color:var(--ink-mute);
+}
+
+
+@media (max-width:720px){
+  .figures .metrics{ gap:clamp(18px, 5vw, 28px); }
+
+  #sceneCopy{ min-height:0; }
+
+}
+
+
+/* ── the nav label rolls: the visible copy leaves upward while its
+      duplicate arrives from below, in the accent. The duplicate is
+      aria-hidden, so the label is still announced once. ── */
+.roll{
+  position:relative;
+  display:block;
+  height:1.25em;
+  overflow:clip;
+}
+
+.roll__t{
+  display:block;
+  line-height:1.25em;
+  transition:transform 460ms var(--e-out), color 460ms var(--e-out);
+  will-change:transform;
+}
+
+.roll__t + .roll__t{
+  position:absolute; inset:0;
+  transform:translateY(100%);
+  color:var(--accent-solid);
+}
+
+.nav__links a:hover .roll__t,
+.nav__signin:hover .roll__t{ transform:translateY(-100%); }
+
+.nav__links a:hover .roll__t + .roll__t,
+.nav__signin:hover .roll__t + .roll__t{ transform:translateY(0); }
+
+
+/* the primary button answers with a press, not a colour change */
+.nav .btn--dark{ transition:transform 220ms var(--e-snap), box-shadow 220ms var(--e-snap); }
+
+.nav .btn--dark:hover{ transform:translateY(-1px) scale(1.015); }
+
+.nav .btn--dark:active{ transform:translateY(0) scale(.985); }
+
+.nav__logo:hover span{ color:var(--accent-solid); transition:color 220ms var(--e-snap); }
+
+
+@media (prefers-reduced-motion:reduce){
+  .roll__t{ transition:none; }
+
+  .nav__links a:hover .roll__t,.nav__signin:hover .roll__t{ transform:none; }
+
+  .nav__links a:hover .roll__t + .roll__t,
+  .nav__signin:hover .roll__t + .roll__t{ transform:translateY(100%); }
 
 }
 

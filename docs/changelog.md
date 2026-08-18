@@ -6,6 +6,47 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-18 · grey page, cards, a live header
+
+Feedback in one pass: the two logo rows sit frozen; make the logo wall its own
+section wrapped in a big card, with a light grey background for the whole site;
+the highlighted phrase should be orange from the first frame and must not change
+weight (the line was reflowing); the three figures are blunt and their note is
+awkwardly placed; the outputs section has two titles — fold the second into the
+paragraph and let it change with the tab; the header looks washed out and its
+hover is dull — look at clay.com.
+
+- **The rails were frozen.** The IntersectionObserver still listed `.marquee`
+  after the class was renamed `.rail`, so `.is-in` never landed and the tracks
+  stayed `paused` forever. Fixed, and the rails' play state is now part of the
+  motion read-out in `tools/audit.js` so a frozen row cannot pass silently again.
+- **The page ground is light grey.** Sections are either white bands on it or —
+  new — `.panel--card`: a white card with radius and shadow, inset from the page.
+  The reach block is now its own section (`#reach`) in that card. Sections that
+  were "wash" simply show the page ground, so the alternation reads as before.
+- **Highlights stopped changing weight.** `.mark.is-lit` no longer sets
+  `font-weight:700`; `--accent-solid` clears AA at these sizes on its own, and
+  re-weighting reflowed the line mid-animation. In the rotating statement the
+  phrase is orange from the first frame — no warm-up.
+- **The figures became an object**: metrics and their note in one white card,
+  numeral and unit at two sizes (`2` + `hrs`), the note as the card's caption
+  rather than a line floating under the middle column.
+- **The count-up had never run.** `[data-count]` sits on children of the observed
+  element, and `enter()` only checked the element itself. It now walks
+  descendants.
+- **Outputs has one title.** The second headline folded into the paragraph as its
+  lead sentence, in ink and 600, with the deliverable in the accent — and it
+  swaps when the tab does, with the paragraph height reserved so the tabs below
+  never move.
+- **The header has presence and a real hover.** Solid paper instead of a
+  translucent blur, three-layer shadow. Nav labels now use the clay.com **text
+  roll**: the visible label leaves upward while its duplicate arrives from below
+  in the accent, 460ms. The duplicate is `aria-hidden`, so the label is still
+  announced once. The primary button answers with a press instead of a colour
+  change.
+
+0 axe violations, 0 page-level borders, no horizontal scroll 390–1920.
+
 ## 2026-08-18 · the reach region: logos only, one statement at a time
 
 Feedback: could it be logos only, like the reference? The logo wall should not
