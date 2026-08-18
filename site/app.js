@@ -1,5 +1,5 @@
 /* ================================================================
-   OKOU — interaction layer, v41
+   OKOU — interaction layer
 
    Rules this file follows (premium-microinteraction standard):
    · only transform / opacity / clip-path are animated

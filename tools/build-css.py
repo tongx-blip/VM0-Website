@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Assemble site/styles.css from the two CSS sources, then drop every rule whose
-selectors reference only classes that no longer appear in the markup.
+Build site/styles.css from the two CSS sources, prune dead rules, and stamp
+the asset links in index.html with a content hash.
 
     python3 tools/build-css.py
 
@@ -21,7 +21,13 @@ ended up with five stacked themes fighting each other (see docs/changelog.md).
 The prune pass keeps the shipped file honest — the old file carried ~18KB of
 rules for markup that had been deleted years earlier. Classes that only ever
 appear at runtime are whitelisted below.
+
+The hash stamp exists because a hand-maintained `?r=NN` was left at 42 across
+four deploys: browsers kept a cached stylesheet that predated a renamed block,
+and that whole region rendered with no CSS at all. The hash is derived from the
+file contents, so it cannot be forgotten.
 """
+import hashlib
 import os
 import re
 import sys
@@ -105,13 +111,27 @@ def prune(css, classes):
     return '\n'.join(kept)
 
 
+def stamp(css_text):
+    """Point index.html at the exact bytes it was built against."""
+    html = open(HTML, encoding='utf-8').read()
+    css_hash = hashlib.sha1(css_text.encode('utf-8')).hexdigest()[:8]
+    js_hash = hashlib.sha1(open(JS, 'rb').read()).hexdigest()[:8]
+    new = re.sub(r'styles\.css\?r=[0-9a-z]+', 'styles.css?r=' + css_hash, html)
+    new = re.sub(r'app\.js\?r=[0-9a-z]+', 'app.js?r=' + js_hash, new)
+    if new != html:
+        open(HTML, 'w', encoding='utf-8').write(new)
+    return css_hash, js_hash
+
+
 def main():
     classes = markup_classes()
     raw = '\n'.join(open(p, encoding='utf-8').read() for p in SOURCES)
     out = prune(raw, classes)
     open(OUT, 'w', encoding='utf-8').write(out)
+    css_hash, js_hash = stamp(out)
     print('sources %d KB -> site/styles.css %d KB (%d classes in markup)'
           % (len(raw) // 1024, len(out) // 1024, len(classes)))
+    print('stamped  styles.css?r=%s  app.js?r=%s' % (css_hash, js_hash))
 
 
 if __name__ == '__main__':

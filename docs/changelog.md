@@ -1,11 +1,29 @@
 # Changelog
 
-Newest first. Each entry records what changed **and what was wrong**, because the
-failure modes are the useful part.
+Newest first, dated. No version numbers: this page gets revised continuously and
+a counter would only ever grow. Each entry records what changed **and what was
+wrong**, because the failure modes are the useful part.
 
 ---
 
-## v45 — the reach region, compressed · 2026-08-18
+## 2026-08-18 · cache-busting, automated
+
+The "what Okou reaches" region rendered completely unstyled for anyone who had
+visited before. Not a CSS bug: `index.html` still linked `styles.css?r=42`, a
+hand-maintained cache-buster that had not moved across four deploys, so browsers
+served a cached stylesheet from before the block was renamed `.wall` → `.cat`.
+Every other region kept its old class names and looked fine, which is why it
+read as one broken area rather than a broken page.
+
+- `tools/build-css.py` now stamps `styles.css?r=<sha1>` and `app.js?r=<sha1>`
+  from the built bytes. It cannot be forgotten, and it changes only when the
+  file changes.
+- Added to the QA gate as §9b.
+- **Dropped version numbers** from this changelog and from the source banners.
+  Entries are dated; the page is revised continuously and a counter would only
+  ever climb.
+
+## 2026-08-18 · the reach region, compressed
 
 Feedback: the capability wall takes far too much of the page — the ask was a
 different *way of showing* these, not a flattened list of all of them; the
@@ -29,7 +47,7 @@ them more efficiently, and be more considered about the typography.
 
 Result: 0 axe violations, 0 page-level borders, no horizontal scroll 390–1920.
 
-## v44 — orange controls, a one-line hero statement, and the capability wall · 2026-08-18
+## 2026-08-18 · orange controls, a one-line hero statement, the capability wall
 
 Feedback: the hero's middle line must never wrap; the hero paragraph is too big;
 don't hide the illustration; that orange is wrong; make every black button orange
@@ -69,7 +87,7 @@ Drive, Google Analytics, Meta Ads, Zapier, Perplexity, Manus, OpenClaw).
 Result: 0 axe violations, 0 page-level borders, one line at every breakpoint,
 no horizontal scroll 390–1920.
 
-## v43 — one composition rule, and the brand layer · 2026-08-18
+## 2026-08-18 · one composition rule, and the brand layer
 
 Feedback: delete the announce strip; the hero's information is scattered and
 messy — centre it, stack it, and put a product image underneath like Notion; the
@@ -109,7 +127,7 @@ avatars and textures to use.
 Result: 0 axe violations, 0 page-level borders, strict paper/wash alternation,
 no horizontal scroll at 390–1920, reduced motion clean.
 
-## v42 — no structural lines · 2026-08-17
+## 2026-08-17 · no structural lines
 
 Feedback: *"你在网站上加的这些线条太乱了，可以把线条都去掉…另外这些带数字的小标签就非常
 像 AI generated。你可以有标签但不要放在左边，占这么大的空间。去掉数字保留文本就成。"*
@@ -148,14 +166,15 @@ Feedback: *"你在网站上加的这些线条太乱了，可以把线条都去�
 
 Result: 0 axe violations, 0 page-level borders, page 8.1k tall at 1440.
 
-## v41 — the rebuild · 2026-08-17
+## 2026-08-17 · the rebuild
 
 Feedback: floating header like Motion's, research better design/motion skills,
 critique the page, then fix it wholesale. No copy changes.
 
 **What was wrong.** `styles.css` was 2,733 lines of *five stacked theme layers*:
 "Swiss technical editorial + one orange accent" → a seven-swatch `PALETTE` →
-"colour lives in backgrounds" → `WIREFRAME` → `WIREFRAME v2` → `v40`. The last
+"colour lives in backgrounds" → `WIREFRAME` → `WIREFRAME v2` → a final
+patch layer. The last
 layers won, so the shipped page was:
 
 - `--accent: #5C5C5C` — the accent was grey; `.mark{background-image:none}`
@@ -189,10 +208,10 @@ layers won, so the shipped page was:
 
 Result: 29+2 axe violations → 0; CLS 0; page 10.6k → 9.2k at 1440.
 
-## v40 and earlier — inherited
+## Before this repo — the inherited page
 
 The page as it existed on the production slug when this repo started
-(`okou-ai-teammate-swiss` v46). Kept only as the origin of the `base.css`
+(the production slug as it stood on 2026-08-17). Kept only as the origin of the `base.css`
 component CSS: the Okou app window, the Slack transcript, the permissions table
 and the workflow stages are all from that lineage and are still in use.
 

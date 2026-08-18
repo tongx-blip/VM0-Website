@@ -1,6 +1,5 @@
 /* ================================================================
-   OKOU — v41 "SWISS LEDGER"
-   The authoritative design layer. Everything above this banner is
+   OKOU — the authoritative design layer. Everything above this banner is
    component-internal CSS (product mocks, Slack, permissions,
    workflow stages); everything below owns the design system:
    colour roles, type scale, grid, chrome, section rhythm, motion.
@@ -10,11 +9,11 @@
    marks under the sentences that matter, the ledger tick beside
    each section, and the interaction reward on primary controls.
 
-   v42: NO STRUCTURAL RULES. Nothing on this page is separated by a
+   NO STRUCTURAL RULES. Nothing on this page is separated by a
    line. Definition comes from grounds (paper / wash / ink), space,
    the type scale and soft shadow.
 
-   v43: ONE COMPOSITION RULE. Every section — the hero included — is a
+   ONE COMPOSITION RULE. Every section — the hero included — is a
    centred stack (eyebrow · heading · lede · action) over a full-width
    figure. Nothing else. That single rule is what makes the page read
    as designed rather than assembled. Brand illustration (agent
@@ -1162,7 +1161,7 @@ h3{ font-family:var(--fd); }
 .absui__field{ border-color:transparent; background:var(--wash); }
 
 /* ================================================================
-   22. v43 — BRAND LAYER + PLACEHOLDERS
+   22. BRAND LAYER + PLACEHOLDERS
    The new branding is warmer and more illustrated than the page it
    is landing on: pill controls, hand-drawn agent avatars, painted
    stickers and one landscape. The neutral system underneath does

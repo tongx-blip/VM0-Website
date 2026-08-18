@@ -13,14 +13,18 @@ and every rule in it comes from a decision that has already been argued once.
    - structure → `site/index.html`
    - behaviour → `site/app.js`
    - `site/styles.css` is **generated** — run `python3 tools/build-css.py`.
+     It also stamps the `?r=<hash>` on the asset links; publishing without it
+     ships stale CSS to anyone who has visited before.
 3. **Look at it in a browser.** Serve `site/` and take screenshots at 1440 and
    390. A screenshot catches what a diff cannot.
 4. **Run the gate** in `docs/qa-checklist.md`. Not a subset of it.
 5. **Publish to the draft slug only**:
    `okou host ./site --site okou-ai-teammate-swiss-draft`
-6. **Write it down.** Add an entry to `docs/changelog.md` — what changed and what
-   was wrong. If a mistake could plausibly repeat, add the check to
-   `docs/qa-checklist.md` rather than a warning to prose.
+6. **Write it down.** Add a **dated** entry to `docs/changelog.md` — what changed
+   and what was wrong. No version numbers anywhere: this page is revised
+   continuously and a counter would only ever climb. If a mistake could
+   plausibly repeat, add the check to `docs/qa-checklist.md` rather than a
+   warning to prose.
 
 ## Hard rules
 

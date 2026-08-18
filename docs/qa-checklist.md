@@ -160,6 +160,22 @@ Baseline to hold: CLS 0, FCP under ~0.5s locally, LCP under ~1.5s. The page is
 image-heavy; new screenshots go through the same `assets/` conventions and keep
 `loading="lazy"` below the fold.
 
+## 9b. The asset links point at what you just built
+
+`tools/build-css.py` stamps `styles.css?r=<hash>` and `app.js?r=<hash>` from the
+file contents. Never edit those by hand, and never publish without running the
+build:
+
+```bash
+python3 tools/build-css.py
+grep -o 'styles.css?r=[0-9a-z]*' site/index.html    # must match the new hash
+```
+
+A hand-kept `?r=42` sat unchanged across four deploys. Returning visitors kept a
+cached stylesheet from before a block was renamed, so that whole region rendered
+with **no CSS at all** while everything else looked fine. Hard-reload proves
+nothing here — check the query string.
+
 ## 10. Publish
 
 ```bash
