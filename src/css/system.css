@@ -12,8 +12,13 @@
 
    v42: NO STRUCTURAL RULES. Nothing on this page is separated by a
    line. Definition comes from grounds (paper / wash / ink), space,
-   the type scale and soft shadow. Section labels are quiet uppercase
-   eyebrows above the heading — no numbers, no left-hand rail.
+   the type scale and soft shadow.
+
+   v43: ONE COMPOSITION RULE. Every section — the hero included — is a
+   centred stack (eyebrow · heading · lede · action) over a full-width
+   figure. Nothing else. That single rule is what makes the page read
+   as designed rather than assembled. Brand illustration (agent
+   avatars, painted stickers, the landscape) is the warmth layer.
    ================================================================ */
 
 /* ─────────────── 1. tokens ─────────────── */
@@ -231,36 +236,17 @@ h3{ font-family:var(--fd); }
   transition:color 620ms var(--e-out);
 }
 .mark.is-lit{ color:var(--accent-ink); }
-.display .mark.is-lit,.sentence .mark.is-lit{ color:var(--accent); }
+.display .mark.is-lit{ color:var(--accent); }
+/* the mid-section statement is already the loudest type on the ground;
+   giving it colour as well made two accent phrases per section */
+.sentence .mark,.sentence .mark.is-lit{ color:var(--ink); }
 .panel--cta .mark.is-lit,.footer .mark.is-lit{ color:var(--accent); }
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 
-/* ─────────────── 4. announce strip ─────────────── */
-.announce{
-  position:relative; z-index:1;
-  display:flex; align-items:center; justify-content:center;
-  flex-wrap:wrap; gap:6px 14px;
-  min-height:42px; padding:10px var(--edge);
-  background:var(--wash);
-  color:var(--ink);
-  font-family:var(--fm); font-weight:500;
-  font-size:var(--t-mono); letter-spacing:.09em; text-transform:uppercase;
-}
-.announce p{ color:var(--ink); }
-.announce a{
-  display:inline-flex; align-items:center; gap:6px;
-  color:var(--accent-ink); white-space:nowrap;
-  background:linear-gradient(var(--accent-ink),var(--accent-ink)) no-repeat 0 100% / 0% 1px;
-  transition:background-size var(--t-state) var(--e-out);
-}
-.announce a:hover{ background-size:100% 1px; text-decoration:none; }
-.announce a span{ transition:transform var(--t-hover) var(--e-snap); }
-.announce a:hover span{ transform:translateX(3px); }
-
 /* ─────────────── 5. floating header ───────────────
    Inset from every edge, floating over the page: logo left,
-   navigation centred, actions right. It rests below the announce
-   strip and rises to the top edge once the page scrolls. */
+   navigation centred, actions right. It condenses once the page
+   scrolls. */
 .nav{
   position:fixed; top:12px; left:50%; z-index:100;
   width:min(calc(100vw - 24px), 1320px);
@@ -275,7 +261,7 @@ h3{ font-family:var(--fd); }
           backdrop-filter:blur(18px) saturate(1.6);
   border:0; border-radius:14px;
   box-shadow:0 1px 3px rgba(12,15,18,.05), 0 18px 40px -24px rgba(12,15,18,.3);
-  transform:translate(-50%, var(--ann, 42px));
+  transform:translate(-50%, 0);
   transition:transform var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
              background var(--t-state) var(--e-out),
@@ -376,17 +362,30 @@ h3{ font-family:var(--fd); }
   border-top:1px solid var(--hairline);
   overflow:visible;
 }
-.panel > *{ grid-column:1 / 9; }
-.panel > .chip{ grid-column:1 / 9; grid-row:1; }
-.panel > .chip + *{ grid-column:1 / 9; grid-row:2; }
-/* the opening paragraph sits beside the heading rather than under it,
-   which is what fills the right half now that no rule does */
-.panel > .chip + * + .section-body{
-  grid-column:9 / 13; grid-row:2;
-  align-self:end; max-width:38ch;
-  margin-top:0; padding-bottom:.4em;
-  font-size:var(--t-body);
+/* ── THE COMPOSITION RULE ────────────────────────────────────────
+   Every section is the same shape: a centred stack of eyebrow →
+   heading → lede (→ action), then a full-width figure underneath.
+   Prose inside a card stays left-aligned; only the section's own
+   voice is centred. Nothing else is allowed to invent a layout. */
+.panel > *{ grid-column:1 / 13; }
+.panel > .chip,
+.panel > .display,
+.panel > .sentence,
+.panel > .section-body,
+.panel > .note,
+.panel > .footnote,
+.panel > .linkline,
+.panel > .cta__btns{
+  justify-self:center;
+  text-align:center;
+  width:100%;
 }
+.panel > .display{ max-width:20ch; }
+.panel > .sentence{ max-width:24ch; }
+.panel > .section-body{ max-width:54ch; margin-inline:auto; }
+.panel > .note,.panel > .footnote{ max-width:58ch; margin-inline:auto; }
+.panel > .linkline{ display:flex; justify-content:center; }
+.panel > .cta__btns{ display:flex; justify-content:center; }
 
 /* the rail head: an accent tick, the section number, and a spine
    that fills with how far into the section you have read */
@@ -401,7 +400,7 @@ h3{ font-family:var(--fd); }
 
 /* wide figures span the ledger too */
 /* figures, data and card grids reach across all twelve columns */
-.scenes,.marquee,.ladder,.metrics,.control,.versus,.proof,.a2a{
+.scenes,.marquee,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
   grid-column:1 / 13;
 }
 .marquee{
@@ -425,50 +424,57 @@ h3{ font-family:var(--fd); }
 .step.is-active{ background:var(--wash-2); }
 
 /* ─────────────── 8. hero ───────────────
-   Two balanced columns: the statement on the left, the thesis and
-   the actions on the right. No L-shaped void, nothing centred by
-   accident. */
+   The composition rule at full size: one centred stack, then the
+   product shot directly underneath it. */
 .hero{
-  padding-top:clamp(128px, 14vh, 188px);
-  padding-bottom:clamp(40px, 4vw, 64px);
+  position:relative;
+  padding-top:clamp(120px, 13vh, 172px);
+  padding-bottom:0;
   border-top:0;
+  overflow:hidden;
 }
-.hero__grid{
+.stack{
   grid-column:1 / 13;
-  display:grid;
-  grid-template-columns:repeat(12, minmax(0,1fr));
-  column-gap:var(--gutter);
-  row-gap:clamp(30px, 4vw, 54px);
-  align-items:start;
+  display:flex; flex-direction:column; align-items:center;
+  gap:clamp(18px, 2vw, 26px);
+  text-align:center;
 }
-.hero__lead{ grid-column:1 / 8; grid-row:1; }
-.hero__lead .display{ font-size:clamp(46px, 7.4vw, 112px); }
+.stack > *{ margin:0; }
+.hero .serif-lead{
+  max-width:34ch;
+  font-size:var(--t-lead);
+  color:var(--ink-soft);
+}
+.hero .display{
+  max-width:16ch;
+  font-size:clamp(46px, 7.2vw, 108px);
+}
 .hero .display .line{ white-space:nowrap; }
-
-.hero__center{
-  grid-column:8 / 13; grid-row:1;
-  display:flex; flex-direction:column; align-items:flex-start;
-  gap:22px;
-  padding-top:.7em;
+.hero__body{
+  max-width:56ch;
+  font-size:var(--t-lead); line-height:1.55;
+  text-align:center;
+  color:var(--ink-soft);
 }
-.hero__center .serif-lead{ max-width:22ch; font-size:clamp(19px,1.7vw,24px); }
-.hero__cta{ display:flex; flex-wrap:wrap; gap:10px; }
-
-.hero__tail{
-  grid-column:1 / 8; grid-row:2;
-  display:block;
+.hero__cta{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:12px;
+  margin-top:clamp(4px,.6vw,10px);
 }
-.hero__tail .display--tail{
+
+/* the rotating second statement, one line, centred under the headline */
+.hero .display--tail{
+  max-width:24ch;
   font-family:var(--fd); font-weight:600;
-  font-size:var(--t-d3); line-height:1.1; letter-spacing:-.028em;
-  text-align:left; color:var(--ink);
+  font-size:var(--t-d3); line-height:1.15; letter-spacing:-.026em;
+  color:var(--ink-mute);
+  text-align:center;
 }
-#rotator{ position:relative; display:block; min-height:2.4em; }
+#rotator{ position:relative; display:block; min-height:1.3em; width:100%; }
 #rotator .rot{
   position:absolute; inset:0;
   display:block;
   opacity:0; transform:translateY(.34em);
-  clip-path:inset(-20% -20% 100% -20%);
+  clip-path:inset(-30% -20% 100% -20%);
   transition:opacity 520ms var(--e-elegant),
              transform 520ms var(--e-elegant),
              clip-path 620ms var(--e-out);
@@ -476,22 +482,48 @@ h3{ font-family:var(--fd); }
 }
 #rotator .rot.is-on{
   opacity:1; transform:none;
-  clip-path:inset(-20% -20% -20% -20%);
+  clip-path:inset(-30% -20% -30% -20%);
   pointer-events:auto;
 }
 #rotator .rot.is-out{
   opacity:0; transform:translateY(-.3em);
-  clip-path:inset(100% -20% -20% -20%);
+  clip-path:inset(100% -20% -30% -20%);
 }
+#rotator .line{ white-space:normal; }
 
-.hero__body{
-  grid-column:8 / 13; grid-row:2;
-  max-width:44ch; margin:0;
-  font-size:var(--t-sm); line-height:1.7;
-  color:var(--ink-soft);
+/* the product shot, with the brand stickers pinned around it */
+.showcase{
+  position:relative;
+  margin-top:clamp(44px, 5vw, 76px);
+  padding-bottom:clamp(28px, 3vw, 48px);
 }
+.showcase__sticker{
+  position:absolute; z-index:2;
+  width:clamp(52px, 6.2vw, 88px); height:auto;
+  filter:drop-shadow(0 12px 26px rgba(12,15,18,.18));
+  pointer-events:none;
+}
+.showcase__sticker--tl{ left:-1.5%;  top:-5%;  transform:rotate(-8deg); }
+.showcase__sticker--tr{ right:-1.5%; top:-7%;  transform:rotate(6deg); }
+.showcase__sticker--bl{ left:2%;     bottom:6%; transform:rotate(5deg); }
+.showcase__sticker--br{ right:1%;    bottom:3%; transform:rotate(-6deg); }
 
-
+/* brand texture behind the hero type */
+.hero__cloud,.hero__sun{
+  position:absolute; z-index:0;
+  pointer-events:none; user-select:none;
+}
+.hero__cloud--a{
+  width:clamp(150px, 17vw, 290px);
+  left:1%; top:clamp(126px, 15vh, 200px);
+  opacity:.6;
+}
+.hero__sun{
+  width:clamp(48px, 5vw, 84px);
+  right:8%; top:clamp(150px, 17vh, 236px);
+  opacity:.85;
+}
+.hero > .stack,.hero > .showcase{ position:relative; z-index:1; }
 /* ─────────────── 9. the ledger sentence ─────────────── */
 .sentence{ margin:clamp(40px,4.4vw,64px) 0 0; }
 .inline-ic{ font-size:.68em; vertical-align:.08em; }
@@ -524,7 +556,7 @@ h3{ font-family:var(--fd); }
 .scene{ display:none; }
 .scene.is-on{
   display:grid;
-  grid-template-columns:minmax(0,.78fr) minmax(0,3fr) minmax(0,1.05fr);
+  grid-template-columns:minmax(0,.92fr) minmax(0,2.75fr) minmax(0,1.18fr);
   gap:clamp(14px,1.5vw,22px);
   align-items:center;
   position:static; padding:0;
@@ -827,37 +859,32 @@ h3{ font-family:var(--fd); }
 
 .footer{
   position:relative;
-  display:grid;
-  grid-template-columns:repeat(12, minmax(0,1fr));
-  column-gap:var(--gutter);
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center;
+  gap:clamp(18px,2vw,26px);
   margin:0; border-radius:0;
-  padding:clamp(44px,4.4vw,72px) var(--edge) clamp(34px,3.6vw,52px);
+  padding:clamp(56px,5.4vw,88px) var(--edge) clamp(34px,3.6vw,52px);
   background:var(--ink); color:rgba(255,255,255,.7);
   overflow:hidden;
 }
 .footer__badge{
-  grid-column:1 / 4; grid-row:1;
-  width:40px; height:40px; margin:0 0 24px;
+  width:44px; height:44px; margin:0;
   display:grid; place-items:center;
   border:0; border-radius:10px;
   background:rgba(255,255,255,.1);
 }
 .footer__badge img{ width:19px; filter:brightness(0) invert(1); }
 .footer__line{
-  grid-column:1 / 8; grid-row:2;
-  color:#fff; font-size:var(--t-d2);
+  color:#fff; font-size:var(--t-d2); text-align:center;
 }
 .footer__disclaimer{
-  grid-column:8 / 13; grid-row:2;
-  align-self:end;
-  max-width:44ch; margin:0;
-  font-size:13px; line-height:1.7;
+  max-width:62ch; margin:clamp(10px,1.4vw,20px) 0 0;
+  font-size:13px; line-height:1.7; text-align:center;
   color:rgba(255,255,255,.56);
 }
 .footer__links{
-  grid-column:1 / 9; grid-row:3;
-  display:flex; flex-wrap:wrap; gap:10px 26px;
-  margin-top:clamp(38px,4vw,60px);
+  display:flex; flex-wrap:wrap; justify-content:center; gap:10px 26px;
+  margin-top:clamp(20px,2.4vw,34px);
   font-size:var(--t-mono); letter-spacing:.09em;
 }
 .footer__links a{
@@ -867,9 +894,7 @@ h3{ font-family:var(--fd); }
 }
 .footer__links a:hover{ color:#fff; background-size:100% 1px; }
 .footer__copy{
-  grid-column:9 / 13; grid-row:3;
-  align-self:end; justify-self:end;
-  margin-top:clamp(38px,4vw,60px);
+  margin-top:6px;
   font-size:11px; letter-spacing:.09em;
   color:rgba(255,255,255,.6);
 }
@@ -970,19 +995,6 @@ h3{ font-family:var(--fd); }
 
 /* ─────────────── 19. responsive ─────────────── */
 @media (max-width:1080px){
-  /* the heading / opening-paragraph pair stops being side by side */
-  .panel > *{ grid-column:1 / 13; }
-  .panel > .chip{ grid-column:1 / 13; grid-row:auto; }
-  .panel > .chip + *{ grid-column:1 / 13; grid-row:auto; }
-  .panel > .chip + * + .section-body{
-    grid-column:1 / 13; grid-row:auto;
-    align-self:auto; max-width:62ch;
-    margin-top:clamp(20px,2.2vw,28px);
-    padding-bottom:0;
-    font-size:var(--t-lead);
-  }
-  .hero__lead,.hero__tail{ grid-column:1 / 8; }
-  .hero__center,.hero__body{ grid-column:8 / 13; }
   .control{ grid-template-columns:1fr; }
   .ladder{ grid-template-columns:1fr; }
   .ladder__stage{ position:static; }
@@ -1019,22 +1031,18 @@ h3{ font-family:var(--fd); }
   }
   .nav.is-open .nav__links a{ padding:14px 12px; }
 
-  .hero{ background-image:none; padding-top:clamp(112px,18vh,150px); }
-  .hero__lead,.hero__center,.hero__tail,.hero__body,.hero__meta{
-    grid-column:1 / 13; grid-row:auto;
-  }
-  .hero__center{ padding-top:0; }
+  .hero{ padding-top:clamp(104px,16vh,140px); }
   .hero .display .line{ white-space:normal; }
+  .hero__cloud,.hero__sun{ display:none; }
+  .showcase__sticker{ width:clamp(40px,11vw,60px); }
+  .showcase__sticker--tl{ left:-2%; top:-4%; }
+  .showcase__sticker--tr{ right:-2%; top:-5%; }
   .versus,.proof,.metrics{ grid-template-columns:1fr; }
   .metrics li{ padding:0; }
   .scene.is-on{ grid-template-columns:1fr; }
   .scene__ui{ grid-column:auto; }
   .scene__side{ flex-direction:row; }
   .scene__side .acard{ flex:1; }
-  .footer{ grid-template-columns:1fr; }
-  .footer__badge,.footer__line,.footer__disclaimer,
-  .footer__links,.footer__copy{ grid-column:1; grid-row:auto; justify-self:start; }
-  .footer__disclaimer,.footer__links,.footer__copy{ margin-top:30px; }
   .chatbar{ right:auto; left:16px; width:calc(100vw - 32px); }
 }
 @media (max-width:620px){
@@ -1056,7 +1064,7 @@ h3{ font-family:var(--fd); }
   [data-reveal="mask"] .line{ clip-path:none !important; transform:none !important; }
   [data-reveal="stagger"] > *{ opacity:1 !important; transform:none !important; }
   .mark{ background-size:100% .14em; }
-  .nav{ transform:translate(-50%, var(--ann, 42px)); }
+  .nav{ transform:translate(-50%, 0); }
   .marquee__track{ animation:none; }
 }
 
@@ -1096,3 +1104,95 @@ h3{ font-family:var(--fd); }
 }
 .absui__panen,.absui__note{ border-top-color:rgba(12,15,18,.07); }
 .absui__field{ border-color:transparent; background:var(--wash); }
+
+/* ================================================================
+   22. v43 — BRAND LAYER + PLACEHOLDERS
+   The new branding is warmer and more illustrated than the page it
+   is landing on: pill controls, hand-drawn agent avatars, painted
+   stickers and one landscape. The neutral system underneath does
+   not change; this layer is the warmth.
+   ================================================================ */
+
+/* ── controls become pills, as in the brand comps ── */
+.btn{ border-radius:var(--r-pill); }
+.btn--lg{ padding:16px 28px; }
+.btn--sm{ padding:10px 18px; }
+.scenes__tab{ border-radius:var(--r-pill); }
+.nav__links a,.nav__signin{ border-radius:var(--r-pill); }
+
+/* ── image placeholders: obviously unfinished, still tidy ──
+      <figure class="ph ph--wide" data-ph="Product screen · 2560×1600">
+        <span class="ph__label">Product image</span>
+      </figure>                                                     */
+.ph{
+  position:relative;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:7px;
+  margin:0;
+  aspect-ratio:16 / 10;
+  border-radius:var(--r-card);
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--paper) 0%, transparent 60%),
+    var(--wash-2);
+  box-shadow:0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
+  overflow:hidden;
+}
+.ph--wide{ aspect-ratio:16 / 9; }
+.ph--square{ aspect-ratio:1 / 1; }
+.ph--band{ aspect-ratio:21 / 6; }
+.panel > .ph{ margin-top:clamp(36px, 4vw, 60px); }
+.ph__label{
+  font-family:var(--fm); font-weight:500;
+  font-size:var(--t-mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.ph::after{
+  content:attr(data-ph);
+  font-family:var(--fm); font-size:10px; letter-spacing:.08em;
+  color:var(--ink-mute); opacity:.7;
+}
+
+/* ── agent avatars ── */
+.avatar{
+  display:block; flex:none;
+  width:40px; height:40px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--wash-2);
+}
+.avatar--sm{ width:26px; height:26px; }
+.avatar--lg{ width:52px; height:52px; }
+
+.quote figcaption .avatar{ width:44px; height:44px; }
+.a2a__av{ overflow:hidden; padding:0; }
+.a2a__av img{ width:100%; height:100%; object-fit:cover; display:block; }
+.slackui__av img.avatar{ width:100%; height:100%; border-radius:8px; }
+
+/* ── the closing landscape, sitting on the bottom edge of the CTA ── */
+.panel--cta{ position:relative; overflow:hidden; }
+.cta__scene{
+  position:absolute; left:50%; bottom:-1px; z-index:0;
+  width:min(1600px, 116vw); max-width:none;
+  height:clamp(120px, 14vw, 210px);
+  transform:translateX(-50%);
+  object-fit:cover; object-position:50% 100%;
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 46%);
+          mask-image:linear-gradient(180deg, transparent 0%, #000 46%);
+  pointer-events:none; user-select:none;
+}
+.panel--cta > .chip,.panel--cta > .display,
+.panel--cta > .section-body,.panel--cta > .cta__btns{ position:relative; z-index:1; }
+.panel--cta{ padding-bottom:clamp(160px, 17vw, 260px); }
+
+/* ── section furniture that the centred rule needs ── */
+.scenes__tabs{ justify-content:center; }
+.metrics{ text-align:center; }
+.metrics li{ display:flex; flex-direction:column; align-items:center; }
+.a2a__label,.a2a__step,.a2a__back{ text-align:center; }
+.ladder__steps{ text-align:left; }
+
+@media (max-width:960px){
+  .ph{ aspect-ratio:4 / 3; }
+  .cta__scene{ width:170%; }
+  .panel--cta{ padding-bottom:clamp(120px, 34vw, 220px); }
+}

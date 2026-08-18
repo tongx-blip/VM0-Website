@@ -86,16 +86,6 @@
     track.style.setProperty('--dur', (m.dataset.speed || 46) + 's');
   });
 
-  /* ── 3b. the floating header rests exactly below the announce strip ── */
-  var ann = doc.querySelector('.announce');
-  function measure() {
-    if (!ann) return;
-    doc.documentElement.style.setProperty('--ann', ann.offsetHeight + 'px');
-  }
-  measure();
-  window.addEventListener('resize', measure, { passive: true });
-  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(measure).catch(function () {});
-
   /* ── 4. one scroll loop: header state + step ladder ─────────── */
   var nav = doc.getElementById('nav');
   var ladder = doc.getElementById('ladder');

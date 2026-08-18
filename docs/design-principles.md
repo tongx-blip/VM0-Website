@@ -105,16 +105,66 @@ One page-load sequence in the hero, five named entrance variants, and hover
 craft on every interactive element. Timing and easing come from tokens, never
 browser defaults. Full spec in `docs/motion.md`.
 
-## 9. Layout: fill the width on purpose
+## 9. One composition rule for the whole page
 
-- Reading column: grid columns 1–8.
-- The section's **opening paragraph sits in columns 9–12**, bottom-aligned to the
-  heading — that pairing is what uses the right half now that no rail does.
-  Below 1080px it stacks.
-- Figures, data rows and card grids span all twelve columns.
-- The reading edge never moves: every text block starts at the same x.
+Every section — the hero included — has the same shape:
 
-## 10. Accessibility is part of the design, not a pass afterwards
+```
+        eyebrow            ← uppercase, no number
+        HEADING            ← centred, ≤20ch
+        lede               ← centred, ≤54ch
+       [ action ]          ← centred
+┌─────────────────────────────────────────┐
+│  figure / cards / data, full width       │
+└─────────────────────────────────────────┘
+```
+
+Centred stack, then a full-width figure. Nothing else. Prose **inside** a card
+stays left-aligned; only the section's own voice is centred.
+
+**Why:** the previous layout let each section arrange itself — heading left,
+lede right, figure somewhere — and the page read as assembled rather than
+designed ("整个landing page都有点乱，因为文字的排版没有特别明显的规律"). One
+visible rule, repeated without exception, is what makes a long page feel
+composed. It is also the rule the reader can *see*, which is the point.
+
+The hero is not an exception: same stack, larger type, with the product image
+directly underneath it (Notion's shape). If a section seems to need a different
+arrangement, the content is wrong, not the rule.
+
+## 10. Illustration is the warmth layer
+
+The neutral system carries structure; the brand illustration carries warmth. Use
+it deliberately and sparingly:
+
+- **Agent avatars** (`assets/brand/avatar-*.png`) go where a *person or an agent*
+  is named — the parallel-work cards, the Slack transcript, the proof quotes.
+  Never as decoration for its own sake.
+- **Painted stickers** (`sticker-*.png`) pin around the hero product image, at
+  the corners, slightly rotated, never overlapping type.
+- **The landscape** (`scene-hills.png`) appears once, as the horizon on the
+  closing dark chapter, bottom-cropped and faded into the ground.
+- **Clouds and sun** sit behind the hero type at low opacity, and are hidden
+  below 960px.
+
+Controls are pills (`--r-pill`), as in the new brand comps. Everything else keeps
+the 12px surface radius.
+
+## 11. Placeholders are honest
+
+Where a real image is still missing, ship a marked placeholder rather than a
+stand-in stock image or a fabricated screenshot:
+
+```html
+<figure class="ph ph--wide" data-ph="Product screen · 2560×1600">
+  <span class="ph__label">Product image</span>
+</figure>
+```
+
+It states what belongs there and at what size, so the slot can be filled without
+guessing. `ph--wide` 16:9 · default 16:10 · `ph--band` 21:6 · `ph--square` 1:1.
+
+## 12. Accessibility is part of the design, not a pass afterwards
 
 Ship at **0 axe violations**. Concretely: `--ink-mute` (`#636A70`) is the lightest text
 allowed, and it is chosen to clear AA on every ground the page uses — paper,

@@ -45,14 +45,18 @@
     .map(([s, n]) => s + '×' + n).join('  ');
 })()
 
-/* ── 3. GRID CONTRACT — the reading column and the paired opening
-      paragraph. Above 1080px they sit side by side; below, they stack. ── */
+/* ── 3. COMPOSITION RULE — every section is a centred stack over a
+      full-width figure. Every heading must report "center". ── */
 (() => {
-  const h = document.querySelector('#outputs h2');
-  const p = document.querySelector('#outputs .section-body');
-  const r = el => { const b = el.getBoundingClientRect(); return Math.round(b.x) + '/' + Math.round(b.width); };
-  return 'viewport ' + innerWidth + ' | heading x/w ' + r(h) + ' | lede x/w ' + r(p) +
-         ' | scrollWidth ' + document.documentElement.scrollWidth;
+  const rows = [...document.querySelectorAll('.panel')].map(p => {
+    const h = p.querySelector(':scope > .display, :scope .stack .display');
+    const l = p.querySelector(':scope > .section-body');
+    const box = el => { const b = el.getBoundingClientRect(); return Math.round(b.x) + '/' + Math.round(b.width); };
+    return (p.id || 'panel') + ' → ' + (h ? getComputedStyle(h).textAlign + ' ' + box(h) : 'no heading') +
+           (l ? ' | lede ' + box(l) : '');
+  });
+  return 'viewport ' + innerWidth + ' | scrollWidth ' + document.documentElement.scrollWidth +
+         '\n' + rows.join('\n');
 })()
 
 /* ── 4. MOTION — the entrances fired, the counters landed on their exact

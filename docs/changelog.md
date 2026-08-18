@@ -5,6 +5,46 @@ failure modes are the useful part.
 
 ---
 
+## v43 — one composition rule, and the brand layer · 2026-08-18
+
+Feedback: delete the announce strip; the hero's information is scattered and
+messy — centre it, stack it, and put a product image underneath like Notion; the
+whole page reads messy because the type has no obvious rule; add placeholders
+where images belong; here are the new branding comps (reference only) plus agent
+avatars and textures to use.
+
+- **Announce strip deleted.** The header now sits at the top of the page and the
+  `--ann` measurement in `app.js` is gone with it.
+- **One composition rule everywhere** (`docs/design-principles.md` §9): centred
+  stack — eyebrow → heading → lede → action — then a full-width figure. The hero
+  is the same shape at a larger size. This replaces the heading-left /
+  lede-right pairing, which let every section arrange itself differently.
+- **Hero rebuilt**: centred stack, the rotating statement as a single line under
+  the headline, then the product image directly below with brand stickers pinned
+  at its corners.
+- **Three placeholders** for images that do not exist yet: the hero product
+  screen, a comparison graphic in Positioning, a customer-logo strip in Proof.
+  Each states its intended size in `data-ph`.
+- **Brand layer added** from the supplied assets: four agent avatars (parallel
+  work cards, Slack transcript, proof quotes), three painted stickers (hero),
+  clouds and sun behind the hero type, and the landscape as the horizon of the
+  closing dark chapter. Controls became pills, following the brand comps.
+- **Footer** follows the same centred rule instead of its own two-column layout.
+- **Accent frequency halved**: the mid-section statement is no longer coloured;
+  one accent phrase per section, in the heading.
+- Bugs found and fixed in the same pass:
+  - An absolutely-positioned child of a grid container resolves percentages
+    against its **grid area**, so the full-bleed landscape rendered 240px
+    narrower than the section. Use `vw` + `max-width:none`.
+  - `.ph` with `display:grid; place-items:center` pushed its label and spec to
+    opposite ends of the box; it needs to be a centred flex column.
+  - A stray `opacity:.9` on `.footnote` dropped it under AA on the wash ground.
+  - Base `text-align:left` on `.hero__body` survived the move into a centred
+    stack.
+
+Result: 0 axe violations, 0 page-level borders, strict paper/wash alternation,
+no horizontal scroll at 390–1920, reduced motion clean.
+
 ## v42 — no structural lines · 2026-08-17
 
 Feedback: *"你在网站上加的这些线条太乱了，可以把线条都去掉…另外这些带数字的小标签就非常

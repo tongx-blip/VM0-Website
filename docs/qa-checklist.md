@@ -25,8 +25,8 @@ Recurring causes, in the order they have actually bitten:
   *darkest* ground it lands on, not just on white. Check labels inside trays,
   pills, tabs and status chips.
 - **White text on an accent fill.** 3.4:1. Accent fills carry ink text.
-- **Landmarks without a unique name.** The announce strip and the composer are
-  both `<aside>`; each needs its own `aria-label`.
+- **Landmarks without a unique name.** Any `<aside>` needs its own `aria-label`
+  (the composer has one).
 - **New copy in a `--ink-mute` caption at <14px.**
 
 ## 2. No structural lines — must be **0**
@@ -64,6 +64,30 @@ getComputedStyle(t).backgroundColor + ' / ' + getComputedStyle(t).color
 
 Same for `.step.is-active`, `.slackui__ch.is-on`, `.state--*`.
 
+## 4b. The composition rule holds
+
+Every section is a centred stack over a full-width figure. Spot-check that no
+section has invented its own arrangement:
+
+```js
+[...document.querySelectorAll('.panel')].map(p => {
+  const h = p.querySelector(':scope > .display');
+  return p.id + ':' + (h ? getComputedStyle(h).textAlign : '—');
+})   // every one must be "center"
+```
+
+Also confirm the eyebrow, lede and any section-level aside are centred, and that
+card interiors are still left-aligned.
+
+## 4c. Brand layer and placeholders
+
+- Stickers must not overlap type — check the hero at 1920, 1440 and 390.
+- The landscape must bleed to both viewport edges (percentages resolve against
+  the grid area, so it needs `vw`): `document.querySelector('.cta__scene')
+  .getBoundingClientRect()` should start at a negative x.
+- Every `.ph` shows both its label and its `data-ph` spec, centred.
+- Decorative imagery carries `alt=""` and `aria-hidden="true"`.
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the
@@ -76,10 +100,9 @@ a hard-coded `font-size` has crept in. (For reference: the pre-rebuild page had
 Check `390 / 768 / 1024 / 1280 / 1920`:
 
 - `document.documentElement.scrollWidth === innerWidth` (no horizontal scroll)
-- the heading/lede pair is side by side above 1080px and stacked below —
-  `tools/audit.js` §3 prints both boxes
-- the floating header never overlaps the announce strip (`--ann` is measured, so
-  check after a font swap and at the width where the strip wraps)
+- the centred stack keeps its measures — heading ≤20ch, lede ≤54ch —
+  `tools/audit.js` §3 prints the boxes
+- the hero product image and its stickers stay inside the viewport
 - the nav collapses to logo · actions · burger under 960px
 
 ## 7. Motion

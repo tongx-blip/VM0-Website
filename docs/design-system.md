@@ -91,34 +91,45 @@ Measures: prose `62ch`, the paired lede `38ch`, notes `64ch`.
 `--r-card 12px` (surfaces) · `--r-btn 10px` (buttons, tabs) · `--r-pill 999px`
 (tags, the composer) · `--r-panel 0` (sections are full-bleed bands).
 
-## 5. Grid
+## 5. Grid and composition
 
-`.panel` is a 12-column grid, `column-gap: var(--gutter)`.
+`.panel` is a 12-column grid, `column-gap: var(--gutter)`. Everything spans all
+twelve columns; the section's own voice is centred inside that span.
 
 ```
-┌ 1 ─────────────────────── 8 ┐ ┌ 9 ──── 12 ┐
-│ eyebrow  (row 1)            │
-│ HEADING  (row 2)            │ │ opening   │  ← bottom-aligned to the heading
-│                             │ │ paragraph │
-├ 1 ───────────────────────────────────── 12 ┤
-│ figures · data rows · card grids            │
-└─────────────────────────────────────────────┘
+              eyebrow
+              HEADING          <=20ch
+              lede             <=54ch
+             [ action ]
++ 1 ------------------------------------- 12 +
+| figure . cards . data row, full width       |
++---------------------------------------------+
 ```
 
 ```css
-.panel > *                      { grid-column:1 / 9; }
-.panel > .chip                  { grid-column:1 / 9; grid-row:1; }
-.panel > .chip + *              { grid-column:1 / 9; grid-row:2; }
-.panel > .chip + * + .section-body { grid-column:9 / 13; grid-row:2; align-self:end; }
-.scenes,.marquee,.ladder,.metrics,.control,.versus,.proof,.a2a { grid-column:1 / 13; }
+.panel > *{ grid-column:1 / 13; }
+.panel > .chip,
+.panel > .display,
+.panel > .sentence,
+.panel > .section-body,
+.panel > .note,
+.panel > .footnote,
+.panel > .linkline,
+.panel > .cta__btns{ justify-self:center; text-align:center; width:100%; }
+.panel > .display     { max-width:20ch; }
+.panel > .sentence    { max-width:24ch; }
+.panel > .section-body{ max-width:54ch; margin-inline:auto; }
+.panel > .note,.panel > .footnote{ max-width:58ch; margin-inline:auto; }
 ```
 
-Below **1080px** the heading/lede pair stacks and everything spans 1–13. That
-reset is easy to forget: the lede's selector out-specifies `.panel > *`, so
-without it the paragraph stays trapped in a 110px column on mobile.
+The hero uses the same shape through `.stack` (a centred flex column) followed by
+`.showcase` — the product image with the stickers pinned around it.
 
-Breakpoints: `1080` (grid pairing), `960` (nav collapses to flex + burger, hero
-stacks, cards go single-column), `620` (scene sides stack, tighter steps).
+Card interiors stay left-aligned. Only the section header, the mid-section
+statement and section-level asides are centred.
+
+Breakpoints: `960` (nav collapses to flex + burger, hero texture hidden, cards
+single-column, placeholders go 4:3), `620` (scene sides stack, tighter steps).
 
 ## 6. Surfaces
 
@@ -145,19 +156,12 @@ like `#outputs .scenes__tab{background:var(--paper)}` out-specifies
 
 ## 7. Chrome
 
-**Announce strip** — in flow at the top, `--wash` ground, mono uppercase,
-min-height 42px, wraps on narrow screens.
-
 **Floating header** — `position:fixed`, centred, `width:min(100vw - 24px, 1320px)`,
 `grid-template-columns:1fr auto 1fr` → logo left, nav centred, actions right.
-Blurred translucent paper, 14px radius, no border, soft shadow.
-
-- At rest it sits below the announce strip: `transform:translate(-50%, var(--ann))`.
-- `--ann` is measured from the strip's real `offsetHeight` in `app.js`, so a
-  two-line strip on mobile cannot be overlapped.
-- Past `scrollY > 28` it gains `.is-stuck`: rises to the top edge, 56px tall,
-  more opaque.
-- Under 960px it becomes flex with `order`: logo · actions · burger.
+Blurred translucent paper, 14px radius, no border, soft shadow. Sits at the top
+of the page; past `scrollY > 28` it gains `.is-stuck` (56px tall, more opaque,
+deeper shadow). Under 960px it becomes flex with `order`: logo · actions ·
+burger. There is no announce strip — it was removed 2026-08-18.
 
 **Composer** (`.chatbar`) — fixed bottom-right pill, blurred paper, ink send
 button that warms to accent, hides itself when the footer is in view.
@@ -184,3 +188,45 @@ button that warms to accent, hides itself when the footer is in view.
 alternation is the only thing separating two sections. Getting it wrong is
 invisible in code review and obvious on the page — sections 2 and 3 were both
 paper for one build and simply ran together.
+
+## 9. Brand layer
+
+The new branding is warmer and more illustrated than the neutral system. It is a
+layer on top, not a replacement.
+
+| Asset | File | Where it is allowed |
+|---|---|---|
+| Agent avatars x4 | `assets/brand/avatar-1…4.png` | wherever a person or agent is named: the parallel-work cards, the Slack transcript, the proof quotes, hero stickers |
+| Painted stickers x3 | `sticker-idea` · `sticker-star` · `sticker-draft` | pinned at the corners of the hero product image, rotated 5–8° |
+| Landscape | `scene-hills.png` | once, as the horizon of the closing dark chapter |
+| Clouds · sun | `clouds.png` · `sun.png` | behind the hero type, low opacity, hidden under 960px |
+
+```css
+.avatar{ width:40px; height:40px; border-radius:50%; object-fit:cover; }
+.showcase__sticker{ position:absolute; width:clamp(52px,6.2vw,88px);
+                    filter:drop-shadow(0 12px 26px rgba(12,15,18,.18)); }
+.cta__scene{ position:absolute; bottom:-1px; height:clamp(120px,14vw,210px);
+             object-fit:cover; object-position:50% 100%;
+             mask-image:linear-gradient(180deg, transparent 0%, #000 46%); }
+```
+
+**Gotcha:** an absolutely-positioned child of a grid container resolves its
+percentages against its **grid area**, not the padding box — `width:116%` on
+`.cta__scene` came out narrower than the section. Use `vw` for full-bleed
+decoration, plus `max-width:none` to defeat the global `img{max-width:100%}`.
+
+Controls are pills: `.btn`, `.scenes__tab`, `.nav__links a` all use `--r-pill`,
+which is where the new brand comps are heading. Surfaces keep `--r-card`.
+
+## 10. Placeholders
+
+```html
+<figure class="ph ph--band" data-ph="Customer logos · 2400x686">
+  <span class="ph__label">Image placeholder</span>
+</figure>
+```
+
+`--wash-2` fill, soft shadow, centred mono label plus the `data-ph` spec.
+Shapes: default 16:10 · `--wide` 16:9 · `--band` 21:6 · `--square` 1:1. Three are
+live right now: the hero product screen, a comparison graphic in Positioning, and
+a customer-logo strip in Proof.

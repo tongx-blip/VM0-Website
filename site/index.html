@@ -13,12 +13,6 @@
 </head>
 <body>
 
-<!-- ─────────────── announce bar ─────────────── -->
-<aside class="announce" aria-label="Announcement">
-  <p>An AI employee for the whole team.</p>
-  <a href="#outputs">See what it ships <span aria-hidden="true">→</span></a>
-</aside>
-
 <!-- ─────────────── floating nav ─────────────── -->
 <header class="nav" id="nav">
   <a class="nav__logo" href="#top">
@@ -43,38 +37,47 @@
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section class="panel hero" id="hero">
-  <div class="hero__grid">
 
-    <div class="hero__lead" data-reveal="mask" data-in>
-      <h1 class="display">
-        <span class="line">More done.</span>
-        <span class="line">Same team.</span>
-      </h1>
-    </div>
+  <!-- brand texture, decorative only -->
+  <img class="hero__cloud hero__cloud--a" src="assets/brand/clouds.png" alt="" aria-hidden="true">
+  <img class="hero__sun" src="assets/brand/sun.png" alt="" aria-hidden="true">
 
-    <div class="hero__center reveal" data-in>
-      <p class="serif-lead">The <mark class="mark mark--pink">AI employee</mark> for the whole team.</p>
-      <div class="hero__cta">
-        <a class="btn btn--dark btn--lg" href="#cta">Get started for free</a>
-        <a class="btn btn--ghost btn--lg" href="#cta"><img src="assets/mockup/slack.svg" alt="">Add to Slack</a>
-      </div>
-    </div>
+  <div class="stack">
+    <p class="serif-lead reveal" data-in>The <mark class="mark mark--pink">AI employee</mark> for the whole team.</p>
 
-    <div class="hero__tail reveal" data-in>
-      <h2 class="display display--tail" id="rotator">
-        <span class="rot is-on"><span class="line">Give it a job,</span><span class="line">not a prompt.</span></span>
-        <span class="rot"><span class="line">Move the team</span><span class="line">forward.</span></span>
-        <span class="rot"><span class="line">Cut the cost,</span><span class="line">not the team.</span></span>
-        <span class="rot"><span class="line">Ten times more,</span><span class="line">half the grind.</span></span>
-        <span class="rot"><span class="line">What one knows,</span><span class="line">everyone runs.</span></span>
-      </h2>
-    </div>
+    <h1 class="display" data-reveal="mask" data-in>
+      <span class="line">More done.</span>
+      <span class="line">Same team.</span>
+    </h1>
+
+    <h2 class="display display--tail reveal" id="rotator" data-in>
+      <span class="rot is-on"><span class="line">Give it a job, not a prompt.</span></span>
+      <span class="rot"><span class="line">Move the team forward.</span></span>
+      <span class="rot"><span class="line">Cut the cost, not the team.</span></span>
+      <span class="rot"><span class="line">Ten times more, half the grind.</span></span>
+      <span class="rot"><span class="line">What one knows, everyone runs.</span></span>
+    </h2>
 
     <p class="hero__body reveal" data-in>
       Okou is an AI employee: give it a job, not a prompt. It connects to the tools you already
       use and does the work across marketing, sales, engineering, and operations, under your control.
     </p>
 
+    <div class="hero__cta reveal" data-in>
+      <a class="btn btn--dark btn--lg" href="#cta">Get started for free</a>
+      <a class="btn btn--ghost btn--lg" href="#cta"><img src="assets/mockup/slack.svg" alt="">Add to Slack</a>
+    </div>
+  </div>
+
+  <!-- the product shot: replace the placeholder with the real capture -->
+  <div class="showcase" data-reveal="scale">
+    <figure class="ph ph--wide" data-ph="Product screen · 2560×1600">
+      <span class="ph__label">Product image</span>
+    </figure>
+    <img class="showcase__sticker showcase__sticker--tl" src="assets/brand/sticker-idea.png" alt="" aria-hidden="true">
+    <img class="showcase__sticker showcase__sticker--tr" src="assets/brand/avatar-2.png" alt="" aria-hidden="true">
+    <img class="showcase__sticker showcase__sticker--bl" src="assets/brand/avatar-4.png" alt="" aria-hidden="true">
+    <img class="showcase__sticker showcase__sticker--br" src="assets/brand/sticker-star.png" alt="" aria-hidden="true">
   </div>
 </section>
 
@@ -317,7 +320,7 @@
           </div>
           <div class="wfstage" data-step="3"><div class="slackui reveal" id="slackui">
         <div class="slackui__side"><p class="slackui__team">vm0 <b>&#9662;</b></p><p class="slackui__grp">Channels</p><ul class="slackui__list"><li class="slackui__ch is-on" data-ch="content"><i>#</i>newsletter</li><li class="slackui__ch" data-ch="marketing"><i>#</i>marketing-and-community</li><li class="slackui__ch" data-ch="bugs"><i>#</i>bug-report</li><li class="slackui__ch" data-ch="customer"><i>#</i>customer</li></ul></div>
-        <div class="slackui__main"><div class="slackui__pane" data-ch="marketing"><div class="slackui__head"><b># marketing-and-community</b><span>12 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--m">M</span><div>
+        <div class="slackui__main"><div class="slackui__pane" data-ch="marketing"><div class="slackui__head"><b># marketing-and-community</b><span>12 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
               <p class="slackui__meta"><b>Ming</b><time>4:15 PM</time></p>
               <p class="slackui__text"><span class="slackui__mention">@Okou</span> what is the general CPC for AI product campaigns</p></div></div>
             <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
@@ -330,7 +333,7 @@
                 <li><b>Meta:</b> $1.50 to $5 for tech audiences.</li>
               </ul>
               <p class="slackui__reacts"><span class="slackui__react">&#128200; 3</span><span class="slackui__react">&#128077; 2</span></p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--m">M</span><div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
               <p class="slackui__meta"><b>Ming</b><time>4:18 PM</time></p>
               <p class="slackui__text">cc <span class="slackui__mention">@Ethan</span> <span class="slackui__mention">@Scarlett</span> &mdash; a click really is expensive.</p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #marketing-and-community<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="bugs"><div class="slackui__head"><b># bug-report</b><span>8 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
               <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:00 AM</time></p>
@@ -342,10 +345,10 @@
                 <p class="slackui__fields"><span><i>Total events</i>1,111</span><span><i>Root causes</i>8</span><span><i>Top group</i>42.6%</span></p>
               </div>
               <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open issues</button><button class="slackui__btn">View full triage</button><button class="slackui__btn">Snooze</button></p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--l">L</span><div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--l"><img class="avatar" src="assets/brand/avatar-3.png" alt=""></span><div>
               <p class="slackui__meta"><b>Linghan</b><time>9:06 AM</time></p>
               <p class="slackui__text">taking the webhook one &#9995;</p>
-              <p class="slackui__reacts"><span class="slackui__react">&#128064; 4</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #bug-report<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="customer"><div class="slackui__head"><b># customer</b><span>24 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--s">S</span><div>
+              <p class="slackui__reacts"><span class="slackui__react">&#128064; 4</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #bug-report<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="customer"><div class="slackui__head"><b># customer</b><span>24 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--s"><img class="avatar" src="assets/brand/avatar-4.png" alt=""></span><div>
               <p class="slackui__meta"><b>Scarlett</b><time>2:41 PM</time></p>
               <p class="slackui__text"><span class="slackui__mention">@Okou</span> customers keep asking for bulk export &mdash; write the spec and drop it here</p></div></div>
             <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
@@ -368,7 +371,7 @@
                 <span class="slackui__filetxt"><b>october-newsletter</b><i>Draft in Resend &middot; audience attached &middot; not sent</i></span>
               </div>
               <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open in Resend</button><button class="slackui__btn">Edit copy</button><button class="slackui__btn">Send now</button></p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--m">M</span><div>
+            <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
               <p class="slackui__meta"><b>Ming</b><time>9:14 AM</time></p>
               <p class="slackui__text">subject B reads better. sending after standup &mdash; nobody had to write it this month.</p>
               <p class="slackui__reacts"><span class="slackui__react">&#128200; 5</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #newsletter<span class="slackui__send">&#10148;</span></div></div></div>
@@ -415,7 +418,7 @@
 
     <span class="a2a__stem" aria-hidden="true"></span>
 
-    <p class="a2a__hub"><span class="a2a__av">O</span>Okou<em>core agent</em></p>
+    <p class="a2a__hub"><span class="a2a__av"><img src="assets/brand/avatar-1.png" alt=""></span>Okou<em>core agent</em></p>
 
     <span class="a2a__stem a2a__stem--long" aria-hidden="true"></span>
 
@@ -424,22 +427,22 @@
       <ul class="a2a__row">
       <li class="a2a__card">
         <p class="a2a__t">Landing page</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm">O</span>Okou</p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm"><img src="assets/brand/avatar-1.png" alt=""></span>Okou</p>
         <p class="a2a__st"><span class="a2a__dot is-run"></span>Building the page</p>
       </li>
       <li class="a2a__card">
         <p class="a2a__t">Launch newsletter</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub">W</span>Writer<em>sub-agent</em></p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub"><img src="assets/brand/avatar-3.png" alt=""></span>Writer<em>sub-agent</em></p>
         <p class="a2a__st"><span class="a2a__dot is-run"></span>Drafting the copy</p>
       </li>
       <li class="a2a__card">
         <p class="a2a__t">CRM refresh</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub">R</span>Revenue<em>sub-agent</em></p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub"><img src="assets/brand/avatar-4.png" alt=""></span>Revenue<em>sub-agent</em></p>
         <p class="a2a__st"><span class="a2a__dot is-done"></span>Done, 412 records</p>
       </li>
       <li class="a2a__card">
         <p class="a2a__t">Launch deck</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm">O</span>Okou</p>
+        <p class="a2a__by"><span class="a2a__av a2a__av--sm"><img src="assets/brand/avatar-1.png" alt=""></span>Okou</p>
         <p class="a2a__st"><span class="a2a__dot is-run"></span>Pulling the numbers</p>
       </li>
       </ul>
@@ -556,6 +559,10 @@
     <span class="line"><mark class="mark mark--tan">alternative</mark> you have tried.</span>
   </h2>
 
+  <figure class="ph ph--band reveal" data-ph="Comparison graphic · 2400×686">
+    <span class="ph__label">Image placeholder</span>
+  </figure>
+
   <div class="versus" data-reveal="stagger">
     <article class="vs">
       <p class="vs__label"><img src="assets/connectors/openai.svg" alt="" width="24" height="24">vs. Codex</p>
@@ -596,12 +603,17 @@
     Replace these sample cards with approved customers, quotes, and verified outcomes.
   </p>
 
+  <figure class="ph ph--band reveal" data-ph="Customer logos · 2400×686">
+    <span class="ph__label">Image placeholder</span>
+  </figure>
+
   <div class="proof" data-reveal="stagger">
     <figure class="quote">
       <p class="quote__tag">Sample proof</p>
       <blockquote>“A website, analytics, and a portfolio started with a few runs instead of a
         weeks-long project.”</blockquote>
       <figcaption>
+        <img class="avatar" src="assets/brand/avatar-1.png" alt="">
         <span><b>Solo founder</b><i>1-person team · Website + analytics setup</i></span>
       </figcaption>
     </figure>
@@ -610,6 +622,7 @@
       <blockquote>“The CRM stays current, and the next follow-up is ready before the conversation
         goes cold.”</blockquote>
       <figcaption>
+        <img class="avatar" src="assets/brand/avatar-3.png" alt="">
         <span><b>Growth operator</b><i>1,500+ prospects managed · Research + outreach</i></span>
       </figcaption>
     </figure>
@@ -618,6 +631,7 @@
       <blockquote>“Our small studio can take on more of the work without turning every project
         into another hire.”</blockquote>
       <figcaption>
+        <img class="avatar" src="assets/brand/avatar-4.png" alt="">
         <span><b>Creator &amp; course operator</b><i>85k+ followers · Content + operations</i></span>
       </figcaption>
     </figure>
@@ -626,6 +640,7 @@
 
 <!-- ═══════════════ CTA ═══════════════ -->
 <section class="panel panel--cta" id="cta">
+  <img class="cta__scene" src="assets/brand/scene-hills.png" alt="" aria-hidden="true">
   <p class="chip reveal">For high-agency teams</p>
   <h2 class="display display--center" data-reveal="mask">
     <span class="line">Make your team’s</span>
