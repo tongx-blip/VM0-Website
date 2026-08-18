@@ -6,6 +6,30 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-18 · tags, a softer horizon, and the token sweep
+
+- **The closing illustration** gets a long dissolve at its top edge
+  (`transparent → #000` over 40% of the band) instead of a hard cut, and the CTA
+  bottom padding dropped so the **buttons overlap the fade**.
+- **Section tags.** The hero's opening line is now one long pill with a 6px
+  accent dot, and every section eyebrow is that same object one size down. One
+  shape for every "what section am I in" label.
+- **Shared workflows was four text blocks before any visual.** The second
+  headline folded into the paragraph as its lead sentence (the pattern already
+  used in Outputs), and the third paragraph moved *below* the ladder as its
+  caption — it describes the figure, so it now sits with it. Two blocks before
+  the figure instead of four; no words changed, only their place.
+- **Design-system sweep.** Radius and elevation are now scales
+  (`--r-xs/btn/card/lg/xl/pill`, `--e-1/2/3/hover/tag/nav`), the five unnamed
+  fluid type steps got names (`--t-figure/unit/statement/tag/wordmark`), and raw
+  `#fff`/one-off shadows were replaced. The page now measures **16 distinct type
+  sizes, 6 radii and 9 text colours — every one of them a token.**
+- A rotating statement at `opacity:0` is still measured for contrast (axe blends
+  it with the ground) and would be announced twice; the inactive statement is
+  `visibility:hidden` now.
+- The accent cannot be used for text below ~24px on the grey ground (4.16:1), so
+  the tab-driven lead sentence is emphasised with ink and weight instead.
+
 ## 2026-08-18 · grey page, cards, a live header
 
 Feedback in one pass: the two logo rows sit frozen; make the logo wall its own

@@ -288,10 +288,10 @@
     var writeLead = function (key) {
       if (!line || !LINES[key]) return;
       var p = LINES[key];
-      var noun = p[3].replace(/\.$/, '');
+      // no accent here: at this size, on the grey ground, orange text
+      // cannot clear 4.5:1. The lead is emphasised by ink + weight.
       line.innerHTML = 'Okou ' + p[0] + ' ' + p[1] +
-        ' <span class="inline-ic">' + p[2] + '</span> ' +
-        '<mark class="mark is-lit">' + noun + '</mark>.';
+        ' <span class="inline-ic">' + p[2] + '</span> ' + p[3];
     };
     var show = function (key) {
       if (line) {

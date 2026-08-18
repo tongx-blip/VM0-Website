@@ -78,6 +78,11 @@ Where it appears — and nowhere else:
    orange drops white text under 4.5:1); the lift and the shadow carry it.
 3. **Live state inside the product figures** — a running task, an active step.
 
+**Where orange text is not allowed:** below ~24px on the grey page ground.
+`--accent-solid` is 4.16:1 on `--wash`, so small accent text there fails AA and
+darkening it far enough turns it rust. Emphasise with ink and weight instead —
+that is what the tab-driven lead sentence in Outputs does.
+
 ## 4. Cool neutrals, never warm
 
 Grounds are pure white and cool greys (`#F4F6F7`, `#EAEEF0`). Warm off-white,

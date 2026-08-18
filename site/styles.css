@@ -260,16 +260,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   color:var(--ink-soft);
   font-size:clamp(15px,1.2vw,17px);
 }
-
-.section-body--tight{
-  margin-top:clamp(58px,6vw,88px);
-  padding-top:26px;
-  border-top:1px solid var(--hairline);
-}
-
-
-/* the inline-avatar sentence, restyled as a heavy editorial statement */
-.sentence{
+/* the inline-avatar sentence{
   max-width:22ch;
   margin:clamp(44px,4.6vw,68px) 0 0;
   text-align:left;
@@ -2100,6 +2091,7 @@ a.acard .acard__txt i{ color:var(--ink); }
 :root{
   /* ground + ink: cool neutral, never warm */
   --paper:      #FFFFFF;
+  --paper-ink:  #FFFFFF;   /* text/marks that sit ON ink or on the accent */
   --wash:       #F4F6F7;
   --wash-2:     #EAEEF0;
   --ink:        #0C0F12;
@@ -2146,11 +2138,25 @@ a.acard .acard__txt i{ color:var(--ink); }
   --gutter: clamp(18px, 2vw, 30px);
   --nav-h:  64px;
 
-  /* radius: sharp structure, soft surfaces */
-  --r-panel: 0px;
-  --r-card:  12px;
-  --r-btn:   10px;
-  --r-pill:  999px;
+  /* radius scale — five steps, nothing in between */
+  --r-panel: 0px;                            /* full-bleed bands            */
+  --r-xs:    8px;                            /* inline chips inside a mock  */
+  --r-btn:   10px;                           /* small controls              */
+  --r-card:  12px;                           /* surfaces, tiles             */
+  --r-lg:    clamp(16px, 1.8vw, 26px);       /* a component-scale card      */
+  --r-xl:    clamp(20px, 2.2vw, 34px);       /* a section-scale card        */
+  --r-pill:  999px;                          /* anything pill-shaped        */
+
+  /* elevation — three steps. A surface is a fill plus one of these. */
+  --e-1: 0 1px 2px rgba(12,15,18,.03), 0 14px 30px -24px rgba(12,15,18,.2);
+  --e-2: 0 1px 2px rgba(12,15,18,.04), 0 22px 54px -40px rgba(12,15,18,.26);
+  --e-3: 0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
+  --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
+  --e-nav: 0 1px 2px rgba(12,15,18,.06), 0 10px 24px -14px rgba(12,15,18,.22),
+           0 30px 60px -40px rgba(12,15,18,.34);
+  --e-nav-stuck: 0 1px 2px rgba(12,15,18,.07), 0 12px 26px -14px rgba(12,15,18,.26),
+                 0 34px 66px -40px rgba(12,15,18,.42);
+  --e-tag: 0 1px 2px rgba(12,15,18,.04), 0 10px 22px -16px rgba(12,15,18,.3);
 
   /* type roles */
   --fd: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -2167,6 +2173,14 @@ a.acard .acard__txt i{ color:var(--ink); }
   --t-sm:   14.5px;
   --t-meta: 13px;
   --t-mono: 11px;
+
+  /* named fluid steps — these were in the CSS as one-off clamps, which is
+     what made the page look like it had 24 type sizes */
+  --t-figure:   clamp(34px, 4vw, 56px);      /* a metric numeral      */
+  --t-unit:     clamp(16px, 1.6vw, 22px);    /* its unit              */
+  --t-tag:      clamp(14px, 1.15vw, 17px);   /* the hero tag          */
+  --t-statement:clamp(19px, 1.95vw, 27px);   /* the rotating statement*/
+  --t-wordmark: 14px;                        /* the logo lockup       */
 
   /* motion: the premium-microinteraction standard, tokenised.
      Browser defaults (ease / linear) are not used anywhere. */
@@ -2197,7 +2211,7 @@ body{
 
 img{ filter:none; }
                  /* the wireframe greyscale is gone */
-::selection{ background:var(--accent); color:#fff; }
+::selection{ background:var(--accent); color:var(--paper-ink); }
 
 :focus-visible{
   outline:2px solid var(--accent);
@@ -2216,20 +2230,12 @@ img{ filter:none; }
 
 .step{ border-radius:0; }
 .state,.chatbar{ border-radius:var(--r-pill); }
-
-
 /* every page-level rule inherited from the component layer comes off:
-   this page separates with grounds, space and shadow, never with a line */
-.hero__body,.section-body,.section-body--tight,.note,.footnote,
-.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,
-.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,
-.metrics li,.scenes__tabs,.step,.nav,.panel,
-.perms__list,.chatbar,.a2a__ask{
+   this page separates with grounds,space and shadow,never with a line */
+.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,.metrics li,.scenes__tabs,.step,.nav,.panel,.perms__list,.chatbar,.a2a__ask{
   border:0;
 }
-
-.hero__body,.section-body--tight,.note,.quote figcaption,
-.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
+.hero__body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
 
 
 /* ─────────────── 3. type ─────────────── */
@@ -2252,17 +2258,6 @@ img{ filter:none; }
 .panel--cta .display{ font-size:clamp(33px, 4.6vw, 66px); }
 
 .display--tail{ text-align:left; }
-
-
-.sentence{
-  font-family:var(--fd);
-  font-weight:600;
-  font-size:var(--t-d2);
-  line-height:1.04;
-  letter-spacing:-.03em;
-  color:var(--ink);
-  max-width:26ch;
-}
 
 
 h3{ font-family:var(--fd); }
@@ -2296,11 +2291,6 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-lead);
   line-height:1.5;
   color:var(--ink-soft);
-}
-
-.section-body--tight{
-  margin-top:clamp(52px,5.5vw,80px);
-  font-size:var(--t-body);
 }
 
 .note{
@@ -2371,10 +2361,8 @@ h3{ font-family:var(--fd); }
   gap:16px;
   margin:0; padding:0 10px 0 20px;
   background:var(--paper);
-  border:0; border-radius:16px;
-  box-shadow:0 1px 2px rgba(12,15,18,.06),
-             0 10px 24px -14px rgba(12,15,18,.22),
-             0 30px 60px -40px rgba(12,15,18,.34);
+  border:0; border-radius:var(--r-lg);
+  box-shadow:var(--e-nav);
   transform:translate(-50%, 0);
   transition:transform var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
@@ -2386,9 +2374,7 @@ h3{ font-family:var(--fd); }
   height:56px;
   transform:translate(-50%, 0);
   background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.07),
-             0 12px 26px -14px rgba(12,15,18,.26),
-             0 34px 66px -40px rgba(12,15,18,.42);
+  box-shadow:var(--e-nav-stuck);
 }
 
 .nav__logo{
@@ -2407,7 +2393,7 @@ h3{ font-family:var(--fd); }
 
 .nav__logo span{
   font-family:var(--fd); font-weight:700;
-  font-size:14px; letter-spacing:.22em;
+  font-size:var(--t-wordmark); letter-spacing:.22em;
 }
 
 .nav__links{
@@ -2462,7 +2448,7 @@ h3{ font-family:var(--fd); }
 
 .btn--lg{ padding:15px 24px; }
 
-.btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:#fff; }
+.btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink); }
 
 .btn--dark:hover{
   /* the fill does not change on hover: any brighter orange drops white
@@ -2539,12 +2525,36 @@ h3{ font-family:var(--fd); }
 /* the rail head: an accent tick, the section number, and a spine
    that fills with how far into the section you have read */
 .chip{
-  display:block; width:auto;
-  margin:0 0 clamp(16px, 1.8vw, 24px);
-  border:0; padding:0; background:transparent;
+  display:inline-flex; align-items:center; gap:9px;
+  width:max-content;
+  margin:0 auto clamp(18px, 2vw, 26px);
+  padding:8px 16px 8px 13px;
+  border:0;
+  border-radius:var(--r-pill);
+  background:var(--paper);
+  box-shadow:var(--e-tag);
   font-size:var(--t-mono); letter-spacing:.16em;
-  color:var(--ink-mute);
+  color:var(--ink);
   line-height:1.4;
+}
+
+.chip::before{
+  content:"";
+  width:6px; height:6px; flex:none;
+  border-radius:50%;
+  background:var(--accent-solid);
+}
+
+/* on a white section the tag takes the inset ground instead of a shadow */
+#workflows > .chip,#control > .chip,#proof > .chip{
+  background:var(--wash-2);
+  box-shadow:none;
+}
+
+.panel--cta > .chip{
+  background:rgba(255,255,255,.1);
+  box-shadow:none;
+  color:var(--paper-ink);
 }
 
 
@@ -2575,8 +2585,8 @@ h3{ font-family:var(--fd); }
   padding-inline:max(20px, calc(var(--edge) - var(--card-gap)));
   padding-block:clamp(52px, 5.4vw, 84px);
   background:var(--paper);
-  border-radius:clamp(20px, 2.2vw, 34px);
-  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 26px 64px -44px rgba(12,15,18,.3);
+  border-radius:var(--r-xl);
+  box-shadow:var(--e-2);
   overflow:hidden;
 }
 
@@ -2609,9 +2619,25 @@ h3{ font-family:var(--fd); }
 .stack > *{ margin:0; }
 
 .hero .serif-lead{
-  max-width:34ch;
-  font-size:var(--t-lead);
-  color:var(--ink-soft);
+  display:inline-block;          /* inline-block, not flex: a flex row would
+                                    put a gap between every word */
+  max-width:none;
+  margin-inline:auto;
+  padding:9px 20px 9px 16px;
+  border-radius:var(--r-pill);
+  background:var(--paper);
+  box-shadow:0 1px 2px rgba(12,15,18,.05), 0 12px 26px -16px rgba(12,15,18,.32);
+  font-size:var(--t-tag);
+  font-weight:500; letter-spacing:-.005em;
+  color:var(--ink);
+}
+
+.hero .serif-lead::before{
+  content:"";
+  display:inline-block; vertical-align:.15em;
+  width:6px; height:6px; margin-right:10px;
+  border-radius:50%;
+  background:var(--accent-solid);
 }
 
 .hero .display{
@@ -2715,9 +2741,6 @@ h3{ font-family:var(--fd); }
 
 .hero > .stack,.hero > .showcase{ position:relative; z-index:1; }
 
-/* ─────────────── 9. the ledger sentence ─────────────── */
-.sentence{ margin:clamp(40px,4.4vw,64px) 0 0; }
-
 .inline-ic{ font-size:.68em; vertical-align:.08em; }
 
 
@@ -2747,7 +2770,7 @@ h3{ font-family:var(--fd); }
 .scenes__tab:hover{ color:var(--ink); transform:translateY(-1px); }
 
 .scenes__tab.is-on{
-  background:var(--accent-solid); border-color:var(--accent-solid); color:#fff;
+  background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink);
 }
 
 .scenes__stage{ position:relative; margin-top:clamp(24px,2.8vw,38px); }
@@ -2768,7 +2791,7 @@ h3{ font-family:var(--fd); }
   width:100%; height:auto;
   border:0;
   background:var(--paper);
-  box-shadow:0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
+  box-shadow:var(--e-3);
 }
 
 .scene__side{
@@ -2793,7 +2816,7 @@ h3{ font-family:var(--fd); }
 .acard__ic{
   width:40px; height:40px; flex:none;
   display:grid; place-items:center;
-  border:0; border-radius:10px;
+  border:0; border-radius:var(--r-btn);
   background:var(--wash);
 }
 
@@ -2880,12 +2903,18 @@ h3{ font-family:var(--fd); }
 
 .reach__line{
   grid-area:1 / 1;
+  /* the statement that is not showing is hidden outright: at opacity 0 it
+     is still measured for contrast (transparent text over the ground) and
+     it would be announced twice */
+  visibility:hidden;
   font-family:var(--fd); font-weight:600;
-  font-size:clamp(19px, 1.95vw, 27px);
+  font-size:var(--t-statement);
   line-height:1.34; letter-spacing:-.018em;
   color:var(--ink);
   pointer-events:none;
 }
+
+.reach__line.is-on,.reach__line.is-out{ visibility:visible; }
 
 .reach__line.is-on{ pointer-events:auto; }
 
@@ -2937,7 +2966,7 @@ h3{ font-family:var(--fd); }
   height:clamp(46px, 4.2vw, 58px);
   flex:none;
   display:grid; place-items:center;
-  border-radius:clamp(12px, 1.1vw, 16px);
+  border-radius:var(--r-card);
   background:var(--wash-2);
 }
 
@@ -3018,14 +3047,14 @@ h3{ font-family:var(--fd); }
 .feat,.vs,.quote{
   border:0;
   background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 14px 30px -24px rgba(12,15,18,.2);
+  box-shadow:var(--e-1);
   transition:transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
 
 .feat:hover,.vs:hover,.quote:hover{
   transform:translateY(-3px);
-  box-shadow:0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
+  box-shadow:var(--e-hover);
 }
 
 .feat{
@@ -3094,7 +3123,7 @@ h3{ font-family:var(--fd); }
 
 .quote figcaption i{
   font-family:var(--fm); font-style:normal;
-  font-size:10px; letter-spacing:.015em; text-transform:none;
+  font-size:var(--t-mono); letter-spacing:.015em; text-transform:none;
   color:var(--ink-mute);
 }
 
@@ -3125,7 +3154,7 @@ h3{ font-family:var(--fd); }
 .a2a__hub{
   align-self:center;
   border:0; border-radius:var(--r-btn);
-  background:var(--ink); color:#fff;
+  background:var(--ink); color:var(--paper-ink);
   font-family:var(--fb); font-size:15.5px; font-weight:600;
 }
 
@@ -3190,7 +3219,7 @@ h3{ font-family:var(--fd); }
 
 .panel--cta .chip{ color:rgba(255,255,255,.6); }
 
-.panel--cta .display{ color:#fff; }
+.panel--cta .display{ color:var(--paper-ink); }
 
 .panel--cta .mark{ --hl:var(--accent); }
 
@@ -3198,16 +3227,16 @@ h3{ font-family:var(--fd); }
 
 .cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
 
-.panel--cta .btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:#fff; }
+.panel--cta .btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink); }
 
 .panel--cta .btn--dark:hover{
   transform:translateY(-1px);
   box-shadow:0 14px 30px -12px rgba(214,67,0,.8);
 }
 
-.panel--cta .btn--ghost{ background:rgba(255,255,255,.1); color:#fff; }
+.panel--cta .btn--ghost{ background:rgba(255,255,255,.1); color:var(--paper-ink); }
 
-.panel--cta .btn--ghost:hover{ background:rgba(255,255,255,.18); color:#fff; }
+.panel--cta .btn--ghost:hover{ background:rgba(255,255,255,.18); color:var(--paper-ink); }
 
 .panel--cta .btn--ghost img{ filter:brightness(0) invert(1); }
 
@@ -3226,14 +3255,14 @@ h3{ font-family:var(--fd); }
 .footer__badge{
   width:44px; height:44px; margin:0;
   display:grid; place-items:center;
-  border:0; border-radius:10px;
+  border:0; border-radius:var(--r-btn);
   background:rgba(255,255,255,.1);
 }
 
 .footer__badge img{ width:19px; filter:brightness(0) invert(1); }
 
 .footer__line{
-  color:#fff; font-size:var(--t-d2); text-align:center;
+  color:var(--paper-ink); font-size:var(--t-d2); text-align:center;
 }
 
 .footer__disclaimer{
@@ -3254,7 +3283,7 @@ h3{ font-family:var(--fd); }
   transition:background-size var(--t-state) var(--e-out), color var(--t-hover) var(--e-snap);
 }
 
-.footer__links a:hover{ color:#fff; background-size:100% 1px; }
+.footer__links a:hover{ color:var(--paper-ink); background-size:100% 1px; }
 
 .footer__copy{
   margin-top:6px;
@@ -3296,8 +3325,8 @@ h3{ font-family:var(--fd); }
   width:46px; height:46px; flex:none;
   display:grid; place-items:center;
   border:0; border-radius:0;
-  background:var(--accent-solid); color:#fff;
-  font-size:15px; cursor:pointer;
+  background:var(--accent-solid); color:var(--paper-ink);
+  font-size:var(--t-sm); cursor:pointer;
   transition:background var(--t-hover) var(--e-snap);
 }
 
@@ -3403,7 +3432,7 @@ h3{ font-family:var(--fd); }
   .nav__burger{
     display:grid; gap:5px;
     background:var(--wash-2); border:0;
-    border-radius:9px; padding:11px 10px; cursor:pointer;
+    border-radius:var(--r-btn); padding:11px 10px; cursor:pointer;
   }
 
   .nav__burger span{ display:block; width:16px; height:1.5px; background:var(--ink); }
@@ -3416,7 +3445,7 @@ h3{ font-family:var(--fd); }
     margin:0; padding:8px;
     background:rgba(255,255,255,.97);
     -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
-    border:0; border-radius:14px;
+    border:0; border-radius:var(--r-lg);
     box-shadow:0 24px 50px -30px rgba(12,15,18,.42);
   }
 
@@ -3476,7 +3505,7 @@ h3{ font-family:var(--fd); }
      both statements are shown, stacked */
   .rail__track{ animation:none !important; }
   .reach__stage{ display:block; min-height:0; }
-  .reach__line{ position:static; }
+  .reach__line{ position:static; visibility:visible; }
   .reach__line + .reach__line{ margin-top:.7em; }
   .reach__line .w{ opacity:1 !important; transform:none !important; }
 }
@@ -3487,7 +3516,7 @@ h3{ font-family:var(--fd); }
    stay: there they are the product's own UI,not our page furniture. */
 .perms,.slackui,.absui,.flowui{ border:0; }
 
-.slackui{ box-shadow:0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3); }
+.slackui{ box-shadow:var(--e-3); }
 
 .absui{ box-shadow:0 2px 8px rgba(12,15,18,.05), 0 30px 58px -32px rgba(12,15,18,.28); }
 
@@ -3570,7 +3599,7 @@ h3{ font-family:var(--fd); }
   background:
     radial-gradient(120% 90% at 50% 0%, var(--paper) 0%, transparent 60%),
     var(--wash-2);
-  box-shadow:0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
+  box-shadow:var(--e-3);
   overflow:hidden;
 }
 
@@ -3609,7 +3638,7 @@ h3{ font-family:var(--fd); }
 
 .a2a__av img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-.slackui__av img.avatar{ width:100%; height:100%; border-radius:8px; }
+.slackui__av img.avatar{ width:100%; height:100%; border-radius:var(--r-xs); }
 
 
 /* ── the closing landscape, sitting on the bottom edge of the CTA ── */
@@ -3621,14 +3650,22 @@ h3{ font-family:var(--fd); }
   height:clamp(230px, 34vw, 560px);
   transform:translateX(-50%);
   object-fit:cover; object-position:50% 100%;
+  /* a long, gentle dissolve so the top edge melts into the dark instead
+     of cutting — the illustration itself stays fully visible */
+  -webkit-mask-image:linear-gradient(180deg,
+      transparent 0%, rgba(0,0,0,.12) 8%, rgba(0,0,0,.45) 18%,
+      rgba(0,0,0,.82) 28%, #000 40%);
+          mask-image:linear-gradient(180deg,
+      transparent 0%, rgba(0,0,0,.12) 8%, rgba(0,0,0,.45) 18%,
+      rgba(0,0,0,.82) 28%, #000 40%);
   pointer-events:none; user-select:none;
 }
 
 .panel--cta > .chip,.panel--cta > .display,
 .panel--cta > .section-body,.panel--cta > .cta__btns{ position:relative; z-index:1; }
 
-.panel--cta{ padding-bottom:clamp(250px, 36vw, 580px); }
-
+.panel--cta{ padding-bottom:clamp(196px, 26vw, 430px); }
+  /* the actions sit over the fade */
 
 /* ── section furniture that the centred rule needs ── */
 .scenes__tabs{ justify-content:center; }
@@ -3660,21 +3697,29 @@ h3{ font-family:var(--fd); }
 /* the per-tab claim is the first sentence of the paragraph, not a
    second headline. It carries more weight than the sentence after it,
    and it swaps when the tab does. */
-.scene-lead{
+/* a section's claim, folded into the first sentence of its paragraph
+   instead of standing as a second headline */
+.lead-in{
+  display:inline-block;
   color:var(--ink);
   font-weight:600;
-}
-
-.scene-lead .inline-ic{ font-size:.85em; }
-
-.scene-lead.is-swapping{
-  opacity:0;
-  transform:translateY(-.22em);
-}
-
-.scene-lead{
-  display:inline-block;
   transition:opacity 240ms var(--e-out), transform 240ms var(--e-out);
+}
+
+.lead-in .inline-ic{ font-size:.85em; }
+
+.lead-in.is-swapping{ opacity:0; transform:translateY(-.22em); }
+
+
+/* a paragraph that explains the figure above it, not more preamble */
+.figcap{
+  grid-column:1 / 13;
+  justify-self:center;
+  max-width:62ch;
+  margin:clamp(22px, 2.6vw, 34px) auto 0;
+  text-align:center;
+  font-size:var(--t-sm); line-height:1.6;
+  color:var(--ink-mute);
 }
 
 #sceneCopy{ min-height:4.4em; }
@@ -3688,8 +3733,8 @@ h3{ font-family:var(--fd); }
   margin-top:clamp(44px, 5vw, 72px);
   padding:clamp(30px, 3.4vw, 52px) clamp(20px, 3vw, 48px) clamp(22px, 2.4vw, 34px);
   background:var(--paper);
-  border-radius:clamp(16px, 1.8vw, 26px);
-  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 22px 54px -40px rgba(12,15,18,.26);
+  border-radius:var(--r-lg);
+  box-shadow:var(--e-2);
 }
 
 .figures .metrics{
@@ -3711,14 +3756,14 @@ h3{ font-family:var(--fd); }
 
 .metrics b i{
   font-style:normal; font-weight:700;
-  font-size:clamp(34px, 4vw, 56px);
+  font-size:var(--t-figure);
   line-height:1; letter-spacing:-.045em;
   font-variant-numeric:tabular-nums;
 }
 
 .metrics b em{
   font-style:normal; font-weight:600;
-  font-size:clamp(16px, 1.6vw, 22px);
+  font-size:var(--t-unit);
   line-height:1.1; letter-spacing:-.02em;
   color:var(--ink-mute);
 }
@@ -3735,7 +3780,7 @@ h3{ font-family:var(--fd); }
   margin:clamp(20px, 2.4vw, 32px) auto 0;
   max-width:52ch;
   text-align:center;
-  font-size:10.5px; letter-spacing:.1em;
+  font-size:var(--t-mono); letter-spacing:.1em;
   color:var(--ink-mute);
 }
 

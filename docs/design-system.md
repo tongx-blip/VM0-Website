@@ -75,6 +75,22 @@ Scale — nine steps, no ad-hoc sizes:
 | `--t-meta` | `13px` | attributions, disclaimers |
 | `--t-mono` | `11px` | every utility label and control |
 
+Five more fluid steps carry the components that need their own size. They are
+named for the same reason the others are — the page measured 24 distinct sizes
+while these lived as one-off `clamp()`s inside rules:
+
+| Token | Value | Used by |
+|---|---|---|
+| `--t-figure` | `clamp(34px, 4vw, 56px)` | a metric numeral |
+| `--t-unit` | `clamp(16px, 1.6vw, 22px)` | its unit (`hrs`, `+`) |
+| `--t-statement` | `clamp(19px, 1.95vw, 27px)` | the rotating statement |
+| `--t-tag` | `clamp(14px, 1.15vw, 17px)` | the hero tag |
+| `--t-wordmark` | `14px` | the logo lockup |
+
+**The whole page measures 16 distinct sizes, and every one is a token.** If a new
+rule needs a size that is not on this list, the rule is wrong — or the step
+belongs here, named.
+
 Section headings step down from the hero: `clamp(33px, 4.6vw, 66px)`. At 96px a
 two-line heading wrapped to four lines inside the reading column.
 
@@ -89,10 +105,31 @@ two-line heading wrapped to four lines inside the reading column.
 Section padding: `clamp(78px, 7.6vw, 124px)` block, `--edge` inline.
 Measures: prose `62ch`, the paired lede `38ch`, notes `64ch`.
 
-## 4. Radius
+## 4. Radius and elevation
 
-`--r-card 12px` (surfaces) · `--r-btn 10px` (buttons, tabs) · `--r-pill 999px`
-(tags, the composer) · `--r-panel 0` (sections are full-bleed bands).
+Five radius steps, nothing in between:
+
+| Token | Value | Use |
+|---|---|---|
+| `--r-panel` | `0` | full-bleed section bands |
+| `--r-xs` | `8px` | small chips inside a product mock |
+| `--r-btn` | `10px` | small controls, logo tiles |
+| `--r-card` | `12px` | surfaces, cards, tiles |
+| `--r-lg` | `clamp(16px, 1.8vw, 26px)` | a component-scale card (`.figures`) |
+| `--r-xl` | `clamp(20px, 2.2vw, 34px)` | a section-scale card (`.panel--card`) |
+| `--r-pill` | `999px` | buttons, tags, tabs, the composer |
+
+Elevation is a scale too — a surface is a fill plus **one** of these, never a
+hand-written shadow:
+
+```css
+--e-1        /* a card at rest                     */
+--e-hover    /* the same card, lifted              */
+--e-2        /* a section-scale card               */
+--e-3        /* the largest objects: product shots */
+--e-tag      /* the section tag                    */
+--e-nav / --e-nav-stuck
+```
 
 ## 5. Grid and composition
 
@@ -185,6 +222,23 @@ holds the first copy in place. The primary button answers with a press
 
 **Composer** (`.chatbar`) — fixed bottom-right pill, blurred paper, ink send
 button that warms to accent, hides itself when the footer is in view.
+
+## 6b. Section tags
+
+Every "what section am I in" label is the same object: a pill with a 6px accent
+dot, mono uppercase, `letter-spacing:.16em`. The hero's opening line is the same
+tag one size up (`--t-tag`), which is why the top of the page and every section
+head read as one system.
+
+```css
+.chip{ display:inline-flex; gap:9px; padding:8px 16px 8px 13px;
+       border-radius:var(--r-pill); background:var(--paper); box-shadow:var(--e-tag); }
+.chip::before{ content:""; width:6px; height:6px; border-radius:50%;
+               background:var(--accent-solid); }
+```
+
+On a white section the tag takes `--wash-2` and drops the shadow; on the ink
+chapter it takes `rgba(255,255,255,.1)`.
 
 ## 7b. Cards on a grey page
 
