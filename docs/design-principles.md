@@ -54,20 +54,29 @@ nothing. Numbering is only earned when the content genuinely **is** a sequence �
 the four workflow steps (Run → Save → Hand over → Automate) keep their numbers
 because the order is the point; a list of sections does not.
 
-## 3. One accent, spent on meaning
+## 3. One accent, in two weights
 
-`--accent: #ED4E01` (VM0 orange) is the only hue on the page besides ink and the
-neutral grounds. It appears in exactly three roles:
+Orange is the only hue on the page besides ink and the neutral grounds. It is
+declared twice because one value cannot do both jobs:
 
-1. **Emphasis** — the phrase inside `<mark class="mark">` warms from ink into the
-   accent as it arrives. Display sizes use `--accent`; text sizes use
-   `--accent-ink` (`#B93C00`) so small type still clears AA.
-2. **The primary action** — the ink button warms to accent on hover; on the dark
-   closing chapter the primary button *is* accent.
+| Token | Value | Job |
+|---|---|---|
+| `--accent` | `#ED4E01` | the brand orange — display-size emphasis, decoration |
+| `--accent-solid` | `#D64300` | **4.5:1 both ways**: carries white text as a fill *and* stays legible as text on paper |
+
+`#D64300` is the most saturated orange that clears AA in both directions, which
+is why every button fill, every control and every accent phrase below display
+size uses it. Going brighter breaks white-on-orange (`#ED4E01` is 3.7:1); going
+darker turns rust and stops reading as the brand.
+
+Where it appears — and nowhere else:
+
+1. **Emphasis** — the phrase inside `<mark>` warms from ink to orange as it
+   arrives, one phrase per section, and it goes **bold** at text sizes.
+2. **Every primary control** — buttons, the active tab, the composer's send key.
+   All orange, all **white text**. Hover does not change the fill (any brighter
+   orange drops white text under 4.5:1); the lift and the shadow carry it.
 3. **Live state inside the product figures** — a running task, an active step.
-
-**Hard rule:** an accent fill always carries **ink** text. White on `#ED4E01` is
-3.4:1 and fails.
 
 ## 4. Cool neutrals, never warm
 

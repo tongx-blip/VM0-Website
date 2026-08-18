@@ -88,6 +88,27 @@ card interiors are still left-aligned.
 - Every `.ph` shows both its label and its `data-ph` spec, centred.
 - Decorative imagery carries `alt=""` and `aria-hidden="true"`.
 
+## 4d. Controls and the accent
+
+- Every button, the active tab and the composer key are `--accent-solid` with
+  **white** text. No black controls remain outside the product mocks.
+- Nav links, sign-in and the small button all measure 38px tall.
+- The hero's rotating statement is **one line at every width** — force each
+  phrase and check `scrollWidth === innerWidth` at 390:
+
+```js
+[...document.querySelectorAll('#rotator .rot')].forEach(r => r.classList.remove('is-on'));
+document.querySelectorAll('#rotator .rot')[3].classList.add('is-on');   // the longest
+```
+
+- The capability wall has no hover affordance, and the cycling band never shows
+  a duplicate name:
+
+```js
+const c = [...document.querySelectorAll('#wallConnectors .cap')].map(x => x.textContent.trim());
+c.length === new Set(c).size   // must be true, at any moment
+```
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the

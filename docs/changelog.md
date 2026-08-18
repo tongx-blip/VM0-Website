@@ -5,6 +5,46 @@ failure modes are the useful part.
 
 ---
 
+## v44 — orange controls, a one-line hero statement, and the capability wall · 2026-08-18
+
+Feedback: the hero's middle line must never wrap; the hero paragraph is too big;
+don't hide the illustration; that orange is wrong; make every black button orange
+with white text; the header hover pill is a different size from the button;
+delete "Explore the workflow behind this"; and the connectors/models region is
+messy — two different categories reduced to two scrolling rails, with hover
+states on things that don't link anywhere. Redesign it.
+
+- **The accent is now two tokens.** `--accent-solid #D64300` is the most vivid
+  orange that clears 4.5:1 *both* as a fill under white text and as text on
+  paper. It replaces the rust `#B93C00` that read wrong, and it lets every
+  control be orange with white text. `--accent #ED4E01` stays for display-size
+  emphasis and decoration. Hover no longer changes the fill — a brighter orange
+  drops white text under AA — so buttons lift and shadow instead.
+- **Hero**: the rotating statement is `white-space:nowrap` with its own clamp, so
+  it is one line at every width down to 390px; the paragraph steps down from
+  `--t-lead` to 16.5px.
+- **Header**: nav links, sign-in and the small button share `height:38px` and
+  pill radius, so the hover pill and the button are the same object.
+- **Closing illustration** is shown, not faded: the mask came off, the band grew
+  to `clamp(230px, 34vw, 560px)` and it bleeds the full viewport width.
+- **"Explore the workflow behind this" removed.**
+- **The connectors/models region was rebuilt as a capability wall** — three
+  labelled families (Models · Built-in APIs · Connectors) of chips, replacing the
+  two marquees. No hover affordance, because nothing there is a link. Instead the
+  connectors band **cycles**: every 2.4s one chip flips to another connector from
+  a pool of real assets, which is what "1,000+" actually looks like. Chips arrive
+  family by family, 34ms apart.
+- Bug caught in the same pass: the first cycling build could show the same brand
+  twice (Gmail/Notion existed in both the grid and the pool) — the swap now
+  checks what is on screen first.
+
+**New copy introduced** (flagged for review): the three wall labels — "Models",
+"Built-in APIs", "Connectors" — and the connector names that rotate in (Google
+Drive, Google Analytics, Meta Ads, Zapier, Perplexity, Manus, OpenClaw).
+
+Result: 0 axe violations, 0 page-level borders, one line at every breakpoint,
+no horizontal scroll 390–1920.
+
 ## v43 — one composition rule, and the brand layer · 2026-08-18
 
 Feedback: delete the announce strip; the hero's information is scattered and

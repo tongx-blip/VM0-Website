@@ -27,11 +27,14 @@ page-level rules with them** (see design-principles §1).
 
 | Token | Value | Use |
 |---|---|---|
-| `--accent` | `#ED4E01` | emphasis at display sizes, primary fill, live state |
-| `--accent-ink` | `#B93C00` | the same accent as small text (5.9:1) |
+| `--accent` | `#ED4E01` | brand orange: display-size emphasis, decoration |
+| `--accent-solid` | `#D64300` | every interactive fill, and accent text below display size |
+| `--accent-ink` | `#D64300` | alias of `--accent-solid`, kept for older rules |
 | `--accent-2` | `#FFF1EA` | the faintest accent wash (rarely used) |
 
-An accent fill carries **ink** text, never white.
+`--accent-solid` is 4.50:1 against **both** white text and a white ground — the
+most vivid orange that does both. Accent fills carry **white** text; accent
+phrases at text sizes are set bold.
 
 ### Status
 
@@ -218,6 +221,10 @@ decoration, plus `max-width:none` to defeat the global `img{max-width:100%}`.
 Controls are pills: `.btn`, `.scenes__tab`, `.nav__links a` all use `--r-pill`,
 which is where the new brand comps are heading. Surfaces keep `--r-card`.
 
+**One control height.** Nav links, the sign-in link and the small button are all
+`height:38px` with pill radius, so the hover pill and the button are the same
+object. Any new control in the header inherits that height.
+
 ## 10. Placeholders
 
 ```html
@@ -230,3 +237,33 @@ which is where the new brand comps are heading. Surfaces keep `--r-card`.
 Shapes: default 16:10 · `--wide` 16:9 · `--band` 21:6 · `--square` 1:1. Three are
 live right now: the hero product screen, a comparison graphic in Positioning, and
 a customer-logo strip in Proof.
+
+## 11. The capability wall
+
+The models / built-in APIs / connectors region (`#outputs`) is three labelled
+bands of chips, not a marquee:
+
+```html
+<div class="wall">
+  <div class="wall__group">
+    <p class="wall__label">Models</p>
+    <ul class="wall__grid" data-reveal="stagger"> <li class="cap">…</li> </ul>
+  </div>
+  … Built-in APIs … Connectors (id="wallConnectors") …
+</div>
+```
+
+Rules that make it work:
+
+- **No hover affordance.** These chips are not links and nothing happens when
+  they are clicked, so they get no lift, no colour change, no cursor.
+- **The connectors band cycles instead.** Every 2.4s one chip flips
+  (`rotateX(78deg)` + fade, 260ms) to a connector from a pool held in `app.js`,
+  and the outgoing one returns to the pool. A guard keeps any name from
+  appearing twice. Reduced motion switches it off entirely.
+- **Chips arrive family by family**, 34ms apart, so the three groups read as
+  three groups.
+- Grids cap at `56rem` (`--wide`: `72rem`) so the rows stay scannable.
+
+The pool lives in `site/app.js` and points at real files in
+`assets/connectors/`. Adding a connector = one entry, no markup change.

@@ -78,13 +78,49 @@
     requestAnimationFrame(frame);
   }
 
-  /* ── 3. marquee: duplicate the track once, set its duration ─── */
-  doc.querySelectorAll('.marquee').forEach(function (m) {
-    var track = m.querySelector('.marquee__track');
-    if (!track) return;
-    track.innerHTML += track.innerHTML;
-    track.style.setProperty('--dur', (m.dataset.speed || 46) + 's');
-  });
+  /* ── 3. the connectors band cycles through the catalogue ──────
+     One chip at a time flips to a connector that was not on screen.
+     No hover, no scroll, no link: the point is only that there are far
+     more of these than fit, which is what the copy claims. */
+  var POOL = [
+    ['google-drive_marketing', 'Google Drive'],
+    ['google-analytics', 'Google Analytics'],
+    ['meta-ads', 'Meta Ads'],
+    ['zapier', 'Zapier'],
+    ['perplexity', 'Perplexity'],
+    ['manus', 'Manus'],
+    ['openclaw', 'OpenClaw']
+  ];
+  var band = doc.getElementById('wallConnectors');
+  if (band && !reduce) {
+    var chips = [].slice.call(band.querySelectorAll('.cap'));
+    var pool = POOL.slice();
+    var last = -1;
+    window.setInterval(function () {
+      if (document.hidden || !chips.length || !pool.length) return;
+      var i = Math.floor(Math.random() * chips.length);
+      if (i === last) i = (i + 1) % chips.length;
+      last = i;
+      var chip = chips[i];
+      var img = chip.querySelector('img');
+      if (!img) return;
+      var outgoing = [img.getAttribute('src').replace(/.*\/|\.svg$/g, ''),
+                      chip.textContent.trim()];
+      // never show the same connector twice
+      var onScreen = chips.map(function (c) { return c.textContent.trim(); });
+      var free = pool.map(function (x, n) { return n; })
+                     .filter(function (n) { return onScreen.indexOf(pool[n][1]) === -1; });
+      if (!free.length) return;
+      var incoming = pool.splice(free[Math.floor(Math.random() * free.length)], 1)[0];
+      chip.classList.add('is-out');
+      window.setTimeout(function () {
+        img.setAttribute('src', 'assets/connectors/' + incoming[0] + '.svg');
+        chip.lastChild.nodeValue = incoming[1];
+        pool.push(outgoing);
+        chip.classList.remove('is-out');
+      }, 260);
+    }, 2400);
+  }
 
   /* ── 4. one scroll loop: header state + step ladder ─────────── */
   var nav = doc.getElementById('nav');
