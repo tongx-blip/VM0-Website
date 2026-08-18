@@ -101,12 +101,14 @@ card interiors are still left-aligned.
 document.querySelectorAll('#rotator .rot')[3].classList.add('is-on');   // the longest
 ```
 
-- The "what Okou reaches" region has no hover affordance and nothing that loops,
-  it stays compact, and every logo tile is named for screen readers:
+- The two rails in "what Okou reaches" run only while on screen, and their chips
+  have no hover affordance:
 
 ```js
-Math.round(document.querySelector('.cat').getBoundingClientRect().height)   // ~275 at 1440
-[...document.querySelectorAll('.cat__logo img')].every(i => i.alt)          // true
+[...document.querySelectorAll('.marquee')].map(m =>
+  m.classList.contains('is-in') + '/' +
+  getComputedStyle(m.querySelector('.marquee__track')).animationPlayState)
+// on screen -> "true/running";  off screen -> "false/paused"
 ```
 
 ## 5. Type scale

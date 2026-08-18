@@ -78,6 +78,14 @@
     requestAnimationFrame(frame);
   }
 
+  /* ── 3. marquee: duplicate the track once, set its duration ─── */
+  doc.querySelectorAll('.marquee').forEach(function (m) {
+    var track = m.querySelector('.marquee__track');
+    if (!track) return;
+    track.innerHTML += track.innerHTML;
+    track.style.setProperty('--dur', (m.dataset.speed || 46) + 's');
+  });
+
   /* ── 4. one scroll loop: header state + step ladder ─────────── */
   var nav = doc.getElementById('nav');
   var ladder = doc.getElementById('ladder');

@@ -240,35 +240,24 @@ a customer-logo strip in Proof.
 
 ## 11. What Okou reaches
 
-The models / APIs / connectors region in `#outputs`. Three families, three
-treatments, each chosen by **what actually identifies the thing**:
-
-| Family | Treatment | Why |
-|---|---|---|
-| Models | icon + name, aligned grid | four models share two vendor marks, so the name is the identifier |
-| Built-in APIs | icon + name, one row | three items, same reason |
-| Connectors | logo tiles only, name on `alt` | the logo *is* the identifier; names would triple the height for nothing |
+Two full-bleed scrolling rails under the section paragraph: models and built-in
+APIs on the first, connectors on the second, opposite directions, 46s and 62s.
+Chips are `.tag` — icon + name, pill, no border.
 
 ```css
-.cat__grid{                       /* models: column flow, two rows, so each  */
-  grid-auto-flow:column;          /* vendor keeps its models in one column   */
-  grid-template-rows:repeat(2, auto);
-  width:max-content; margin-inline:auto;
-}
-.cat__logo{ width:44px; height:44px; border-radius:var(--r-btn); }
+.marquee{ margin-inline:calc(-1 * var(--edge)); overflow:hidden;
+          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
+.marquee__track{ animation:slide var(--dur) linear infinite paused; }
+.marquee.is-in .marquee__track{ animation-play-state:running; }
 ```
 
-Rules:
+- The rails only animate while on screen, and pause on hover.
+- **The chips have no hover affordance** — nothing there is a link. Pausing the
+  rail is a reading aid, not a click cue.
+- `app.js` duplicates each track once so the loop is seamless; `data-speed` sets
+  the duration and `data-dir="rev"` reverses the second rail.
 
-- **Icon-only for the long list is what keeps it compact.** The point of the
-  region is the paragraph's "1,000+", not a catalogue. Listing every connector
-  with its name cost 430px of page for no extra meaning; this is ~275px.
-- **Nothing here is a link**, so nothing gets a hover state, a cursor or a
-  pointer affordance.
-- **Nothing loops.** An earlier build cycled one connector chip every 2.4s;
-  it read as an unexplained flicker. Items get the staggered entrance (30ms
-  apart, family by family) and then hold still.
-- Below 900px the grids fall to two columns and stay there — one column doubles
-  the height and gains nothing.
-- Every logo tile carries the brand name in `alt`, so the icon-only row is still
-  readable to a screen reader.
+Two redesigns of this region were tried and reverted (2026-08-18): a labelled
+three-family "wall" of chips (430px tall) and a compact grid with logo-only
+connector tiles (276px). Both were rejected as worse than the rails, which cost
+114px. Before rebuilding it again, agree the direction first.

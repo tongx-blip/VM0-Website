@@ -56,7 +56,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    bare eyebrow are not surfaces, so a radius would only blur them */
 .nav__logo,.nav__links,.nav__auth,.chip,.linkline a,
 .metrics li,.perms__list li{ border-radius:0; }
-.chatbar,.chatbar__go,.state{ border-radius:var(--r-pill); }
+.tag,.chatbar,.chatbar__go,.state{ border-radius:var(--r-pill); }
 
 
 /* ─────────────── display type ─────────────── */
@@ -103,7 +103,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 /* ─────────────── monospace metadata ─────────────── */
-.chip,.quote__tag,.metrics span,.footnote,.vs__label,.state,.footer__copy{
+.chip,.quote__tag,.metrics span,.footnote,.tag,.vs__label,.state,.footer__copy{
   font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
@@ -355,11 +355,34 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .marquee:first-of-type{ margin-top:28px; border-top:1px solid var(--hairline); }
 
+.marquee__track{
+  display:flex; gap:10px; width:max-content;
+  animation:slide var(--dur,46s) linear infinite;
+}
+
 .marquee[data-dir="rev"] .marquee__track{ animation-direction:reverse; }
 
 .marquee:hover .marquee__track{ animation-play-state:paused; }
 
 @keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
+
+
+.tag{
+  display:inline-flex; align-items:center; gap:9px;
+  padding:8px 14px;
+  border:1px solid var(--hairline);
+  background:var(--paper);
+  font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-soft);
+  white-space:nowrap;
+  transition:border-color .18s, color .18s;
+}
+
+.tag:hover{ border-color:var(--ink); color:var(--ink); }
+
+.tag img{ width:15px; height:15px; object-fit:contain; }
+
+.tag__ic{ width:14px; height:14px; fill:none; stroke:var(--ink-soft); stroke-width:1.8; stroke-linecap:round; }
 
 
 /* ─────────────── ladder (sticky steps) ─────────────── */
@@ -1095,7 +1118,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .perms__list img{ width:26px; height:26px; }
 
 .perms__slack{ width:32px !important; height:32px !important; margin:-3px; }
-.btn--ghost img[src*="slack"]{ transform:scale(1.25); }
+.tag img[src*="slack"],.btn--ghost img[src*="slack"]{ transform:scale(1.25); }
 
 
 /* the Slack mark has ~30% internal padding in its SVG, so it needs to be
@@ -1182,10 +1205,13 @@ a.acard .acard__txt i{ color:var(--ink); }
 .acard__ic--slack img{ transform:scale(1.35); }
 
 .acard--conn .acard__txt i{ white-space:normal; line-height:1.4; }
+
 /* connector marks: percentage-sized SVGs need a fixed box to paint into */
-.acard__ic img,.perms__list img,.vs__label img{ width:100%; height:100%; }
+.acard__ic img,.perms__list img,.tag img,.vs__label img{ width:100%; height:100%; }
 
 .acard__ic img{ width:22px; height:22px; }
+
+.tag img{ width:17px; height:17px; }
 
 .vs__label img{ width:20px; height:20px; }
 
@@ -2236,7 +2262,7 @@ img{ filter:none; }
 .btn,.scenes__tab{ border-radius:var(--r-btn); }
 
 .step{ border-radius:0; }
-.state,.chatbar{ border-radius:var(--r-pill); }
+.tag,.state,.chatbar{ border-radius:var(--r-pill); }
 
 
 /* every page-level rule inherited from the component layer comes off:
@@ -2244,7 +2270,7 @@ img{ filter:none; }
 .hero__body,.section-body,.section-body--tight,.note,.footnote,
 .linkline a,.quote figcaption,.footer__disclaimer,.footer__links,
 .footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,
-.metrics li,.scenes__tabs,.step,.nav,.panel,
+.metrics li,.marquee,.scenes__tabs,.step,.nav,.panel,
 .perms__list,.chatbar,.a2a__ask{
   border:0;
 }
@@ -2299,7 +2325,7 @@ h3{ font-family:var(--fd); }
 }
 /* utility face: labels,data,captions,controls — the signal that a
    string is metadata and not prose */
-.chip,.footnote,.metrics span,.vs__label,.state,.quote__tag,.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,.footer__links,.footer__links a,.footer__copy,.a2a__step,.a2a__label,.a2a__back,.scenes__tab{
+.chip,.footnote,.metrics span,.tag,.vs__label,.state,.quote__tag,.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,.footer__links,.footer__links a,.footer__copy,.a2a__step,.a2a__label,.a2a__back,.scenes__tab{
   font-family:var(--fm);
   font-weight:500;
   text-transform:uppercase;
@@ -2567,7 +2593,7 @@ h3{ font-family:var(--fd); }
 
 /* wide figures span the ledger too */
 /* figures, data and card grids reach across all twelve columns */
-.scenes,.cat,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
+.scenes,.marquee,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
   grid-column:1 / 13;
 }
 
@@ -2582,9 +2608,13 @@ h3{ font-family:var(--fd); }
 #workflows,#control,#proof{ background:var(--paper); }
 
 .panel{ border-top:0; }
+
 /* surfaces are always paper; the shadow carries them on a paper ground
-   and the fill carries them on a wash ground. Only the small pills flip,.scenes__tab:not(.is-on){ background:var(--wash-2); }
-#outputs .scenes__tab:not(.is-on){ background:var(--paper); }
+   and the fill carries them on a wash ground. Only the small pills flip,
+   and never in their active state. */
+.tag,.scenes__tab:not(.is-on){ background:var(--wash-2); }
+
+#outputs .tag,#outputs .scenes__tab:not(.is-on){ background:var(--paper); }
 
 .step.is-active{ background:var(--wash-2); }
 
@@ -2853,109 +2883,34 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* ─────────────── 12. what Okou reaches ───────────────
-   Three families, three treatments, chosen by what actually
-   identifies the thing:
-
-     Models          the NAME identifies it (four models share two
-                     vendor marks), so: icon + name, on an aligned grid
-     Built-in APIs   same, three of them, one row
-     Connectors      the LOGO identifies it, so: logo tiles only, with
-                     the name on the alt attribute
-
-   Icon-only for the long list is what makes this compact — the point
-   of the region is the paragraph's "1,000+", not a catalogue. Nothing
-   here is a link, so nothing has a hover state, and nothing animates
-   on a loop. */
-.cat{
-  display:flex; flex-direction:column;
-  gap:clamp(22px, 2.4vw, 34px);
-  margin-top:clamp(28px, 3vw, 44px);
+/* ─────────────── 12. marquee: bleeds to the screen edge ─────────────── */
+.marquee{
+  padding:10px 0;
+  border:0;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
 }
 
-.cat__label{
-  margin:0 0 clamp(12px, 1.3vw, 16px);
-  font-family:var(--fm); font-weight:500;
-  font-size:var(--t-mono); letter-spacing:.18em; text-transform:uppercase;
-  color:var(--ink-mute); text-align:center;
-}
+.marquee:first-of-type{ margin-top:26px; }
 
-/* names, on a grid so the columns line up instead of ragging */
-/* column flow, two rows: each vendor keeps its models in one column
-   (Claude Opus / Claude Fable, GPT 5.6 / gpt-image-2, …) */
-.cat__grid{
-  display:grid;
-  grid-auto-flow:column;
-  grid-template-rows:repeat(2, auto);
-  gap:11px clamp(14px, 1.8vw, 26px);
-  width:max-content; max-width:100%;
-  margin:0 auto; padding:0;
-}
+.marquee__track{ display:flex; gap:10px; width:max-content; }
 
-.cat__grid--three{
-  grid-auto-flow:row;
-  grid-template-rows:none;
-  grid-template-columns:repeat(3, auto);
-  column-gap:clamp(22px, 2.6vw, 40px);
-}
-
-.cat__item{
-  display:flex; align-items:center; gap:10px;
-  min-width:0;
-  font-family:var(--fm); font-weight:500;
-  font-size:var(--t-mono); letter-spacing:.06em; text-transform:uppercase;
-  color:var(--ink-soft); white-space:nowrap;
-}
-
-.cat__item img{ width:18px; height:18px; flex:none; }
-
-.cat__ic{
-  width:16px; height:16px; flex:none;
-  fill:none; stroke:var(--ink-soft); stroke-width:1.8; stroke-linecap:round;
-}
-
-/* logos, on a strict tile rhythm */
-.cat__logos{
-  display:flex; flex-wrap:wrap; justify-content:center;
-  gap:10px;
-  max-width:70rem; margin:0 auto; padding:0;
-}
-
-.cat__logo{
-  width:44px; height:44px;
-  display:grid; place-items:center;
-  border-radius:var(--r-btn);
+.tag{
+  display:inline-flex; align-items:center; gap:9px;
+  padding:10px 16px;
+  border:0;
   background:var(--wash-2);
+  font-size:var(--t-mono); letter-spacing:.07em;
+  color:var(--ink-soft); white-space:nowrap;
+  transition:color var(--t-hover) var(--e-snap),
+             transform var(--t-hover) var(--e-snap),
+             box-shadow var(--t-hover) var(--e-snap);
 }
 
-#outputs .cat__logo{ background:var(--paper); }
+.tag img{ width:17px; height:17px; }
 
-.cat__logo img{ width:22px; height:22px; }
-
-
-@media (max-width:900px){
-  .cat__grid,.cat__grid--three{
-    grid-auto-flow:row;
-    grid-template-rows:none;
-    grid-template-columns:repeat(2, auto);
-    justify-content:center;
-    column-gap:clamp(20px, 4vw, 40px);
-  }
-
-}
-
-@media (max-width:430px){
-  /* two columns all the way down: one column doubles the height for
-     no gain, and the longest name still fits at 390 */
-  .cat__item{ font-size:10.5px; letter-spacing:.04em; gap:8px; }
-
-  .cat__item img{ width:16px; height:16px; }
-
-  .cat__grid,.cat__grid--three{ column-gap:14px; }
-
-  .cat__logo{ width:40px; height:40px; }
-
-}
+.tag__ic{ width:15px; height:15px; stroke:var(--ink-soft); }
 
 
 /* ─────────────── 13. ladder: a spine with a progress fill ─────────────── */
@@ -3363,6 +3318,18 @@ h3{ font-family:var(--fd); }
 }
 
 [data-reveal="scale"].is-in{ opacity:1; transform:none; }
+
+
+/* the marquee only runs while it is on screen, and pauses on hover */
+.marquee__track{ animation:slide var(--dur,46s) linear infinite paused; }
+
+.marquee.is-in .marquee__track{ animation-play-state:running; }
+
+.marquee[data-dir="rev"] .marquee__track{ animation-direction:reverse; }
+
+.marquee:hover .marquee__track{ animation-play-state:paused; }
+   /* pause is not a link affordance */
+@keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
 
 
 /* the scene cards re-play on every tab switch, from their own side */

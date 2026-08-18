@@ -6,6 +6,27 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-18 · the reach region, reverted to the two scrolling rows
+
+Feedback: *"不成啊，这效果太差了。要不先退回之前两行滚动的那个版本吧。"*
+
+Two attempts at redesigning this region both landed worse than what they
+replaced. Reverted the markup, CSS and script for the region to the state at
+commit `2e4e928` — the two full-bleed scrolling rails — and kept everything
+else from the rounds since (orange controls, the one-line hero statement, the
+header sizing, the closing illustration, hashed asset links).
+
+- Region height: 430px (wall) → 276px (compact grid) → **114px** (two rails).
+- Kept from the intervening feedback: no hover affordance on the chips, since
+  none of them link anywhere; the marquee still pauses on hover, which is a
+  reading aid rather than a click affordance.
+- "Explore the workflow behind this" stays deleted — that was a separate
+  instruction, not part of this region's design.
+
+**Lesson:** two redesigns in a row, each shipped as a whole, each rejected. When
+a region is working and the ask is "show it differently", propose the direction
+before rebuilding it — the cost of guessing wrong is a full round trip.
+
 ## 2026-08-18 · cache-busting, automated
 
 The "what Okou reaches" region rendered completely unstyled for anyone who had
