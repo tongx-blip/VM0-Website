@@ -34,6 +34,10 @@ otherwise return 0.
 - Status is a tinted fill (`ALLOWED` / `DENIED` / `NOT GRANTED`), never a
   bordered chip.
 - Secondary buttons are a soft fill (`--wash-2`), never an outline.
+- **A section is a fill, full stop** — no shadow either. A white card on a grey
+  page is already a separate object; a shadow under it only softens the edge it
+  was meant to define. Shadow is reserved for things that genuinely float above
+  the page: the header, and pills sitting on a white ground.
 - Emphasis is **colour on the phrase**, not an underline (§3).
 - Diagrams: if captions already narrate the flow, the connectors are redundant.
   The parallel-work figure says "You ask once → Four tasks, each in its own chat

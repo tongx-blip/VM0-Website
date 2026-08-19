@@ -260,26 +260,35 @@ the same 1320 measure as an uncarded section. `#reach` is the first card;
 
 ## 8. Sections
 
-| # | Section | Ground |
+Every section is the same object: a white card on the grey page. Its geometry is
+four tokens and nothing else — never a per-section value.
+
+| token | at 1440 | what it is |
 |---|---|---|
-| — | hero | paper |
-| 1 | `#outputs` Outputs | wash |
-| 2 | `#workflows` Shared workflows | paper |
-| 3 | `#parallel` At once | wash |
-| 4 | `#control` Control | paper |
-| 5 | `#positioning` Positioning | wash |
-| 6 | `#proof` Proof | paper |
-| — | `#cta` + `.footer` | ink — one dark closing chapter |
+| `--card-gap` | 26px | the grey showing around the card |
+| `--pad-section` | 63px | the card's edge → its content |
+| `--edge` | 89px | `max(card-gap + pad-section, (100vw − 1320) / 2)` — the content inset, and what caps the measure at 1320 |
+| `--r-section` | 16px | the corner, at every width |
 
-```css
-#outputs,#parallel,#positioning { background:var(--wash); }
-#workflows,#control,#proof      { background:var(--paper); }
-```
+- **No section carries a shadow.** A white card on a grey page is already a
+  separate object. The shadow only softened the edge it was meant to define.
+- **The header is a section too**: `left/right: var(--card-gap)`, so it is
+  exactly as wide as every card under it. Check this at five widths — a header
+  sized with its own `min()` expression agrees with the cards at no width at all.
+- **A rounded box holding rounded controls has a derived corner**:
+  `--r-nav: calc(var(--r-btn) + var(--nav-pad))`. Anything else and the two
+  curves fight — the control looks pinched in one corner and loose in the next.
+  Its padding must be symmetric for the same reason.
+- **`--nav-h` is not the height to measure against while scrolled.** The header
+  shrinks when it sticks; anything positioning itself under it needs
+  `--nav-bottom-stuck`. That 8px is exactly what made a "centred" block sit off
+  centre.
+- **Equal space above and below a pinned block is derived, not chosen**:
+  `--wf-top: nav-bottom-stuck + (100vh − nav-bottom-stuck − height) / 2`.
+  A fixed top margin only balances at one window height.
 
-**Adding or reordering a section means re-deriving this list**, because the
-alternation is the only thing separating two sections. Getting it wrong is
-invisible in code review and obvious on the page — sections 2 and 3 were both
-paper for one build and simply ran together.
+Narrow widths scale the two paddings down but never break their relationship, so
+a card's content can never drift out of line with the header above it.
 
 ## 9. Brand layer
 

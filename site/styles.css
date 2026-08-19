@@ -2003,10 +2003,25 @@ a.acard .acard__txt i{ color:var(--ink); }
   --paper-2:#F7F9FA;
 
   /* measure */
-  --edge:   max(20px, calc((100vw - 1320px) / 2));
+  /* The grey that shows around a section card, and the air between that card's
+     edge and its content. Every section gets the same two, so nothing on this
+     page ever sits closer to an edge than anything else. */
+  --card-gap:    clamp(12px, 1.8vw, 26px);
+  --pad-section: clamp(24px, 4.4vw, 72px);
+  --edge:   max(
+    calc(var(--card-gap) + var(--pad-section)),
+    calc((100vw - 1320px) / 2)
+  );
   --pad:    var(--edge);
   --gutter: clamp(18px, 2vw, 30px);
-  --nav-h:  64px;
+  --nav-h:  62px;                            /* 38px control + 2 × --nav-pad */
+  --nav-top:12px;
+  --nav-h-stuck:54px;                        /* the header once you scroll  */
+  --nav-bottom:calc(var(--nav-top) + var(--nav-h));
+  /* anything that measures itself against the header while the page is
+     scrolled must use the STUCK height — the header is never its resting
+     size at the moment a pinned section is on screen */
+  --nav-bottom-stuck:calc(var(--nav-top) + var(--nav-h-stuck));
 
   /* radius scale — five steps, nothing in between */
   --r-panel: 0px;                            /* full-bleed bands            */
@@ -2015,7 +2030,14 @@ a.acard .acard__txt i{ color:var(--ink); }
   --r-card:  12px;                           /* surfaces, tiles             */
   --r-lg:    clamp(16px, 1.8vw, 26px);       /* a component-scale card      */
   --r-xl:    clamp(20px, 2.2vw, 34px);       /* a section-scale card        */
-  --r-pill:  999px;                          /* anything pill-shaped        */
+  --r-pill:  999px;                          /* anything genuinely round    */
+  --r-section: 16px;                         /* every section's own corner  */
+  /* The header is a rounded box holding rounded controls, so its corner is
+     the control's corner PLUS the space between them. Anything else and the
+     two curves fight: the button looks pinched in one corner and loose in
+     the next. State the relationship, do not eyeball it. */
+  --nav-pad: 12px;
+  --r-nav:   calc(var(--r-btn) + var(--nav-pad));
 
   /* elevation — three steps. A surface is a fill plus one of these. */
   --e-1: 0 1px 2px rgba(12,15,18,.03), 0 14px 30px -24px rgba(12,15,18,.2);
@@ -2229,18 +2251,18 @@ h3{ font-family:var(--fd); }
    navigation centred, actions right. It condenses once the page
    scrolls. */
 .nav{
-  position:fixed; top:12px; left:50%; z-index:100;
-  width:min(calc(100vw - 24px), 1320px);
+  /* exactly as wide as a section card, and inset by the same grey */
+  position:fixed; top:var(--nav-top); left:var(--card-gap);
+  right:var(--card-gap); z-index:100;
   height:var(--nav-h);
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
   gap:16px;
-  margin:0; padding:0 10px 0 20px;
+  margin:0; padding:0 var(--nav-pad);
   background:var(--paper);
-  border:0; border-radius:var(--r-lg);
+  border:0; border-radius:var(--r-nav);
   box-shadow:var(--e-nav);
-  transform:translate(-50%, 0);
   transition:transform var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
              background var(--t-state) var(--e-out),
@@ -2248,8 +2270,7 @@ h3{ font-family:var(--fd); }
 }
 
 .nav.is-stuck{
-  height:56px;
-  transform:translate(-50%, 0);
+  height:var(--nav-h-stuck);
   background:var(--paper);
   box-shadow:var(--e-nav-stuck);
 }
@@ -2281,7 +2302,7 @@ h3{ font-family:var(--fd); }
 
 .nav__links a{
   display:inline-flex; align-items:center;
-  height:38px; padding:0 14px; border-radius:var(--r-pill);
+  height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
   color:var(--ink-soft);
   transition:color var(--t-hover) var(--e-snap),
@@ -2298,7 +2319,7 @@ h3{ font-family:var(--fd); }
 
 .nav__signin{
   display:inline-flex; align-items:center;
-  height:38px; padding:0 14px; border-radius:var(--r-pill);
+  height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
   color:var(--ink-soft);
   transition:color var(--t-hover) var(--e-snap), background var(--t-hover) var(--e-snap);
@@ -2465,14 +2486,15 @@ h3{ font-family:var(--fd); }
 
 /* ── a section as one object on the grey page ── */
 .panel--card{
-  --card-gap:clamp(12px, 1.8vw, 26px);
   margin-inline:var(--card-gap);
   margin-block:clamp(10px, 1.4vw, 22px);   /* grey shows above and below */
-  padding-inline:max(20px, calc(var(--edge) - var(--card-gap)));
+  padding-inline:var(--pad-section);
   padding-block:clamp(52px, 5.4vw, 84px);
   background:var(--paper);
-  border-radius:var(--r-xl);
-  box-shadow:var(--e-2);
+  border-radius:var(--r-section);
+  /* no shadow: a white card on a grey page is already a separate object, and
+     the shadow only muddied the edge it was meant to define */
+  box-shadow:none;
   overflow:hidden;
 }
 
@@ -2783,7 +2805,9 @@ h3{ font-family:var(--fd); }
   display:grid; place-items:center;      /* short statements stay centred in
                                             the height the longest one needs */
   max-width:min(100%, 54ch); margin:0 auto;
-  min-height:3.9em;
+  /* both statements are two lines, so two is what the stage reserves — a
+     taller floor pads the block unevenly against its own section padding */
+  min-height:2.6em;
   text-align:center;
 }
 
@@ -2894,18 +2918,18 @@ h3{ font-family:var(--fd); }
   --wf-row-gap:clamp(12px, 1.12vw, 16px);   /* 12  · list gap, each side of a rule */
   --wf-open-gap:clamp(8px, .75vw, 11px);    /*  8  · open title → its paragraph  */
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
-  --wf-bar-h:clamp(19px, 1.8vw, 26px);      /* 19                                 */
+  --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
   --wf-rule:.5px;  --wf-rule-ink:rgba(0,0,0,.12);
-  --wf-title:clamp(16px, 1.5vw, 22px);      /* 16                                 */
+  --wf-title:clamp(15px, 1.25vw, 18px);     /* 16                                 */
   --wf-title-lh:1.21;                       /* 19.36 / 16                         */
   --wf-title-wt:300;
   --wf-title-ink:rgba(0,0,0,.6);
-  --wf-title-on:clamp(32px, 3vw, 44px);     /* 32  · exactly 2× the resting one   */
+  --wf-title-on:clamp(30px, 2.5vw, 36px);   /* 32  · exactly 2× the resting one   */
   --wf-title-on-lh:1.21;                    /* 38.73 / 32                         */
   --wf-title-on-wt:400;
-  --wf-body:clamp(16px, 1.5vw, 22px);       /* 16                                 */
+  --wf-body:clamp(15px, 1.25vw, 18px);      /* 16                                 */
   --wf-body-lh:1.21;
-  --wf-foot:clamp(12px, 1.12vw, 16px);      /* 12                                 */
+  --wf-foot:clamp(12px, .97vw, 14px);       /* 12                                 */
   --wf-foot-lh:1.21;
   --wf-media-r:clamp(16px, 1.5vw, 22px);    /* 16                                 */
 
@@ -2919,14 +2943,20 @@ h3{ font-family:var(--fd); }
   /* ── the scroll mechanic ── */
   --wf-steps:4;
   --wf-travel:64vh;                         /* scroll spent on each step */
-  /* the block clears the header by a proper margin: at the old +26px the
-     first row sat right under the nav with no air at all */
-  --wf-top:calc(var(--nav-h) + 60px);
   /* the media keeps the reference's 649 : 498 proportion at every width, and
-     is capped only so the pinned view still fits on screen with air under it */
+     is capped so the pinned view leaves at least --wf-air above and below */
+  --wf-air:clamp(36px, 5vh, 64px);
   --wf-h:min(
     calc((100vw - 2 * var(--edge) - var(--wf-gap)) * 498 / 935),
-    calc(100vh - var(--nav-h) - 168px)
+    calc(100vh - var(--nav-bottom-stuck) - 2 * var(--wf-air))
+  );
+  /* pinned, the block is CENTRED in the space under the header, so the gap
+     above it and the gap below it are the same at every viewport height.
+     Deriving the offset is the only way to guarantee that: a fixed top
+     margin only balances at one window size. */
+  --wf-top:calc(
+    var(--nav-bottom-stuck) +
+    (100vh - var(--nav-bottom-stuck) - var(--wf-h)) / 2
   );
   position:relative;
   margin-top:clamp(40px, 4.4vw, 68px);
@@ -2968,9 +2998,11 @@ h3{ font-family:var(--fd); }
 }
 
 /* a rule between rows, never above the first or below the last */
+/* one rule between rows, and the same air on both sides of it: the rule is
+   drawn on the border, so the padding above the title owes back its width */
 .step + .step{
   border-top:var(--wf-rule) solid var(--wf-rule-ink);
-  padding-top:var(--wf-row-gap);
+  padding-top:calc(var(--wf-row-gap) - var(--wf-rule));
 }
 
 .step__bar{
@@ -3022,9 +3054,15 @@ h3{ font-family:var(--fd); }
 
 .step.is-active .step__body{ grid-template-rows:1fr; opacity:1; }
 
+.step.is-active .step__body > p{ padding-top:var(--wf-open-gap); }
+
 .step__body > p{
   overflow:hidden; min-height:0;
-  padding-top:var(--wf-open-gap);
+  /* a 0fr grid track cannot absorb padding — it floors the row at the
+     padding box, which left every closed row taller at the bottom than at
+     the top. The gap exists only while the row is open. */
+  padding-top:0;
+  transition:padding-top var(--t-state) var(--e-elegant);
   font-family:inherit;
   font-size:var(--wf-body); line-height:var(--wf-body-lh);
   font-weight:var(--wf-title-wt);
@@ -3526,11 +3564,20 @@ h3{ font-family:var(--fd); }
 
 
 @media (max-width:960px){
-  :root{ --edge:20px; --nav-h:58px; }
+  /* the two section paddings keep their relationship at every width — only
+     their size comes down. --edge stays derived so a card's content can never
+     drift out of line with the header above it. */
+  :root{
+    --card-gap:12px;
+    --pad-section:clamp(18px, 3.4vw, 28px);
+    --nav-pad:8px;
+    --nav-h:56px;
+    --nav-h-stuck:50px;
+  }
 
   .nav{
     display:flex; align-items:center; justify-content:space-between;
-    padding:0 8px 0 16px;
+    padding:0 var(--nav-pad);
   }
 
   .nav__logo{ order:1; }
@@ -3615,8 +3662,6 @@ h3{ font-family:var(--fd); }
 
   .mark{ background-size:100% .14em; }
 
-  .nav{ transform:translate(-50%, 0); }
-
   /* the rails hold still, and nothing is hidden behind a rotation:
      both statements are shown, stacked */
   .rail__track{ animation:none !important; }
@@ -3696,7 +3741,7 @@ h3{ font-family:var(--fd); }
    ================================================================ */
 
 /* ── controls become pills, as in the brand comps ── */
-.btn{ border-radius:var(--r-pill); }
+.btn{ border-radius:var(--r-btn); }
 
 .btn--lg{ padding:16px 28px; }
 
@@ -3704,7 +3749,7 @@ h3{ font-family:var(--fd); }
 
 .scenes__tab{ border-radius:var(--r-pill); }
 
-.nav__links a,.nav__signin{ border-radius:var(--r-pill); }
+.nav__links a,.nav__signin{ border-radius:var(--r-btn); }
 
 
 /* ── image placeholders: obviously unfinished, still tidy ──

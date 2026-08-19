@@ -255,6 +255,67 @@ invisible in a diff:
 // every one "Archivo" — except the ladder, which is Inter by design
 ```
 
+## 4j. One section geometry
+
+`docs/design-system.md` §8. Four things that each shipped wrong once:
+
+```js
+// the header is exactly as wide as a section card — at every width
+const n = document.getElementById('nav').getBoundingClientRect();
+const c = document.querySelector('.panel--card').getBoundingClientRect();
+[Math.round(n.x) === Math.round(c.x), Math.round(n.right) === Math.round(c.right)]
+
+// one corner, no shadows
+[...document.querySelectorAll('.panel--card')].map(p => getComputedStyle(p).borderTopLeftRadius)
+[...document.querySelectorAll('.panel--card')].filter(p => getComputedStyle(p).boxShadow !== 'none').length  // 0
+
+// a pinned block sits with equal air above and below
+const v = document.querySelector('.ladder__view').getBoundingClientRect();
+[Math.round(v.top - n.bottom), Math.round(innerHeight - v.bottom)]   // equal
+```
+
+Re-run the width check at **390 / 768 / 1024 / 1280 / 1920** — the failure mode
+is a header whose width expression happens to agree with the cards at the one
+width you looked at.
+
+## 4k. Rows that look symmetric and are not
+
+Measure, don't eyeball. For any list of rows separated by a rule:
+
+```js
+const st = [...document.querySelectorAll('.step')];
+st.map((s, i) => {
+  const t = s.querySelector('.step__t').getBoundingClientRect();
+  const next = st[i + 1] && st[i + 1].getBoundingClientRect().top;
+  return [Math.round(t.top - s.getBoundingClientRect().top),
+          next && Math.round(next - t.bottom)];
+})   // above and below must match on every CLOSED row
+```
+
+Two causes, both invisible in the CSS:
+
+- **`grid-template-rows: 0fr` does not absorb padding.** The track is floored at
+  the collapsed item's padding box, so a gap meant for the open state is silently
+  present on every closed one. Apply it only in the open state.
+- **A decoration taller than the text sets the row height.** A marker bar at
+  `clamp(19px, 1.8vw, 26px)` beside an 18px title makes the row 26px and pushes
+  the title off centre. Derive it from the text it marks.
+
+## 4l. A marquee actually closes its loop
+
+A track duplicated once is only seamless if **one copy is at least as wide as the
+rail**. Otherwise the row runs out of content before it wraps and a gap crosses
+the screen — which reads as broken, not as a design:
+
+```js
+[...document.querySelectorAll('.rail')].map(r =>
+  Math.round(r.querySelector('.rail__track').scrollWidth / 2) >= r.clientWidth)
+// every one true
+```
+
+Watch a full cycle at 1920, where the rail is widest and one copy is least likely
+to cover it.
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the

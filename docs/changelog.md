@@ -6,6 +6,74 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · one section geometry: width, radius, padding, no shadow
+
+Nine notes in one round. The half that mattered was structural — the page had no
+single rule for how wide a section is, how far its content sits from its edge, or
+what its corner is, so every one of those had drifted apart.
+
+**One geometry, stated in tokens, applied everywhere.**
+
+```
+--card-gap    12 → 26px   the grey that shows around a section card
+--pad-section 24 → 72px   that card's edge → its content
+--edge        max(card-gap + pad-section, (100vw − 1320) / 2)
+--r-section   16px        every section's corner
+--nav-pad     12px        header edge → the controls inside it
+--r-nav       calc(--r-btn + --nav-pad)
+```
+
+- **The header is now exactly as wide as a section** — `left/right:
+  var(--card-gap)` instead of a `min(100vw − 24px, 1320px)` that agreed with the
+  cards at no width at all. Verified equal at 390 / 768 / 1024 / 1280 / 1920.
+- **Its corner is derived, not chosen.** A rounded box holding rounded controls
+  needs `control radius + the gap between them`, or the two curves fight and the
+  button looks pinched in one corner and loose in the next. 10 + 12 = 22px, and
+  the padding is symmetric now (it was 20 left, 10 right).
+- **Controls are rounded rectangles**, `--r-btn` 10px, not lozenges.
+- **Section content sits much further from the edge** — 60px → 89px at 1440 —
+  and the same token drives every section, so it can never drift again.
+- **No section carries a shadow.** A white card on a grey page is already a
+  separate object; the shadow only softened the edge it was meant to define.
+
+**The pinned block is centred, not offset.** Equal space above and below in the
+viewport needs the offset *derived*: a fixed top margin only balances at one
+window height. `--wf-top` is now
+`nav-bottom + (100vh − nav-bottom − --wf-h) / 2`. Measured 98 / 98 at 1440×900,
+where it had been 102 / 94 — and the 8px was the header, which is `--nav-h-stuck`
+(54px), not `--nav-h` (62px), at the moment a pinned section is on screen. That
+distinction is now a token.
+
+**A closed ladder row was taller at the bottom than at the top.** 19px above the
+title, 29px below. The cause: `grid-template-rows: 0fr` cannot absorb *padding* —
+the track is floored at the collapsed item's padding box, so the open row's 11px
+gap was silently present on every closed row too. The gap now only exists while
+the row is open. Also: the marker was `clamp(19px, 1.8vw, 26px)` and had grown
+taller than the title's line box, so it — not the title — was setting the row
+height and pushing the text off centre. It is `--wf-title × --wf-title-lh` now,
+which is what the reference always had. Rows measure 17 / 16.
+
+**The open row was too big**: title 44 → 36px, paragraph 22 → 18px, foot 16 →
+14px. The reference's 2× title ratio is preserved.
+
+**The first logo rail never closed its loop.** `app.js` duplicated the track once
+so the `-50%` keyframe would be seamless — but one copy was narrower than the
+rail, so the row ran out of logos before it wrapped and a gap crossed the screen.
+It now repeats the content until one copy covers the rail, *then* duplicates.
+
+**Copy (requested).** The two rotating statements were three lines and two, so
+the block reserved three and padded itself unevenly. Both are two lines now:
+
+> 1,000+ connectors for the tools **your team** already uses, plus our own APIs
+> and model picker.
+> Far more arrives built in than **with** Codex or Claude Code — and Okou reaches
+> **it all** the same way.
+
+The second lost "less to wire up, less to install", which was the weakest clause
+and the only one not carrying new information. The reach card measures 78 / 78.
+
+---
+
 ## 2026-08-19 · the ladder sized to the viewport, and a build that ate a comment
 
 Measured against the Apollo page supplied as a reference (that screenshot is a

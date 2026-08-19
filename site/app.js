@@ -91,6 +91,14 @@
   doc.querySelectorAll('.rail').forEach(function (r) {
     var track = r.querySelector('.rail__track');
     if (!track) return;
+    // The keyframe travels exactly one copy of the content, so ONE copy has to
+    // be at least as wide as the rail — otherwise the row runs out of logos
+    // before it wraps and a gap crosses the screen. Repeat the content until it
+    // covers the rail, then duplicate the whole thing for the seamless half.
+    var one = track.innerHTML;
+    for (var i = 0; i < 8 && track.scrollWidth < r.clientWidth; i++) {
+      track.innerHTML += one;
+    }
     track.innerHTML += track.innerHTML;
     railTracks.push(track);
   });
