@@ -6,6 +6,38 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · the product mock, aligned and faithful (/ui-design)
+
+Feedback: the reference screenshot is squarely aligned and mine is all over the
+place, and the product is not faithfully reproduced. Ran `/ui-design`.
+
+**What was wrong.** The mock had *four different left edges* — chat title at
+20px, avatar at 20px, reply text at 51px, composer at 16px — so nothing lined
+up. And I had approximated the app from memory rather than reading the
+reference, which the skill explicitly forbids: no collapse control, no top-right
+actions, no jump-to-latest, no mic, three tool icons instead of four, and
+`WORKED FOR 3M` set in **uppercase** when the product writes sentence case.
+
+**What it is now.** One content column: the chat title, the prompt bubble's
+right edge, the artifact, the paragraph, the action row and the composer all
+share `--gl` (338px) and `--gr` (945px) at 1440. Only the agent avatar hangs
+into the left gutter, exactly as the app does it. In the sidebar, group labels,
+row icons and icon-less rows share one edge (76px) and labelled rows share
+another (100px) — which is the app's own two-edge pattern, measured off the
+reference rather than guessed.
+
+Restored from the reference: the sidebar collapse control, the two top-right
+actions, the jump-to-latest button above the composer, the fourth tool icon and
+the mic, the model chip's chevron, the artifact card's hairline and link-blue
+title. `--overlap` reserves the width the page window covers, so the column
+still ends clear of it.
+
+Sentence case throughout the mock — **0 uppercase elements inside `.appui`**,
+now measured in the gate.
+
+0 axe violations (43 passes), 0 page-level borders, no horizontal scroll
+390–1920.
+
 ## 2026-08-19 · the Storefront Launch tab, drawn in code
 
 Feedback: build this region in code rather than as a screenshot, make the

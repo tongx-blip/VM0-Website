@@ -131,6 +131,31 @@ None of these fail an accessibility audit or a layout measurement — they are
 only visible by looking. **Take a screenshot of a section head and of every
 figure before publishing.**
 
+## 4f. The product mock is the product
+
+`docs/design-system.md` §12. When any part of the app is drawn on this page:
+
+- **One content column.** The chat title, the prompt's right edge, the artifact,
+  the paragraph, the action row and the composer share one left and one right
+  edge. Only the agent avatar hangs into the gutter.
+
+```js
+['.appui__title','.appui__art','.appui__say','.appui__acts','.appui__composer']
+  .map(s => Math.round(document.querySelector(s).getBoundingClientRect().x))
+// every value identical
+```
+
+- **Sentence case only** — the product never uses Title Case or CSS uppercase:
+
+```js
+[...document.querySelectorAll('.appui *')]
+  .filter(e => getComputedStyle(e).textTransform === 'uppercase').length   // 0
+```
+
+- **Read the reference, don't approximate.** Open the captured screenshot beside
+  the build and account for every control: the collapse toggle, top-right
+  actions, jump-to-latest, the tool row, the mic, the model chevron.
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the

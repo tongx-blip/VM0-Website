@@ -3874,15 +3874,26 @@ h3{ font-family:var(--fd); }
 
 .stage{
   position:relative;
-  margin:clamp(46px, 5vw, 78px) 0 0;
+  margin:clamp(72px, 7.4vw, 116px) 0 0;   /* room for the cards above it */
   padding-bottom:clamp(60px, 7vw, 130px);   /* the page window hangs below */
 }
 
 
-/* ── the product ── */
+/* ── the product ──────────────────────────────────────────────────
+   One content column. The chat title, the prompt, the reply, the
+   artifact, the action row and the composer all share the same left
+   and right edge; only the agent avatar hangs into the left gutter,
+   the way the real app does it. Every sidebar row shares one icon
+   edge and one label edge. Nothing here is Title Case or uppercase —
+   the product writes in sentence case. */
 .appui{
+  --overlap:clamp(0px, 7%, 92px);              /* what the page window covers */
+  --gl:40px;                                   /* the content column, left  */
+  --gr:calc(40px + var(--overlap, 0px));       /* …and right, clear of the
+                                                  window that overlaps it   */
+  --sp:8px;                                    /* sidebar row inset         */
   width:min(100%, 74%);
-  display:grid; grid-template-columns:236px minmax(0,1fr);
+  display:grid; grid-template-columns:238px minmax(0,1fr);
   min-height:clamp(420px, 44vw, 620px);
   border-radius:var(--r-lg);
   background:var(--paper);
@@ -3891,37 +3902,50 @@ h3{ font-family:var(--fd); }
   font-family:var(--fb);
 }
 
+.appui svg{ fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+
+
+/* sidebar */
 .appui__side{
+  position:relative;
   display:flex; flex-direction:column;
-  padding:14px 12px;
+  padding:12px var(--sp);
   background:var(--wash);
   font-size:12.5px; color:var(--ink-soft);
 }
 
 .appui__ws{
   display:flex; align-items:center; gap:8px;
-  padding:7px 8px; margin-bottom:14px;
+  width:calc(100% - 26px);
+  padding:6px var(--sp);
+  margin-bottom:10px;
   border-radius:var(--r-btn);
-  background:var(--paper);
-  font-size:13px; font-weight:600; color:var(--ink);
-  box-shadow:0 1px 2px rgba(12,15,18,.05);
+  font-size:12.5px; font-weight:600; color:var(--ink);
 }
 
 .appui__wsic{
-  width:22px; height:22px; flex:none;
+  width:20px; height:20px; flex:none;
   display:grid; place-items:center;
-  border-radius:7px;
+  border-radius:6px;
   background:var(--accent-2);
 }
 
-.appui__caret{ width:14px; height:14px; margin-left:auto; stroke:var(--ink-mute); }
+.appui__wsname{ flex:1; min-width:0; }
 
-.appui svg{ fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.appui__ws svg{ width:13px; height:13px; flex:none; stroke:var(--ink-mute); }
+
+.appui__collapse{
+  position:absolute; top:16px; right:12px;
+  color:var(--ink-mute);
+}
+
+.appui__collapse svg{ width:15px; height:15px; }
 
 .appui__grp{
   display:flex; align-items:center; justify-content:space-between;
-  margin:12px 8px 6px;
-  font-size:11px; letter-spacing:.02em; color:var(--ink-mute);
+  margin:10px 0 4px;
+  padding:0 var(--sp);
+  font-size:11px; color:var(--ink-mute);
 }
 
 .appui__grp em{ font-style:normal; }
@@ -3930,144 +3954,166 @@ h3{ font-family:var(--fd); }
 
 .appui__nav li{
   display:flex; align-items:center; gap:9px;
-  padding:6px 8px;
+  min-height:28px;
+  padding:4px var(--sp);
   border-radius:8px;
   color:var(--ink-soft);
 }
 
-.appui__nav li svg{ width:15px; height:15px; flex:none; stroke:var(--ink-mute); }
+.appui__nav li svg,.appui__nav li img{ width:15px; height:15px; flex:none; }
 
-.appui__nav li.is-on{ background:var(--wash-2); color:var(--ink); font-weight:500; }
+.appui__nav li svg{ stroke:var(--ink-mute); }
 
-.appui__chat{ font-size:12px; }
+.appui__nav li.is-on{ background:var(--wash-2); color:var(--ink); }
 
-.appui__av{
-  width:20px; height:20px; flex:none;
-  border-radius:50%; object-fit:cover;
-}
+.appui__av{ width:18px; height:18px; border-radius:50%; object-fit:cover; flex:none; }
 
-.appui__av--sm{ width:18px; height:18px; }
+.appui__av--sm{ width:16px; height:16px; }
 
-.appui__foot{ margin-top:auto; display:flex; flex-direction:column; gap:4px; }
+.appui__chat{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.appui__foot{ margin-top:auto; }
 
 .appui__pro{
-  display:flex; padding:9px 10px; margin-bottom:4px;
+  display:flex; align-items:center; gap:10px;
+  padding:9px var(--sp);
+  margin-bottom:6px;
   border-radius:var(--r-btn);
   background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.05);
 }
 
-.appui__pro span{ display:flex; flex-direction:column; }
+.appui__pro span{ display:flex; flex-direction:column; min-width:0; }
 
-.appui__pro b{ font-size:12.5px; color:var(--ink); }
+.appui__pro b{ font-size:12.5px; font-weight:600; color:var(--ink); }
 
 .appui__pro i{ font-style:normal; font-size:11px; color:var(--ink-mute); }
 
-.appui__link,.appui__user{
-  display:flex; align-items:center; gap:9px;
-  padding:6px 8px; font-size:12.5px;
-}
-
-.appui__link svg{ width:14px; height:14px; stroke:var(--ink-mute); }
+.appui__pro img{ width:32px; height:32px; flex:none; object-fit:contain; }
 
 
-/* ── the thread ── */
+/* the thread — one column */
 .appui__main{ display:flex; flex-direction:column; min-width:0; background:var(--paper); }
 
 .appui__top{
-  display:flex; align-items:center;
-  padding:14px clamp(20px, 9%, 104px) 14px 20px;
-  font-size:13px; color:var(--ink);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:15px var(--gr) 15px var(--gl);
+  font-size:12.5px; color:var(--ink);
 }
 
-.appui__title{ display:flex; align-items:center; gap:9px; font-weight:500; }
+.appui__title{ display:flex; align-items:center; gap:8px; min-width:0; }
+
+.appui__topact{ display:flex; gap:14px; color:var(--ink-mute); flex:none; }
+
+.appui__topact svg{ width:15px; height:15px; }
 
 .appui__thread{
   flex:1; min-height:0;
-  padding:6px clamp(20px, 9%, 104px) 16px 20px;
-  display:flex; flex-direction:column; gap:20px;
+  display:flex; flex-direction:column; gap:22px;
+  padding:8px var(--gr) 12px var(--gl);
   overflow:hidden;
 }
 
 .appui__ask{
-  align-self:flex-end; max-width:74%;
-  padding:12px 15px;
-  border-radius:14px 14px 4px 14px;
+  align-self:flex-end; max-width:82%;
+  padding:11px 14px;
+  border-radius:12px;
   background:var(--wash);
-  font-size:13px; line-height:1.55; color:var(--ink);
+  font-size:12.5px; line-height:1.6; color:var(--ink);
 }
 
-.appui__reply{ display:grid; grid-template-columns:20px minmax(0,1fr); gap:11px; }
+.appui__reply{ display:flex; flex-direction:column; gap:12px; }
 
 .appui__worked{
-  margin:1px 0 8px;
-  font-family:var(--fm); font-size:10.5px; letter-spacing:.06em;
-  text-transform:uppercase; color:var(--ink-mute);
+  display:flex; align-items:center; gap:7px;
+  margin-left:-30px;                 /* the avatar hangs in the gutter */
+  font-size:11.5px; color:var(--ink-mute);
 }
 
-/* the artifact, previewed in the thread the way the product does it */
+.appui__worked svg{ width:12px; height:12px; }
+
 .appui__art{
-  margin:0 0 12px;
-  width:min(100%, 300px);
-  border-radius:10px;
+  margin:0; width:min(100%, 286px);
+  border-radius:8px;
+  border:1px solid var(--hairline);
   background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.05), 0 12px 26px -20px rgba(12,15,18,.3);
   overflow:hidden;
 }
 
 .appui__art figcaption{
-  padding:7px 10px;
-  font-size:11px; color:var(--accent-solid);
-  background:var(--paper);
+  padding:6px 10px;
+  font-size:11px; color:#2563EB;
 }
 
-.appui__art img{
-  display:block; width:100%; height:132px;
-  object-fit:cover; object-position:50% 42%;
-}
+.appui__art img{ display:block; width:100%; height:126px; object-fit:cover; object-position:50% 42%; }
 
-.appui__say{ font-size:13px; line-height:1.62; color:var(--ink-soft); }
+.appui__say{ font-size:12.5px; line-height:1.65; color:var(--ink-soft); }
 
-.appui__say a{ color:var(--accent-solid); }
+.appui__say a{ color:#2563EB; }
 
 .appui__acts{
   display:flex; align-items:center; gap:14px;
-  margin-top:12px;
   font-size:11px; color:var(--ink-mute);
 }
 
-.appui__acts svg{ width:15px; height:15px; stroke:var(--ink-mute); }
+.appui__acts svg{ width:14px; height:14px; }
 
 .appui__acts span{ display:flex; align-items:center; gap:5px; }
 
+/* the jump-to-latest control the product shows above the composer */
+.appui__jump{
+  align-self:center; margin-top:auto;
+  width:26px; height:26px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  border:1px solid var(--hairline);
+  background:var(--paper);
+  color:var(--ink-mute);
+}
+
+.appui__jump svg{ width:13px; height:13px; }
+
+
+/* composer — same column as the thread */
 .appui__composer{
-  display:flex; align-items:center; gap:10px;
-  margin:0 clamp(16px, 9%, 104px) 16px 16px;
-  padding:11px 12px;
+  display:flex; flex-direction:column; gap:14px;
+  margin:0 var(--gr) 18px var(--gl);
+  padding:12px 12px 10px;
   border-radius:var(--r-lg);
-  background:var(--wash);
+  border:1px solid var(--hairline);
+  background:var(--paper);
   font-size:12.5px; color:var(--ink-mute);
 }
 
-.appui__ph{ flex:1; min-width:0; }
+.appui__ph{ padding:2px 2px 10px; }
 
-.appui__tools{ display:flex; gap:9px; }
+.appui__bar{ display:flex; align-items:center; gap:10px; }
 
-.appui__tools svg{ width:15px; height:15px; stroke:var(--ink-mute); }
+.appui__tools{ display:flex; align-items:center; gap:12px; color:var(--ink-mute); }
+
+.appui__tools svg{ width:15px; height:15px; }
+
+.appui__tools svg.is-on{ stroke:var(--accent-solid); }
 
 .appui__model{
   display:flex; align-items:center; gap:6px;
-  padding:5px 9px;
+  margin-left:auto;
+  padding:4px 8px;
   border-radius:var(--r-pill);
-  background:var(--paper);
+  background:var(--wash);
   font-size:11px; color:var(--ink-soft);
   white-space:nowrap;
 }
 
+.appui__model svg{ width:12px; height:12px; stroke:var(--ink-mute); }
+
+.appui__mic{ color:var(--ink-mute); display:flex; }
+
+.appui__mic svg{ width:15px; height:15px; }
+
 .appui__send{
   width:26px; height:26px; flex:none;
   display:grid; place-items:center;
-  border-radius:50%;
+  border-radius:8px;
   background:var(--accent-solid); color:var(--paper-ink);
   font-size:13px;
 }
@@ -4076,7 +4122,7 @@ h3{ font-family:var(--fd); }
 /* ── what the run reached into ── */
 .stage__conn{
   position:absolute; z-index:3;
-  top:-42px; right:0;          /* above the product, clipping its top corner */
+  top:-64px; right:0;          /* above the product, clear of its top row */
   display:flex; gap:10px;
 }
 
