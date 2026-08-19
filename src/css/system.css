@@ -824,38 +824,60 @@ h3{ font-family:var(--fd); }
    (16 → 32px) and its paragraph unfolds; the media beside it changes with
    it and keeps one height, so four screens of four shapes read as one. */
 .ladder{
-  /* ── straight from the Figma ── */
-  --wf-gap:48px;                          /* 16 + 32, the two frames' facing pads */
-  --wf-row-gap:12px;                      /* list gap, and each side of a rule    */
-  --wf-open-gap:8px;                      /* open title → its paragraph           */
-  --wf-bar-w:4px;  --wf-bar-h:19px;       /* the marker rail, r=100               */
+  /* ── the reference frame, scaled ──
+     Every value below is Figma node 662:1561 multiplied by one factor: the
+     ratio of this block's width to the reference's own 983px. At 1440 that
+     is 1.34×, which is why the clamp maxima are what they are. Scaling the
+     whole frame by one number is what keeps the reference's proportions —
+     the 2× title jump, the 40-character measure, the 649 : 498 media —
+     while giving the section a size that suits the viewport it is in. */
+  --wf-gap:clamp(48px, 4.4vw, 64px);        /* 48  · the two frames' facing pads */
+  --wf-row-gap:clamp(12px, 1.12vw, 16px);   /* 12  · list gap, each side of a rule */
+  --wf-open-gap:clamp(8px, .75vw, 11px);    /*  8  · open title → its paragraph  */
+  --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
+  --wf-bar-h:clamp(19px, 1.8vw, 26px);      /* 19                                 */
   --wf-rule:.5px;  --wf-rule-ink:rgba(0,0,0,.12);
-  --wf-title:16px;      --wf-title-lh:19.36px;  --wf-title-wt:300;
+  --wf-title:clamp(16px, 1.5vw, 22px);      /* 16                                 */
+  --wf-title-lh:1.21;                       /* 19.36 / 16                         */
+  --wf-title-wt:300;
   --wf-title-ink:rgba(0,0,0,.6);
-  --wf-title-on:32px;   --wf-title-on-lh:38.73px; --wf-title-on-wt:400;
-  --wf-body:16px;       --wf-body-lh:19.36px;
-  --wf-foot:12px;       --wf-foot-lh:14.52px;
-  --wf-media-r:16px;    --wf-media-bg:#D9D9D9;
+  --wf-title-on:clamp(32px, 3vw, 44px);     /* 32  · exactly 2× the resting one   */
+  --wf-title-on-lh:1.21;                    /* 38.73 / 32                         */
+  --wf-title-on-wt:400;
+  --wf-body:clamp(16px, 1.5vw, 22px);       /* 16                                 */
+  --wf-body-lh:1.21;
+  --wf-foot:clamp(12px, 1.12vw, 16px);      /* 12                                 */
+  --wf-foot-lh:1.21;
+  --wf-media-r:clamp(16px, 1.5vw, 22px);    /* 16                                 */
+
+  /* the mat. The reference fills its box with the picture, so its ground never
+     shows; ours is a white app window on a white card, which disappeared into
+     it. A dark mat with the screen inset is what makes it read as a framed
+     product shot instead of a floating rectangle. */
+  --wf-media-bg:var(--mat);
+  --wf-pad:clamp(20px, 3.4vw, 52px);
 
   /* ── the scroll mechanic ── */
   --wf-steps:4;
-  --wf-travel:64vh;                       /* scroll spent on each step */
-  --wf-top:calc(var(--nav-h) + 26px);
-  /* the reference frame is 286 + 48 + 649 wide and 498 tall inside its own
-     padding, which the card already provides. Reproducing it at that size —
-     centred, like every other block in the section — is what keeps the
-     literal token values in the proportion they were drawn in. */
-  --wf-w:983px;
-  --wf-h:min(498px, calc(100vh - var(--nav-h) - 96px));
+  --wf-travel:64vh;                         /* scroll spent on each step */
+  /* the block clears the header by a proper margin: at the old +26px the
+     first row sat right under the nav with no air at all */
+  --wf-top:calc(var(--nav-h) + 60px);
+  /* the media keeps the reference's 649 : 498 proportion at every width, and
+     is capped only so the pinned view still fits on screen with air under it */
+  --wf-h:min(
+    calc((100vw - 2 * var(--edge) - var(--wf-gap)) * 498 / 935),
+    calc(100vh - var(--nav-h) - 168px)
+  );
   position:relative;
   margin-top:clamp(40px, 4.4vw, 68px);
   height:calc(var(--wf-h) + (var(--wf-steps) - 1) * var(--wf-travel));
   font-family:Inter, var(--fb);
 }
+
 .ladder__view{
   position:sticky; top:var(--wf-top);
   height:var(--wf-h);
-  max-width:var(--wf-w); margin-inline:auto;
   display:grid;
   grid-template-columns:minmax(0,286fr) minmax(0,649fr);
   gap:var(--wf-gap);
@@ -954,6 +976,7 @@ h3{ font-family:var(--fd); }
 .ladder__frame{
   position:relative;
   height:100%;
+  padding:var(--wf-pad);
   border-radius:var(--wf-media-r);
   background:var(--wf-media-bg);
   overflow:hidden;
@@ -961,33 +984,41 @@ h3{ font-family:var(--fd); }
 /* the switch itself is `display:none / block` in the component layer, which
    also keeps the three closed steps out of the accessibility tree.
 
-   The screens were drawn taller than the reference box (the two-pane
-   workspace needs 572px, the Slack window 640px), so each one lays out at
-   the height it needs and is then FITTED to the box, the way a photograph
-   is scaled to a frame. Cropping instead would take the action row off the
-   bottom of the save card, which is the whole point of that screen. */
+   Every screen lays out at ONE design width and is then scaled into the mat,
+   the way a photograph is fitted to a frame. The factor is measured in
+   `app.js` rather than written down, because the mat is fluid now — a
+   hard-coded height is only ever right at one viewport. Fitting also beats
+   cropping here: the bottom of these screens is the action row and the
+   composer, which is the point of the picture. */
 .wfstage{
-  --dh:498;                              /* the height this screen needs */
-  position:absolute; top:0; left:0;
-  width:calc(100% * var(--dh) / 498);
-  height:calc(var(--dh) * 1px);
-  transform:scale(calc(498 / var(--dh)));
-  transform-origin:top left;
+  position:absolute; top:50%; left:50%;
+  width:var(--dw, 760px);
+  height:var(--dh, 520px);
+  transform:translate(-50%, -50%) scale(var(--fit, 1));
 }
-.wfstage[data-step="2"]{ --dh:572; }
-.wfstage[data-step="3"]{ --dh:640; }
-/* every mock fills the box instead of setting its own height or shadow */
+/* how app.js takes the measurement: laid out at the design width, its own
+   height, nothing scaled, nothing visible */
+.wfstage.is-measuring{
+  display:block !important;
+  visibility:hidden !important;
+  top:0; left:0;
+  height:auto !important;
+  transform:none !important;
+}
+.wfstage.is-measuring .absui,
+.wfstage.is-measuring .slackui{ height:auto !important; }
+
+/* every mock fills the stage box instead of setting its own height or shadow */
 .ladder__frame .absui,
 .ladder__frame .slackui{
   height:100%; min-height:0;
-  border-radius:var(--wf-media-r);
+  border-radius:var(--r-card);
   box-shadow:none;
 }
 .ladder__frame .absui__body,
 .ladder__frame .flowui__grid{ flex:1 1 auto; min-height:0; overflow:hidden; }
-/* the reference box is wider than it is tall, so a short thread has spare
-   height — centre it rather than pinning it to either end, or the space
-   opens as a hole above the composer */
+/* a short thread has spare height in a box this size — centre it rather than
+   pinning it to either end, or the space opens as a hole above the composer */
 .ladder__frame .absui__body--chat{ justify-content:center; }
 
 /* ─────────────── 14. control, versus, proof: one card language ─────── */
@@ -1273,10 +1304,12 @@ h3{ font-family:var(--fd); }
   .step__body > p{ padding-top:8px; }
   .ladder__foot{ margin-top:0; }
   .ladder__frame{ height:var(--wf-h); }
-  /* the fit-to-frame scale is computed against the reference box's 498px, so
-     it is wrong for a box of any other height: here the screen simply fills
-     the box and the clipped edge fades instead */
-  .wfstage{ width:100%; height:100%; transform:none; }
+  /* nothing is pinned here and the mat is a different shape, so the screen
+     fills the box and the clipped edge fades instead of being fitted */
+  .wfstage{
+    position:static; width:100%; height:100%;
+    transform:none;
+  }
   .wfstage .slackui__msgs,
   .wfstage .absui__wfs,
   .wfstage .absui__body,

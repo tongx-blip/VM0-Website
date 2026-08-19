@@ -102,8 +102,9 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .mark.is-lit{ background-size:100% .12em; }
 
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
-/* ─────────────── monospace metadata ─────────────── */
-.chip,.quote__tag,.metrics span,.footnote,.vs__label,.state,.footer__copy{
+
+
+/* ─────────────── monospace metadata ─────────────── */.chip,.quote__tag,.metrics span,.footnote,.vs__label,.state,.footer__copy{
   font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
@@ -260,16 +261,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   color:var(--ink-soft);
   font-size:clamp(15px,1.2vw,17px);
 }
-/* the inline-avatar sentence{
-  max-width:22ch;
-  margin:clamp(44px,4.6vw,68px) 0 0;
-  text-align:left;
-  font-family:inherit;
-  font-weight:700;
-  font-size:clamp(24px,3.1vw,44px);
-  line-height:1.06;
-  letter-spacing:-.035em;
-}
 
 .inline-ic{ font-size:.74em; vertical-align:.04em; }
 
@@ -334,12 +325,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 @keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
-/* the ladder — its layout{
-  background:var(--paper);
-  border:1px solid var(--rule);
-  box-shadow:none;
-  overflow:hidden;
-}
 
 
 /* ─────────────── control ─────────────── */
@@ -538,12 +523,18 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 /* ─────────────── responsive ─────────────── */
 @media (max-width:1080px){
   .control{ grid-template-columns:1fr; }
+
   .control__stage{ border-right:0; }
+
   
   .proof{ grid-template-columns:1fr; }
+
   .metrics{ grid-template-columns:1fr; }
+
   .metrics li{ border-right:0; border-bottom:1px solid var(--hairline); }
+
   .metrics li:last-child{ border-bottom:0; }
+
 }
 
 
@@ -598,12 +589,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
   .mark{ background-size:100% .12em; }
 
-}
-/* ─────────────── real product screenshots ───────────────
-   These replace the hand-built mock markup. Captured at 2x from the
-   live app{
-  margin:clamp(44px,5vw,68px) 0 0;
-  display:flex; flex-direction:column; gap:14px;
 }
 
 /* the sticky column in the workflow ladder now holds a screenshot */
@@ -897,16 +882,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   from{ opacity:0; transform:translateX(var(--from,0)) translateY(6px); }
   to{ opacity:1; transform:none; }
 }
-/* file artifacts show their own extension{
-  width:40px; height:40px; flex:none;
-  display:grid; place-items:center;
-  border:1px solid var(--hairline);
-  border-radius:10px;
-  background:#FAFAF8;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:9.5px; letter-spacing:.04em;
-  color:var(--ink-soft);
-}
 
 /* published artifacts show the deliverable itself */
 .acard--thumb{ flex-direction:column; align-items:stretch; gap:10px; padding:10px 10px 12px; }
@@ -929,13 +904,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-style:normal; font-size:10.5px; letter-spacing:.04em;
   color:var(--ink-mute);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-/* the built Okou UI{
-  border:1px solid var(--hairline);
-  border-radius:var(--r-card);
-  overflow:hidden;
-  background:#fff;
-  box-shadow:0 2px 6px rgba(0,0,0,.05), 0 22px 52px -24px rgba(0,0,0,.30);
 }
 
 .okoui__side ul li.is-on{ color:var(--ink); font-weight:600; }
@@ -1078,8 +1046,8 @@ a.acard .acard__txt i{ color:var(--ink); }
 .acard__ic--slack img{ transform:scale(1.35); }
 
 .acard--conn .acard__txt i{ white-space:normal; line-height:1.4; }
-/* connector marks: percentage-sized SVGs need a fixed box to paint into */
-.acard__ic img,.perms__list img,.vs__label img{ width:100%; height:100%; }
+
+/* connector marks: percentage-sized SVGs need a fixed box to paint into */.acard__ic img,.perms__list img,.vs__label img{ width:100%; height:100%; }
 
 .acard__ic img{ width:22px; height:22px; }
 
@@ -1237,7 +1205,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 }
 
 .absui__stop{ width:26px; height:26px; border-radius:8px; background:var(--orange); }
-/* the Create workflow dialog{ background:rgba(0,0,0,.06); padding:26px; }
 
 
 /* the Workflows list, Automated filter on */
@@ -1280,12 +1247,6 @@ a.acard .acard__txt i{ color:var(--ink); }
   margin-left:auto; font-style:normal;
   font-family:"IBM Plex Mono", ui-monospace, monospace;
   font-size:11.5px; color:var(--ink-mute);
-}
-/* ── step 2: the agent proposes the workflow,and the list it lands in.
-      One window,two panes: the tail of the conversation on the left{
-  display:grid;
-  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
-  flex:1; min-height:0;
 }
 
 .absui__pane .absui__stream p{ font-size:13.5px; line-height:1.55; }
@@ -1439,8 +1400,6 @@ a.acard .acard__txt i{ color:var(--ink); }
   .rot.is-on{ animation:none; }
 
 }
-/* ── 03 / at once: one ask,five jobs running side by side ──
-      Read left to right: what was asked,what Okou split it into,who is on each one,how far along it is{ margin:clamp(44px,5vw,68px) 0 0; }
 
 .fan .absui{ max-width:1040px; margin-inline:auto; min-height:0; }
 
@@ -1690,10 +1649,15 @@ a.acard .acard__txt i{ color:var(--ink); }
 @media (max-width:900px){
   .a2a__row::before,.a2a__return::before,
   .a2a__card::before,.a2a__card::after{ display:none; }
+
   .a2a__row{ padding-top:0; margin-bottom:0; row-gap:14px; }
+
   .a2a__return{ height:22px; margin-top:22px; }
+
   .a2a__stem--long{ height:34px; }
+
   .a2a__label{ position:static; margin-bottom:14px; text-align:center; }
+
 }
 
 
@@ -2136,9 +2100,10 @@ img{ filter:none; }
 
 .step{ border-radius:0; }
 .state{ border-radius:var(--r-pill); }
+
+
 /* every page-level rule inherited from the component layer comes off:
-   this page separates with grounds,space and shadow,never with a line */
-.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,.metrics li,.scenes__tabs,.step,.nav,.panel,.perms__list,.a2a__ask{
+   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,.metrics li,.scenes__tabs,.step,.nav,.panel,.perms__list,.a2a__ask{
   border:0;
 }
 .hero__body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
@@ -2182,9 +2147,10 @@ h3{ font-family:var(--fd); }
   letter-spacing:-.014em;
   color:var(--ink);
 }
-/* utility face: labels,data,captions,controls — the signal that a
-   string is metadata and not prose */
-.chip,.footnote,.metrics span,.vs__label,.state,.quote__tag,.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,.footer__links,.footer__links a,.footer__copy,.a2a__step,.a2a__label,.a2a__back,.scenes__tab{
+
+
+/* utility face: labels, data, captions, controls — the signal that a
+   string is metadata and not prose */.chip,.footnote,.metrics span,.vs__label,.state,.quote__tag,.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,.footer__links,.footer__links a,.footer__copy,.a2a__step,.a2a__label,.a2a__back,.scenes__tab{
   font-family:var(--fm);
   font-weight:500;
   text-transform:uppercase;
@@ -2511,8 +2477,10 @@ h3{ font-family:var(--fd); }
 }
 
 .panel{ border-top:0; }
+
 /* surfaces are always paper; the shadow carries them on a paper ground
-   and the fill carries them on a wash ground. Only the small pills flip,.scenes__tab:not(.is-on){ background:var(--wash-2); }
+   and the fill carries them on a wash ground. Only the small pills flip,
+   and never in their active state. */.scenes__tab:not(.is-on){ background:var(--wash-2); }
 #outputs .scenes__tab:not(.is-on){ background:var(--paper); }
 
 
@@ -2900,46 +2868,76 @@ h3{ font-family:var(--fd); }
 .logo img[src*="slack"]{ transform:scale(1.34); }
 
 .logo img[src*="notion"]{ transform:scale(1.06); }
+
+
 /* ─────────────── 13. the ladder ───────────────
-   Built to the Figma,node 662:1561 of "Mobile app",token for token:
+   Built to the Figma, node 662:1561 of "Mobile app", token for token:
    every number and colour in this block was read out of that node rather
-   than derived from this page's scale,because that is what was asked for.
+   than derived from this page's scale, because that is what was asked for.
    The rows carry a 4px marker rail and are separated by a 0.5px hairline
-   — both are the reference design's own furniture,so four screens of four shapes read as one. */
+   — both are the reference design's own furniture, so §1 of
+   docs/design-principles.md does not apply inside this component.
+
+   Behaviour on top of it: the section is pinned and how far you have
+   scrolled through the pin selects the open row. Its title doubles
+   (16 → 32px) and its paragraph unfolds; the media beside it changes with
+   it and keeps one height, so four screens of four shapes read as one. */
 .ladder{
-  /* ── straight from the Figma ── */
-  --wf-gap:48px;                          /* 16 + 32, the two frames' facing pads */
-  --wf-row-gap:12px;                      /* list gap, and each side of a rule    */
-  --wf-open-gap:8px;                      /* open title → its paragraph           */
-  --wf-bar-w:4px;  --wf-bar-h:19px;       /* the marker rail, r=100               */
+  /* ── the reference frame, scaled ──
+     Every value below is Figma node 662:1561 multiplied by one factor: the
+     ratio of this block's width to the reference's own 983px. At 1440 that
+     is 1.34×, which is why the clamp maxima are what they are. Scaling the
+     whole frame by one number is what keeps the reference's proportions —
+     the 2× title jump, the 40-character measure, the 649 : 498 media —
+     while giving the section a size that suits the viewport it is in. */
+  --wf-gap:clamp(48px, 4.4vw, 64px);        /* 48  · the two frames' facing pads */
+  --wf-row-gap:clamp(12px, 1.12vw, 16px);   /* 12  · list gap, each side of a rule */
+  --wf-open-gap:clamp(8px, .75vw, 11px);    /*  8  · open title → its paragraph  */
+  --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
+  --wf-bar-h:clamp(19px, 1.8vw, 26px);      /* 19                                 */
   --wf-rule:.5px;  --wf-rule-ink:rgba(0,0,0,.12);
-  --wf-title:16px;      --wf-title-lh:19.36px;  --wf-title-wt:300;
+  --wf-title:clamp(16px, 1.5vw, 22px);      /* 16                                 */
+  --wf-title-lh:1.21;                       /* 19.36 / 16                         */
+  --wf-title-wt:300;
   --wf-title-ink:rgba(0,0,0,.6);
-  --wf-title-on:32px;   --wf-title-on-lh:38.73px; --wf-title-on-wt:400;
-  --wf-body:16px;       --wf-body-lh:19.36px;
-  --wf-foot:12px;       --wf-foot-lh:14.52px;
-  --wf-media-r:16px;    --wf-media-bg:#D9D9D9;
+  --wf-title-on:clamp(32px, 3vw, 44px);     /* 32  · exactly 2× the resting one   */
+  --wf-title-on-lh:1.21;                    /* 38.73 / 32                         */
+  --wf-title-on-wt:400;
+  --wf-body:clamp(16px, 1.5vw, 22px);       /* 16                                 */
+  --wf-body-lh:1.21;
+  --wf-foot:clamp(12px, 1.12vw, 16px);      /* 12                                 */
+  --wf-foot-lh:1.21;
+  --wf-media-r:clamp(16px, 1.5vw, 22px);    /* 16                                 */
+
+  /* the mat. The reference fills its box with the picture, so its ground never
+     shows; ours is a white app window on a white card, which disappeared into
+     it. A dark mat with the screen inset is what makes it read as a framed
+     product shot instead of a floating rectangle. */
+  --wf-media-bg:var(--mat);
+  --wf-pad:clamp(20px, 3.4vw, 52px);
 
   /* ── the scroll mechanic ── */
   --wf-steps:4;
-  --wf-travel:64vh;                       /* scroll spent on each step */
-  --wf-top:calc(var(--nav-h) + 26px);
-  /* the reference frame is 286 + 48 + 649 wide and 498 tall inside its own
-     padding, which the card already provides. Reproducing it at that size —
-     centred, like every other block in the section — is what keeps the
-     literal token values in the proportion they were drawn in. */
-  --wf-w:983px;
-  --wf-h:min(498px, calc(100vh - var(--nav-h) - 96px));
+  --wf-travel:64vh;                         /* scroll spent on each step */
+  /* the block clears the header by a proper margin: at the old +26px the
+     first row sat right under the nav with no air at all */
+  --wf-top:calc(var(--nav-h) + 60px);
+  /* the media keeps the reference's 649 : 498 proportion at every width, and
+     is capped only so the pinned view still fits on screen with air under it */
+  --wf-h:min(
+    calc((100vw - 2 * var(--edge) - var(--wf-gap)) * 498 / 935),
+    calc(100vh - var(--nav-h) - 168px)
+  );
   position:relative;
   margin-top:clamp(40px, 4.4vw, 68px);
   height:calc(var(--wf-h) + (var(--wf-steps) - 1) * var(--wf-travel));
   font-family:Inter, var(--fb);
 }
 
+
 .ladder__view{
   position:sticky; top:var(--wf-top);
   height:var(--wf-h);
-  max-width:var(--wf-w); margin-inline:auto;
   display:grid;
   grid-template-columns:minmax(0,286fr) minmax(0,649fr);
   gap:var(--wf-gap);
@@ -3058,6 +3056,7 @@ h3{ font-family:var(--fd); }
 .ladder__frame{
   position:relative;
   height:100%;
+  padding:var(--wf-pad);
   border-radius:var(--wf-media-r);
   background:var(--wf-media-bg);
   overflow:hidden;
@@ -3066,38 +3065,46 @@ h3{ font-family:var(--fd); }
 /* the switch itself is `display:none / block` in the component layer, which
    also keeps the three closed steps out of the accessibility tree.
 
-   The screens were drawn taller than the reference box (the two-pane
-   workspace needs 572px, the Slack window 640px), so each one lays out at
-   the height it needs and is then FITTED to the box, the way a photograph
-   is scaled to a frame. Cropping instead would take the action row off the
-   bottom of the save card, which is the whole point of that screen. */
+   Every screen lays out at ONE design width and is then scaled into the mat,
+   the way a photograph is fitted to a frame. The factor is measured in
+   `app.js` rather than written down, because the mat is fluid now — a
+   hard-coded height is only ever right at one viewport. Fitting also beats
+   cropping here: the bottom of these screens is the action row and the
+   composer, which is the point of the picture. */
 .wfstage{
-  --dh:498;                              /* the height this screen needs */
-  position:absolute; top:0; left:0;
-  width:calc(100% * var(--dh) / 498);
-  height:calc(var(--dh) * 1px);
-  transform:scale(calc(498 / var(--dh)));
-  transform-origin:top left;
+  position:absolute; top:50%; left:50%;
+  width:var(--dw, 760px);
+  height:var(--dh, 520px);
+  transform:translate(-50%, -50%) scale(var(--fit, 1));
 }
 
-.wfstage[data-step="2"]{ --dh:572; }
+/* how app.js takes the measurement: laid out at the design width, its own
+   height, nothing scaled, nothing visible */
+.wfstage.is-measuring{
+  display:block !important;
+  visibility:hidden !important;
+  top:0; left:0;
+  height:auto !important;
+  transform:none !important;
+}
 
-.wfstage[data-step="3"]{ --dh:640; }
+.wfstage.is-measuring .absui,
+.wfstage.is-measuring .slackui{ height:auto !important; }
 
-/* every mock fills the box instead of setting its own height or shadow */
+
+/* every mock fills the stage box instead of setting its own height or shadow */
 .ladder__frame .absui,
 .ladder__frame .slackui{
   height:100%; min-height:0;
-  border-radius:var(--wf-media-r);
+  border-radius:var(--r-card);
   box-shadow:none;
 }
 
 .ladder__frame .absui__body,
 .ladder__frame .flowui__grid{ flex:1 1 auto; min-height:0; overflow:hidden; }
 
-/* the reference box is wider than it is tall, so a short thread has spare
-   height — centre it rather than pinning it to either end, or the space
-   opens as a hole above the composer */
+/* a short thread has spare height in a box this size — centre it rather than
+   pinning it to either end, or the space opens as a hole above the composer */
 .ladder__frame .absui__body--chat{ justify-content:center; }
 
 
@@ -3439,6 +3446,7 @@ h3{ font-family:var(--fd); }
 /* ─────────────── 19. responsive ─────────────── */
 @media (max-width:1080px){
   .control{ grid-template-columns:1fr; }
+
   /* nothing is pinned at this width, so the mechanic unwinds: every
      paragraph is open and the titles stop changing size — a size change
      with no room to absorb it just makes the page jump as you scroll.
@@ -3446,26 +3454,41 @@ h3{ font-family:var(--fd); }
      it, so every step still gets to change what you are looking at. A grid
      item can only stick inside its own cell, so the grid comes off here. */
   .ladder{ height:auto; padding-bottom:0; --wf-h:clamp(440px, 118vw, 580px); }
+
   .ladder__view{ display:block; position:static; height:auto; }
+
   .ladder__col{ display:block; }
+
   .ladder__stage{
     position:sticky; top:calc(var(--nav-h) + 14px); z-index:1;
     margin-bottom:clamp(26px, 4vw, 40px);
   }
+
   .ladder__steps{ gap:clamp(14px, 2.4vw, 22px); }
+
   .step__t,.step.is-active .step__t{
     font-size:var(--wf-title-on); line-height:var(--wf-title-on-lh);
   }
+
   .step.is-active .step__t{ color:#000; }
-  .step__body{ grid-template-rows:1fr; opacity:1; }   /* nothing is hidden */
+
+  .step__body{ grid-template-rows:1fr; opacity:1; }
+   /* nothing is hidden */
   .step__body > p,.ladder__foot > p{ max-width:64ch; }
+
   .step__body > p{ padding-top:8px; }
+
   .ladder__foot{ margin-top:0; }
+
   .ladder__frame{ height:var(--wf-h); }
-  /* the fit-to-frame scale is computed against the reference box's 498px, so
-     it is wrong for a box of any other height: here the screen simply fills
-     the box and the clipped edge fades instead */
-  .wfstage{ width:100%; height:100%; transform:none; }
+
+  /* nothing is pinned here and the mat is a different shape, so the screen
+     fills the box and the clipped edge fades instead of being fitted */
+  .wfstage{
+    position:static; width:100%; height:100%;
+    transform:none;
+  }
+
   .wfstage .slackui__msgs,
   .wfstage .absui__wfs,
   .wfstage .absui__body,
@@ -3473,6 +3496,7 @@ h3{ font-family:var(--fd); }
     -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
             mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
   }
+
   /* the thread is centred, so it can run off either end */
   .wfstage .absui__body--chat{
     -webkit-mask-image:linear-gradient(to bottom, transparent, #000 28px,
@@ -3480,10 +3504,15 @@ h3{ font-family:var(--fd); }
             mask-image:linear-gradient(to bottom, transparent, #000 28px,
                                        #000 calc(100% - 28px), transparent);
   }
+
   .scene.is-on{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); }
+
   .scene__side--l{ order:2; }
+
   .scene__ui{ order:1; grid-column:1 / 3; }
+
   .scene__side--r{ order:3; }
+
 }
 
 /* the component layer drops the Slack channel column at this width, but a
@@ -3491,7 +3520,8 @@ h3{ font-family:var(--fd); }
    the thread about a hundred pixels wide. The design layer has the last word. */
 @media (max-width:860px){
   .slackui{ grid-template-columns:minmax(0,1fr); }
-  .slackui__rail,.slackui__side{ display:none; }
+.slackui__side{ display:none; }
+
 }
 
 
@@ -3576,25 +3606,37 @@ h3{ font-family:var(--fd); }
     transition-duration:.01ms !important;
     scroll-behavior:auto !important;
   }
+
   .reveal,[data-reveal="scale"]{ opacity:1 !important; transform:none !important; }
+
   [data-reveal="mask"] .line{ clip-path:none !important; transform:none !important; }
+
   [data-reveal="stagger"] > *{ opacity:1 !important; transform:none !important; }
+
   .mark{ background-size:100% .14em; }
+
   .nav{ transform:translate(-50%, 0); }
+
   /* the rails hold still, and nothing is hidden behind a rotation:
      both statements are shown, stacked */
   .rail__track{ animation:none !important; }
+
   .reach__stage{ display:block; min-height:0; }
+
   .reach__line{ position:static; visibility:visible; }
+
   .reach__line + .reach__line{ margin-top:.7em; }
+
   .reach__line .w{ opacity:1 !important; transform:none !important; }
+
 }
+
+
 /* ─────────────── 21. no outlines on our own surfaces ───────────────
    The component layer above still boxes its panels in a hairline. On
-   this page a surface is defined by its ground and its shadow,so the
+   this page a surface is defined by its ground and its shadow, so the
    outlines come off here in one place. Borders INSIDE a product window
-   stay: there they are the product's own UI,not our page furniture. */
-.perms,.slackui,.absui,.flowui{ border:0; }
+   stay: there they are the product's own UI, not our page furniture. */.perms,.slackui,.absui,.flowui{ border:0; }
 
 .slackui{ box-shadow:var(--e-3); }
 
@@ -3922,10 +3964,11 @@ h3{ font-family:var(--fd); }
   .nav__signin:hover .roll__t + .roll__t{ transform:translateY(100%); }
 
 }
+
+
 /* ── brand marks never stretch ─────────────────────────────────────
    Several connector SVGs are not square (Gmail is 4:3). Anywhere we
-   put one in a fixed box it has to letterbox,not squash. */
-.acard__ic img,.perms__list img,.vs__label img,.logo img,.btn img{
+   put one in a fixed box it has to letterbox, not squash. */.acard__ic img,.perms__list img,.vs__label img,.logo img,.btn img{
   object-fit:contain;
 }
 
@@ -3946,10 +3989,15 @@ h3{ font-family:var(--fd); }
   margin:clamp(72px, 7.4vw, 116px) 0 0;   /* room for the cards above it */
   padding-bottom:clamp(60px, 7vw, 130px);   /* the page window hangs below */
 }
+
+
 /* ── the product ──────────────────────────────────────────────────
-   Every value below is the platform's own,the cool gray ramp,--radius 8px,primary-700 #ED4E01,and lucide-react glyphs — Users / Route / Plug / Package for the
-   Manage nav,PanelLeftClose,LayoutGrid,Hourglass + ChevronRight
-   for the run row,Paperclip / Image / SlidersHorizontal / Globe /
+   Every value below is the platform's own, read out of vm0-ai/vm0
+   (turbo/packages/ui/src/styles/globals.css and the zero-page views):
+   Noto Sans, the cool gray ramp, --radius 8px, primary-700 #ED4E01,
+   and lucide-react glyphs — Users / Route / Plug / Package for the
+   Manage nav, PanelLeftClose, LayoutGrid, Hourglass + ChevronRight
+   for the run row, Paperclip / Image / SlidersHorizontal / Globe /
    Mic / ArrowUp in the composer. Nothing here is drawn by hand. */
 .appui{
   /* platform tokens, light theme */

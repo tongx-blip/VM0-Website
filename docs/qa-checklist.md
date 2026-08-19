@@ -306,6 +306,19 @@ Baseline to hold: CLS 0, FCP under ~0.5s locally, LCP under ~1.5s. The page is
 image-heavy; new screenshots go through the same `assets/` conventions and keep
 `loading="lazy"` below the fold.
 
+## 9a. The build did not corrupt the CSS
+
+`tools/build-css.py` aborts on unbalanced `/*` / `*/`, but that only catches the
+loud case. The prune pass reads the comment above a rule as part of its selector,
+so **a dot or a comma in a comment can delete the rule under it**. After any
+build that touched a commented block, confirm the rule actually reached the
+browser — the file having the text is not proof:
+
+```js
+[...document.styleSheets].flatMap(sh => { try { return [...sh.cssRules] } catch { return [] } })
+  .filter(r => r.selectorText && /YOUR-SELECTOR/.test(r.selectorText)).length   // > 0
+```
+
 ## 9b. The asset links point at what you just built
 
 `tools/build-css.py` stamps `styles.css?r=<hash>` and `app.js?r=<hash>` from the

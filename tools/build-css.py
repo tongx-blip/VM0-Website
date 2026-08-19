@@ -80,6 +80,25 @@ def split_rules(css):
     return out
 
 
+COMMENT = re.compile(r'/\*.*?\*/', re.S)
+
+
+def split_head(selector):
+    """Separate the comments that sit above a rule from the selector itself.
+
+    `split_rules` hands back everything between `}` and the next `{`, which
+    includes any preceding comment. That matters: a comment containing a dot
+    (`app.js`, `0.5px`, `--wf-h: 498px.`) reads as a class name to the pruner,
+    and a comment containing a comma gets split into "selectors" that are then
+    re-joined without it. That silently rewrote a comment into live CSS once and
+    swallowed the rule underneath it — see docs/changelog.md.
+    """
+    last = None
+    for m in COMMENT.finditer(selector):
+        last = m
+    return (selector[:last.end()], selector[last.end():]) if last else ('', selector)
+
+
 def selector_used(selector, classes):
     used = re.findall(r'\.(-?[_a-zA-Z][\w-]*)', selector)
     return True if not used else any(c in classes for c in used)
@@ -91,7 +110,8 @@ def prune(css, classes):
         if selector is None:                      # trailing comment / whitespace
             kept.append(whole)
             continue
-        head = selector.strip()
+        lead, real = split_head(selector)
+        head = real.strip()
         if head.startswith('@'):
             if head.split()[0] in ('@media', '@supports'):
                 inner = prune(body, classes)
@@ -105,7 +125,7 @@ def prune(css, classes):
         if not keep:
             continue
         if len(keep) != len(parts):
-            kept.append(','.join(p.strip() for p in keep) + '{' + body + '}')
+            kept.append(lead + ','.join(p.strip() for p in keep) + '{' + body + '}')
         else:
             kept.append(whole)
     return '\n'.join(kept)
@@ -127,6 +147,14 @@ def main():
     classes = markup_classes()
     raw = '\n'.join(open(p, encoding='utf-8').read() for p in SOURCES)
     out = prune(raw, classes)
+
+    # A rule rebuilt from a mis-split selector leaves a comment's tail as live
+    # CSS, which the browser then swallows along with the rule after it. Cheap
+    # to detect, and it has shipped once.
+    if out.count('/*') != out.count('*/'):
+        raise SystemExit(
+            'build aborted: %d `/*` vs %d `*/` in the output — a comment was '
+            'cut in half by the prune pass' % (out.count('/*'), out.count('*/')))
     open(OUT, 'w', encoding='utf-8').write(out)
     css_hash, js_hash = stamp(out)
     print('sources %d KB -> site/styles.css %d KB (%d classes in markup)'

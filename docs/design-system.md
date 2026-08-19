@@ -459,21 +459,41 @@ than they were designed for. Every one of those numbers is a `--wf-*` custom
 property at the top of §13, with the node id in the comment, so the next person
 can diff them against the file rather than guess which are intentional.
 
-**Fitting, not matting.** When several product screens share one slot, they must
-not resize it. Ours are drawn taller than the reference box (572px and 640px
-against 498), so each stage lays out at the height it needs and is then scaled
-into the box:
+**Sizing it to the viewport.** The reference frame is scaled by ONE factor — this
+block's width over the reference's own 983px, 1.34× at 1440 — and every `--wf-*`
+clamp maximum is that product. Scaling the whole frame by one number is the only
+way to keep a reference's proportions while changing its size; tuning values
+individually is how a design stops being the design. Targets worth holding, read
+off a page whose sizing was called comfortable: **media ≈ 65–75% of viewport
+height**, and enough space under it that the section does not end at the fold.
+
+**Fitting, not matting.** When several product screens share one slot they must
+not resize it, and a hard-coded fit is only right at one viewport. Each stage
+lays out at one design width, `app.js` measures its natural height behind
+`visibility:hidden`, and sets the scale:
+
+```js
+st.classList.add('is-measuring');            // display:block, height:auto, no transform
+var h = st.getBoundingClientRect().height;
+st.classList.remove('is-measuring');
+st.style.setProperty('--fit', Math.min(bw / FIT_W, bh / h).toFixed(4));
+```
 
 ```css
 .wfstage{
-  --dh:498;                                    /* what this screen needs */
-  width:calc(100% * var(--dh) / 498);
-  height:calc(var(--dh) * 1px);
-  transform:scale(calc(498 / var(--dh)));
-  transform-origin:top left;
+  position:absolute; top:50%; left:50%;
+  width:var(--dw); height:var(--dh);
+  transform:translate(-50%, -50%) scale(var(--fit, 1));
 }
-.wfstage[data-step="2"]{ --dh:572; }
 ```
+
+Re-run it on resize and on `fonts.ready` — web fonts change every measurement.
+The CSS defaults (`--fit: 1`) must still render something sane if the JS never
+runs.
+
+**A mat has to contrast with what it sits on.** The reference's ground never
+shows because the picture fills it; a white app window on a white card needs a
+dark mat and a real inset, or the frame reads as nothing at all.
 
 - **Fit before you crop.** Cropping is only acceptable where the clipped edge is
   more of the same — a long thread, a long list. Where the bottom of the screen

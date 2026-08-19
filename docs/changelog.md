@@ -6,6 +6,56 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · the ladder sized to the viewport, and a build that ate a comment
+
+Measured against the Apollo page supplied as a reference (that screenshot is a
+1260 × 857 viewport at DPR 2): its media is **558 × 554 — square, 65% of the
+viewport height** — its columns are near 50/50, its section headline is ~40px,
+and its screenshot sits inset in a mat that contrasts hard with the card. Ours
+was doing the opposite: a 649px picture on a 1320px card, a `#D9D9D9` mat
+completely hidden behind a white app window, content jammed under the header and
+a large dead band at the bottom of the viewport.
+
+**One scale factor, not a re-design.** Every `--wf-*` value is still Figma node
+`662:1561`, now multiplied by the ratio of this block's width to the reference's
+own 983px — 1.34× at 1440. That is what the clamp maxima are: 16 → 22px body,
+32 → 44px open title, 12 → 16px foot, 48 → 64px gutter, 4 → 5.5px marker. Every
+proportion the reference was drawn with survives (the 2× title jump, the
+40-character measure, the 649 : 498 media); only the absolute size changes. The
+`--wf-w: 983px` cap is gone, so the block fills the card: media **872 × 668**,
+which is 74% of the viewport height.
+
+- **Safe space.** The pin now starts at `--nav-h + 60px`, not `+ 26px`.
+- **Vertical fill.** The media height is capped at `100vh - --nav-h - 168px`
+  instead of `- 96px`, and because it is now much taller the dead band under it
+  is ~110px rather than ~300px.
+- **The mat is visible.** `var(--mat)` (`#171B1F`) with the screen inset by
+  `clamp(20px, 3.4vw, 52px)`. The reference fills its box with the picture so its
+  ground never shows; ours is a white window on a white card, which is exactly
+  why it disappeared.
+
+**The fit is measured now, not written down.** Hard-coded `--dh` values were only
+ever right at one viewport, and the mat is fluid. `app.js` lays each stage out at
+one design width (760px), reads its natural height behind
+`visibility:hidden`, and sets `--fit = min(boxW/760, boxH/h)`. Re-run on resize
+and on `fonts.ready`. All four screens now sit inside the mat with room to spare —
+including the Slack thread, which had been losing its last message to a crop.
+
+**`tools/build-css.py` was silently rewriting comments into live CSS.**
+`split_rules` hands back everything between `}` and the next `{`, which includes
+the comment above a rule. The pruner then split that "selector" on commas and
+matched `\.([a-z…])` against each part — so a comment containing **`app.js`**
+read as the class `.js`, was found to be unused, and was **dropped**, leaving its
+own tail (`its own height, nothing scaled, nothing visible */`) sitting in the
+output as live CSS. The browser swallowed that and the entire rule beneath it,
+which is why `.wfstage.is-measuring` never applied and only the visible stage got
+measured. Fixed by separating the leading comments from the selector before
+splitting, and the build now **aborts** if `/*` and `*/` counts disagree in the
+output. This is the second time this file has shipped a silent corruption — the
+first was the stale `?r=` hash.
+
+---
+
 ## 2026-08-19 · shared workflows, built to the Figma; lighter titles everywhere
 
 Three instructions in one round: drop the floating composer, put the whole

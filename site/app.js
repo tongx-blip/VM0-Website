@@ -202,6 +202,29 @@
     return Math.max(0, Math.min(steps.length - 1, Math.floor(p * steps.length)));
   }
 
+  /* Fit each screen into the mat. Every stage lays out at one design width
+     and is scaled to whatever the mat currently is — the mat is fluid, so a
+     hard-coded height is only ever right at one viewport. */
+  var FIT_W = 760;
+
+  function fitStages() {
+    var frame = ladder && ladder.querySelector('.ladder__frame');
+    if (!frame || !stages.length) return;
+    var cs = getComputedStyle(frame);
+    var bw = frame.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var bh = frame.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    if (!(bw > 0 && bh > 0)) return;
+    stages.forEach(function (st) {
+      st.style.setProperty('--dw', FIT_W + 'px');
+      st.classList.add('is-measuring');
+      var h = st.getBoundingClientRect().height;
+      st.classList.remove('is-measuring');
+      if (!h) return;
+      st.style.setProperty('--dh', Math.round(h) + 'px');
+      st.style.setProperty('--fit', Math.min(bw / FIT_W, bh / h).toFixed(4));
+    });
+  }
+
   function readScroll() {
     if (nav) nav.classList.toggle('is-stuck', window.scrollY > 28);
     // stacked, the frame is stuck over the list and all four paragraphs are
@@ -217,8 +240,13 @@
     ticking = true;
     requestAnimationFrame(function () { readScroll(); ticking = false; });
   }, { passive: true });
-  window.addEventListener('resize', function () { cur = -1; readScroll(); }, { passive: true });
+  window.addEventListener('resize', function () {
+    cur = -1; fitStages(); readScroll();
+  }, { passive: true });
+  fitStages();
   readScroll();
+  // web fonts change every one of those measurements
+  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fitStages).catch(function () {});
 
   steps.forEach(function (s, i) {
     s.addEventListener('click', function () {
