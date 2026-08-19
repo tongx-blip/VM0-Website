@@ -6,6 +6,35 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · the Storefront Launch tab, drawn in code
+
+Feedback: build this region in code rather than as a screenshot, make the
+interface bigger, use our own avatars, pick something for the Workspace mark,
+swap the template for Coastal Hotel, and overlay the template on the product as
+a panel the visitor can actually scroll. Only this tab for now — review before
+the other six.
+
+- **The product UI is code, not a PNG.** `.appui` — sidebar (workspace row, the
+  four Manage items, Pinned, the chat list, Get Pro, footer) plus the thread
+  (prompt, agent reply with the artifact preview, action row, composer with the
+  model chip). Our brand avatars stand in for the agent and the user; the
+  workspace mark is the Okou icon on an accent-wash tile.
+- **Bigger**: the stage is 1300px wide at 1440 — the product alone is 962px,
+  against 745px for the old screenshot.
+- **The template is a real page**, regenerated for a coastal hotel called
+  Litoral: `.tpl` has its own miniature design system (sand/shell/sea-green,
+  Cormorant Garamond) and three photographs generated for it. It lives in
+  `.tplwin`, a browser window pinned to the right that **overlaps the product and
+  scrolls** (`overflow-y:auto`, keyboard-focusable, `overscroll-behavior:contain`).
+- **The two connector cards** sit above the product's top-right corner, clear of
+  the chat, as in the sketch.
+- The product keeps a right gutter (`clamp(20px, 9%, 104px)`) so nothing readable
+  ever sits underneath the overlapping window.
+- The other six tabs still use their captured screenshots.
+
+0 axe violations (43 passes), 0 page-level borders, sweep clean, no horizontal
+scroll 390–1920.
+
 ## 2026-08-18 · three visual bugs that screenshots would have caught
 
 Feedback: the Slack mark is too small, the two logo rows run at different

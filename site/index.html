@@ -8,8 +8,8 @@
 <link rel="icon" href="assets/okou-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=c39c1acb">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?r=cd71f11f">
 </head>
 <body>
 
@@ -101,10 +101,137 @@
   <div class="scenes" id="scenes" data-reveal="scale">
       <div class="scenes__tabs" role="tablist"><button class="scenes__tab is-on" role="tab" data-scene="marketing" aria-selected="true">Storefront Launch</button><button class="scenes__tab" role="tab" data-scene="ads" aria-selected="false">Ad Campaign</button><button class="scenes__tab" role="tab" data-scene="sales" aria-selected="false">Lead Scoring</button><button class="scenes__tab" role="tab" data-scene="engineering" aria-selected="false">Incident Triage</button><button class="scenes__tab" role="tab" data-scene="product" aria-selected="false">Spec Writing</button><button class="scenes__tab" role="tab" data-scene="ops" aria-selected="false">Team Digest</button><button class="scenes__tab" role="tab" data-scene="leadership" aria-selected="false">Board Deck</button></div>
       <div class="scenes__stage">
-        <div class="scene is-on" data-scene="marketing" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-drive_marketing.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Drive</b><i>Brand brief read from the shared folder</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/gmail.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Gmail</b><i>Launch announcement drafted, unsent</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/chat-artifact.png" alt="An Okou run for marketing" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-aurelle-storefront.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-aurelle-storefront.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/marketing-v2.png" alt="Aurelle storefront preview" loading="lazy"><span class="acard__txt"><b>Aurelle storefront</b><i>Open the live page &#8599;</i></span></a></aside>
+        <div class="scene scene--built is-on" data-scene="marketing" role="tabpanel">
+          <div class="stage">
+
+            <!-- the product, drawn in code -->
+            <div class="appui">
+              <aside class="appui__side">
+                <p class="appui__ws">
+                  <span class="appui__wsic"><img src="assets/okou-icon.svg" alt="" width="18" height="18"></span>
+                  My Organization
+                  <svg viewBox="0 0 24 24" class="appui__caret" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </p>
+
+                <p class="appui__grp">Manage</p>
+                <ul class="appui__nav">
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M16 11a3 3 0 1 0 0-6"/></svg>Agents</li>
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h7M13 7h7M4 17h7M13 17h7"/><circle cx="11" cy="7" r="2"/><circle cx="13" cy="17" r="2"/></svg>Workflows</li>
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v6M12 15v6M5 12h6M15 12h4"/><circle cx="12" cy="12" r="3"/></svg>Connectors</li>
+                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>Artifacts</li>
+                </ul>
+
+                <p class="appui__grp">Pinned <em>+</em></p>
+                <ul class="appui__nav">
+                  <li class="is-on"><img class="appui__av" src="assets/brand/avatar-1.png" alt="">Zero</li>
+                </ul>
+
+                <p class="appui__grp">Chats with Zero <em>&middot;&middot;&middot;</em></p>
+                <ul class="appui__nav">
+                  <li class="is-on appui__chat">Litoral Coastal Hotel Site</li>
+                </ul>
+
+                <div class="appui__foot">
+                  <p class="appui__pro"><span><b>Get Pro</b><i>More credits &amp; concurrent runs</i></span></p>
+                  <p class="appui__link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>Where Zero works</p>
+                  <p class="appui__user"><img class="appui__av" src="assets/brand/avatar-2.png" alt="">User</p>
+                </div>
+              </aside>
+
+              <div class="appui__main">
+                <div class="appui__top">
+                  <span class="appui__title"><img class="appui__av appui__av--sm" src="assets/brand/avatar-1.png" alt="">Litoral Coastal Hotel Site</span>
+                </div>
+
+                <div class="appui__thread">
+                  <p class="appui__ask">Build a one-page site for a coastal hotel called Litoral: a hero with the
+                    name, a short story, and three room tiles. Keep it minimal and elegant, then publish it and
+                    send me the link.</p>
+
+                  <div class="appui__reply">
+                    <img class="appui__av" src="assets/brand/avatar-1.png" alt="">
+                    <div>
+                      <p class="appui__worked">Worked for 3m <span aria-hidden="true">&rsaquo;</span></p>
+                      <figure class="appui__art">
+                        <figcaption>Litoral</figcaption>
+                        <img src="assets/template/coast-hero.jpg" alt="The page Okou built for Litoral" loading="lazy">
+                      </figure>
+                      <p class="appui__say">It&rsquo;s a single, self-contained page built in a minimal editorial
+                        style &mdash; a warm sand palette with a sea-green accent, a Cormorant Garamond serif for
+                        the brand voice, and photography instead of stock illustration. It includes the hero with
+                        the name and tagline, a short story, and three room tiles &mdash; Terrace, Garden and Sea
+                        View &mdash; each with its own description. It&rsquo;s fully responsive, and the source
+                        lives at <a href="#outputs">index.html</a> if you&rsquo;d like any tweaks to copy, colours
+                        or layout.</p>
+                      <p class="appui__acts">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l5-6 4 3 6-8"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5h10"/></svg>
+                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>10</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="appui__composer">
+                  <span class="appui__ph">Ask me to automate workflows, manage tasks&hellip;</span>
+                  <span class="appui__tools">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12l-8.5 8.5a4 4 0 0 1-6-6L14 6a3 3 0 0 1 4 4l-8 8"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
+                  </span>
+                  <span class="appui__model"><img src="assets/connectors/deepseek.svg" alt="" width="16" height="16">DeepSeek V4 Flash</span>
+                  <span class="appui__send" aria-hidden="true">&uarr;</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- what the run reached into -->
+            <aside class="stage__conn">
+              <article class="acard acard--conn" style="--i:1">
+                <span class="acard__ic"><img src="assets/connectors/google-drive_marketing.svg" alt="" width="24" height="24"></span>
+                <span class="acard__txt"><b>Google Drive</b><i>Brand brief read from the shared folder</i></span>
+              </article>
+              <article class="acard acard--conn" style="--i:2">
+                <span class="acard__ic"><img src="assets/connectors/gmail.svg" alt="" width="24" height="24"></span>
+                <span class="acard__txt"><b>Gmail</b><i>Launch announcement drafted, unsent</i></span>
+              </article>
+            </aside>
+
+            <!-- what it shipped: a real page, scrollable -->
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">okou-artifact-litoral-hotel.sites.vm0.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of the page Okou published">
+                <div class="tpl">
+                  <header class="tpl__nav"><span class="tpl__mark">LITORAL</span><span>Rooms &middot; Table &middot; Book</span></header>
+                  <img class="tpl__hero" src="assets/template/coast-hero.jpg" alt="" loading="lazy">
+                  <div class="tpl__pad">
+                    <p class="tpl__eyebrow">Cala Blanca &middot; Since 1974</p>
+                    <h1 class="tpl__h1">A quiet house<br>above the water</h1>
+                    <p class="tpl__lede">Eleven rooms on a lime-washed terrace, one olive tree, and the sea doing
+                      the talking. Breakfast is late and the afternoon is yours.</p>
+                  </div>
+                  <img class="tpl__wide" src="assets/template/coast-room.jpg" alt="" loading="lazy">
+                  <div class="tpl__pad">
+                    <p class="tpl__eyebrow">The rooms</p>
+                    <ul class="tpl__rooms">
+                      <li><b>Terrace</b><i>Shuttered doors onto the pool deck</i><em>from &euro;180</em></li>
+                      <li><b>Garden</b><i>Rosemary, shade and a stone bath</i><em>from &euro;210</em></li>
+                      <li><b>Sea View</b><i>Two windows, both of them water</i><em>from &euro;260</em></li>
+                    </ul>
+                  </div>
+                  <img class="tpl__wide" src="assets/template/coast-still.jpg" alt="" loading="lazy">
+                  <div class="tpl__pad">
+                    <p class="tpl__quote">&ldquo;We came for two nights and rebooked from the terrace.&rdquo;</p>
+                    <p class="tpl__foot">Litoral &middot; Cala Blanca &middot; hola@litoral.example</p>
+                  </div>
+                </div>
+              </div>
+            </figure>
+
+          </div>
         </div>
         <div class="scene" data-scene="ads" role="tabpanel">
           <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-analytics.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Analytics</b><i>10,220 sessions reviewed across three pages</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/meta-ads.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Meta Ads</b><i>$183 budget shift drafted for approval</i></span></article></aside>

@@ -364,3 +364,31 @@ each track once for a seamless loop; `data-speed` sets the duration and
 Two earlier redesigns of this region were reverted (2026-08-18): a labelled
 three-family wall of named chips, and a compact grid with logo-only connector
 tiles. Agree the direction before rebuilding it again.
+
+## 12. The Storefront Launch stage
+
+The first tab of Outputs is built in code (`.scene--built`), not a screenshot:
+
+```
+.stage
+├── .appui        the product — sidebar + thread, 74% width
+├── .stage__conn  two connector cards, absolute, top right, above the product
+└── .tplwin       the published page in a browser window, absolute right,
+                  overlapping the product and scrollable
+```
+
+- `.appui` uses the page's own tokens, so the product picture stays in the design
+  system rather than drifting like a screenshot would.
+- `.tplwin__scroll` is `overflow-y:auto`, `tabindex="0"`, `role="region"` with a
+  label, and `overscroll-behavior:contain` so scrolling it never scrolls the page.
+- `.tpl` is a **separate miniature design system** — its own colours, its own
+  serif — because it is depicting a different website. Nothing inside it should
+  inherit ours, and its internal hairlines are that site's furniture, not ours.
+- The product carries a right gutter (`clamp(20px, 9%, 104px)`) so no text is
+  ever hidden under the overlapping window.
+
+Photographs for the template are generated (`site/assets/template/`), scaled to
+≤760px and saved as JPEG — 124KB for all three.
+
+The other six tabs still use captured screenshots. If they are ever rebuilt the
+same way, they should reuse `.appui` and only vary the thread and the artifact.
