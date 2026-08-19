@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=6a87f75e">
+<link rel="stylesheet" href="styles.css?r=c70a7efb">
 </head>
 <body>
 
@@ -362,185 +362,198 @@
     can run, and the workspace keeps it.
   </p>
 
-  <!-- sticky 4-step ladder -->
+  <!-- one step at a time: scrolling the pinned section opens the next step and
+       changes what sits in the frame beside it. The frame keeps one height so
+       four mocks of four different shapes read as one object. -->
   <div class="ladder" id="ladder">
-    <div class="ladder__rail">
-      <ol class="ladder__steps">
+    <div class="ladder__view">
+      <div class="ladder__stage">
+        <div class="ladder__frame">
+        <div class="wfstage is-on" data-step="1">
+        <div class="absui">
+        <div class="absui__bar"><i></i><i></i><i></i><span>October newsletter</span></div>
+        <div class="absui__body absui__body--chat">
+        <p class="absui__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
+        <div class="absui__stream">
+        <p>I&rsquo;ll start from what actually shipped since the last send, then look at which of the last three newsletters got read.</p>
+        <p>Six things shipped. The send that opened with a customer story did far better than the changelog-style ones, so I&rsquo;ll lead with the Notion sync and keep the rest as a short list underneath.</p>
+        <p>Subject lines, body copy and the segment are drafted. It goes to you as a draft in Resend, not to the list.</p>
+        </div>
+        <p class="absui__live"><span class="absui__ldots"><i></i><i></i><i></i></span>Piecing things together&hellip;</p>
+        </div>
+        <div class="absui__composer"><span>Type your next message&hellip;</span><span class="absui__stop"></span></div>
+        </div>
+        </div>
+        <div class="wfstage" data-step="2">
+        <div class="absui flowui">
+        <div class="flowui__top">
+        <span class="flowui__agent"><img src="assets/okou-icon.svg" alt="" width="20" height="20"></span>
+        <span>October newsletter</span>
+        </div>
+        <div class="flowui__grid">
+        <section class="flowchat" aria-label="Chat with Okou">
+        <p class="flowchat__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
+        <div class="flowchat__reply">
+        <span class="flowchat__avatar"><img src="assets/okou-icon.svg" alt="" width="22" height="22"></span>
+        <div class="flowchat__answer">
+        <p class="flowchat__worked">Okou <span>&middot; Worked for 2m</span></p>
+        <p>The draft is ready in Resend. This is the third month you have asked for it the same way, so I can keep the process for next time.</p>
+        <article class="flowsave">
+        <div class="flowsave__head">
+        <span><b>Monthly product newsletter</b><i>Ready to save</i></span>
+        <em>Workflow</em>
+        </div>
+        <p>Linear releases &rarr; open-rate check &rarr; newsletter draft in Resend</p>
+        <div class="flowsave__actions"><span class="flowsave__primary">Save workflow</span><span>Not now</span></div>
+        </article>
+        </div>
+        </div>
+        <div class="flowchat__composer"><span>Ask me anything&hellip;</span><span class="flowchat__send" aria-hidden="true">&uarr;</span></div>
+        </section>
+        <section class="flowlist" aria-label="Team workflows">
+        <div class="flowlist__head">
+        <span><b>Workflows</b><i>A reusable SOP for a task</i></span>
+        <em>+ Create in chat</em>
+        </div>
+        <p class="flowlist__filters"><span class="is-on">All</span><span>Automated</span><span>Manual</span></p>
+        <ul class="flowlist__items">
+        <li class="is-new"><span><b>Monthly product newsletter</b><i>Draft in Resend &middot; 4 steps</i></span><em>Just saved</em></li>
+        <li><span><b>Weekly team digest</b><i>Automated</i></span><em>Mon 09:00</em></li>
+        <li><span><b>Morning error triage</b><i>Automated</i></span><em>Daily 08:30</em></li>
+        </ul>
+        <p class="flowlist__note">Saved to the team&rsquo;s workspace</p>
+        </section>
+        </div>
+        </div>
+        </div>
+        <div class="wfstage" data-step="3"><div class="slackui reveal" id="slackui">
+        <div class="slackui__side"><p class="slackui__team">vm0 <b>&#9662;</b></p><p class="slackui__grp">Channels</p><ul class="slackui__list"><li class="slackui__ch is-on" data-ch="content"><i>#</i>newsletter</li><li class="slackui__ch" data-ch="marketing"><i>#</i>marketing-and-community</li><li class="slackui__ch" data-ch="bugs"><i>#</i>bug-report</li><li class="slackui__ch" data-ch="customer"><i>#</i>customer</li></ul></div>
+        <div class="slackui__main"><div class="slackui__pane" data-ch="marketing"><div class="slackui__head"><b># marketing-and-community</b><span>12 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
+        <p class="slackui__meta"><b>Ming</b><time>4:15 PM</time></p>
+        <p class="slackui__text"><span class="slackui__mention">@Okou</span> what is the general CPC for AI product campaigns</p></div></div>
+        <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+        <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>4:16 PM</time></p>
+        <p class="slackui__text">General CPC benchmarks for AI product campaigns vary by channel.</p>
+        <ul class="slackui__bullets">
+        <li><b>Search:</b> AI tools $3 to $8, high-intent keywords $5 to $15+.</li>
+        <li><b>LinkedIn:</b> $8 to $15, expensive but high-quality leads.</li>
+        <li><b>X:</b> $0.50 to $3.</li>
+        <li><b>Meta:</b> $1.50 to $5 for tech audiences.</li>
+        </ul>
+        <p class="slackui__reacts"><span class="slackui__react">&#128200; 3</span><span class="slackui__react">&#128077; 2</span></p></div></div>
+        <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
+        <p class="slackui__meta"><b>Ming</b><time>4:18 PM</time></p>
+        <p class="slackui__text">cc <span class="slackui__mention">@Ethan</span> <span class="slackui__mention">@Scarlett</span> &mdash; a click really is expensive.</p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #marketing-and-community<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="bugs"><div class="slackui__head"><b># bug-report</b><span>8 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+        <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:00 AM</time></p>
+        <p class="slackui__ctx"><span>&#128337;</span> Scheduled &middot; every weekday at 09:00</p>
+        <div class="slackui__attach slackui__attach--red">
+        <p class="slackui__attitle">2 causes crossed the 50-event threshold</p>
+        <p class="slackui__attext"><b>Stripe webhook TypeError</b> &middot; 208 events &middot; new this week<br>
+        <b>CSV export RangeError</b> &middot; 74 events &middot; new this week</p>
+        <p class="slackui__fields"><span><i>Total events</i>1,111</span><span><i>Root causes</i>8</span><span><i>Top group</i>42.6%</span></p>
+        </div>
+        <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open issues</button><button class="slackui__btn">View full triage</button><button class="slackui__btn">Snooze</button></p></div></div>
+        <div class="slackui__msg"><span class="slackui__av slackui__av--l"><img class="avatar" src="assets/brand/avatar-3.png" alt=""></span><div>
+        <p class="slackui__meta"><b>Linghan</b><time>9:06 AM</time></p>
+        <p class="slackui__text">taking the webhook one &#9995;</p>
+        <p class="slackui__reacts"><span class="slackui__react">&#128064; 4</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #bug-report<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="customer"><div class="slackui__head"><b># customer</b><span>24 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--s"><img class="avatar" src="assets/brand/avatar-4.png" alt=""></span><div>
+        <p class="slackui__meta"><b>Scarlett</b><time>2:41 PM</time></p>
+        <p class="slackui__text"><span class="slackui__mention">@Okou</span> customers keep asking for bulk export &mdash; write the spec and drop it here</p></div></div>
+        <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+        <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>2:44 PM</time></p>
+        <p class="slackui__text">41 asks last month, 23 of them from paying accounts. One page, with the current workaround and the open questions.</p>
+        <div class="slackui__file">
+        <span class="slackui__fileic">DOC</span>
+        <span class="slackui__filetxt"><b>Bulk export spec</b><i>Google Doc &middot; 1 page &middot; shared in #customer</i></span>
+        </div>
+        <p class="slackui__thread">5 replies <em>Last reply 12 minutes ago</em></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #customer<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane is-on" data-ch="content"><div class="slackui__head"><b># newsletter</b><span>9 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
+        <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:02 AM</time></p>
+        <p class="slackui__ctx"><span>&#128337;</span> Monthly product newsletter &middot; 1st of the month at 09:00</p>
+        <div class="slackui__attach">
+        <p class="slackui__attitle">October newsletter is drafted in Resend</p>
+        <p class="slackui__attext">Six things shipped since the September send. It opens on the <b>Notion sync</b> with a customer line, and the rest sits underneath as a short list.</p>
+        <p class="slackui__fields"><span><i>Audience</i>4,182</span><span><i>Segment</i>Product users</span><span><i>Open rate, last 3</i>38%</span></p>
+        </div>
+        <div class="slackui__file">
+        <span class="slackui__fileic">HTML</span>
+        <span class="slackui__filetxt"><b>october-newsletter</b><i>Draft in Resend &middot; audience attached &middot; not sent</i></span>
+        </div>
+        <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open in Resend</button><button class="slackui__btn">Edit copy</button><button class="slackui__btn">Send now</button></p></div></div>
+        <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
+        <p class="slackui__meta"><b>Ming</b><time>9:14 AM</time></p>
+        <p class="slackui__text">subject B reads better. sending after standup &mdash; nobody had to write it this month.</p>
+        <p class="slackui__reacts"><span class="slackui__react">&#128200; 5</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #newsletter<span class="slackui__send">&#10148;</span></div></div></div>
+        </div></div>
+        <div class="wfstage" data-step="4">
+        <div class="absui">
+        <div class="absui__bar"><i></i><i></i><i></i><span>Workflows</span></div>
+        <div class="absui__body">
+        <p class="absui__sub">A reusable SOP for a task. Run, edit, or automate it.</p>
+        <p class="absui__filters"><span class="is-on">Automated</span><span>Manual</span><span>Private</span><span>Public</span><em>&#8645; Next run</em></p>
+        <ul class="absui__wfs">
+        <li><span class="absui__wfn">Monthly product newsletter</span><span class="absui__tag">Automated</span><em>1st, 09:00</em></li>
+        <li><span class="absui__wfn">Weekly team digest</span><span class="absui__tag">Automated</span><em>Mon 09:00</em></li>
+        <li><span class="absui__wfn">Morning error triage</span><span class="absui__tag">Automated</span><em>Daily 08:30</em></li>
+        </ul>
+        <p class="absui__note">The work starts arriving before anyone has to ask for it.</p>
+        </div>
+        </div>
+        </div>
+        </div>
+      </div>
+      <div class="ladder__col">
+        <ol class="ladder__steps">
         <li class="step is-active" data-step="1">
-          <span class="step__n">1</span>
-          <div>
-            <h3>Run</h3>
+          <span class="step__n" aria-hidden="true">1</span>
+          <h3 class="step__h"><button class="step__t" type="button"
+              aria-expanded="true" aria-controls="wf-body-1">Run</button></h3>
+          <div class="step__body" id="wf-body-1">
             <p>Someone asks for a piece of work the way they would ask a colleague, without
                spelling out the steps. Okou works out the angle and does the job in the open.</p>
           </div>
         </li>
         <li class="step" data-step="2">
-          <span class="step__n">2</span>
-          <div>
-            <h3>Save</h3>
+          <span class="step__n" aria-hidden="true">2</span>
+          <h3 class="step__h"><button class="step__t" type="button"
+              aria-expanded="false" aria-controls="wf-body-2">Save</button></h3>
+          <div class="step__body" id="wf-body-2">
             <p>Okou offers to keep the run once it sees the job repeat. The instructions it
                followed and the tools it reached for are saved with it, in the team&rsquo;s list.</p>
           </div>
         </li>
         <li class="step" data-step="3">
-          <span class="step__n">3</span>
-          <div>
-            <h3>Hand over</h3>
+          <span class="step__n" aria-hidden="true">3</span>
+          <h3 class="step__h"><button class="step__t" type="button"
+              aria-expanded="false" aria-controls="wf-body-3">Hand over</button></h3>
+          <div class="step__body" id="wf-body-3">
             <p>The workflow belongs to the workspace, not to one person. A teammate runs it from
                chat or from Slack without rebuilding any of the setup.</p>
           </div>
         </li>
         <li class="step" data-step="4">
-          <span class="step__n">4</span>
-          <div>
-            <h3>Automate</h3>
+          <span class="step__n" aria-hidden="true">4</span>
+          <h3 class="step__h"><button class="step__t" type="button"
+              aria-expanded="false" aria-controls="wf-body-4">Automate</button></h3>
+          <div class="step__body" id="wf-body-4">
             <p>Put it on a schedule or a trigger, and the work starts arriving before anyone has
                to ask for it.</p>
           </div>
         </li>
-      </ol>
+        </ol>
+
+        <div class="ladder__foot">
+          <p class="figcap">
+            The work still happens in an ordinary chat. The workflow is what is left behind afterwards,
+            and every one your team keeps makes the next job shorter.
+          </p>
+          <p class="note">
+            Shared context, personal permissions. What a workflow may reach stays tied to the person running it.
+          </p>
+        </div>
+      </div>
+
     </div>
-
-    <div class="ladder__stage">
-      <div class="wfstage is-on" data-step="1">
-            <div class="absui">
-              <div class="absui__bar"><i></i><i></i><i></i><span>October newsletter</span></div>
-              <div class="absui__body absui__body--chat">
-                <p class="absui__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
-                <div class="absui__stream">
-                  <p>I&rsquo;ll start from what actually shipped since the last send, then look at which of the last three newsletters got read.</p>
-                  <p>Six things shipped. The send that opened with a customer story did far better than the changelog-style ones, so I&rsquo;ll lead with the Notion sync and keep the rest as a short list underneath.</p>
-                  <p>Subject lines, body copy and the segment are drafted. It goes to you as a draft in Resend, not to the list.</p>
-                </div>
-                <p class="absui__live"><span class="absui__ldots"><i></i><i></i><i></i></span>Piecing things together&hellip;</p>
-              </div>
-              <div class="absui__composer"><span>Type your next message&hellip;</span><span class="absui__stop"></span></div>
-            </div>
-          </div>
-          <div class="wfstage" data-step="2">
-            <div class="absui flowui">
-              <div class="flowui__top">
-                <span class="flowui__agent"><img src="assets/okou-icon.svg" alt="" width="20" height="20"></span>
-                <span>October newsletter</span>
-              </div>
-              <div class="flowui__grid">
-                <section class="flowchat" aria-label="Chat with Okou">
-                  <p class="flowchat__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
-                  <div class="flowchat__reply">
-                    <span class="flowchat__avatar"><img src="assets/okou-icon.svg" alt="" width="22" height="22"></span>
-                    <div class="flowchat__answer">
-                      <p class="flowchat__worked">Okou <span>&middot; Worked for 2m</span></p>
-                      <p>The draft is ready in Resend. This is the third month you have asked for it the same way, so I can keep the process for next time.</p>
-                      <article class="flowsave">
-                        <div class="flowsave__head">
-                          <span><b>Monthly product newsletter</b><i>Ready to save</i></span>
-                          <em>Workflow</em>
-                        </div>
-                        <p>Linear releases &rarr; open-rate check &rarr; newsletter draft in Resend</p>
-                        <div class="flowsave__actions"><span class="flowsave__primary">Save workflow</span><span>Not now</span></div>
-                      </article>
-                    </div>
-                  </div>
-                  <div class="flowchat__composer"><span>Ask me anything&hellip;</span><span class="flowchat__send" aria-hidden="true">&uarr;</span></div>
-                </section>
-                <section class="flowlist" aria-label="Team workflows">
-                  <div class="flowlist__head">
-                    <span><b>Workflows</b><i>A reusable SOP for a task</i></span>
-                    <em>+ Create in chat</em>
-                  </div>
-                  <p class="flowlist__filters"><span class="is-on">All</span><span>Automated</span><span>Manual</span></p>
-                  <ul class="flowlist__items">
-                    <li class="is-new"><span><b>Monthly product newsletter</b><i>Draft in Resend &middot; 4 steps</i></span><em>Just saved</em></li>
-                    <li><span><b>Weekly team digest</b><i>Automated</i></span><em>Mon 09:00</em></li>
-                    <li><span><b>Morning error triage</b><i>Automated</i></span><em>Daily 08:30</em></li>
-                  </ul>
-                  <p class="flowlist__note">Saved to the team&rsquo;s workspace</p>
-                </section>
-              </div>
-            </div>
-          </div>
-          <div class="wfstage" data-step="3"><div class="slackui reveal" id="slackui">
-        <div class="slackui__side"><p class="slackui__team">vm0 <b>&#9662;</b></p><p class="slackui__grp">Channels</p><ul class="slackui__list"><li class="slackui__ch is-on" data-ch="content"><i>#</i>newsletter</li><li class="slackui__ch" data-ch="marketing"><i>#</i>marketing-and-community</li><li class="slackui__ch" data-ch="bugs"><i>#</i>bug-report</li><li class="slackui__ch" data-ch="customer"><i>#</i>customer</li></ul></div>
-        <div class="slackui__main"><div class="slackui__pane" data-ch="marketing"><div class="slackui__head"><b># marketing-and-community</b><span>12 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
-              <p class="slackui__meta"><b>Ming</b><time>4:15 PM</time></p>
-              <p class="slackui__text"><span class="slackui__mention">@Okou</span> what is the general CPC for AI product campaigns</p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
-              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>4:16 PM</time></p>
-              <p class="slackui__text">General CPC benchmarks for AI product campaigns vary by channel.</p>
-              <ul class="slackui__bullets">
-                <li><b>Search:</b> AI tools $3 to $8, high-intent keywords $5 to $15+.</li>
-                <li><b>LinkedIn:</b> $8 to $15, expensive but high-quality leads.</li>
-                <li><b>X:</b> $0.50 to $3.</li>
-                <li><b>Meta:</b> $1.50 to $5 for tech audiences.</li>
-              </ul>
-              <p class="slackui__reacts"><span class="slackui__react">&#128200; 3</span><span class="slackui__react">&#128077; 2</span></p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
-              <p class="slackui__meta"><b>Ming</b><time>4:18 PM</time></p>
-              <p class="slackui__text">cc <span class="slackui__mention">@Ethan</span> <span class="slackui__mention">@Scarlett</span> &mdash; a click really is expensive.</p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #marketing-and-community<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="bugs"><div class="slackui__head"><b># bug-report</b><span>8 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
-              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:00 AM</time></p>
-              <p class="slackui__ctx"><span>&#128337;</span> Scheduled &middot; every weekday at 09:00</p>
-              <div class="slackui__attach slackui__attach--red">
-                <p class="slackui__attitle">2 causes crossed the 50-event threshold</p>
-                <p class="slackui__attext"><b>Stripe webhook TypeError</b> &middot; 208 events &middot; new this week<br>
-                  <b>CSV export RangeError</b> &middot; 74 events &middot; new this week</p>
-                <p class="slackui__fields"><span><i>Total events</i>1,111</span><span><i>Root causes</i>8</span><span><i>Top group</i>42.6%</span></p>
-              </div>
-              <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open issues</button><button class="slackui__btn">View full triage</button><button class="slackui__btn">Snooze</button></p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--l"><img class="avatar" src="assets/brand/avatar-3.png" alt=""></span><div>
-              <p class="slackui__meta"><b>Linghan</b><time>9:06 AM</time></p>
-              <p class="slackui__text">taking the webhook one &#9995;</p>
-              <p class="slackui__reacts"><span class="slackui__react">&#128064; 4</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #bug-report<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="customer"><div class="slackui__head"><b># customer</b><span>24 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--s"><img class="avatar" src="assets/brand/avatar-4.png" alt=""></span><div>
-              <p class="slackui__meta"><b>Scarlett</b><time>2:41 PM</time></p>
-              <p class="slackui__text"><span class="slackui__mention">@Okou</span> customers keep asking for bulk export &mdash; write the spec and drop it here</p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
-              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>2:44 PM</time></p>
-              <p class="slackui__text">41 asks last month, 23 of them from paying accounts. One page, with the current workaround and the open questions.</p>
-              <div class="slackui__file">
-                <span class="slackui__fileic">DOC</span>
-                <span class="slackui__filetxt"><b>Bulk export spec</b><i>Google Doc &middot; 1 page &middot; shared in #customer</i></span>
-              </div>
-              <p class="slackui__thread">5 replies <em>Last reply 12 minutes ago</em></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #customer<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane is-on" data-ch="content"><div class="slackui__head"><b># newsletter</b><span>9 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg" alt=""></span><div>
-              <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:02 AM</time></p>
-              <p class="slackui__ctx"><span>&#128337;</span> Monthly product newsletter &middot; 1st of the month at 09:00</p>
-              <div class="slackui__attach">
-                <p class="slackui__attitle">October newsletter is drafted in Resend</p>
-                <p class="slackui__attext">Six things shipped since the September send. It opens on the <b>Notion sync</b> with a customer line, and the rest sits underneath as a short list.</p>
-                <p class="slackui__fields"><span><i>Audience</i>4,182</span><span><i>Segment</i>Product users</span><span><i>Open rate, last 3</i>38%</span></p>
-              </div>
-              <div class="slackui__file">
-                <span class="slackui__fileic">HTML</span>
-                <span class="slackui__filetxt"><b>october-newsletter</b><i>Draft in Resend &middot; audience attached &middot; not sent</i></span>
-              </div>
-              <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open in Resend</button><button class="slackui__btn">Edit copy</button><button class="slackui__btn">Send now</button></p></div></div>
-            <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
-              <p class="slackui__meta"><b>Ming</b><time>9:14 AM</time></p>
-              <p class="slackui__text">subject B reads better. sending after standup &mdash; nobody had to write it this month.</p>
-              <p class="slackui__reacts"><span class="slackui__react">&#128200; 5</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #newsletter<span class="slackui__send">&#10148;</span></div></div></div>
-      </div></div>
-          <div class="wfstage" data-step="4">
-            <div class="absui">
-              <div class="absui__bar"><i></i><i></i><i></i><span>Workflows</span></div>
-              <div class="absui__body">
-                <p class="absui__sub">A reusable SOP for a task. Run, edit, or automate it.</p>
-                <p class="absui__filters"><span class="is-on">Automated</span><span>Manual</span><span>Private</span><span>Public</span><em>&#8645; Next run</em></p>
-                <ul class="absui__wfs">
-                  <li><span class="absui__wfn">Monthly product newsletter</span><span class="absui__tag">Automated</span><em>1st, 09:00</em></li>
-                  <li><span class="absui__wfn">Weekly team digest</span><span class="absui__tag">Automated</span><em>Mon 09:00</em></li>
-                  <li><span class="absui__wfn">Morning error triage</span><span class="absui__tag">Automated</span><em>Daily 08:30</em></li>
-                </ul>
-                <p class="absui__note">The work starts arriving before anyone has to ask for it.</p>
-              </div>
-            </div>
-          </div>
-
-  <p class="figcap reveal">
-    The work still happens in an ordinary chat. The workflow is what is left behind afterwards,
-    and every one your team keeps makes the next job shorter.
-  </p>
-
-  <p class="note reveal">
-    Shared context, personal permissions. What a workflow may reach stays tied to the person running it.
-  </p>
+  </div>
 </section>
 
 <!-- ═══════════════ 03 / AT ONCE ═══════════════ -->
@@ -831,6 +844,6 @@
   <button class="chatbar__go" aria-label="Send"><span aria-hidden="true">↑</span></button>
 </aside>
 
-<script src="app.js?r=5d9496c8"></script>
+<script src="app.js?r=92d8cd81"></script>
 </body>
 </html>

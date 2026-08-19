@@ -14,7 +14,7 @@
       Borders inside a product mock are the product's own UI, not page
       furniture, so those subtrees are exempt. ─────────────────────── */
 (() => {
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock';
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
@@ -34,7 +34,7 @@
 /* ── 2. TYPE-SCALE — page-level type must stay on the scale. Product mocks
       are exempt: they mimic app UI at its own sizes. ───────────────── */
 (() => {
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot';
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl';
   const sizes = {};
   document.querySelectorAll('main *,.footer *,.nav *,.announce *,.chatbar *').forEach(el => {
     if (el.closest(MOCK) || !el.textContent.trim()) return;

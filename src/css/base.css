@@ -40,7 +40,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 .panel{ border-radius:var(--r-panel); }
 .mock,.card,.stage-card,.feat,.vs,.quote,.artifact,.mock__input,
-.step,.perms{ border-radius:var(--r-card); }
+.perms{ border-radius:var(--r-card); }
 .btn,.nav__signin,.nav__burger{ border-radius:var(--r-btn); }
 /* left square on purpose: rules, dividers, underlined links and the
    bare eyebrow are not surfaces, so a radius would only blur them */
@@ -520,43 +520,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .tag img{ width:15px; height:15px; object-fit:contain; }
 .tag__ic{ width:14px; height:14px; fill:none; stroke:var(--ink-soft); stroke-width:1.8; stroke-linecap:round; }
 
-/* ─────────────── ladder (sticky steps) ─────────────── */
-.ladder{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
-  gap:clamp(28px,3.4vw,56px);
-  margin-top:clamp(52px,6vw,84px);
-  align-items:start;
-}
-.ladder__steps{ display:flex; flex-direction:column; gap:8px; }
-.step{
-  display:flex; gap:20px;
-  padding:24px 22px 24px 20px;
-  border:1px solid transparent;
-  border-left:3px solid transparent;
-  background:transparent;
-  transition:border-color .3s var(--ease), background .3s, opacity .3s;
-  opacity:.42;
-}
-.step.is-active{
-  background:var(--paper-2);
-  border-left-color:var(--accent);
-  opacity:1;
-}
-.step__n{
-  flex:none;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-weight:400; font-size:12px; line-height:1.9;
-  letter-spacing:.08em; color:var(--ink-mute);
-  transition:color .3s;
-}
-.step.is-active .step__n{ color:var(--accent); }
-.step h3{
-  font-size:19px; font-weight:700; letter-spacing:-.025em;
-  margin-bottom:8px;
-}
-.step p{ font-size:14px; color:var(--ink-soft); line-height:1.6; }
-
-.ladder__stage{ position:sticky; top:88px; }
+/* the ladder — its layout, states and type live in the design layer */
 .stage-card{
   background:var(--paper);
   border:1px solid var(--rule);
@@ -803,9 +767,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   .control{ grid-template-columns:1fr; }
   .control__stage{ border-right:0; }
   
-  .ladder{ grid-template-columns:1fr; }
-  .ladder__stage{ position:static; }
-  .step{ opacity:1; }
   .proof{ grid-template-columns:1fr; }
   .metrics{ grid-template-columns:1fr; }
   .metrics li{ border-right:0; border-bottom:1px solid var(--hairline); }
@@ -1459,7 +1420,6 @@ a.acard .acard__txt i{ color:var(--ink); }
   font-size:13px; color:var(--ink-soft);
 }
 .wfstage .slackui{ min-height:400px; }
-.step{ cursor:pointer; }
 
 /* ── panels redrawn from the real product screens ── */
 .absui__body--chat{ gap:18px; }
@@ -1971,7 +1931,6 @@ a.acard .acard__txt i{ color:var(--ink); }
    ============================================================ */
 
 /* The active ladder marker is a clean rule, not a rounded bracket. */
-.step{ border-radius:0; }
 
 /* The floating entry follows the softer composer shape used in product. */
 .chatbar{

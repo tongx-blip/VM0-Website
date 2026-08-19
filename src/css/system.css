@@ -32,6 +32,7 @@
   --ink-mute:   #636A70;   /* the lightest text allowed: 5.5:1 on paper,
                               5.1:1 on --wash, 4.7:1 on --wash-2 — AA on
                               every ground this page uses */
+  --mat:        #171B1F;   /* the ground a product screen is matted on */
   --hairline:   #DFE4E7;
   --rule:       #C9D0D5;
   --grid:       #EDF0F2;
@@ -114,6 +115,8 @@
   --t-tag:      clamp(14px, 1.15vw, 17px);   /* the hero tag          */
   --t-statement:clamp(19px, 1.95vw, 27px);   /* the rotating statement*/
   --t-wordmark: 14px;                        /* the logo lockup       */
+  --t-step:     clamp(26px, 2.9vw, 42px);    /* the open ladder step  */
+  --t-step-off: clamp(18px, 1.55vw, 22px);   /* a resting one         */
 
   /* motion: the premium-microinteraction standard, tokenised.
      Browser defaults (ease / linear) are not used anywhere. */
@@ -487,7 +490,6 @@ h3{ font-family:var(--fd); }
    and never in their active state. */
 .tag,.scenes__tab:not(.is-on){ background:var(--wash-2); }
 #outputs .tag,#outputs .scenes__tab:not(.is-on){ background:var(--paper); }
-.step.is-active{ background:var(--wash-2); }
 
 /* ─────────────── 8. hero ───────────────
    The composition rule at full size: one centred stack, then the
@@ -803,49 +805,154 @@ h3{ font-family:var(--fd); }
 .logo img[src*="slack"]{ transform:scale(1.34); }
 .logo img[src*="notion"]{ transform:scale(1.06); }
 
-/* ─────────────── 13. ladder: a spine with a progress fill ─────────────── */
+/* ─────────────── 13. the ladder: one step at a time ───────────────
+   The four steps rest as a list of titles on the left. Scrolling the
+   pinned section opens the next one — its title grows to display size,
+   its paragraph unfolds, and the frame beside it changes to the screen
+   that belongs to that step. Only one is ever open.
+
+   The frame is the point of the right-hand column. Four mocks of four
+   different shapes (a chat, a two-pane workspace, Slack, a list) would
+   otherwise make the section jump every time the step changed; matted
+   in one grey ground at one fixed height, they read as one object being
+   looked at from four angles. No outline does that work — a fill does. */
 .ladder{
-  display:grid;
-  grid-template-columns:minmax(0,.95fr) minmax(0,1.35fr);
-  gap:clamp(26px,3vw,52px);
-  margin-top:clamp(48px,5.5vw,80px);
-  align-items:start;
-}
-.ladder__rail{ position:relative; }
-.ladder__steps{ display:flex; flex-direction:column; gap:6px; }
-.step{
+  --wf-steps:4;
+  --wf-top:calc(var(--nav-h) + 26px);
+  --wf-h:min(578px, calc(100vh - var(--nav-h) - 132px));
+  --wf-pad:clamp(18px, 2vw, 34px);
+  --wf-travel:64vh;                     /* scroll spent on each step */
   position:relative;
-  display:grid; grid-template-columns:30px minmax(0,1fr);
-  gap:14px;
-  padding:20px 22px;
-  border:0; border-radius:var(--r-card);
-  background:transparent;
-  opacity:1; cursor:pointer;
-  transition:background var(--t-state) var(--e-out),
-             transform var(--t-state) var(--e-out);
+  margin-top:clamp(40px, 4.4vw, 68px);
+  height:calc(var(--wf-h) + (var(--wf-steps) - 1) * var(--wf-travel));
 }
-.step.is-active{ background:var(--wash-2); }
+.ladder__view{
+  position:sticky; top:var(--wf-top);
+  height:var(--wf-h);
+  display:grid;
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.3fr);
+  gap:clamp(28px, 3.4vw, 64px);
+  align-items:stretch;
+}
+/* the frame comes first in the source so that when the section unwinds at
+   narrow widths it can sit on top and stay sticky over the list; on the wide
+   layout the two are placed explicitly, left and right */
+.ladder__col{
+  grid-area:1 / 1;
+  display:flex; flex-direction:column; min-width:0;
+}
+.ladder__stage{ grid-area:1 / 2; min-width:0; }
+.ladder__steps{
+  display:flex; flex-direction:column;
+  gap:clamp(6px, .8vw, 14px);
+}
+.step{
+  display:grid;
+  grid-template-columns:20px minmax(0,1fr);
+  column-gap:14px;
+  align-items:start;
+  cursor:pointer;
+}
+/* the number reads as a marker beside the title's cap, not as a word on
+   its baseline — so it is nudged down in its own ems, and further when the
+   title opens to display size */
 .step__n{
+  grid-column:1; grid-row:1;
   font-family:var(--fm); font-weight:500;
   font-size:var(--t-mono); letter-spacing:.1em;
-  line-height:2.1; color:var(--ink-mute);
-  transition:color var(--t-state) var(--e-out);
+  line-height:1; padding-top:.62em;
+  color:var(--ink-mute);
+  transition:color var(--t-state) var(--e-out),
+             padding-top var(--t-state) var(--e-elegant);
 }
-.step.is-active .step__n{ color:var(--accent-ink); }
-.step h3{
-  font-size:var(--t-d3); font-weight:600;
-  letter-spacing:-.028em; line-height:1.1;
-  margin-bottom:8px; color:var(--ink-mute);
-  transition:color var(--t-state) var(--e-out);
+.step.is-active .step__n{ color:var(--accent-solid); padding-top:1.05em; }
+.step__h{ grid-column:2; grid-row:1; margin:0; }
+.step__t{
+  display:block;
+  padding:0; margin:0; border:0; background:none;
+  text-align:left; cursor:pointer;
+  font-family:var(--fd);
+  font-size:var(--t-step-off); font-weight:600;
+  letter-spacing:-.022em; line-height:1.14;
+  color:var(--ink-mute);
+  transition:font-size var(--t-state) var(--e-elegant),
+             letter-spacing var(--t-state) var(--e-elegant),
+             color var(--t-state) var(--e-out);
 }
-.step.is-active h3{ color:var(--ink); }
-.step p{
+.step:not(.is-active):hover .step__t,
+.step__t:focus-visible{ color:var(--ink-soft); }
+.step.is-active .step__t{
+  font-size:var(--t-step);
+  letter-spacing:-.032em;
+  color:var(--ink);
+}
+/* the paragraph belongs to the open step and to nothing else */
+.step__body{
+  grid-column:2; grid-row:2;
+  display:grid; grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows var(--t-state) var(--e-elegant),
+             opacity 240ms var(--e-out);
+}
+.step.is-active .step__body{ grid-template-rows:1fr; opacity:1; }
+.step__body > p{
+  overflow:hidden; min-height:0;
+  padding-top:12px;
+  max-width:46ch;
+  font-size:var(--t-sm); line-height:1.62;
+  color:var(--ink-soft);
+}
+
+/* the two closing paragraphs sit under the list, at the foot of the
+   column — they read the figure beside them, so they belong next to it
+   rather than centred under the whole section */
+.ladder__foot{
+  margin-top:auto;
+  padding-top:clamp(22px, 2.6vw, 40px);
+  display:flex; flex-direction:column;
+  gap:clamp(10px, 1vw, 14px);
+}
+.ladder__foot > p{
+  margin:0; max-width:48ch;
+  text-align:left;
   font-size:var(--t-sm); line-height:1.6;
   color:var(--ink-mute);
-  transition:color var(--t-state) var(--e-out);
 }
-.step.is-active p{ color:var(--ink-soft); }
-.ladder__stage{ position:sticky; top:calc(var(--nav-h) + 56px); }
+
+.ladder__frame{
+  position:relative;
+  height:100%;
+  padding:var(--wf-pad);
+  border-radius:var(--r-xl);
+  background:var(--mat);
+  overflow:hidden;
+}
+/* the switch itself is `display:none / block` in the component layer, which
+   also keeps the three closed steps out of the accessibility tree */
+.wfstage{ position:absolute; inset:var(--wf-pad); }
+/* every mock fills the frame instead of setting its own height, so the
+   frame never resizes when the step changes */
+.ladder__frame .absui,
+.ladder__frame .slackui{ height:100%; min-height:0; }
+.ladder__frame .absui__body,
+.ladder__frame .flowui__grid{ flex:1 1 auto; min-height:0; overflow:hidden; }
+.ladder__frame .slackui__msgs{ min-height:0; overflow:hidden; }
+/* a thread fills from the bottom, the way a real one does — otherwise the
+   extra height in the frame opens as a hole above the composer */
+.ladder__frame .absui__body--chat{ justify-content:flex-end; }
+/* where a screen holds more than the frame does, the clipped edge fades
+   instead of cutting a sentence in half — a hard crop reads as a bug.
+   A list runs off the bottom; a thread, anchored to its newest message,
+   runs off the top. */
+.ladder__frame .slackui__msgs,
+.ladder__frame .absui__wfs{
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 34px), transparent);
+          mask-image:linear-gradient(to bottom, #000 calc(100% - 34px), transparent);
+}
+.ladder__frame .absui__body--chat{
+  -webkit-mask-image:linear-gradient(to bottom, transparent, #000 34px);
+          mask-image:linear-gradient(to bottom, transparent, #000 34px);
+}
 
 /* ─────────────── 14. control, versus, proof: one card language ─────── */
 .control{
@@ -1133,13 +1240,43 @@ h3{ font-family:var(--fd); }
 /* ─────────────── 19. responsive ─────────────── */
 @media (max-width:1080px){
   .control{ grid-template-columns:1fr; }
-  .ladder{ grid-template-columns:1fr; }
-  .ladder__stage{ position:static; }
+  /* nothing is pinned at this width, so the mechanic unwinds: every
+     paragraph is open and the titles stop changing size — a size change
+     with no room to absorb it just makes the page jump as you scroll.
+     The frame instead rides along at the top while the list scrolls under
+     it, so every step still gets to change what you are looking at. A grid
+     item can only stick inside its own cell, so the grid comes off here. */
+  .ladder{ height:auto; --wf-h:clamp(380px, 92vw, 560px); }
+  .ladder__view{ display:block; position:static; height:auto; }
+  .ladder__col{ display:block; }
+  .ladder__stage{
+    position:sticky; top:calc(var(--nav-h) + 14px); z-index:1;
+    margin-bottom:clamp(26px, 4vw, 40px);
+  }
+  .ladder__steps{ gap:clamp(14px, 2.4vw, 22px); }
+  .step__t,.step.is-active .step__t{
+    font-size:var(--t-d3); letter-spacing:-.028em;
+  }
+  .step.is-active .step__t{ color:var(--ink); }
+  .step__body{ grid-template-rows:1fr; opacity:1; }   /* nothing is hidden */
+  .step__body > p,.ladder__foot > p{ max-width:64ch; }
+  .step__body > p{ padding-top:8px; }
+  .ladder__foot{ margin-top:0; }
+  .ladder__frame{ height:var(--wf-h); }
   .scene.is-on{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); }
   .scene__side--l{ order:2; }
   .scene__ui{ order:1; grid-column:1 / 3; }
   .scene__side--r{ order:3; }
 }
+/* the component layer drops the Slack channel column at this width, but a
+   later unconditional rule puts the 230px column back — at 390px that left
+   the thread about a hundred pixels wide. The design layer has the last word. */
+@media (max-width:860px){
+  .slackui{ grid-template-columns:minmax(0,1fr); }
+  .slackui__rail,.slackui__side{ display:none; }
+  .ladder{ --wf-pad:12px; }               /* the mat gives the width back */
+}
+
 @media (max-width:960px){
   :root{ --edge:20px; --nav-h:58px; }
   .nav{
@@ -1185,7 +1322,7 @@ h3{ font-family:var(--fd); }
 @media (max-width:620px){
   .announce{ font-size:10px; letter-spacing:.06em; gap:4px 10px; }
   .scene__side{ flex-direction:column; }
-  .step{ grid-template-columns:26px minmax(0,1fr); gap:10px; }
+  .step{ grid-template-columns:18px minmax(0,1fr); column-gap:10px; }
   .hero__meta{ gap:8px 18px; }
 }
 

@@ -168,6 +168,52 @@ svgs.length && svgs.filter(s =>
 getComputedStyle(document.querySelector('.appui')).fontFamily  // "Noto Sans"
 ```
 
+## 4g. The pinned ladder
+
+`docs/design-system.md` §14. Three things break silently here:
+
+```js
+// the step must advance 1 → 2 → 3 → 4 across the track, and clamp at both ends
+const l = ladder = document.getElementById('ladder'), v = l.querySelector('.ladder__view');
+const travel = l.offsetHeight - v.offsetHeight, top = parseFloat(getComputedStyle(v).top);
+[-0.2, 0.125, 0.375, 0.625, 0.875, 1.3].map(p => {
+  scrollTo({top: l.getBoundingClientRect().top + scrollY - top + travel * p, behavior: 'instant'});
+  return p + ':' + document.querySelector('.step.is-active').dataset.step;
+})   // expect 1 1 2 3 4 4 — and .wfstage.is-on must always match
+```
+
+- **The frame must not resize between steps.** Measure it on all four:
+  `document.querySelector('.ladder__frame').getBoundingClientRect().height` —
+  one value. A mock with its own `min-height` will win over the frame and make
+  the whole section jump.
+- **A mask must not fall on a control.** Screenshot every stage and read the
+  composer, the send key and any footnote. `mask-image` on a pane, rather than on
+  the scroll region inside it, dims them.
+- **Check the narrow layout separately.** It is a different mechanic: the frame
+  sticks over the list and follows taps. Verify at 390 that the frame is stuck
+  (`getBoundingClientRect().top` equals the sticky offset, not a negative number)
+  and that tapping the third step changes both the title state and the stage.
+
+## 4h. Tags balance in a block you moved
+
+Moving a block of markup is a structural edit, so check it before looking at it:
+
+```bash
+python3 - <<'EOF'
+import re; s=open('site/index.html').read()
+seg=s[s.index('<section class="panel" id="workflows"'):s.index('AT ONCE')]
+for t in ('div','section','ol','li','p'):
+    print(t, sum(1 if not m.group(1) else -1 for m in re.finditer(r'<(/?)'+t+r'[ >]', seg)))
+EOF
+```
+
+Every count must be 0. An unclosed `<div>` does not throw — the browser closes it
+at `</section>`, and the content silently lands inside the wrong column. That is
+exactly how the two closing paragraphs of Shared workflows ended up inside the
+sticky right-hand column. Note also that product mocks contain their own
+`<section>` elements, so "the section's end" is the **last** `</section>` before
+the next section, not the first.
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the

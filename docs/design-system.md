@@ -420,3 +420,52 @@ git sparse-checkout set turbo/apps/platform/src turbo/packages/ui
 **Never hand-draw an SVG path for a product icon.** Pull the glyph from
 `lucide-static` at the version in `turbo/apps/platform/package.json`. Hand-drawn
 approximations are what made the first two attempts read as "not our product".
+
+## 14. The pinned ladder, and matting a screen
+
+Shared workflows is the page's only scroll-driven section. Its shape:
+
+```
+.ladder                  a track, --wf-h + (steps − 1) × --wf-travel tall
+└── .ladder__view        sticky; two placed cells, no auto flow
+    ├── .ladder__stage   grid-area 1/2 — but FIRST in the source
+    │   └── .ladder__frame   the mat: one height, --mat ground, overflow hidden
+    │       └── .wfstage     absolutely inset; display:none/block switches them
+    └── .ladder__col     grid-area 1/1 — the list, then .ladder__foot at its base
+```
+
+**Why the stage comes first in the markup.** Below 1080px the grid comes off and
+the frame sticks over the list — and a grid item can only stick inside its own
+cell, so the frame has to be a *block sibling ahead of* the list. On the wide
+layout `grid-area` puts it back on the right. Never rely on `order` for this:
+`order` moves the paint position, not the containing block.
+
+**Reading the step from scroll.** `readStep()` is
+`(stickyTop − ladderTop) / (trackHeight − viewHeight)`, floored into equal
+shares. Nothing observes the steps themselves. Clicking one **scrolls the pin**
+to `travel × (i + 0.5) / n` rather than just setting a class, so the scroll
+position and the open step can never disagree. `--wf-travel: 64vh` is the scroll
+spent per step; below ~50vh it flicks past, above ~80vh it feels stuck.
+
+**The state is the size.** A resting title is `--t-step-off`, an open one
+`--t-step`, and its paragraph unfolds with `grid-template-rows: 0fr → 1fr` (the
+child needs `overflow:hidden` and `min-height:0`). No fill, no bar, no rule —
+one dimension per state.
+
+**Matting.** When several product screens share one slot, put them in a frame
+with a fixed height and a ground of its own (`--mat #171B1F`) rather than letting
+each set its own size:
+
+- mocks get `height:100%; min-height:0`, and their scroll region
+  `flex:1 1 auto; min-height:0; overflow:hidden` — the frame must never resize
+  when the step changes, or the whole section jumps
+- **fade the clipped edge**, don't cut it: `mask-image` over the last ~34px of
+  whatever actually overflows. Mask the overflow container only
+  (`.slackui__msgs`, `.absui__wfs`) — masking a whole pane dims the composer and
+  the footnote sitting inside it, which looks like a rendering fault
+- a thread is anchored to its newest message (`justify-content:flex-end`), so it
+  overflows and fades at the **top**; a list fades at the bottom
+- the mat costs the mock `2 × --wf-pad` of width. Under 860px drop the padding to
+  12px, and check that the mock's own responsive rules still fire — Slack's
+  channel column is re-declared unconditionally *after* its own media query, so
+  the design layer has to drop it again

@@ -154,36 +154,61 @@
     }
   }
 
-  /* ── 4. one scroll loop: header state + step ladder ─────────── */
+  /* ── 4. one scroll loop: header state + step ladder ───────────
+     The ladder is a pinned section taller than its own viewport, and how
+     far you have scrolled through that pin IS which step is open — one
+     step per equal share of the travel. Below the pinning breakpoint the
+     section is an ordinary stack, so the step nearest the reading line
+     wins instead. Clicking a step scrolls the pin to where that step
+     lives, so the page never disagrees with itself. */
   var nav = doc.getElementById('nav');
   var ladder = doc.getElementById('ladder');
+  var view = ladder ? ladder.querySelector('.ladder__view') : null;
   var steps = ladder ? [].slice.call(ladder.querySelectorAll('.step')) : [];
   var stages = ladder ? [].slice.call(ladder.querySelectorAll('.wfstage')) : [];
+  var pinned = window.matchMedia('(min-width: 1081px)');
   var lock = 0;
+  var cur = -1;
 
   function syncStages(n) {
     stages.forEach(function (s) { s.classList.toggle('is-on', s.dataset.step === n); });
   }
 
+  function setStep(i) {
+    if (i === cur) return;
+    cur = i;
+    steps.forEach(function (s, n) {
+      var on = n === i;
+      s.classList.toggle('is-active', on);
+      var t = s.querySelector('.step__t');
+      if (t) t.setAttribute('aria-expanded', on ? 'true' : 'false');
+    });
+    syncStages(steps[i].dataset.step);
+  }
+
+  function pinTravel() {
+    return view ? ladder.offsetHeight - view.offsetHeight : 0;
+  }
+
+  function pinTop() {
+    var t = view ? parseFloat(getComputedStyle(view).top) : 0;
+    return t === t ? t : 0;                 // NaN when `top` reads `auto`
+  }
+
+  function readStep() {
+    var travel = pinTravel();
+    if (travel <= 0) return 0;
+    var p = (pinTop() - ladder.getBoundingClientRect().top) / travel;
+    return Math.max(0, Math.min(steps.length - 1, Math.floor(p * steps.length)));
+  }
+
   function readScroll() {
     if (nav) nav.classList.toggle('is-stuck', window.scrollY > 28);
-
-    if (steps.length) {
-      var active = ladder.querySelector('.step.is-active');
-      if (performance.now() < lock) {
-        if (active) syncStages(active.dataset.step);
-      } else {
-        var focus = window.innerHeight * 0.44;
-        var best = 0, bestDist = Infinity;
-        steps.forEach(function (s, i) {
-          var r = s.getBoundingClientRect();
-          var d = Math.abs(r.top + r.height / 2 - focus);
-          if (d < bestDist) { bestDist = d; best = i; }
-        });
-        steps.forEach(function (s, i) { s.classList.toggle('is-active', i === best); });
-        syncStages(steps[best].dataset.step);
-      }
-    }
+    // stacked, the frame is stuck over the list and all four paragraphs are
+    // open at once: there is no scroll distance left to read a step from, so
+    // the frame follows taps instead and nothing is hidden if nobody taps
+    if (steps.length && view && pinned.matches && performance.now() >= lock)
+      setStep(readStep());
   }
 
   var ticking = false;
@@ -192,14 +217,21 @@
     ticking = true;
     requestAnimationFrame(function () { readScroll(); ticking = false; });
   }, { passive: true });
-  window.addEventListener('resize', readScroll, { passive: true });
+  window.addEventListener('resize', function () { cur = -1; readScroll(); }, { passive: true });
   readScroll();
 
-  steps.forEach(function (s) {
+  steps.forEach(function (s, i) {
     s.addEventListener('click', function () {
-      steps.forEach(function (x) { x.classList.toggle('is-active', x === s); });
-      syncStages(s.dataset.step);
-      lock = performance.now() + 1200;   // a click outranks the scroll reading
+      setStep(i);
+      if (!pinned.matches || !view) return;
+      var travel = pinTravel();
+      if (travel <= 0) return;
+      lock = performance.now() + 900;      // let the scroll settle first
+      window.scrollTo({
+        top: ladder.getBoundingClientRect().top + window.scrollY - pinTop() +
+             travel * ((i + 0.5) / steps.length),
+        behavior: reduce ? 'auto' : 'smooth'
+      });
     });
   });
 

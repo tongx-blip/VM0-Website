@@ -6,6 +6,71 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · shared workflows: one step at a time, in a frame
+
+Feedback: borrow the layout of the reference (a tab strip, then a big title with
+its paragraph on the left and a screen matted in a coloured frame on the right);
+show **one tab at a time, driven by scrolling**; move the two closing paragraphs
+into the left column; when a step opens, its title grows and its paragraph
+appears; and **the picture must always keep one height** — mat it in a frame with
+a background colour if the shapes differ. Structure from the reference, not its
+colours or type sizes.
+
+What the section is now:
+
+- **A pinned section, and scroll position IS the step.** `.ladder` is a track
+  `--wf-h + 3 × 64vh` tall; `.ladder__view` sticks inside it. `app.js` divides
+  the travel into four equal shares — no IntersectionObserver, no per-step
+  scroll listener, the same one rAF-throttled reader the header already used.
+  Clicking a step *scrolls the pin* to where that step lives, so the page can
+  never disagree with itself.
+- **Only the open step has a paragraph.** Titles rest at `--t-step-off`
+  (18–22px) and grow to `--t-step` (26–42px) when open; the paragraph unfolds
+  with `grid-template-rows: 0fr → 1fr`. Two new named steps in §1 — the size
+  change *is* the state, so nothing else marks it.
+- **The mat.** Four mocks of four different shapes (a chat window, a two-pane
+  workspace, Slack, a workflow list) made the section jump every time the step
+  changed. They now sit inset in one frame at one fixed height on a new
+  `--mat #171B1F` ground. Each mock fills the frame instead of declaring its own
+  height, and where a screen holds more than the frame does the clipped edge
+  **fades** — a list off the bottom, a thread off the top, since a thread is
+  anchored to its newest message (`justify-content:flex-end`). A hard crop
+  mid-sentence reads as a bug.
+- **The two closing paragraphs moved into the left column**, at its foot, beside
+  the figure they describe.
+
+Four things that were wrong:
+
+- **`.figcap` and `.note` were never in the section at all.** `.ladder` and
+  `.ladder__stage` were both left unclosed, so the browser closed them at
+  `</section>` — the two paragraphs had been living *inside the right-hand
+  sticky column* this whole time, which is why their position looked awkward.
+  Balance the tags of any block you move: `<section class="flowchat">` inside a
+  product mock also means "find the last `</section>`", not the first.
+- **`base.css` still owned the ladder's layout** — two-column grid, `opacity:.42`
+  on a resting step, a 3px accent `border-left`, 19px titles. Page layout is not
+  a mock internal; it is deleted, and the design layer owns it outright. This is
+  the fifth-theme-layer failure in miniature.
+- **A grid item can only stick inside its own cell.** The narrow layout puts the
+  frame on top and sticks it over the list, which needs the grid off
+  (`display:block`) and the frame *first in the source* — so the stage now comes
+  before the column in the markup and both are placed explicitly by `grid-area`
+  on the wide layout.
+- **Slack's channel column came back at 390px.** `base.css` drops it at 860px and
+  then a later unconditional rule re-declares `grid-template-columns:230px …`,
+  which won. Inside the mat that left the thread about a hundred pixels wide.
+  Re-dropped from the design layer, which has the last word.
+
+`tools/audit.js` §1 and §2 had never been told about `.appui`, `.tplwin` and
+`.tpl` — the mocks built the round before — so §1 was reporting the product's own
+borders as page furniture. Added to both exemption lists.
+
+Narrow layouts do not scroll-drive: the frame is stuck over the list and all four
+paragraphs are open, so there is no travel left to read a step from. The frame
+follows taps there, and nothing is hidden if nobody taps.
+
+---
+
 ## 2026-08-19 · the product mock, rebuilt from the product's own source
 
 Feedback: still not faithful — did you check it against our design system, are
