@@ -46,7 +46,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    bare eyebrow are not surfaces, so a radius would only blur them */
 .nav__logo,.nav__links,.nav__auth,.chip,.linkline a,
 .metrics li,.perms__list li{ border-radius:0; }
-.tag,.chatbar,.chatbar__go,.state,.pill-mini,.ws__badge{ border-radius:var(--r-pill); }
+.tag,.state,.pill-mini,.ws__badge{ border-radius:var(--r-pill); }
 .character img,.msg__av,.quote__av{ border-radius:50%; }
 
 /* ─────────────── display type ─────────────── */
@@ -727,33 +727,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 /* ─────────────── sticky chat bar ─────────────── */
-.chatbar{
-  position:fixed; left:auto; right:22px; bottom:22px; z-index:70;
-  transform:translateY(0);
-  display:flex; align-items:center; gap:14px;
-  width:min(360px, calc(100vw - 44px));
-  padding:0 0 0 18px;
-  background:var(--paper);
-  border:1px solid var(--ink);
-  border-radius:0;
-  box-shadow:0 2px 6px rgba(0,0,0,.06), 0 18px 44px -20px rgba(0,0,0,.28);
-  transition:transform .45s var(--ease), opacity .35s;
-}
-.chatbar.is-hidden{ transform:translateY(180%); opacity:0; }
-.chatbar__ph{
-  flex:1; font-size:12.5px; color:var(--ink-soft);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  transition:opacity .3s;
-}
-.chatbar__go{
-  width:44px; height:44px; flex:none;
-  border-radius:0; border:0; border-left:1px solid var(--ink);
-  background:var(--accent); color:var(--paper);
-  font-size:15px; cursor:pointer;
-  display:grid; place-items:center;
-  transition:background .2s;
-}
-.chatbar__go:hover{ background:var(--ink); }
 
 /* ─────────────── scroll reveal ─────────────── */
 .reveal{
@@ -811,8 +784,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   .mock__side{ display:none; }
   .slack{ grid-template-columns:1fr; }
   .slack__side{ display:none; }
-  .chatbar{ right:auto; left:18px; width:calc(100vw - 36px); }
-}
+  }
 
 @media (prefers-reduced-motion:reduce){
   *{ animation-duration:.01ms !important; animation-iteration-count:1 !important;
@@ -1931,17 +1903,6 @@ a.acard .acard__txt i{ color:var(--ink); }
    ============================================================ */
 
 /* The active ladder marker is a clean rule, not a rounded bracket. */
-
-/* The floating entry follows the softer composer shape used in product. */
-.chatbar{
-  border-radius:20px;
-  overflow:hidden;
-}
-.chatbar__go{
-  width:46px; height:46px;
-  border-radius:0 19px 19px 0;
-  border-left-color:var(--g-600);
-}
 
 /* Step 2: the real chat rhythm on the left, the real workflow-page
    hierarchy on the right. Both sides share one grid and one baseline. */

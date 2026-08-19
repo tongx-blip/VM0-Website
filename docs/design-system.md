@@ -220,9 +220,6 @@ The duplicate is `aria-hidden`, so the label is announced once. Reduced motion
 holds the first copy in place. The primary button answers with a press
 (`translateY(-1px) scale(1.015)`), never a colour change.
 
-**Composer** (`.chatbar`) — fixed bottom-right pill, blurred paper, ink send
-button that warms to accent, hides itself when the footer is in view.
-
 ## 6b. Section tags
 
 Every "what section am I in" label is the same object: a pill with a 6px accent
@@ -421,7 +418,7 @@ git sparse-checkout set turbo/apps/platform/src turbo/packages/ui
 `lucide-static` at the version in `turbo/apps/platform/package.json`. Hand-drawn
 approximations are what made the first two attempts read as "not our product".
 
-## 14. The pinned ladder, and matting a screen
+## 14. The pinned ladder, and fitting a screen to a frame
 
 Shared workflows is the page's only scroll-driven section. Its shape:
 
@@ -452,20 +449,43 @@ spent per step; below ~50vh it flicks past, above ~80vh it feels stuck.
 child needs `overflow:hidden` and `min-height:0`). No fill, no bar, no rule —
 one dimension per state.
 
-**Matting.** When several product screens share one slot, put them in a frame
-with a fixed height and a ground of its own (`--mat #171B1F`) rather than letting
-each set its own size:
+**The reference is reproduced at its own size.** The ladder is built to
+Figma node `662:1561` token for token — 286 + 48 + 649 wide, 498 tall, 4 × 19
+markers, 0.5px rules, Inter 300/400 at 16 → 32px, media `r=16` on `#D9D9D9`.
+It is centred at `--wf-w: 983px` rather than stretched to the card, because
+literal px values only hold their proportion at the size they were drawn: the
+same 16px paragraph in a 520px column reads lost, and the mocks get pulled wider
+than they were designed for. Every one of those numbers is a `--wf-*` custom
+property at the top of §13, with the node id in the comment, so the next person
+can diff them against the file rather than guess which are intentional.
 
-- mocks get `height:100%; min-height:0`, and their scroll region
-  `flex:1 1 auto; min-height:0; overflow:hidden` — the frame must never resize
-  when the step changes, or the whole section jumps
-- **fade the clipped edge**, don't cut it: `mask-image` over the last ~34px of
-  whatever actually overflows. Mask the overflow container only
-  (`.slackui__msgs`, `.absui__wfs`) — masking a whole pane dims the composer and
-  the footnote sitting inside it, which looks like a rendering fault
-- a thread is anchored to its newest message (`justify-content:flex-end`), so it
-  overflows and fades at the **top**; a list fades at the bottom
-- the mat costs the mock `2 × --wf-pad` of width. Under 860px drop the padding to
-  12px, and check that the mock's own responsive rules still fire — Slack's
-  channel column is re-declared unconditionally *after* its own media query, so
-  the design layer has to drop it again
+**Fitting, not matting.** When several product screens share one slot, they must
+not resize it. Ours are drawn taller than the reference box (572px and 640px
+against 498), so each stage lays out at the height it needs and is then scaled
+into the box:
+
+```css
+.wfstage{
+  --dh:498;                                    /* what this screen needs */
+  width:calc(100% * var(--dh) / 498);
+  height:calc(var(--dh) * 1px);
+  transform:scale(calc(498 / var(--dh)));
+  transform-origin:top left;
+}
+.wfstage[data-step="2"]{ --dh:572; }
+```
+
+- **Fit before you crop.** Cropping is only acceptable where the clipped edge is
+  more of the same — a long thread, a long list. Where the bottom of the screen
+  is the *point* (an action row, a composer, a total), scale it.
+- Any entrance animation on a fitted element must use the independent
+  `translate` / `scale` properties, not `transform`, or it replaces the fit.
+- Where cropping *is* right, fade the last ~28px with `mask-image` on the
+  overflow container only. Masking a whole pane dims the composer and the
+  footnote inside it, which looks like a rendering fault.
+- The fit factor is computed against one fixed box height, so **any layout with
+  a different box height must reset it** (`transform:none`) and fall back to
+  fading. The stacked layout does exactly that.
+- `.panel--card` around a pinned section must use `overflow:clip`, not
+  `overflow:hidden` — the latter makes the card a scroll container and
+  `position:sticky` inside it has nothing to stick to.

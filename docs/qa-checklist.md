@@ -182,13 +182,28 @@ const travel = l.offsetHeight - v.offsetHeight, top = parseFloat(getComputedStyl
 })   // expect 1 1 2 3 4 4 — and .wfstage.is-on must always match
 ```
 
-- **The frame must not resize between steps.** Measure it on all four:
-  `document.querySelector('.ladder__frame').getBoundingClientRect().height` —
-  one value. A mock with its own `min-height` will win over the frame and make
-  the whole section jump.
+- **The box must not resize between steps, and nothing may overflow it.**
+  Every stage must report zero on both axes:
+
+```js
+[...document.querySelectorAll('.wfstage')].map(st => {
+  const f = document.querySelector('.ladder__frame').getBoundingClientRect();
+  st.style.display = 'block';                       // measure the hidden ones
+  const r = st.firstElementChild.getBoundingClientRect();
+  st.style.display = '';
+  return st.dataset.step + ':' + Math.round(r.bottom - f.bottom) + '/' +
+                                 Math.round(r.right - f.right);
+})   // every one must be 0/0 — a mock with its own min-height wins otherwise
+```
+
+  If one overflows, raise its `--dh` to the height it needs rather than letting
+  it crop. `--dh` is measured, not guessed: sum the visible pane's children.
 - **A mask must not fall on a control.** Screenshot every stage and read the
   composer, the send key and any footnote. `mask-image` on a pane, rather than on
   the scroll region inside it, dims them.
+- **A fitted stage's entrance must use `translate`, not `transform`** — otherwise
+  the keyframe replaces the fit and the screen jumps to full size mid-animation.
+  Check `getComputedStyle(stage).transform` is a scale matrix while `.is-on`.
 - **Check the narrow layout separately.** It is a different mechanic: the frame
   sticks over the list and follows taps. Verify at 390 that the frame is stuck
   (`getBoundingClientRect().top` equals the sticky offset, not a negative number)
@@ -213,6 +228,32 @@ exactly how the two closing paragraphs of Shared workflows ended up inside the
 sticky right-hand column. Note also that product mocks contain their own
 `<section>` elements, so "the section's end" is the **last** `</section>` before
 the next section, not the first.
+
+## 4i. Heading weight
+
+Every site-level title is Archivo **500** (`system.css` §3). Nothing outside a
+product mock may be 700, and 600 survives only on the wordmark:
+
+```js
+const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl';
+[...document.querySelectorAll('main *,.footer *,.nav *')]
+  .filter(el => !el.closest(MOCK) && el.textContent.trim() &&
+                parseInt(getComputedStyle(el).fontWeight) >= 600 &&
+                parseFloat(getComputedStyle(el).fontSize) >= 16)
+  .map(el => el.className + ' ' + getComputedStyle(el).fontWeight)
+// expect [] — the wordmark is under 16px so it does not appear
+```
+
+Also confirm every heading is still in the **display** face. `base.css` sets
+`font-family:inherit` on some of them, which resolves to the prose face and is
+invisible in a diff:
+
+```js
+[...document.querySelectorAll('h2,h3,.display,.sentence')]
+  .filter(h => !h.closest(MOCK))
+  .map(h => getComputedStyle(h).fontFamily.split(',')[0])
+// every one "Archivo" — except the ladder, which is Inter by design
+```
 
 ## 5. Type scale
 

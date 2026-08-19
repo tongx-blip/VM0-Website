@@ -254,40 +254,6 @@
     window.setTimeout(start, 1200);      // never let the fold wait on a font
   }
 
-  /* ── 7. the sticky composer ─────────────────────────────────── */
-  var bar = doc.getElementById('chatbar');
-  var ph = doc.getElementById('chatPh');
-  var prompts = [
-    'Draft the Q3 campaign brief',
-    'Build the storefront off the brand brief',
-    'Summarise last week’s ad spend',
-    'Refresh the CRM and queue the follow-ups',
-    'Turn this run into a workflow the team can use'
-  ];
-  if (ph && !reduce) {
-    var i = 0;
-    window.setInterval(function () {
-      if (document.hidden) return;
-      ph.classList.add('is-swapping');
-      window.setTimeout(function () {
-        i = (i + 1) % prompts.length;
-        ph.textContent = prompts[i];
-        ph.classList.remove('is-swapping');
-      }, 300);
-    }, 3800);
-  }
-  var footer = doc.querySelector('.footer');
-  if (bar && footer && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { bar.classList.toggle('is-hidden', e.isIntersecting); });
-    }, { threshold: 0.06 }).observe(footer);
-  }
-  if (bar) {
-    bar.querySelector('.chatbar__go').addEventListener('click', function () {
-      doc.getElementById('cta').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
-    });
-  }
-
   /* ── 8. mobile navigation ───────────────────────────────────── */
   var burger = doc.getElementById('burger');
   if (burger && nav) {

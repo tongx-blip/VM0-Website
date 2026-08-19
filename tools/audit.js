@@ -12,9 +12,12 @@
 
 /* ── 1. NO-RULES — the design forbids structural lines. Must return 0.
       Borders inside a product mock are the product's own UI, not page
-      furniture, so those subtrees are exempt. ─────────────────────── */
+      furniture, so those subtrees are exempt. So is `.step`: the ladder is
+      built to a supplied reference design that separates its rows with a
+      0.5px rule, and that was an explicit instruction — see
+      docs/design-principles.md §1. ─────────────────────────────────── */
 (() => {
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl';
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
@@ -36,7 +39,7 @@
 (() => {
   const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl';
   const sizes = {};
-  document.querySelectorAll('main *,.footer *,.nav *,.announce *,.chatbar *').forEach(el => {
+  document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
     if (el.closest(MOCK) || !el.textContent.trim()) return;
     const s = getComputedStyle(el).fontSize;
     sizes[s] = (sizes[s] || 0) + 1;

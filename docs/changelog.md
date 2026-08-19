@@ -6,6 +6,70 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · shared workflows, built to the Figma; lighter titles everywhere
+
+Three instructions in one round: drop the floating composer, put the whole
+section in a card like the logo wall, and **implement the ladder to the Figma's
+own tokens** ("完全按照figma的tokens实现") rather than translating it into this
+page's scale, which is what the first attempt did and why it read wrong.
+
+**Read out of `qOjbTX2K2K2YTobWMb6a1F`, node `662:1561`, and used verbatim:**
+
+| | |
+|---|---|
+| frame | 286 + 48 gutter + 649, 498 tall inside its own padding |
+| row | horizontal, 12px gutter, cross-axis **centred** |
+| marker | 4 × 19px, `r=100` — `#F8A100` `#E24E4A` `#E4ABC8` `#3758A2` |
+| rule between rows | **0.5px `rgba(0,0,0,.12)`**, 12px each side, never first or last |
+| resting title | Inter **300**, 16px / 19.36 lh, `rgba(0,0,0,.6)` |
+| open title | Inter **400**, 32px / 38.73 lh, `#000` — exactly 2× |
+| open paragraph | Inter 300, 16px / 19.36 lh, 8px under its title |
+| closing paragraphs | Inter 300, 12px / 14.52 lh, gap 12, `SPACE_BETWEEN` to the foot |
+| media | `r=16`, ground `#D9D9D9` |
+
+Two deliberate departures, both stated rather than silent:
+
+- **Inter is now loaded** (300;400). The reference specifies it and Instrument
+  Sans ships no 300 here, so a "w300" would have silently synthesised to 400.
+  This is the section's own face; the rest of the page is unchanged.
+- **The block is reproduced at the reference's own 983 × 498, centred**, instead
+  of stretched to the card. Literal token values only stay in proportion at the
+  size they were drawn — stretched to 1320 the same 16px paragraph and 32px
+  title looked lost, and the mocks were pulled 36% wider than they were drawn.
+
+**The rules and the marker bars break `docs/design-principles.md` §1.** They were
+asked for explicitly, so the rule now records the exception rather than being
+quietly violated, and `tools/audit.js` §1 exempts `.step` by name.
+
+**Fit, don't crop.** Our screens are drawn taller than the reference box — the
+two-pane workspace needs 572px and the Slack window 640px against the box's 498.
+Each stage now lays out at the height it needs and is scaled to the box, the way
+a photograph is fitted to a frame. Cropping would have taken the action row off
+the bottom of the save card, which is the entire point of that screen. The
+`wfIn` entrance had to move from `transform` to the independent `translate`
+property so it composes with that scale instead of replacing it.
+
+**Also fixed while in here:**
+
+- **`.panel--card` would have killed the pin.** `overflow:hidden` makes an
+  element a scroll container, and `position:sticky` inside one has nothing to
+  stick to. `overflow:clip` clips without that side effect.
+- **The floating composer is gone** — markup, both CSS layers, the placeholder
+  rotator, the footer observer and the scroll-to-CTA handler.
+- **`.vs h3` was rendering in the prose face.** `base.css` sets
+  `font-family:inherit` on it, which resolves to the body face; a section
+  heading in the wrong face is the one type role that must not drift.
+
+**Titles are lighter across the whole site** ("整个网站的title 字体都太粗了改细").
+Every site-level heading is now Archivo **500**: the display, the second-order
+sentence, the hero's rotating statement, the figures and their units, the card
+headings and the pull-quote. Nothing on the page is 700 any more. 600 survives
+only on the wordmark and inside product mocks, where it is the app's own weight
+rather than this page's voice — recorded at the top of `system.css` §3 so it does
+not drift back one selector at a time.
+
+---
+
 ## 2026-08-19 · shared workflows: one step at a time, in a frame
 
 Feedback: borrow the layout of the reference (a tab strip, then a big title with

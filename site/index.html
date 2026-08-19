@@ -8,8 +8,8 @@
 <link rel="icon" href="assets/okou-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=c70a7efb">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?r=8255548b">
 </head>
 <body>
 
@@ -348,7 +348,7 @@
 </section>
 
 <!-- ═══════════════ 02 / SHARED WORKFLOWS ═══════════════ -->
-<section class="panel" id="workflows">
+<section class="panel panel--card" id="workflows">
   <p class="chip reveal">Shared workflows</p>
 
   <h2 class="display display--center" data-reveal="mask">
@@ -504,7 +504,7 @@
       <div class="ladder__col">
         <ol class="ladder__steps">
         <li class="step is-active" data-step="1">
-          <span class="step__n" aria-hidden="true">1</span>
+          <span class="step__bar" aria-hidden="true"></span>
           <h3 class="step__h"><button class="step__t" type="button"
               aria-expanded="true" aria-controls="wf-body-1">Run</button></h3>
           <div class="step__body" id="wf-body-1">
@@ -513,7 +513,7 @@
           </div>
         </li>
         <li class="step" data-step="2">
-          <span class="step__n" aria-hidden="true">2</span>
+          <span class="step__bar" aria-hidden="true"></span>
           <h3 class="step__h"><button class="step__t" type="button"
               aria-expanded="false" aria-controls="wf-body-2">Save</button></h3>
           <div class="step__body" id="wf-body-2">
@@ -522,7 +522,7 @@
           </div>
         </li>
         <li class="step" data-step="3">
-          <span class="step__n" aria-hidden="true">3</span>
+          <span class="step__bar" aria-hidden="true"></span>
           <h3 class="step__h"><button class="step__t" type="button"
               aria-expanded="false" aria-controls="wf-body-3">Hand over</button></h3>
           <div class="step__body" id="wf-body-3">
@@ -531,7 +531,7 @@
           </div>
         </li>
         <li class="step" data-step="4">
-          <span class="step__n" aria-hidden="true">4</span>
+          <span class="step__bar" aria-hidden="true"></span>
           <h3 class="step__h"><button class="step__t" type="button"
               aria-expanded="false" aria-controls="wf-body-4">Automate</button></h3>
           <div class="step__body" id="wf-body-4">
@@ -838,12 +838,6 @@
   <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
 </footer>
 
-<!-- ─────────────── sticky chat bar ─────────────── -->
-<aside class="chatbar" id="chatbar" aria-label="Ask Okou">
-  <span class="chatbar__ph" id="chatPh">Draft the Q3 campaign brief</span>
-  <button class="chatbar__go" aria-label="Send"><span aria-hidden="true">↑</span></button>
-</aside>
-
-<script src="app.js?r=92d8cd81"></script>
+<script src="app.js?r=cd9a3a7f"></script>
 </body>
 </html>

@@ -39,6 +39,15 @@ otherwise return 0.
   The parallel-work figure says "You ask once → Four tasks, each in its own chat
   → Each chat reports back", so the lines came out and a tray groups the cards.
 
+**The one exception, and how to earn it.** The Shared-workflows ladder separates
+its rows with a 0.5px rule and marks each with a 4px colour bar. That came from a
+supplied Figma with an explicit instruction to implement it token for token, so
+the exception is recorded here and `.step` is named in the audit's exemption list
+— not left as a quiet violation of a rule the audit still claims to enforce. Any
+future exception works the same way: it is written down, it is scoped to one
+component by name, and the audit keeps returning 0 for everything else. A line
+that appears because a layout would not read without it is still a bug.
+
 ## 2. Labels: no numbers, no rail
 
 A section label is a small uppercase eyebrow, **text only**, sitting directly

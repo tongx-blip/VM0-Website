@@ -56,7 +56,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    bare eyebrow are not surfaces, so a radius would only blur them */
 .nav__logo,.nav__links,.nav__auth,.chip,.linkline a,
 .metrics li,.perms__list li{ border-radius:0; }
-.chatbar,.chatbar__go,.state{ border-radius:var(--r-pill); }
+.state{ border-radius:var(--r-pill); }
 
 
 /* ─────────────── display type ─────────────── */
@@ -525,38 +525,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 
 /* ─────────────── sticky chat bar ─────────────── */
-.chatbar{
-  position:fixed; left:auto; right:22px; bottom:22px; z-index:70;
-  transform:translateY(0);
-  display:flex; align-items:center; gap:14px;
-  width:min(360px, calc(100vw - 44px));
-  padding:0 0 0 18px;
-  background:var(--paper);
-  border:1px solid var(--ink);
-  border-radius:0;
-  box-shadow:0 2px 6px rgba(0,0,0,.06), 0 18px 44px -20px rgba(0,0,0,.28);
-  transition:transform .45s var(--ease), opacity .35s;
-}
-
-.chatbar.is-hidden{ transform:translateY(180%); opacity:0; }
-
-.chatbar__ph{
-  flex:1; font-size:12.5px; color:var(--ink-soft);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  transition:opacity .3s;
-}
-
-.chatbar__go{
-  width:44px; height:44px; flex:none;
-  border-radius:0; border:0; border-left:1px solid var(--ink);
-  background:var(--accent); color:var(--paper);
-  font-size:15px; cursor:pointer;
-  display:grid; place-items:center;
-  transition:background .2s;
-}
-
-.chatbar__go:hover{ background:var(--ink); }
-
 
 /* ─────────────── scroll reveal ─────────────── */
 .reveal{
@@ -619,9 +587,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
   .versus{ grid-template-columns:1fr; }
 
-  .chatbar{ right:auto; left:18px; width:calc(100vw - 36px); }
-
-}
+  }
 
 
 @media (prefers-reduced-motion:reduce){
@@ -1737,19 +1703,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 
 /* The active ladder marker is a clean rule, not a rounded bracket. */
 
-/* The floating entry follows the softer composer shape used in product. */
-.chatbar{
-  border-radius:20px;
-  overflow:hidden;
-}
-
-.chatbar__go{
-  width:46px; height:46px;
-  border-radius:0 19px 19px 0;
-  border-left-color:var(--g-600);
-}
-
-
 /* Step 2: the real chat rhythm on the left, the real workflow-page
    hierarchy on the right. Both sides share one grid and one baseline. */
 .flowui{ min-height:520px; }
@@ -2134,8 +2087,6 @@ a.acard .acard__txt i{ color:var(--ink); }
   --t-tag:      clamp(14px, 1.15vw, 17px);   /* the hero tag          */
   --t-statement:clamp(19px, 1.95vw, 27px);   /* the rotating statement*/
   --t-wordmark: 14px;                        /* the logo lockup       */
-  --t-step:     clamp(26px, 2.9vw, 42px);    /* the open ladder step  */
-  --t-step-off: clamp(18px, 1.55vw, 22px);   /* a resting one         */
 
   /* motion: the premium-microinteraction standard, tokenised.
      Browser defaults (ease / linear) are not used anywhere. */
@@ -2184,19 +2135,24 @@ img{ filter:none; }
 .btn,.scenes__tab{ border-radius:var(--r-btn); }
 
 .step{ border-radius:0; }
-.state,.chatbar{ border-radius:var(--r-pill); }
+.state{ border-radius:var(--r-pill); }
 /* every page-level rule inherited from the component layer comes off:
    this page separates with grounds,space and shadow,never with a line */
-.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,.metrics li,.scenes__tabs,.step,.nav,.panel,.perms__list,.chatbar,.a2a__ask{
+.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,.metrics li,.scenes__tabs,.step,.nav,.panel,.perms__list,.a2a__ask{
   border:0;
 }
 .hero__body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
 
 
-/* ─────────────── 3. type ─────────────── */
+/* ─────────────── 3. type ───────────────
+   HEADING WEIGHT: every site-level title is Archivo 500. Nothing on this
+   page is 700 any more — at display sizes a bold grotesque reads as shouting,
+   and the page's emphasis is carried by size, colour and the accent marks
+   instead. 600 survives only on the wordmark and inside product mocks, where
+   it is the app's own weight and not this page's voice. */
 .display{
   font-family:var(--fd);
-  font-weight:700;
+  font-weight:500;
   font-size:var(--t-d1);
   line-height:.94;
   letter-spacing:-.038em;
@@ -2347,7 +2303,7 @@ h3{ font-family:var(--fd); }
 .nav__logo:hover img{ transform:rotate(-12deg) scale(1.08); }
 
 .nav__logo span{
-  font-family:var(--fd); font-weight:700;
+  font-family:var(--fd); font-weight:600;
   font-size:var(--t-wordmark); letter-spacing:.22em;
 }
 
@@ -2536,6 +2492,10 @@ h3{ font-family:var(--fd); }
 
 #workflows,#control,#proof{ background:var(--paper); }
 
+/* this card holds a pinned section, and `overflow:hidden` would make it a
+   scroll container and kill the sticky. `clip` clips without doing that. */
+#workflows.panel--card{ overflow:clip; }
+
 
 /* ── a section as one object on the grey page ── */
 .panel--card{
@@ -2621,7 +2581,7 @@ h3{ font-family:var(--fd); }
 /* the rotating second statement, one line, centred under the headline */
 .hero .display--tail{
   max-width:none;
-  font-family:var(--fd); font-weight:600;
+  font-family:var(--fd); font-weight:500;
   font-size:clamp(17px, 4.1vw, 30px);
   line-height:1.2; letter-spacing:-.026em;
   color:var(--ink-mute);
@@ -2820,7 +2780,7 @@ h3{ font-family:var(--fd); }
 
 .metrics b{
   display:block;
-  font-family:var(--fd); font-weight:700;
+  font-family:var(--fd); font-weight:500;
   font-size:var(--t-d2); line-height:1;
   letter-spacing:-.045em; color:var(--ink) !important;
   font-variant-numeric:tabular-nums;
@@ -2865,7 +2825,7 @@ h3{ font-family:var(--fd); }
      is still measured for contrast (transparent text over the ground) and
      it would be announced twice */
   visibility:hidden;
-  font-family:var(--fd); font-weight:600;
+  font-family:var(--fd); font-weight:500;
   font-size:var(--t-statement);
   line-height:1.34; letter-spacing:-.018em;
   color:var(--ink);
@@ -2940,40 +2900,53 @@ h3{ font-family:var(--fd); }
 .logo img[src*="slack"]{ transform:scale(1.34); }
 
 .logo img[src*="notion"]{ transform:scale(1.06); }
-
-
-/* ─────────────── 13. the ladder: one step at a time ───────────────
-   The four steps rest as a list of titles on the left. Scrolling the
-   pinned section opens the next one — its title grows to display size,
-   its paragraph unfolds, and the frame beside it changes to the screen
-   that belongs to that step. Only one is ever open.
-
-   The frame is the point of the right-hand column. Four mocks of four
-   different shapes (a chat, a two-pane workspace, Slack, a list) would
-   otherwise make the section jump every time the step changed; matted
-   in one grey ground at one fixed height, they read as one object being
-   looked at from four angles. No outline does that work — a fill does. */
+/* ─────────────── 13. the ladder ───────────────
+   Built to the Figma,node 662:1561 of "Mobile app",token for token:
+   every number and colour in this block was read out of that node rather
+   than derived from this page's scale,because that is what was asked for.
+   The rows carry a 4px marker rail and are separated by a 0.5px hairline
+   — both are the reference design's own furniture,so four screens of four shapes read as one. */
 .ladder{
+  /* ── straight from the Figma ── */
+  --wf-gap:48px;                          /* 16 + 32, the two frames' facing pads */
+  --wf-row-gap:12px;                      /* list gap, and each side of a rule    */
+  --wf-open-gap:8px;                      /* open title → its paragraph           */
+  --wf-bar-w:4px;  --wf-bar-h:19px;       /* the marker rail, r=100               */
+  --wf-rule:.5px;  --wf-rule-ink:rgba(0,0,0,.12);
+  --wf-title:16px;      --wf-title-lh:19.36px;  --wf-title-wt:300;
+  --wf-title-ink:rgba(0,0,0,.6);
+  --wf-title-on:32px;   --wf-title-on-lh:38.73px; --wf-title-on-wt:400;
+  --wf-body:16px;       --wf-body-lh:19.36px;
+  --wf-foot:12px;       --wf-foot-lh:14.52px;
+  --wf-media-r:16px;    --wf-media-bg:#D9D9D9;
+
+  /* ── the scroll mechanic ── */
   --wf-steps:4;
+  --wf-travel:64vh;                       /* scroll spent on each step */
   --wf-top:calc(var(--nav-h) + 26px);
-  --wf-h:min(578px, calc(100vh - var(--nav-h) - 132px));
-  --wf-pad:clamp(18px, 2vw, 34px);
-  --wf-travel:64vh;                     /* scroll spent on each step */
+  /* the reference frame is 286 + 48 + 649 wide and 498 tall inside its own
+     padding, which the card already provides. Reproducing it at that size —
+     centred, like every other block in the section — is what keeps the
+     literal token values in the proportion they were drawn in. */
+  --wf-w:983px;
+  --wf-h:min(498px, calc(100vh - var(--nav-h) - 96px));
   position:relative;
   margin-top:clamp(40px, 4.4vw, 68px);
   height:calc(var(--wf-h) + (var(--wf-steps) - 1) * var(--wf-travel));
+  font-family:Inter, var(--fb);
 }
 
 .ladder__view{
   position:sticky; top:var(--wf-top);
   height:var(--wf-h);
+  max-width:var(--wf-w); margin-inline:auto;
   display:grid;
-  grid-template-columns:minmax(0,.92fr) minmax(0,1.3fr);
-  gap:clamp(28px, 3.4vw, 64px);
+  grid-template-columns:minmax(0,286fr) minmax(0,649fr);
+  gap:var(--wf-gap);
   align-items:stretch;
 }
 
-/* the frame comes first in the source so that when the section unwinds at
+/* the media comes first in the source so that when the section unwinds at
    narrow widths it can sit on top and stay sticky over the list; on the wide
    layout the two are placed explicitly, left and right */
 .ladder__col{
@@ -2985,57 +2958,62 @@ h3{ font-family:var(--fd); }
 
 .ladder__steps{
   display:flex; flex-direction:column;
-  gap:clamp(6px, .8vw, 14px);
+  gap:var(--wf-row-gap);
 }
 
 .step{
   display:grid;
-  grid-template-columns:20px minmax(0,1fr);
-  column-gap:14px;
-  align-items:start;
+  grid-template-columns:var(--wf-bar-w) minmax(0,1fr);
+  column-gap:var(--wf-row-gap);
+  align-items:center;                     /* the rail centres on the title */
   cursor:pointer;
 }
 
-/* the number reads as a marker beside the title's cap, not as a word on
-   its baseline — so it is nudged down in its own ems, and further when the
-   title opens to display size */
-.step__n{
-  grid-column:1; grid-row:1;
-  font-family:var(--fm); font-weight:500;
-  font-size:var(--t-mono); letter-spacing:.1em;
-  line-height:1; padding-top:.62em;
-  color:var(--ink-mute);
-  transition:color var(--t-state) var(--e-out),
-             padding-top var(--t-state) var(--e-elegant);
+/* a rule between rows, never above the first or below the last */
+.step + .step{
+  border-top:var(--wf-rule) solid var(--wf-rule-ink);
+  padding-top:var(--wf-row-gap);
 }
 
-.step.is-active .step__n{ color:var(--accent-solid); padding-top:1.05em; }
+.step__bar{
+  grid-column:1; grid-row:1;
+  width:var(--wf-bar-w); height:var(--wf-bar-h);
+  border-radius:var(--r-pill);
+}
 
-.step__h{ grid-column:2; grid-row:1; margin:0; }
+.step:nth-child(1) .step__bar{ background:#F8A100; }
+
+.step:nth-child(2) .step__bar{ background:#E24E4A; }
+
+.step:nth-child(3) .step__bar{ background:#E4ABC8; }
+
+.step:nth-child(4) .step__bar{ background:#3758A2; }
+
+.step__h{ grid-column:2; grid-row:1; margin:0; font:inherit; }
 
 .step__t{
   display:block;
   padding:0; margin:0; border:0; background:none;
   text-align:left; cursor:pointer;
-  font-family:var(--fd);
-  font-size:var(--t-step-off); font-weight:600;
-  letter-spacing:-.022em; line-height:1.14;
-  color:var(--ink-mute);
+  font-family:inherit;
+  font-size:var(--wf-title); line-height:var(--wf-title-lh);
+  font-weight:var(--wf-title-wt); letter-spacing:0;
+  color:var(--wf-title-ink);
   transition:font-size var(--t-state) var(--e-elegant),
-             letter-spacing var(--t-state) var(--e-elegant),
+             line-height var(--t-state) var(--e-elegant),
              color var(--t-state) var(--e-out);
 }
 
 .step:not(.is-active):hover .step__t,
-.step__t:focus-visible{ color:var(--ink-soft); }
+.step__t:focus-visible{ color:var(--ink); }
 
 .step.is-active .step__t{
-  font-size:var(--t-step);
-  letter-spacing:-.032em;
-  color:var(--ink);
+  font-size:var(--wf-title-on); line-height:var(--wf-title-on-lh);
+  font-weight:var(--wf-title-on-wt);
+  color:#000;
 }
 
-/* the paragraph belongs to the open step and to nothing else */
+/* the paragraph belongs to the open row and to nothing else */
 .step__body{
   grid-column:2; grid-row:2;
   display:grid; grid-template-rows:0fr;
@@ -3048,72 +3026,79 @@ h3{ font-family:var(--fd); }
 
 .step__body > p{
   overflow:hidden; min-height:0;
-  padding-top:12px;
-  max-width:46ch;
-  font-size:var(--t-sm); line-height:1.62;
-  color:var(--ink-soft);
+  padding-top:var(--wf-open-gap);
+  font-family:inherit;
+  font-size:var(--wf-body); line-height:var(--wf-body-lh);
+  font-weight:var(--wf-title-wt);
+  color:#000;
 }
 
 
-/* the two closing paragraphs sit under the list, at the foot of the
-   column — they read the figure beside them, so they belong next to it
-   rather than centred under the whole section */
+/* the two closing paragraphs sit at the foot of the column (SPACE_BETWEEN in
+   the reference), beside the figure they describe */
 .ladder__foot{
   margin-top:auto;
   padding-top:clamp(22px, 2.6vw, 40px);
   display:flex; flex-direction:column;
-  gap:clamp(10px, 1vw, 14px);
+  gap:var(--wf-row-gap);
 }
 
 .ladder__foot > p{
-  margin:0; max-width:48ch;
+  margin:0;
   text-align:left;
-  font-size:var(--t-sm); line-height:1.6;
-  color:var(--ink-mute);
+  font-family:inherit;
+  font-size:var(--wf-foot); line-height:var(--wf-foot-lh);
+  font-weight:var(--wf-title-wt);
+  color:#000;
 }
 
 
+/* the media: one fixed-height rounded box with a ground of its own, so the
+   section never resizes when the step changes */
 .ladder__frame{
   position:relative;
   height:100%;
-  padding:var(--wf-pad);
-  border-radius:var(--r-xl);
-  background:var(--mat);
+  border-radius:var(--wf-media-r);
+  background:var(--wf-media-bg);
   overflow:hidden;
 }
 
 /* the switch itself is `display:none / block` in the component layer, which
-   also keeps the three closed steps out of the accessibility tree */
-.wfstage{ position:absolute; inset:var(--wf-pad); }
+   also keeps the three closed steps out of the accessibility tree.
 
-/* every mock fills the frame instead of setting its own height, so the
-   frame never resizes when the step changes */
+   The screens were drawn taller than the reference box (the two-pane
+   workspace needs 572px, the Slack window 640px), so each one lays out at
+   the height it needs and is then FITTED to the box, the way a photograph
+   is scaled to a frame. Cropping instead would take the action row off the
+   bottom of the save card, which is the whole point of that screen. */
+.wfstage{
+  --dh:498;                              /* the height this screen needs */
+  position:absolute; top:0; left:0;
+  width:calc(100% * var(--dh) / 498);
+  height:calc(var(--dh) * 1px);
+  transform:scale(calc(498 / var(--dh)));
+  transform-origin:top left;
+}
+
+.wfstage[data-step="2"]{ --dh:572; }
+
+.wfstage[data-step="3"]{ --dh:640; }
+
+/* every mock fills the box instead of setting its own height or shadow */
 .ladder__frame .absui,
-.ladder__frame .slackui{ height:100%; min-height:0; }
+.ladder__frame .slackui{
+  height:100%; min-height:0;
+  border-radius:var(--wf-media-r);
+  box-shadow:none;
+}
 
 .ladder__frame .absui__body,
 .ladder__frame .flowui__grid{ flex:1 1 auto; min-height:0; overflow:hidden; }
 
-.ladder__frame .slackui__msgs{ min-height:0; overflow:hidden; }
-
-/* a thread fills from the bottom, the way a real one does — otherwise the
-   extra height in the frame opens as a hole above the composer */
-.ladder__frame .absui__body--chat{ justify-content:flex-end; }
-
-/* where a screen holds more than the frame does, the clipped edge fades
-   instead of cutting a sentence in half — a hard crop reads as a bug.
-   A list runs off the bottom; a thread, anchored to its newest message,
-   runs off the top. */
-.ladder__frame .slackui__msgs,
-.ladder__frame .absui__wfs{
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 34px), transparent);
-          mask-image:linear-gradient(to bottom, #000 calc(100% - 34px), transparent);
-}
-
-.ladder__frame .absui__body--chat{
-  -webkit-mask-image:linear-gradient(to bottom, transparent, #000 34px);
-          mask-image:linear-gradient(to bottom, transparent, #000 34px);
-}
+/* the reference box is wider than it is tall, so a short thread has spare
+   height — centre it rather than pinning it to either end, or the space
+   opens as a hole above the composer */
+.ladder__frame .absui__body--chat{ justify-content:center; }
 
 
 /* ─────────────── 14. control, versus, proof: one card language ─────── */
@@ -3144,7 +3129,7 @@ h3{ font-family:var(--fd); }
   display:flex; flex-direction:column; justify-content:center;
 }
 
-.feat h3{ font-size:var(--t-h); font-weight:600; letter-spacing:-.02em; margin-bottom:9px; color:var(--ink); }
+.feat h3{ font-size:var(--t-h); font-weight:500; letter-spacing:-.02em; margin-bottom:9px; color:var(--ink); }
 
 .feat p{ font-size:var(--t-sm); line-height:1.6; color:var(--ink-soft); }
 
@@ -3167,7 +3152,11 @@ h3{ font-family:var(--fd); }
 .vs__label img{ width:20px; height:20px; }
 
 .vs h3{
-  font-size:var(--t-d3); font-weight:600;
+  /* base.css sets `font-family:inherit` here, which lands on the body face —
+     a section heading in the prose face is the one type role that must not
+     drift */
+  font-family:var(--fd);
+  font-size:var(--t-d3); font-weight:500;
   line-height:1.1; letter-spacing:-.03em;
   margin-bottom:13px; color:var(--ink);
 }
@@ -3190,7 +3179,7 @@ h3{ font-family:var(--fd); }
 
 .quote blockquote{
   margin:0 0 24px;
-  font-family:var(--fd); font-weight:600;
+  font-family:var(--fd); font-weight:500;
   font-size:clamp(17px,1.5vw,20px);
   line-height:1.3; letter-spacing:-.024em;
   color:var(--ink); flex:1;
@@ -3375,45 +3364,6 @@ h3{ font-family:var(--fd); }
 
 
 /* ─────────────── 17. sticky composer ─────────────── */
-.chatbar{
-  position:fixed; right:20px; bottom:20px; z-index:90;
-  display:flex; align-items:center; gap:12px;
-  width:min(352px, calc(100vw - 40px));
-  padding:0 0 0 18px;
-  background:rgba(255,255,255,.9);
-  -webkit-backdrop-filter:blur(14px) saturate(1.5);
-          backdrop-filter:blur(14px) saturate(1.5);
-  border:0;
-  box-shadow:0 2px 8px rgba(12,15,18,.06), 0 22px 48px -24px rgba(12,15,18,.4);
-  overflow:hidden;
-  transition:transform var(--t-state) var(--e-out),
-             opacity var(--t-state) var(--e-out),
-             box-shadow var(--t-hover) var(--e-snap);
-}
-
-.chatbar:hover{ box-shadow:0 3px 10px rgba(12,15,18,.08), 0 26px 54px -24px rgba(12,15,18,.5); }
-
-.chatbar.is-hidden{ transform:translateY(160%); opacity:0; }
-
-.chatbar__ph{
-  flex:1; font-size:13px; color:var(--ink-soft);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  transition:opacity 280ms var(--e-out), transform 280ms var(--e-out);
-}
-
-.chatbar__ph.is-swapping{ opacity:0; transform:translateY(-6px); }
-
-.chatbar__go{
-  width:46px; height:46px; flex:none;
-  display:grid; place-items:center;
-  border:0; border-radius:0;
-  background:var(--accent-solid); color:var(--paper-ink);
-  font-size:var(--t-sm); cursor:pointer;
-  transition:background var(--t-hover) var(--e-snap);
-}
-
-.chatbar__go:hover{ background:var(--accent); }
-
 
 /* ─────────────── 18. motion layer ───────────────
    Only transform, opacity and clip-path are animated. Every reveal
@@ -3481,7 +3431,9 @@ h3{ font-family:var(--fd); }
 
 .wfstage.is-on{ animation:wfIn 440ms var(--e-out) both; }
 
-@keyframes wfIn{ from{ opacity:0; transform:translateY(12px) } to{ opacity:1; transform:none } }
+/* `translate` rather than `transform`: the stage already carries a
+   fit-to-frame scale in `transform`, and these compose instead of clashing */
+@keyframes wfIn{ from{ opacity:0; translate:0 12px } to{ opacity:1; translate:0 0 } }
 
 
 /* ─────────────── 19. responsive ─────────────── */
@@ -3493,7 +3445,7 @@ h3{ font-family:var(--fd); }
      The frame instead rides along at the top while the list scrolls under
      it, so every step still gets to change what you are looking at. A grid
      item can only stick inside its own cell, so the grid comes off here. */
-  .ladder{ height:auto; --wf-h:clamp(380px, 92vw, 560px); }
+  .ladder{ height:auto; padding-bottom:0; --wf-h:clamp(440px, 118vw, 580px); }
   .ladder__view{ display:block; position:static; height:auto; }
   .ladder__col{ display:block; }
   .ladder__stage{
@@ -3502,14 +3454,32 @@ h3{ font-family:var(--fd); }
   }
   .ladder__steps{ gap:clamp(14px, 2.4vw, 22px); }
   .step__t,.step.is-active .step__t{
-    font-size:var(--t-d3); letter-spacing:-.028em;
+    font-size:var(--wf-title-on); line-height:var(--wf-title-on-lh);
   }
-  .step.is-active .step__t{ color:var(--ink); }
+  .step.is-active .step__t{ color:#000; }
   .step__body{ grid-template-rows:1fr; opacity:1; }   /* nothing is hidden */
   .step__body > p,.ladder__foot > p{ max-width:64ch; }
   .step__body > p{ padding-top:8px; }
   .ladder__foot{ margin-top:0; }
   .ladder__frame{ height:var(--wf-h); }
+  /* the fit-to-frame scale is computed against the reference box's 498px, so
+     it is wrong for a box of any other height: here the screen simply fills
+     the box and the clipped edge fades instead */
+  .wfstage{ width:100%; height:100%; transform:none; }
+  .wfstage .slackui__msgs,
+  .wfstage .absui__wfs,
+  .wfstage .absui__body,
+  .wfstage .flowui__grid{
+    -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+            mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+  }
+  /* the thread is centred, so it can run off either end */
+  .wfstage .absui__body--chat{
+    -webkit-mask-image:linear-gradient(to bottom, transparent, #000 28px,
+                                       #000 calc(100% - 28px), transparent);
+            mask-image:linear-gradient(to bottom, transparent, #000 28px,
+                                       #000 calc(100% - 28px), transparent);
+  }
   .scene.is-on{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); }
   .scene__side--l{ order:2; }
   .scene__ui{ order:1; grid-column:1 / 3; }
@@ -3522,7 +3492,6 @@ h3{ font-family:var(--fd); }
 @media (max-width:860px){
   .slackui{ grid-template-columns:minmax(0,1fr); }
   .slackui__rail,.slackui__side{ display:none; }
-  .ladder{ --wf-pad:12px; }               /* the mat gives the width back */
 }
 
 
@@ -3588,8 +3557,6 @@ h3{ font-family:var(--fd); }
   .scene__side{ flex-direction:row; }
 
   .scene__side .acard{ flex:1; }
-
-  .chatbar{ right:auto; left:16px; width:calc(100vw - 32px); }
 
 }
 
@@ -3815,7 +3782,7 @@ h3{ font-family:var(--fd); }
 .lead-in{
   display:inline-block;
   color:var(--ink);
-  font-weight:600;
+  font-weight:500;
   transition:opacity 240ms var(--e-out), transform 240ms var(--e-out);
 }
 
@@ -3868,14 +3835,14 @@ h3{ font-family:var(--fd); }
 }
 
 .metrics b i{
-  font-style:normal; font-weight:700;
+  font-style:normal; font-weight:500;
   font-size:var(--t-figure);
   line-height:1; letter-spacing:-.045em;
   font-variant-numeric:tabular-nums;
 }
 
 .metrics b em{
-  font-style:normal; font-weight:600;
+  font-style:normal; font-weight:500;
   font-size:var(--t-unit);
   line-height:1.1; letter-spacing:-.02em;
   color:var(--ink-mute);
