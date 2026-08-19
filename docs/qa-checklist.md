@@ -156,6 +156,18 @@ figure before publishing.**
   the build and account for every control: the collapse toggle, top-right
   actions, jump-to-latest, the tool row, the mic, the model chevron.
 
+- **Every glyph is a real Lucide icon, at the version the app ships**, and every
+  colour, radius and typeface is a platform token (`docs/design-system.md` §13).
+  Hand-drawn paths are the thing that made the mock read as "not our product":
+
+```js
+const svgs = [...document.querySelectorAll('.appui svg')];
+svgs.length && svgs.filter(s =>
+  s.getAttribute('stroke-width') !== '2' ||
+  s.getAttribute('viewBox') !== '0 0 24 24').length            // must be 0
+getComputedStyle(document.querySelector('.appui')).fontFamily  // "Noto Sans"
+```
+
 ## 5. Type scale
 
 `tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the

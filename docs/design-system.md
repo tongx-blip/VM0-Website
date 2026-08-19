@@ -392,3 +392,31 @@ Photographs for the template are generated (`site/assets/template/`), scaled to
 
 The other six tabs still use captured screenshots. If they are ever rebuilt the
 same way, they should reuse `.appui` and only vary the thread and the artifact.
+
+## 13. Drawing the product: the source of truth is the product
+
+`.appui` is a picture of the real app, so **nothing in it may be invented**.
+Every value below was read out of `vm0-ai/vm0`, not remembered:
+
+| What | Where it comes from |
+|---|---|
+| Typeface | `turbo/apps/platform/src/views/css/index.css` → **Noto Sans**, JetBrains Mono |
+| Colours | `turbo/packages/ui/src/styles/globals.css` → `--card #FFFFFF`, `--sidebar` gray-50 `#F3F5F8`, `--foreground` gray-950 `#14171D`, `--muted-foreground` gray-800 `#525B68`, `--border` gray-200 `#DCE1E8`, `--accent` gray-100 `#E7EBF0`, `--primary` primary-700 `#ED4E01` |
+| Radii | `--radius 8px`, `--radius-md 6px`, `--radius-xl 14px` |
+| Icons | **lucide-react**, the exact names the app imports: `Users` Agents · `Route` Workflows · `Plug` Connectors · `Package` Artifacts · `PanelLeftClose` collapse · `Hourglass`+`ChevronRight` the run row · `Paperclip`/`Image`/`SlidersHorizontal`/`Globe`/`Mic`/`ArrowUp` composer. The footer row uses the Slack mark, per `FOOTER_NAV.iconImg` |
+| Run row | `<Hourglass size={14}/> <span class="text-[13px]">Worked for 3m</span> <ChevronRight size={14}/>`, muted, `rounded-lg px-2 py-1.5 min-h-9` |
+| Prompt bubble | `rounded-lg bg-muted/40 text-sm`, `max-w-[85%]`, self-end |
+
+How to refresh it when the app changes:
+
+```bash
+git clone --depth 1 --filter=blob:none --sparse https://github.com/vm0-ai/vm0
+git sparse-checkout set turbo/apps/platform/src turbo/packages/ui
+# icons: grep MANAGE_NAV in views/zero-page/zero-sidebar.tsx
+# tokens: turbo/packages/ui/src/styles/globals.css
+# glyph paths: unpkg.com/lucide-static@<version>/icons/<name>.svg
+```
+
+**Never hand-draw an SVG path for a product icon.** Pull the glyph from
+`lucide-static` at the version in `turbo/apps/platform/package.json`. Hand-drawn
+approximations are what made the first two attempts read as "not our product".

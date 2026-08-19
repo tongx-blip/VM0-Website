@@ -8,8 +8,8 @@
 <link rel="icon" href="assets/okou-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=bc15ddba">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?r=6a87f75e">
 </head>
 <body>
 
@@ -107,29 +107,29 @@
             <!-- the product, drawn in code -->
             <div class="appui">
               <aside class="appui__side">
-                <p class="appui__ws">
-                  <span class="appui__wsic"><img src="assets/okou-icon.svg" alt="" width="16" height="16"></span>
-                  <span class="appui__wsname">My Organization</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-                </p>
-                <span class="appui__collapse" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
-                </span>
+                <div class="appui__wsrow">
+                  <p class="appui__ws">
+                    <span class="appui__wsic"><img src="assets/okou-icon.svg" alt="" width="16" height="16"></span>
+                    <span class="appui__wsname">My Organization</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                  </p>
+                  <span class="appui__collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M9 3v18" /> <path d="m16 15-3-3 3-3" /></svg></span>
+                </div>
 
                 <p class="appui__grp">Manage</p>
                 <ul class="appui__nav">
-                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.7-4.6 6-4.6s6 1.6 6 4.6"/><path d="M16 11a3 3 0 1 0 0-6"/></svg><span>Agents</span></li>
-                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h5M15 7h5M4 17h5M15 17h5"/><circle cx="12" cy="7" r="2.4"/><circle cx="12" cy="17" r="2.4"/></svg><span>Workflows</span></li>
-                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v5M12 16v5M6 12h4M14 12h4"/><circle cx="12" cy="12" r="3"/></svg><span>Connectors</span></li>
-                  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg><span>Artifacts</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></svg><span>Agents</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="3" /> <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /> <circle cx="18" cy="5" r="3" /></svg><span>Workflows</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5" /> <path d="M15 8V2" /> <path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z" /> <path d="M9 8V2" /></svg><span>Connectors</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></svg><span>Artifacts</span></li>
                 </ul>
 
-                <p class="appui__grp">Pinned <em aria-hidden="true">+</em></p>
+                <p class="appui__grp">Pinned <em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /> <path d="M12 5v14" /></svg></em></p>
                 <ul class="appui__nav">
                   <li class="is-on"><img class="appui__av" src="assets/brand/avatar-1.png" alt=""><span>Zero</span></li>
                 </ul>
 
-                <p class="appui__grp">Chats with Zero <em aria-hidden="true">&middot;&middot;&middot;</em></p>
+                <p class="appui__grp">Chats with Zero <em class="appui__dots" aria-hidden="true">&hellip;</em></p>
                 <ul class="appui__nav">
                   <li class="is-on"><span class="appui__chat">Litoral Coastal Hotel Site</span></li>
                 </ul>
@@ -137,10 +137,10 @@
                 <div class="appui__foot">
                   <p class="appui__pro">
                     <span><b>Get Pro</b><i>More credits &amp; concurrent runs</i></span>
-                    <img src="assets/brand/sticker-draft.png" alt="" width="34" height="34">
+                    <img src="assets/brand/sticker-draft.png" alt="" width="30" height="30">
                   </p>
                   <ul class="appui__nav">
-                    <li><img src="assets/connectors/slack.svg" alt="" width="15" height="15"><span>Where Zero works</span></li>
+                    <li><img src="assets/connectors/slack.svg" alt="" width="16" height="16"><span>Where Zero works</span></li>
                     <li><img class="appui__av" src="assets/brand/avatar-2.png" alt=""><span>User</span></li>
                   </ul>
                 </div>
@@ -152,10 +152,7 @@
                     <img class="appui__av appui__av--sm" src="assets/brand/avatar-1.png" alt="">
                     Litoral Coastal Hotel Site
                   </span>
-                  <span class="appui__topact" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 3 2.6 15 0 18M12 3c-2.6 3-2.6 15 0 18"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
-                  </span>
+                  <span class="appui__topact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></svg></span>
                 </div>
 
                 <div class="appui__thread">
@@ -166,8 +163,7 @@
                   <div class="appui__reply">
                     <p class="appui__worked">
                       <img class="appui__av" src="assets/brand/avatar-1.png" alt="">
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9"/></svg>
-                      Worked for 3m <span aria-hidden="true">&rsaquo;</span>
+                      <span class="appui__workedbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14" /> <path d="M5 2h14" /> <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /> <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /></svg> Worked for 3m <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></span>
                     </p>
 
                     <figure class="appui__art">
@@ -182,32 +178,18 @@
                       View &mdash; each with its own description. It&rsquo;s fully responsive, and the source
                       lives at <a href="#outputs">index.html</a> if you&rsquo;d like any tweaks to copy, colours
                       or layout.</p>
-
-                    <p class="appui__acts" aria-hidden="true">
-                      <svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 6-8"/></svg>
-                      <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5h10"/></svg>
-                      <span><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>10</span>
-                    </p>
                   </div>
 
-                  <span class="appui__jump" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-                  </span>
+                  <span class="appui__jump"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /> <path d="m19 12-7 7-7-7" /></svg></span>
                 </div>
 
                 <div class="appui__composer">
                   <span class="appui__ph">Ask me to automate workflows, manage tasks&hellip;</span>
                   <span class="appui__bar">
-                    <span class="appui__tools" aria-hidden="true">
-                      <svg viewBox="0 0 24 24"><path d="M21 12l-8.5 8.5a4 4 0 0 1-6-6L14 6a3 3 0 0 1 4 4l-8 8"/></svg>
-                      <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M5 17l5-4 4 3 3-2 2 2"/></svg>
-                      <svg viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/></svg>
-                      <svg class="is-on" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.4 2.8 2.4 12.4 0 16M12 4c-2.4 2.8-2.4 12.4 0 16"/></svg>
-                    </span>
-                    <span class="appui__model"><img src="assets/connectors/deepseek.svg" alt="" width="15" height="15">DeepSeek V4 Flash
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
-                    <span class="appui__mic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
-                    <span class="appui__send" aria-hidden="true">&uarr;</span>
+                    <span class="appui__tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5H3" /> <path d="M12 19H3" /> <path d="M14 3v4" /> <path d="M16 17v4" /> <path d="M21 12h-9" /> <path d="M21 19h-5" /> <path d="M21 5h-7" /> <path d="M8 10v4" /> <path d="M8 12H3" /></svg><span class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /></svg></span></span>
+                    <span class="appui__model"><img src="assets/connectors/deepseek.svg" alt="" width="14" height="14">DeepSeek V4 Flash <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></span>
+                    <span class="appui__mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>
+                    <span class="appui__send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /> <path d="M12 19V5" /></svg></span>
                   </span>
                 </div>
               </div>

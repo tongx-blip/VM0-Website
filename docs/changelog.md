@@ -6,6 +6,40 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · the product mock, rebuilt from the product's own source
+
+Feedback: still not faithful — did you check it against our design system, are
+you using our components? Don't invent. Every icon in the sidebar is made up.
+
+I had been drawing the app from a screenshot: hand-written SVG paths, this
+site's typeface and this site's greys. That is why it kept reading as
+"not our product". Fixed by going to the source, `vm0-ai/vm0`:
+
+- **Icons are the app's own imports**, pulled from `lucide-static` at the version
+  `turbo/apps/platform/package.json` pins: `Users` Agents · `Route` Workflows ·
+  `Plug` Connectors · `Package` Artifacts (read out of `MANAGE_NAV` in
+  `zero-sidebar.tsx`), `PanelLeftClose`, the Slack mark on the footer row,
+  `Hourglass`+`ChevronRight` on the run row, and
+  `Paperclip`/`Image`/`SlidersHorizontal`/`Globe`/`Mic`/`ArrowUp` in the
+  composer. **Every one of my four Manage icons had been wrong.**
+- **Typeface is Noto Sans**, not the marketing site's Instrument Sans.
+- **Colours are the platform tokens**: card `#FFFFFF`, sidebar gray-50
+  `#F3F5F8`, foreground gray-950 `#14171D`, muted gray-800 `#525B68`, border
+  gray-200 `#DCE1E8`, active row gray-100 `#E7EBF0`, primary-700 `#ED4E01`.
+- **Radii are `--radius` 8px / `--radius-xl` 14px**, not my invented values.
+- The run row now matches the app's markup exactly — hourglass, 13px label,
+  chevron, muted, `rounded-lg px-2 py-1.5 min-h-9` — instead of the sigma-ish
+  glyph I had drawn.
+- The template's sea-green failed AA at 9px (3.59:1); it now has a legible
+  sibling `--sea-ink #456B5E` for small text.
+
+Recorded as `docs/design-system.md` §13 with the exact commands to re-read the
+source, and added to the gate: 0 non-Lucide SVGs inside `.appui`, font must
+compute to Noto Sans.
+
+0 axe violations (43 passes), 0 page-level borders, one content column
+(left 338 / right 945), sweep clean, no horizontal scroll 390–1920.
+
 ## 2026-08-19 · the product mock, aligned and faithful (/ui-design)
 
 Feedback: the reference screenshot is squarely aligned and mine is all over the

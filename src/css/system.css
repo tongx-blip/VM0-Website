@@ -1496,188 +1496,202 @@ h3{ font-family:var(--fd); }
 }
 
 /* ── the product ──────────────────────────────────────────────────
-   One content column. The chat title, the prompt, the reply, the
-   artifact, the action row and the composer all share the same left
-   and right edge; only the agent avatar hangs into the left gutter,
-   the way the real app does it. Every sidebar row shares one icon
-   edge and one label edge. Nothing here is Title Case or uppercase —
-   the product writes in sentence case. */
+   Every value below is the platform's own, read out of vm0-ai/vm0
+   (turbo/packages/ui/src/styles/globals.css and the zero-page views):
+   Noto Sans, the cool gray ramp, --radius 8px, primary-700 #ED4E01,
+   and lucide-react glyphs — Users / Route / Plug / Package for the
+   Manage nav, PanelLeftClose, LayoutGrid, Hourglass + ChevronRight
+   for the run row, Paperclip / Image / SlidersHorizontal / Globe /
+   Mic / ArrowUp in the composer. Nothing here is drawn by hand. */
 .appui{
-  --overlap:clamp(0px, 7%, 92px);              /* what the page window covers */
+  /* platform tokens, light theme */
+  --p-card:#FFFFFF;        /* --card                    */
+  --p-side:#F3F5F8;        /* --sidebar   = gray-50     */
+  --p-fg:#14171D;          /* --foreground = gray-950   */
+  --p-muted:#525B68;       /* --muted-foreground = 800  */
+  --p-border:#DCE1E8;      /* --border    = gray-200    */
+  --p-accent:#E7EBF0;      /* --accent    = gray-100    */
+  --p-primary:#ED4E01;     /* --primary   = primary-700 */
+  --p-r:8px;               /* --radius                  */
+  --p-r-md:6px;            /* --radius-md               */
+  --p-r-xl:14px;           /* --radius-xl               */
+
   --gl:40px;                                   /* the content column, left  */
   --gr:calc(40px + var(--overlap, 0px));       /* …and right, clear of the
                                                   window that overlaps it   */
+  --overlap:clamp(0px, 7%, 92px);
   --sp:8px;                                    /* sidebar row inset         */
   width:min(100%, 74%);
   display:grid; grid-template-columns:238px minmax(0,1fr);
   min-height:clamp(420px, 44vw, 620px);
   border-radius:var(--r-lg);
-  background:var(--paper);
+  background:var(--p-card);
   box-shadow:var(--e-3);
   overflow:hidden;
-  font-family:var(--fb);
+  font-family:"Noto Sans", system-ui, sans-serif;
+  color:var(--p-fg);
 }
-.appui svg{ fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.appui svg{ width:16px; height:16px; flex:none; }
 
 /* sidebar */
 .appui__side{
-  position:relative;
   display:flex; flex-direction:column;
   padding:12px var(--sp);
-  background:var(--wash);
-  font-size:12.5px; color:var(--ink-soft);
+  background:var(--p-side);
+  font-size:13px; color:var(--p-fg);
 }
+.appui__wsrow{ display:flex; align-items:center; gap:2px; margin-bottom:10px; }
 .appui__ws{
   display:flex; align-items:center; gap:8px;
-  width:calc(100% - 26px);
+  flex:1; min-width:0;
   padding:6px var(--sp);
-  margin-bottom:10px;
-  border-radius:var(--r-btn);
-  font-size:12.5px; font-weight:600; color:var(--ink);
+  border-radius:var(--p-r);
+  font-size:13px; font-weight:600;
 }
 .appui__wsic{
   width:20px; height:20px; flex:none;
   display:grid; place-items:center;
-  border-radius:6px;
-  background:var(--accent-2);
+  border-radius:var(--p-r-md);
+  background:#FFE9DE;
 }
 .appui__wsname{ flex:1; min-width:0; }
-.appui__ws svg{ width:13px; height:13px; flex:none; stroke:var(--ink-mute); }
+.appui__ws svg{ width:14px; height:14px; color:var(--p-muted); }
 .appui__collapse{
-  position:absolute; top:16px; right:12px;
-  color:var(--ink-mute);
+  display:grid; place-items:center;
+  width:28px; height:28px; flex:none;
+  border-radius:var(--p-r-md);
+  color:var(--p-muted);
 }
-.appui__collapse svg{ width:15px; height:15px; }
 .appui__grp{
   display:flex; align-items:center; justify-content:space-between;
-  margin:10px 0 4px;
+  margin:12px 0 2px;
   padding:0 var(--sp);
-  font-size:11px; color:var(--ink-mute);
+  font-size:12px; color:var(--p-muted);
 }
-.appui__grp em{ font-style:normal; }
+.appui__grp em{ font-style:normal; display:flex; color:var(--p-muted); }
+.appui__grp svg{ width:14px; height:14px; }
+.appui__dots{ letter-spacing:.06em; }
 .appui__nav{ list-style:none; margin:0; padding:0; }
 .appui__nav li{
-  display:flex; align-items:center; gap:9px;
-  min-height:28px;
-  padding:4px var(--sp);
-  border-radius:8px;
-  color:var(--ink-soft);
+  display:flex; align-items:center; gap:10px;
+  min-height:32px;
+  padding:5px var(--sp);
+  border-radius:var(--p-r);
+  color:var(--p-fg);
 }
-.appui__nav li svg,.appui__nav li img{ width:15px; height:15px; flex:none; }
-.appui__nav li svg{ stroke:var(--ink-mute); }
-.appui__nav li.is-on{ background:var(--wash-2); color:var(--ink); }
-.appui__av{ width:18px; height:18px; border-radius:50%; object-fit:cover; flex:none; }
-.appui__av--sm{ width:16px; height:16px; }
+.appui__nav li svg{ color:var(--p-muted); }
+.appui__nav li.is-on{ background:var(--p-accent); }
+.appui__av{ width:20px; height:20px; border-radius:50%; object-fit:cover; flex:none; }
+.appui__av--sm{ width:18px; height:18px; }
 .appui__chat{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .appui__foot{ margin-top:auto; }
 .appui__pro{
   display:flex; align-items:center; gap:10px;
   padding:9px var(--sp);
   margin-bottom:6px;
-  border-radius:var(--r-btn);
-  background:var(--paper);
+  border-radius:var(--p-r);
+  background:var(--p-card);
 }
 .appui__pro span{ display:flex; flex-direction:column; min-width:0; }
-.appui__pro b{ font-size:12.5px; font-weight:600; color:var(--ink); }
-.appui__pro i{ font-style:normal; font-size:11px; color:var(--ink-mute); }
-.appui__pro img{ width:32px; height:32px; flex:none; object-fit:contain; }
+.appui__pro b{ font-size:13px; font-weight:600; }
+.appui__pro i{ font-style:normal; font-size:11.5px; color:var(--p-muted); }
+.appui__pro img{ width:28px; height:28px; flex:none; object-fit:contain; }
 
 /* the thread — one column */
-.appui__main{ display:flex; flex-direction:column; min-width:0; background:var(--paper); }
+.appui__main{ display:flex; flex-direction:column; min-width:0; background:var(--p-card); }
 .appui__top{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:15px var(--gr) 15px var(--gl);
-  font-size:12.5px; color:var(--ink);
+  padding:14px var(--gr) 14px var(--gl);
+  font-size:13px;
 }
 .appui__title{ display:flex; align-items:center; gap:8px; min-width:0; }
-.appui__topact{ display:flex; gap:14px; color:var(--ink-mute); flex:none; }
-.appui__topact svg{ width:15px; height:15px; }
+.appui__topact{ display:flex; gap:14px; color:var(--p-muted); flex:none; }
 .appui__thread{
   flex:1; min-height:0;
-  display:flex; flex-direction:column; gap:22px;
+  display:flex; flex-direction:column; gap:18px;
   padding:8px var(--gr) 12px var(--gl);
   overflow:hidden;
 }
-.appui__ask{
-  align-self:flex-end; max-width:82%;
-  padding:11px 14px;
-  border-radius:12px;
-  background:var(--wash);
-  font-size:12.5px; line-height:1.6; color:var(--ink);
+.appui__ask{                       /* rounded-lg bg-muted/40 text-sm */
+  align-self:flex-end; max-width:85%;
+  padding:12px 16px;
+  border-radius:var(--p-r);
+  background:color-mix(in srgb, var(--p-accent) 55%, #fff);
+  font-size:14px; line-height:1.6;
 }
 .appui__reply{ display:flex; flex-direction:column; gap:12px; }
 .appui__worked{
-  display:flex; align-items:center; gap:7px;
-  margin-left:-30px;                 /* the avatar hangs in the gutter */
-  font-size:11.5px; color:var(--ink-mute);
+  display:flex; align-items:center; gap:10px;
+  margin-left:-32px;                 /* the avatar hangs in the gutter */
+  color:var(--p-muted);
 }
-.appui__worked svg{ width:12px; height:12px; }
+.appui__workedbtn{
+  display:inline-flex; align-items:center; gap:8px;
+  min-height:36px; padding:6px 8px;
+  border-radius:var(--p-r);
+  font-size:13px;
+}
+.appui__workedbtn svg{ width:14px; height:14px; }
 .appui__art{
   margin:0; width:min(100%, 286px);
-  border-radius:8px;
-  border:1px solid var(--hairline);
-  background:var(--paper);
+  border-radius:var(--p-r);
+  border:1px solid var(--p-border);
+  background:var(--p-card);
   overflow:hidden;
 }
 .appui__art figcaption{
-  padding:6px 10px;
-  font-size:11px; color:#2563EB;
+  padding:7px 12px;
+  font-size:13px; color:#2563EB;
 }
 .appui__art img{ display:block; width:100%; height:126px; object-fit:cover; object-position:50% 42%; }
-.appui__say{ font-size:12.5px; line-height:1.65; color:var(--ink-soft); }
+.appui__say{ font-size:14px; line-height:1.65; color:var(--p-fg); }
 .appui__say a{ color:#2563EB; }
-.appui__acts{
-  display:flex; align-items:center; gap:14px;
-  font-size:11px; color:var(--ink-mute);
-}
-.appui__acts svg{ width:14px; height:14px; }
-.appui__acts span{ display:flex; align-items:center; gap:5px; }
-/* the jump-to-latest control the product shows above the composer */
 .appui__jump{
   align-self:center; margin-top:auto;
-  width:26px; height:26px;
+  width:30px; height:30px;
   display:grid; place-items:center;
   border-radius:50%;
-  border:1px solid var(--hairline);
-  background:var(--paper);
-  color:var(--ink-mute);
+  border:1px solid var(--p-border);
+  background:var(--p-card);
+  color:var(--p-muted);
 }
-.appui__jump svg{ width:13px; height:13px; }
+.appui__jump svg{ width:15px; height:15px; }
+.appui__nav li img{ width:16px; height:16px; flex:none; object-fit:contain; }
 
 /* composer — same column as the thread */
 .appui__composer{
   display:flex; flex-direction:column; gap:14px;
   margin:0 var(--gr) 18px var(--gl);
-  padding:12px 12px 10px;
-  border-radius:var(--r-lg);
-  border:1px solid var(--hairline);
-  background:var(--paper);
-  font-size:12.5px; color:var(--ink-mute);
+  padding:14px 12px 10px;
+  border-radius:var(--p-r-xl);
+  border:1px solid var(--p-border);
+  background:var(--p-card);
+  font-size:14px; color:var(--p-muted);
 }
-.appui__ph{ padding:2px 2px 10px; }
-.appui__bar{ display:flex; align-items:center; gap:10px; }
-.appui__tools{ display:flex; align-items:center; gap:12px; color:var(--ink-mute); }
-.appui__tools svg{ width:15px; height:15px; }
-.appui__tools svg.is-on{ stroke:var(--accent-solid); }
+.appui__ph{ padding:0 4px 12px; }
+.appui__bar{ display:flex; align-items:center; gap:12px; }
+.appui__tools{ display:flex; align-items:center; gap:14px; color:var(--p-muted); }
+.appui__tools svg{ width:18px; height:18px; }
+.appui__tools .is-on{ display:flex; color:var(--p-primary); }
 .appui__model{
   display:flex; align-items:center; gap:6px;
   margin-left:auto;
-  padding:4px 8px;
-  border-radius:var(--r-pill);
-  background:var(--wash);
-  font-size:11px; color:var(--ink-soft);
+  padding:5px 9px;
+  border-radius:var(--p-r);
+  background:var(--p-side);
+  font-size:12.5px; color:var(--p-fg);
   white-space:nowrap;
 }
-.appui__model svg{ width:12px; height:12px; stroke:var(--ink-mute); }
-.appui__mic{ color:var(--ink-mute); display:flex; }
-.appui__mic svg{ width:15px; height:15px; }
+.appui__model svg{ width:13px; height:13px; color:var(--p-muted); }
+.appui__mic{ display:flex; color:var(--p-muted); }
+.appui__mic svg{ width:17px; height:17px; }
 .appui__send{
-  width:26px; height:26px; flex:none;
+  width:30px; height:30px; flex:none;
   display:grid; place-items:center;
-  border-radius:8px;
-  background:var(--accent-solid); color:var(--paper-ink);
-  font-size:13px;
+  border-radius:var(--p-r);
+  background:var(--p-primary); color:#fff;
 }
+.appui__send svg{ width:18px; height:18px; }
 
 /* ── what the run reached into ── */
 .stage__conn{
@@ -1726,7 +1740,9 @@ h3{ font-family:var(--fd); }
 
 /* the page itself — its own little design system, nothing shared */
 .tpl{
-  --sand:#F6F1E8; --shell:#FBF8F3; --deep:#2F3A36; --sea:#5E8C7D;
+  --sand:#F6F1E8; --shell:#FBF8F3; --deep:#2F3A36;
+  --sea:#5E8C7D;        /* the accent at display sizes            */
+  --sea-ink:#456B5E;    /* …and its legible sibling for small text */
   background:var(--shell);
   color:var(--deep);
   font-family:"Instrument Sans", system-ui, sans-serif;
@@ -1745,7 +1761,7 @@ h3{ font-family:var(--fd); }
 .tpl__eyebrow{
   margin:0 0 10px;
   font-size:9px; letter-spacing:.18em; text-transform:uppercase;
-  color:var(--sea);
+  color:var(--sea-ink);
 }
 .tpl__h1{
   margin:0 0 12px;
@@ -1770,7 +1786,7 @@ h3{ font-family:var(--fd); }
 }
 .tpl__rooms em{
   grid-column:2; grid-row:1 / span 2; align-self:center; text-align:right;
-  font-style:normal; font-size:11px; color:var(--sea);
+  font-style:normal; font-size:11px; color:var(--sea-ink);
 }
 .tpl__quote{
   margin:0 0 16px;
