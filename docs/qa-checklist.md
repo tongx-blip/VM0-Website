@@ -19,6 +19,18 @@ agent-browser open http://localhost:8931/
 agent-browser a11y            # expect: violations 0, passes 41
 ```
 
+**Audit the resting frame.** A looping animation makes this check
+non-deterministic — axe measures one instant, and an element caught mid-fade
+reports below contrast. Park the loop first, then audit:
+
+```js
+document.getElementById('a2a').classList.remove('is-live');
+```
+
+Then run it *again* without parking, ~20 times across a full loop. Anything that
+reproduces is a real defect: text that fades is text below contrast, and a loop
+re-enters that state forever. The fix is `clip-path`, not a quieter audit.
+
 Recurring causes, in the order they have actually bitten:
 
 - **`--ink-mute` on a `--wash-2` fill.** The mute grey has to clear AA on the

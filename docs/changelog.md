@@ -6,6 +6,52 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · the parallel figure stops describing a run and performs one
+
+The section's claim is *you ask once → four chats open → each reports back as it
+finishes*. It was a still diagram of that claim. It is now the claim happening,
+on a loop, with **no words added or changed** — the timing carries the argument
+that the copy was having to assert.
+
+The run, ~12s:
+
+| | |
+|---|---|
+| 0.1s | "You ask once" |
+| 0.4s | the bubble appears empty, with a caret |
+| 0.6s | the sentence types, 34ms a character, and the bubble grows with it |
+| +0.3 | Okou takes it — the pill lands on `--e-spring`, the one bit of weight in the sequence |
+| +0.7 | the tray, then four cards unroll 140ms apart |
+| +1.9 | each task reports its own status — **card 3 first**, then 1, 2, 4 |
+| +3.4 | "Each chat reports back as its task finishes" |
+| hold | three dots keep pulsing; the finished one sits still |
+
+**The out-of-order finish is the point.** Cards open 1-2-3-4 and report 1-3-2-4.
+An even stagger would have read as a progress bar in four pieces; four clocks
+that disagree is what "in its own chat" actually means, so it is written into
+the cue list rather than falling out of a loop index.
+
+One rAF timeline, gated on an IntersectionObserver and `visibilitychange`, so it
+costs nothing off screen or in a background tab. The resting state — reduced
+motion, no JS, the page before the observer fires — is the finished frame with
+every element visible, which is also what the section looked like before today.
+
+**Two things fade nothing.** Auditing mid-animation flagged
+`.a2a__st` and then `.a2a__t`, and both were real: text at `opacity: .4` is text
+below its contrast ratio, and because this figure *loops*, it re-entered that
+state every twelve seconds rather than once per page load. So the status line
+**wipes** (`clip-path`) instead of fading, and the cards **unroll** instead of
+fading. Either painted or not painted, never half-legible — and a card unrolling
+is a better picture of a chat opening than a card fading in. Sampled the audit 22
+times across the loop afterwards: clean.
+
+That leaves one transient elsewhere — the hero's rotating statement crossfades
+its text every 6.5s and will flag if the audit lands inside those 620ms. Same
+class of issue, same fix available; left alone this round because the hero's
+motion is settled.
+
+---
+
 ## 2026-08-19 · the product mock, measured off the components
 
 The mock had been built from a screenshot and a memory of the tokens, which is

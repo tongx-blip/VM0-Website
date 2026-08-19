@@ -162,6 +162,109 @@
     }
   }
 
+  /* ── 3b. the parallel figure, played as a run ─────────────────
+     One rAF timeline, not a stack of timers, and it only advances while
+     the figure is on screen and the tab is in front. The page's resting
+     state is the finished frame, so reduced motion and no-JS both get a
+     complete figure rather than an empty one. */
+  var a2a = doc.getElementById('a2a');
+  if (a2a && !reduce) {
+    var askEl = a2a.querySelector('.a2a__ask');
+    var cards = [].slice.call(a2a.querySelectorAll('.a2a__card'));
+    var stats = cards.map(function (c) { return c.querySelector('.a2a__st'); });
+    var askText = askEl.textContent.replace(/\s+/g, ' ').trim();
+
+    // the typed copy is decorative; the sentence itself stays readable
+    var sr = doc.createElement('span');
+    sr.className = 'a2a__sr';
+    sr.textContent = askText;
+    var typed = doc.createElement('span');
+    typed.setAttribute('aria-hidden', 'true');
+    var caret = doc.createElement('i');
+    caret.className = 'a2a__caret';
+    caret.setAttribute('aria-hidden', 'true');
+    askEl.textContent = '';
+    askEl.appendChild(sr);
+    askEl.appendChild(typed);
+    askEl.appendChild(caret);
+
+    var TYPE_START = 640;
+    var TYPE_MS = 34;                       // per character
+    var typeEnd = TYPE_START + askText.length * TYPE_MS;
+
+    // Each task reports back on its own clock, and NOT in the order they
+    // were opened — the middle one finishes first. That out-of-order beat
+    // is the whole argument of the section, so it is written down here
+    // rather than falling out of an even stagger.
+    var CUES = [
+      [120,  '.a2a__step'],
+      [420,  '.a2a__ask'],
+      [typeEnd + 300, '.a2a__hub'],
+      [typeEnd + 700, '.a2a__stage'],
+      [typeEnd + 1000, cards[0]], [typeEnd + 1140, cards[1]],
+      [typeEnd + 1280, cards[2]], [typeEnd + 1420, cards[3]],
+      [typeEnd + 1950, stats[0]],
+      [typeEnd + 2210, stats[2]],          // CRM refresh lands first
+      [typeEnd + 2570, stats[1]],
+      [typeEnd + 2930, stats[3]],
+      [typeEnd + 3450, '.a2a__back']
+    ];
+    var LOOP = typeEnd + 9500;
+
+    var t0 = null, raf = 0, visible = false;
+
+    function paint(now) {
+      raf = 0;
+      if (!visible || document.hidden) { t0 = null; return; }
+      if (t0 === null) t0 = now;
+      var t = now - t0;
+      if (t > LOOP) { reset(); t0 = now; t = 0; }
+
+      typed.textContent = askText.slice(
+        0, Math.max(0, Math.min(askText.length,
+          Math.floor((t - TYPE_START) / TYPE_MS)))
+      );
+      askEl.classList.toggle('is-typed', t >= typeEnd);
+
+      CUES.forEach(function (cue) {
+        var el = typeof cue[1] === 'string' ? a2a.querySelector(cue[1]) : cue[1];
+        if (el) el.classList.toggle('is-on', t >= cue[0]);
+      });
+      raf = requestAnimationFrame(paint);
+    }
+
+    function reset() {
+      typed.textContent = '';
+      askEl.classList.remove('is-typed');
+      CUES.forEach(function (cue) {
+        var el = typeof cue[1] === 'string' ? a2a.querySelector(cue[1]) : cue[1];
+        if (el) el.classList.remove('is-on');
+      });
+    }
+
+    function run(on) {
+      visible = on;
+      if (on) {
+        a2a.classList.add('is-live');
+        if (!raf) raf = requestAnimationFrame(paint);
+      } else {
+        t0 = null;
+        if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { run(e.isIntersecting); });
+      }, { threshold: 0.25 }).observe(a2a);
+    } else {
+      run(true);
+    }
+    doc.addEventListener('visibilitychange', function () {
+      if (!document.hidden && visible && !raf) raf = requestAnimationFrame(paint);
+    });
+  }
+
   /* ── 4. one scroll loop: header state + step ladder ───────────
      The ladder is a pinned section taller than its own viewport, and how
      far you have scrolled through that pin IS which step is open — one

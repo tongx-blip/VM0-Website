@@ -88,3 +88,25 @@ a webfont), then adds `.is-in` with a 110ms cascade: headline → thesis + actio
 - CSS scroll-driven animations (`animation-timeline: view()`) are avoided: they
   do not tick reliably in the headless Chromium used for review, which makes
   them impossible to verify.
+
+## A figure that performs instead of describing
+
+`#parallel` is the page's one looping narrative. The rules it establishes:
+
+- **One rAF timeline, one cue list.** Cues are `[ms, target]` pairs read every
+  frame and toggled with `classList.toggle`, so scrubbing backwards (the loop
+  reset) is free and no timer can drift out of sequence. Never a stack of
+  `setTimeout`s.
+- **Gate it.** An `IntersectionObserver` starts and stops the loop, and
+  `visibilitychange` restarts it — a looping animation in a background tab is
+  pure waste.
+- **The resting state is the finished frame.** `.is-live` is added by JS only.
+  Reduced motion, no JS, and the moments before the observer fires all get the
+  complete figure. Never build a loop that leaves the page empty if it fails.
+- **Write the irregularity down.** Four tasks that finish 1-3-2-4 read as four
+  independent runs; 1-2-3-4 reads as a progress bar. If a sequence is meant to
+  look uncoordinated, it has to be authored, not derived from an index.
+- **Looping text must not fade.** Text at partial opacity is text below its
+  contrast ratio. Once per page load is an artifact; every twelve seconds,
+  forever, is a defect. Reveal text-bearing elements with `clip-path` — painted
+  or not painted, never half-legible. Fades stay for surfaces and decoration.

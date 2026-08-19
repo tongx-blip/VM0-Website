@@ -1195,6 +1195,92 @@ h3{ font-family:var(--fd); }
 .a2a__dot.is-run{ background:var(--accent); box-shadow:0 0 0 3px rgba(237,78,1,.16); }
 .a2a__dot.is-done{ background:var(--paper); box-shadow:inset 0 0 0 2px var(--ok); }
 
+/* ── the run, played out ──────────────────────────────────────────
+   The figure used to be a diagram OF a run. It is now the run: the ask
+   is typed, Okou takes it, four chats are opened, and each one reports
+   back when its own task finishes — deliberately out of order, because
+   that is the claim the section is making. Nothing is added to the copy;
+   the timing carries the argument.
+
+   `.is-live` is set by app.js only when the figure is on screen and the
+   choreography is wanted, so the resting page — and reduced motion, and
+   no-JS — is the finished state with everything visible. */
+.a2a.is-live .a2a__step,
+.a2a.is-live .a2a__ask,
+.a2a.is-live .a2a__hub,
+.a2a.is-live .a2a__stage,
+.a2a.is-live .a2a__back{
+  opacity:0;
+  transition:opacity 360ms var(--e-out), transform 560ms var(--e-out);
+}
+/* Same reasoning as the status line, and it loops: a card that fades holds
+   its title below contrast every time round. The cards unroll instead —
+   which is also what opening four chats should look like. */
+.a2a.is-live .a2a__card{
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path 520ms var(--e-out), transform 560ms var(--e-out);
+}
+.a2a.is-live .a2a__card.is-on{ clip-path:inset(0 0 0 0); }
+/* The status line wipes in rather than fading. Fading small text means it
+   spends ~360ms below its contrast ratio — invisible to the eye, but real,
+   and an accessibility audit sampled mid-transition catches it. A clip is
+   either painted or not, never half-legible, and a line being written in
+   is the truer gesture for a task reporting its own progress anyway. */
+.a2a.is-live .a2a__st{
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path 440ms var(--e-out);
+}
+.a2a.is-live .a2a__st.is-on{ clip-path:inset(0 0 0 0); }
+.a2a.is-live .a2a__step{ transform:translateY(6px); }
+.a2a.is-live .a2a__ask{ transform:translateY(10px) scale(.98); }
+.a2a.is-live .a2a__hub{ transform:translateY(12px) scale(.9); }
+.a2a.is-live .a2a__stage{ transform:translateY(14px); }
+.a2a.is-live .a2a__card{ transform:translateY(10px); }
+.a2a.is-live .a2a__back{ transform:translateY(6px); }
+.a2a.is-live .is-on{ opacity:1; transform:none; }
+/* the pill lands with a little weight behind it — it is the moment the
+   request stops being a sentence and becomes work */
+.a2a.is-live .a2a__hub.is-on{ transition-timing-function:var(--e-spring); }
+
+/* the composer caret, blinking at the end of what has been typed */
+.a2a__caret{
+  display:inline-block;
+  width:2px; height:1.05em; margin-left:1px;
+  vertical-align:-.14em;
+  background:var(--accent-solid);
+  animation:a2aCaret 1.06s steps(1) infinite;
+}
+@keyframes a2aCaret{ 0%,49%{ opacity:1 } 50%,100%{ opacity:0 } }
+.a2a__ask.is-typed .a2a__caret{ animation:none; opacity:0; }
+/* the bubble grows with the sentence, so it has to hold a shape while empty */
+.a2a.is-live .a2a__ask{ min-width:4ch; min-height:1.9em; }
+
+/* a running task breathes; a finished one lands once and stops */
+.a2a__dot{ position:relative; }
+.a2a.is-live .a2a__st.is-on .a2a__dot.is-run::after{
+  content:"";
+  position:absolute; inset:-3px;
+  border-radius:50%;
+  background:rgba(237,78,1,.2);
+  animation:a2aPulse 1.9s var(--e-elegant) infinite;
+}
+@keyframes a2aPulse{
+  0%,100%{ transform:scale(1); opacity:.85 }
+  50%    { transform:scale(1.8); opacity:0 }
+}
+.a2a.is-live .a2a__st.is-on .a2a__dot.is-done{
+  animation:a2aLand 520ms var(--e-spring) both;
+}
+@keyframes a2aLand{ from{ transform:scale(.4) } to{ transform:scale(1) } }
+
+/* the sentence stays in the accessibility tree while the visible copy is
+   being typed one character at a time */
+.a2a__sr{
+  position:absolute; width:1px; height:1px;
+  margin:-1px; padding:0; border:0;
+  clip-path:inset(50%); overflow:hidden; white-space:nowrap;
+}
+
 /* ─────────────── 16. the closing dark chapter ─────────────── */
 .panel--cta{
   background:var(--ink); color:rgba(255,255,255,.72);
