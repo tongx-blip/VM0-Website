@@ -6,6 +6,55 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-19 · the product mock, measured off the components
+
+The mock had been built from a screenshot and a memory of the tokens, which is
+why it kept reading as "close but not ours". Every value below is now read out
+of `vm0-ai/vm0` — the component that draws it, not the picture of it.
+
+| | had been | actually is |
+|---|---|---|
+| sidebar width | 238px | **255px** (`zero-directed-shared.tsx`, `w-[255px]`) |
+| nav / thread row | 13px, min-h 32, pad 5/8, gap 10 | **`h-8 gap-2 rounded-lg p-2 text-sm leading-5`** — 14px |
+| section label | 12px, muted-foreground | **13px, weight 500, lh 16, `sidebar-foreground/50`** |
+| **selected row** | `#E7EBF0` | **`#DEE4EB`** — `#E7EBF0` is `--state-hover`; selected is `--state-selected`, one step further down the ladder |
+| org switcher | 13px/600, gap 8, pad 6/8 | **`text-sm font-semibold`, `gap-2.5 px-2 py-2`**, chevron 16 |
+| user bubble | radius 8, muted/40 | **`rounded-xl` (14px), gray-100 `#E7EBF0`, `text-[0.9375rem] leading-[1.7]`** |
+| artifact card | radius 8, 1px border | **`.zero-card`: radius 20px, 0.7px gray-400, `--zero-card-shadow`** |
+| composer | radius 14, 1px border | **`.zero-composer`: radius 24px, 0.7px gray-400, same shadow** |
+| send button | 30px square, no glyph | **`Button size="icon-sm"`: 32px, radius 8, primary-700, `ArrowUp` 18** |
+| tool icons | bare 18px glyphs | **`variant="quiet" size="icon-sm"`: 32px targets, 16px glyphs, muted** |
+| model picker | grey fill, 12.5px | **`variant="outline" size="sm"`: h-8 px-3, 0.7px gray-400, 14px/500** |
+| Slack mark in the footer | plain 16px | **`h-3.5 w-3.5 scale-[2.2]`** — the mark ships with heavy internal padding |
+
+The one that mattered most is the **state ladder**. The platform's hover and
+selected states are not flat greys, they are one translucent layer
+(`--state-layer 215 100% 19%`) at 5% and 8.5%. Composited onto the sidebar those
+land on `#E7EBF0` and `#DEE4EB` — and the mock had been using the *hover* colour
+to mark the *selected* row, so every selected row in the picture was one step too
+light. That is not a value you can eyeball; it has to be computed from the ladder.
+
+**The window is shorter and the thread behaves like a thread.** `--app-h` comes
+down from 620 to 540 at 1440. The sidebar's pinned-and-threads block and the
+thread itself are what absorb that (`flex-1 min-h-0 overflow-hidden`, exactly as
+`ExpandedSidebarSections` does), so the footer stays pinned instead of being
+pushed out of the window — which is what had happened to Get Pro, the Slack row
+and the account row. The thread runs past the bottom of the window and fades
+there, so the ask, the run row and the artifact it produced stay in view.
+
+**The right-hand column is one column now, not three floating pieces.** The stage
+was three absolutely-positioned elements at hand-picked offsets. It is a
+two-column grid: the two connector cards share the published page's width with a
+single gap between them, and that same gap is the distance down to the page. So
+everything on the right lines up on the same two edges, and the column is one
+`--conn-gap` taller than the product on each side. Measured at 1440: connectors
+`972..1351`, page `972..1351`, gap between cards 18, gap down to the page 18.
+
+Below 1080 the same block stacks under the product; below 720 the sidebar is
+hidden, which is what the app does at that width too.
+
+---
+
 ## 2026-08-19 · one section geometry: width, radius, padding, no shadow
 
 Nine notes in one round. The half that mattered was structural — the page had no

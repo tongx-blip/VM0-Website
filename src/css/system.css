@@ -1745,125 +1745,185 @@ h3{ font-family:var(--fd); }
    for the run row, Paperclip / Image / SlidersHorizontal / Globe /
    Mic / ArrowUp in the composer. Nothing here is drawn by hand. */
 .appui{
-  /* platform tokens, light theme */
-  --p-card:#FFFFFF;        /* --card                    */
-  --p-side:#F3F5F8;        /* --sidebar   = gray-50     */
-  --p-fg:#14171D;          /* --foreground = gray-950   */
-  --p-muted:#525B68;       /* --muted-foreground = 800  */
-  --p-border:#DCE1E8;      /* --border    = gray-200    */
-  --p-accent:#E7EBF0;      /* --accent    = gray-100    */
-  --p-primary:#ED4E01;     /* --primary   = primary-700 */
-  --p-r:8px;               /* --radius                  */
-  --p-r-md:6px;            /* --radius-md               */
-  --p-r-xl:14px;           /* --radius-xl               */
+  /* ── PLATFORM TOKENS, read out of vm0-ai/vm0, light theme ──
+     turbo/packages/ui/src/styles/globals.css. Nothing here is chosen. */
+  --p-card:#FFFFFF;        /* --card                                      */
+  --p-side:#F3F5F8;        /* --sidebar            = gray-50              */
+  --p-fg:#14171D;          /* --foreground         = gray-950             */
+  --p-muted:#525B68;       /* --muted-foreground   = gray-800             */
+  --p-border:#DCE1E8;      /* --border             = gray-200             */
+  --p-line:#C5CCD7;        /* gray-400 — the 0.7px card border            */
+  --p-bubble:#E7EBF0;      /* gray-100 — .zero-chat-bubble-user           */
+  --p-primary:#ED4E01;     /* --primary            = primary-700          */
+  /* The interaction ladder is a translucent layer, not a flat grey:
+     --state-layer 215 100% 19% at 5% / 8.5%. Composited onto the sidebar
+     those land here — hover is exactly gray-100, selected is a step past
+     it. The old mock used the HOVER colour for the SELECTED row. */
+  --p-hover:#E7EBF0;
+  --p-selected:#DEE4EB;
+  --p-r:8px;               /* --radius                                    */
+  --p-r-md:6px;            /* --radius-md                                 */
+  --p-r-xl:14px;           /* --radius-xl — rounded-xl, the chat bubble   */
+  --p-r-card:20px;         /* --zero-card-radius     1.25rem              */
+  --p-r-composer:24px;     /* --zero-composer-radius 1.5rem               */
+  --p-shadow:
+    0 2px 12px hsl(220 12% 50% / .04),
+    0 0 0 .5px hsl(220 12% 50% / .02);   /* --zero-card-shadow            */
 
-  --gl:40px;                                   /* the content column, left  */
-  --gr:calc(40px + var(--overlap, 0px));       /* …and right, clear of the
-                                                  window that overlaps it   */
-  --overlap:clamp(0px, 7%, 92px);
-  --sp:8px;                                    /* sidebar row inset         */
-  width:min(100%, 74%);
-  display:grid; grid-template-columns:238px minmax(0,1fr);
-  min-height:clamp(420px, 44vw, 620px);
-  border-radius:var(--r-lg);
+  --gl:32px;                                   /* the content column, left  */
+  --gr:32px;                                   /* …and right                */
+  --sp:8px;                                    /* px-2, the sidebar inset   */
+  width:100%;
+  height:var(--app-h);
+  display:grid; grid-template-columns:255px minmax(0,1fr);
+  border-radius:var(--p-r-card);
   background:var(--p-card);
-  box-shadow:var(--e-3);
+  border:.7px solid var(--p-line);
+  box-shadow:var(--p-shadow), 0 30px 64px -30px rgba(12,15,18,.28);
   overflow:hidden;
   font-family:"Noto Sans", system-ui, sans-serif;
   color:var(--p-fg);
 }
 .appui svg{ width:16px; height:16px; flex:none; }
 
-/* sidebar */
+/* ── sidebar ── w-[255px] bg-sidebar, nav px-2 pt-1, footer p-2 ── */
 .appui__side{
-  display:flex; flex-direction:column;
-  padding:12px var(--sp);
+  display:flex; flex-direction:column; min-height:0;
+  padding:8px var(--sp);
   background:var(--p-side);
-  font-size:13px; color:var(--p-fg);
+  color:var(--p-fg);
+  overflow:hidden;
 }
-.appui__wsrow{ display:flex; align-items:center; gap:2px; margin-bottom:10px; }
+/* ExpandedSidebarSections: flex-1 min-h-0 overflow-hidden — the pinned and
+   thread lists are what absorb a short window, so the footer stays put */
+.appui__sections{
+  flex:1; min-height:0;
+  display:flex; flex-direction:column;
+  margin-top:8px;
+  overflow:hidden;
+}
+/* org switcher: w-full flex items-center gap-2.5 px-2 py-2 rounded-lg */
+.appui__wsrow{ display:flex; align-items:center; gap:0; margin-bottom:4px; }
 .appui__ws{
-  display:flex; align-items:center; gap:8px;
+  display:flex; align-items:center; gap:10px;
   flex:1; min-width:0;
-  padding:6px var(--sp);
+  padding:8px var(--sp);
   border-radius:var(--p-r);
-  font-size:13px; font-weight:600;
+  font-size:14px; font-weight:600; line-height:1.25;
 }
 .appui__wsic{
-  width:20px; height:20px; flex:none;
+  width:24px; height:24px; flex:none;
   display:grid; place-items:center;
   border-radius:var(--p-r-md);
   background:#FFE9DE;
 }
 .appui__wsname{ flex:1; min-width:0; }
-.appui__ws svg{ width:14px; height:14px; color:var(--p-muted); }
+.appui__ws svg{ width:16px; height:16px; color:var(--p-fg); }
 .appui__collapse{
   display:grid; place-items:center;
-  width:28px; height:28px; flex:none;
-  border-radius:var(--p-r-md);
+  width:32px; height:32px; flex:none;
+  border-radius:var(--p-r);
   color:var(--p-muted);
 }
+/* section label: h-8 pl-2, text-[13px] font-medium leading-4,
+   text-sidebar-foreground/50 */
 .appui__grp{
   display:flex; align-items:center; justify-content:space-between;
-  margin:12px 0 2px;
-  padding:0 var(--sp);
-  font-size:12px; color:var(--p-muted);
+  height:32px; margin:0;
+  padding:0 var(--sp) 0 var(--sp);
+  border-radius:var(--p-r);
+  font-size:13px; font-weight:500; line-height:16px;
+  color:color-mix(in srgb, var(--p-fg) 50%, transparent);
 }
-.appui__grp em{ font-style:normal; display:flex; color:var(--p-muted); }
+.appui__grp em{ font-style:normal; display:flex; }
 .appui__grp svg{ width:14px; height:14px; }
 .appui__dots{ letter-spacing:.06em; }
-.appui__nav{ list-style:none; margin:0; padding:0; }
+/* nav + thread rows: flex w-full h-8 items-center gap-2 rounded-lg p-2
+   text-sm leading-5 */
+.appui__nav{ list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:4px; }
 .appui__nav li{
-  display:flex; align-items:center; gap:10px;
-  min-height:32px;
-  padding:5px var(--sp);
+  display:flex; align-items:center; gap:8px;
+  height:32px;
+  padding:0 var(--sp);
   border-radius:var(--p-r);
+  font-size:14px; line-height:20px;
   color:var(--p-fg);
 }
-.appui__nav li svg{ color:var(--p-muted); }
-.appui__nav li.is-on{ background:var(--p-accent); }
+.appui__nav li svg{ color:var(--p-fg); }
+.appui__nav li.is-on{ background:var(--p-selected); font-weight:500; }
+.appui__nav + .appui__grp{ margin-top:8px; }
 .appui__av{ width:20px; height:20px; border-radius:50%; object-fit:cover; flex:none; }
-.appui__av--sm{ width:18px; height:18px; }
+.appui__av--sm{ width:20px; height:20px; }
 .appui__chat{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.appui__foot{ margin-top:auto; }
+.appui__foot{ flex:none; padding-top:8px; }
+/* SidebarUpgradeCard: gap-3 p-2.5, zero-card at 12px, its own softer shadow */
 .appui__pro{
-  display:flex; align-items:center; gap:10px;
-  padding:9px var(--sp);
-  margin-bottom:6px;
-  border-radius:var(--p-r);
+  display:flex; align-items:center; gap:12px;
+  padding:10px;
+  margin:0 0 8px;
+  border-radius:12px;
+  border:.7px solid var(--p-line);
   background:var(--p-card);
+  box-shadow:0 1px 2px hsl(220 12% 20% / .04), 0 4px 12px hsl(220 12% 20% / .03);
 }
-.appui__pro span{ display:flex; flex-direction:column; min-width:0; }
-.appui__pro b{ font-size:13px; font-weight:600; }
-.appui__pro i{ font-style:normal; font-size:11.5px; color:var(--p-muted); }
-.appui__pro img{ width:28px; height:28px; flex:none; object-fit:contain; }
+.appui__pro span{ display:block; min-width:0; flex:1; }
+.appui__pro b{ display:block; font-size:14px; font-weight:500; color:var(--p-fg); }
+.appui__pro i{
+  display:block; margin-top:2px;
+  font-style:normal; font-size:11px; color:var(--p-muted);
+}
+.appui__pro img{ width:56px; height:56px; flex:none; object-fit:contain; margin:-12px 0; }
+/* FOOTER_NAV: the Slack mark ships with heavy internal padding, so the app
+   draws it at h-3.5 w-3.5 scale-[2.2] inside a 14px box */
+.appui__slackbox{
+  width:16px; height:16px; flex:none;
+  display:grid; place-items:center; overflow:visible;
+}
+.appui__slack{ width:14px; height:14px; transform:scale(2.2); }
+/* the h-px bg-border/30 mx-1 my-1 above the account row */
+.appui__foot hr{
+  height:1px; margin:4px; border:0;
+  background:color-mix(in srgb, var(--p-border) 30%, transparent);
+}
 
-/* the thread — one column */
-.appui__main{ display:flex; flex-direction:column; min-width:0; background:var(--p-card); }
+/* ── the thread ── */
+.appui__main{ display:flex; flex-direction:column; min-width:0; min-height:0; }
 .appui__top{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
   padding:14px var(--gr) 14px var(--gl);
-  font-size:13px;
+  font-size:14px; font-weight:500;
 }
-.appui__title{ display:flex; align-items:center; gap:8px; min-width:0; }
-.appui__topact{ display:flex; gap:14px; color:var(--p-muted); flex:none; }
+.appui__title{ display:flex; align-items:center; gap:10px; min-width:0; }
+.appui__topact{ display:flex; align-items:center; gap:14px; color:var(--p-muted); }
 .appui__thread{
   flex:1; min-height:0;
-  display:flex; flex-direction:column; gap:18px;
-  padding:8px var(--gr) 12px var(--gl);
+  display:flex; flex-direction:column; gap:14px;
+  padding:4px var(--gr) 12px var(--gl);
   overflow:hidden;
+  /* the window is shorter than the thread, so the thread continues past the
+     bottom of it and fades there — the ask, the run and the artifact it made
+     are what this tab is about, so they are what stays in view */
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 44px), transparent);
+          mask-image:linear-gradient(to bottom, #000 calc(100% - 44px), transparent);
 }
-.appui__ask{                       /* rounded-lg bg-muted/40 text-sm */
+/* zero-chat-bubble-user: rounded-xl max-w-[85%] text-[0.9375rem]
+   leading-[1.7], background gray-100 */
+.appui__ask{
   align-self:flex-end; max-width:85%;
+  margin:0;
   padding:12px 16px;
-  border-radius:var(--p-r);
-  background:color-mix(in srgb, var(--p-accent) 55%, #fff);
-  font-size:14px; line-height:1.6;
+  border-radius:var(--p-r-xl);
+  background:var(--p-bubble);
+  font-size:15px; line-height:1.7;
 }
 .appui__reply{ display:flex; flex-direction:column; gap:12px; }
+/* the run row: mt-1.5 inline-flex min-h-9 items-center gap-2 rounded-lg
+   px-2 py-1.5 text-muted-foreground, Hourglass 14 + text-[13px] +
+   ChevronRight 14 at 70% */
 .appui__worked{
   display:flex; align-items:center; gap:10px;
-  margin-left:-32px;                 /* the avatar hangs in the gutter */
+  margin:0 0 0 -32px;                /* the avatar hangs in the gutter */
   color:var(--p-muted);
 }
 .appui__workedbtn{
@@ -1873,87 +1933,122 @@ h3{ font-family:var(--fd); }
   font-size:13px;
 }
 .appui__workedbtn svg{ width:14px; height:14px; }
+.appui__workedbtn svg:last-child{ color:color-mix(in srgb, var(--p-muted) 70%, transparent); }
+/* zero-card: 0.7px gray-400, --zero-card-radius, --zero-card-shadow */
 .appui__art{
-  margin:0; width:min(100%, 286px);
-  border-radius:var(--p-r);
-  border:1px solid var(--p-border);
+  margin:0; width:min(100%, 300px);
+  border-radius:var(--p-r-card);
+  border:.7px solid var(--p-line);
   background:var(--p-card);
+  box-shadow:var(--p-shadow);
   overflow:hidden;
 }
 .appui__art figcaption{
-  padding:7px 12px;
-  font-size:13px; color:#2563EB;
+  padding:12px 14px 10px;
+  font-size:14px; font-weight:500; color:#2563EB;
 }
-.appui__art img{ display:block; width:100%; height:126px; object-fit:cover; object-position:50% 42%; }
-.appui__say{ font-size:14px; line-height:1.65; color:var(--p-fg); }
+.appui__art img{ display:block; width:100%; height:132px; object-fit:cover; }
+.appui__say{ margin:0; font-size:15px; line-height:1.7; color:var(--p-fg); }
 .appui__say a{ color:#2563EB; }
 .appui__jump{
   align-self:center; margin-top:auto;
-  width:30px; height:30px;
+  width:32px; height:32px; flex:none;
   display:grid; place-items:center;
   border-radius:50%;
-  border:1px solid var(--p-border);
+  border:.7px solid var(--p-line);
   background:var(--p-card);
   color:var(--p-muted);
 }
-.appui__jump svg{ width:15px; height:15px; }
-.appui__nav li img{ width:16px; height:16px; flex:none; object-fit:contain; }
-
-/* composer — same column as the thread */
+/* .zero-composer: white, 0.7px gray-400, 1.5rem radius, card shadow */
 .appui__composer{
-  display:flex; flex-direction:column; gap:14px;
-  margin:0 var(--gr) 18px var(--gl);
+  display:flex; flex-direction:column; gap:12px;
+  margin:0 var(--gr) 16px var(--gl);
   padding:14px 12px 10px;
-  border-radius:var(--p-r-xl);
-  border:1px solid var(--p-border);
+  border-radius:var(--p-r-composer);
+  border:.7px solid var(--p-line);
   background:var(--p-card);
-  font-size:14px; color:var(--p-muted);
+  box-shadow:var(--p-shadow);
+  font-size:15px; color:var(--p-muted);
 }
-.appui__ph{ padding:0 4px 12px; }
-.appui__bar{ display:flex; align-items:center; gap:12px; }
-.appui__tools{ display:flex; align-items:center; gap:14px; color:var(--p-muted); }
-.appui__tools svg{ width:18px; height:18px; }
-.appui__tools .is-on{ display:flex; color:var(--p-primary); }
-.appui__model{
-  display:flex; align-items:center; gap:6px;
-  margin-left:auto;
-  padding:5px 9px;
+.appui__ph{ padding:2px 6px 10px; }
+.appui__bar{ display:flex; align-items:center; gap:6px; }
+/* Button variant="quiet" size="icon-sm": h-8 w-8, muted, 16px glyph */
+.appui__tools{ display:flex; align-items:center; gap:2px; color:var(--p-muted); }
+.appui__tools > svg,
+.appui__tools > span{
+  width:32px; height:32px; flex:none;
+  display:grid; place-items:center;
   border-radius:var(--p-r);
-  background:var(--p-side);
-  font-size:12.5px; color:var(--p-fg);
+}
+.appui__tools .is-on{ color:var(--p-primary); }
+/* Button variant="outline" size="sm": h-8 px-3, 0.7px gray-400, text-sm */
+.appui__model{
+  display:flex; align-items:center; gap:8px;
+  margin-left:auto;
+  height:32px; padding:0 12px;
+  border-radius:var(--p-r);
+  border:.7px solid var(--p-line);
+  background:var(--p-card);
+  font-size:14px; font-weight:500; color:var(--p-fg);
   white-space:nowrap;
 }
-.appui__model svg{ width:13px; height:13px; color:var(--p-muted); }
-.appui__mic{ display:flex; color:var(--p-muted); }
-.appui__mic svg{ width:17px; height:17px; }
+.appui__model svg{ width:16px; height:16px; color:var(--p-muted); }
+.appui__mic{
+  width:32px; height:32px; flex:none;
+  display:grid; place-items:center;
+  border-radius:var(--p-r);
+  color:var(--p-muted);
+}
+/* Button size="icon-sm": h-8 w-8 rounded-lg bg-primary, ArrowUp 18 */
 .appui__send{
-  width:30px; height:30px; flex:none;
+  width:32px; height:32px; flex:none;
   display:grid; place-items:center;
   border-radius:var(--p-r);
   background:var(--p-primary); color:#fff;
 }
 .appui__send svg{ width:18px; height:18px; }
 
-/* ── what the run reached into ── */
-.stage__conn{
-  position:absolute; z-index:3;
-  top:-64px; right:0;          /* above the product, clear of its top row */
-  display:flex; gap:10px;
+/* ── the layout ────────────────────────────────────────────────────
+   Two columns on one grid, not three absolutely-positioned pieces.
+   The right column is ONE width: the two connector cards share it with
+   a single gap between them, and that same gap is the distance down to
+   the published page. Everything on the right therefore lines up on the
+   same two edges, and the whole column is a little taller than the
+   product beside it. */
+.stage{
+  --stage-gap:clamp(20px, 2.4vw, 34px);   /* between the two columns  */
+  --conn-gap:clamp(12px, 1.3vw, 18px);    /* inside the right column  */
+  --app-h:clamp(380px, 38vw, 540px);
+  position:relative;
+  margin:clamp(40px, 4.4vw, 64px) 0 0;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) clamp(260px, 30%, 400px);
+  gap:var(--stage-gap);
+  align-items:center;                      /* the taller column overhangs
+                                              evenly, top and bottom     */
 }
-.stage__conn .acard{ width:clamp(190px, 17vw, 232px); }
-.scene--built .acard{ padding:13px 14px; }
+.stage__right{
+  display:flex; flex-direction:column;
+  gap:var(--conn-gap);
+  height:calc(var(--app-h) + 2 * var(--conn-gap));
+}
+.stage__conn{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:var(--conn-gap);
+  flex:none;
+}
+.stage__conn .acard{ width:auto; }
+.scene--built .acard{ padding:12px 13px; }
 
 /* ── the page it shipped ── */
 .tplwin{
-  position:absolute; z-index:4;
-  right:0; top:clamp(74px, 8vw, 118px);
-  width:clamp(290px, 26vw, 376px);
-  height:clamp(420px, 44vw, 610px);
-  margin:0;
+  flex:1; min-height:0;
+  width:100%; margin:0;
   display:flex; flex-direction:column;
-  border-radius:var(--r-lg);
+  border-radius:var(--p-r-card, 20px);
   background:var(--paper);
-  box-shadow:0 3px 10px rgba(12,15,18,.08), 0 40px 80px -36px rgba(12,15,18,.42);
+  box-shadow:0 2px 12px hsl(220 12% 50% / .04),
+             0 30px 64px -30px rgba(12,15,18,.28);
   overflow:hidden;
 }
 .tplwin__bar{
@@ -2041,15 +2136,22 @@ h3{ font-family:var(--fd); }
 }
 
 @media (max-width:1080px){
-  .appui{ width:100%; grid-template-columns:200px minmax(0,1fr); }
-  .stage__conn{
-    position:static; width:auto; flex-direction:row;
-    margin-top:14px;
+  /* one column: the product, then the same right-hand block underneath it,
+     still sharing its two edges and its one gap */
+  .stage{
+    grid-template-columns:minmax(0,1fr);
+    --app-h:clamp(420px, 62vw, 560px);
   }
-  .tplwin{
-    position:static; width:100%; height:460px;
-    margin-top:14px;
-  }
+  .stage__right{ height:auto; }
+  .tplwin{ height:clamp(340px, 58vw, 460px); flex:none; }
+}
+@media (max-width:720px){
+  /* below this the 255px sidebar would be most of the window, which is not
+     what the app does either — it hides the sidebar */
+  .appui{ grid-template-columns:minmax(0,1fr); }
+  .appui__side{ display:none; }
+  .appui{ --gl:18px; --gr:18px; }
+  .stage__conn{ grid-template-columns:1fr; }
 }
 @media (max-width:640px){
   .appui{ grid-template-columns:1fr; min-height:0; }

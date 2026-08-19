@@ -401,31 +401,45 @@ same way, they should reuse `.appui` and only vary the thread and the artifact.
 
 ## 13. Drawing the product: the source of truth is the product
 
-`.appui` is a picture of the real app, so **nothing in it may be invented**.
-Every value below was read out of `vm0-ai/vm0`, not remembered:
+`.appui` is a picture of the real app, so **nothing in it may be invented**, and
+"read the design system" is not enough — read the **component**. Every value
+below came out of `vm0-ai/vm0`:
 
-| What | Where it comes from |
+| what | where |
 |---|---|
-| Typeface | `turbo/apps/platform/src/views/css/index.css` → **Noto Sans**, JetBrains Mono |
-| Colours | `turbo/packages/ui/src/styles/globals.css` → `--card #FFFFFF`, `--sidebar` gray-50 `#F3F5F8`, `--foreground` gray-950 `#14171D`, `--muted-foreground` gray-800 `#525B68`, `--border` gray-200 `#DCE1E8`, `--accent` gray-100 `#E7EBF0`, `--primary` primary-700 `#ED4E01` |
-| Radii | `--radius 8px`, `--radius-md 6px`, `--radius-xl 14px` |
-| Icons | **lucide-react**, the exact names the app imports: `Users` Agents · `Route` Workflows · `Plug` Connectors · `Package` Artifacts · `PanelLeftClose` collapse · `Hourglass`+`ChevronRight` the run row · `Paperclip`/`Image`/`SlidersHorizontal`/`Globe`/`Mic`/`ArrowUp` composer. The footer row uses the Slack mark, per `FOOTER_NAV.iconImg` |
-| Run row | `<Hourglass size={14}/> <span class="text-[13px]">Worked for 3m</span> <ChevronRight size={14}/>`, muted, `rounded-lg px-2 py-1.5 min-h-9` |
-| Prompt bubble | `rounded-lg bg-muted/40 text-sm`, `max-w-[85%]`, self-end |
+| sidebar width `255px`, `bg-sidebar` | `views/zero-page/zero-directed-shared.tsx` |
+| nav row `h-8 gap-2 rounded-lg p-2 text-sm leading-5`, icon 16 | `zero-sidebar.tsx` → `ExpandedManageSection` |
+| section label `text-[13px] font-medium leading-4 text-sidebar-foreground/50`, `h-8 pl-2` | same |
+| thread row `h-8 gap-2 rounded-lg py-2 pl-2 pr-8` | `sidebar-threads.tsx` |
+| org switcher `gap-2.5 px-2 py-2 rounded-lg`, `text-sm font-semibold` | `zero-org-switcher.tsx` |
+| upgrade card `gap-3 p-2.5`, radius 12, its own softer shadow | `zero-sidebar-upgrade.tsx` |
+| footer Slack mark `h-3.5 w-3.5 scale-[2.2]` | `zero-sidebar.tsx` → `ExpandedFooter` |
+| run row `min-h-9 gap-2 rounded-lg px-2 py-1.5`, Hourglass 14 + `text-[13px]` + ChevronRight 14 @70% | `zero-chat-thread-page.tsx` |
+| user bubble `rounded-xl max-w-[85%] text-[0.9375rem] leading-[1.7]`, gray-100 | `.zero-chat-bubble-user` in `views/css/index.css` |
+| card radius `--zero-card-radius` 20px, border `0.7px gray-400`, `--zero-card-shadow` | `views/css/index.css` |
+| composer radius `--zero-composer-radius` 24px | same |
+| send `Button size="icon-sm"` → `h-8 w-8 rounded-lg bg-primary`, ArrowUp 18 | `packages/ui/.../button.tsx` |
+| toolbar icons `variant="quiet" size="icon-sm"` → 32px target, 16px glyph, muted | same |
+| model picker `variant="outline" size="sm"` → `h-8 px-3`, `0.7px gray-400` | same |
 
-How to refresh it when the app changes:
+**The state ladder is computed, not picked.** Hover and selected are one
+translucent layer over whatever surface they land on:
 
-```bash
-git clone --depth 1 --filter=blob:none --sparse https://github.com/vm0-ai/vm0
-git sparse-checkout set turbo/apps/platform/src turbo/packages/ui
-# icons: grep MANAGE_NAV in views/zero-page/zero-sidebar.tsx
-# tokens: turbo/packages/ui/src/styles/globals.css
-# glyph paths: unpkg.com/lucide-static@<version>/icons/<name>.svg
+```
+--state-layer: 215 100% 19%   →  rgb(0, 40, 97)
+--state-hover-alpha:    5%    →  over --sidebar (#F3F5F8)  =  #E7EBF0
+--state-selected-alpha: 8.5%  →  over --sidebar            =  #DEE4EB
 ```
 
-**Never hand-draw an SVG path for a product icon.** Pull the glyph from
-`lucide-static` at the version in `turbo/apps/platform/package.json`. Hand-drawn
-approximations are what made the first two attempts read as "not our product".
+`#E7EBF0` is *hover*. Using it for a selected row — which the mock did — makes
+every selected row one step too light, and no amount of looking at a screenshot
+will tell you that. Composite the layer.
+
+**When the window is shorter than the app.** Do not scale the chrome and do not
+crop a control. Copy what the app itself does: `ExpandedSidebarSections` is
+`flex-1 min-h-0 overflow-hidden`, so the pinned and thread lists absorb the
+shrink and the footer stays pinned. The thread does the same, and fades where it
+runs past the bottom.
 
 ## 14. The pinned ladder, and fitting a screen to a frame
 

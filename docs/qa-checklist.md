@@ -152,6 +152,23 @@ figure before publishing.**
   .filter(e => getComputedStyle(e).textTransform === 'uppercase').length   // 0
 ```
 
+- **Read the component, not the design system.** "It uses our tokens" is not the
+  same as "it is our component". Open the `.tsx` that draws the thing and copy
+  its class list. The values that have been wrong every time are the ones a
+  screenshot cannot tell you: a 255px sidebar, a 14px row, and the difference
+  between `--state-hover` and `--state-selected`.
+- **Composite the state layer, never eyeball it.**
+
+```js
+// selected must be one step past hover, not equal to it
+getComputedStyle(document.querySelector('.appui__nav li.is-on')).backgroundColor
+// expect rgb(222, 228, 235) — rgb(231, 235, 240) is the HOVER colour
+```
+
+- **The window may be short; the chrome may not be cropped.** The sidebar footer
+  and the composer must both be visible at every width. If they are not, the
+  scrolling regions are missing `flex:1; min-height:0; overflow:hidden`.
+
 - **Read the reference, don't approximate.** Open the captured screenshot beside
   the build and account for every control: the collapse toggle, top-right
   actions, jump-to-latest, the tool row, the mic, the model chevron.
