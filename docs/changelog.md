@@ -6,6 +6,47 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-20 · the grounds are shown, and the rule is the mask
+
+**The blur is gone.** The paintings render as painted — only the per-ground
+`saturate()` and the computed veil remain. The veil is what keeps a ground from
+competing with a screen full of 13px text; the blur was doing that job twice.
+
+**The rule is what masks the paragraph, in both directions.** It already looked
+close, but the geometry was wrong: the air between two rows lived in the list's
+`gap`, and the rule was the *next* row's `border-top`. So the paragraph was being
+cut 29px above the line, and the text appeared out of empty space rather than
+from behind it.
+
+Now every bit of air belongs to a row:
+
+```
+.ladder__steps      gap: 0
+.step               padding: --wf-rule-gap 0            ← its own air
+.step:not(:last)    border-bottom                       ← its OWN bottom edge
+.step.is-active     padding-bottom: 0                   ← handed to the paragraph
+.is-active … > p    padding-bottom: --wf-rule-gap
+```
+
+Opening a row hands its bottom air to the paragraph, so the rule ends up flush
+against the growing box — measured 1px — and the text slides out from under the
+line. Closing reverses it. Caught mid-transition, "Save" is being swallowed by
+the rule below it while "Hand over" is emerging from behind its own; that frame
+is the whole specification.
+
+The `clip-path` I had added is gone. The row's own `overflow` does the masking,
+and a clip would only cut the text somewhere the line is not.
+
+**The 0fr trap, a second time.** A closed row was showing the first line of a
+paragraph it was supposed to have swallowed, because the paragraph carried
+`padding-bottom` unconditionally and **a `0fr` track cannot absorb padding** — it
+floors the row at the padding box. Both paddings belong to the open state now.
+This is the same failure that made closed rows taller at the bottom than the top
+a few rounds ago; it is in the QA gate as §4k and it still caught me out, so the
+note there now names padding on *either* edge.
+
+---
+
 ## 2026-08-20 · one title size, a stroke-led reveal, and a deck of painted grounds
 
 **The list.** Every title is one size now — the open row is told apart by weight

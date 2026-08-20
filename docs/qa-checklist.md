@@ -338,9 +338,16 @@ st.map((s, i) => {
 
 Two causes, both invisible in the CSS:
 
-- **`grid-template-rows: 0fr` does not absorb padding.** The track is floored at
-  the collapsed item's padding box, so a gap meant for the open state is silently
-  present on every closed one. Apply it only in the open state.
+- **`grid-template-rows: 0fr` does not absorb padding — on EITHER edge.** The
+  track is floored at the collapsed item's padding box, so a gap meant for the
+  open state is silently present on every closed one. `padding-top` shows as a
+  too-tall closed row; `padding-bottom` shows as a closed row leaking the first
+  line of its own paragraph. Both belong to the open state only:
+
+```js
+[...document.querySelectorAll('.step:not(.is-active) .step__body > p')]
+  .filter(p => p.getBoundingClientRect().height > 1)   // must be [] where rows collapse
+```
 - **A decoration taller than the text sets the row height.** A marker bar at
   `clamp(19px, 1.8vw, 26px)` beside an 18px title makes the row 26px and pushes
   the title off centre. Derive it from the text it marks.
@@ -358,6 +365,30 @@ A product mock is full of real `<button>` elements:
 ```
 
 axe catches this as `aria-hidden-focus`, but only once the element is on screen.
+
+## 4k3. A rule that masks text is that row's own edge
+
+When a divider is meant to occlude text sliding in and out from behind it, the
+divider has to be the **bottom border of the growing element**, not the top
+border of the next one. Any air sitting between them — a list `gap`, a bottom
+padding on the row — is the distance by which the text will be cut short of the
+line, and the text then appears out of empty space:
+
+```js
+const s = document.querySelector('.step.is-active');
+const p = s.querySelector('.step__body > p');
+Math.round(s.getBoundingClientRect().bottom - p.getBoundingClientRect().bottom)  // ≈ 0
+```
+
+Check the closing direction too. Force it and screenshot immediately:
+
+```js
+document.querySelectorAll('.step').forEach(s => s.classList.remove('is-active'));
+document.querySelectorAll('.step')[2].classList.add('is-active');
+```
+
+One row should be sinking behind its rule while the next rises from behind its
+own.
 
 ## 4l. A marquee actually closes its loop
 

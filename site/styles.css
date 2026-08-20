@@ -2996,9 +2996,14 @@ h3{ font-family:var(--fd); }
 
 .ladder__stage{ grid-area:1 / 2; min-width:0; }
 
+/* No gap between rows: every bit of air belongs to a row, so the rule under a
+   row is that row's OWN bottom edge and travels with it. With the air sitting
+   between two rows instead, the rule stayed 29px away from where the paragraph
+   was being cut, and the text appeared out of empty space rather than from
+   behind the line. */
 .ladder__steps{
   display:flex; flex-direction:column;
-  gap:var(--wf-rule-gap);
+  gap:0;
 }
 
 .step{
@@ -3010,12 +3015,22 @@ h3{ font-family:var(--fd); }
 }
 
 /* a rule between rows, never above the first or below the last */
-/* one rule between rows, and the same air on both sides of it: the rule is
-   drawn on the border, so the padding above the title owes back its width */
-.step + .step{
-  border-top:var(--wf-rule) solid var(--wf-rule-ink);
-  padding-top:calc(var(--wf-rule-gap) - var(--wf-rule));
+/* The row carries its own air and its own rule. Opening it hands the bottom
+   air to the paragraph — so the rule ends up flush against the growing box and
+   the text slides out from under it, and back under it on the way closed. */
+.step{
+  padding-top:var(--wf-rule-gap);
+  padding-bottom:var(--wf-rule-gap);
+  transition:padding-bottom var(--t-state) var(--e-elegant);
 }
+
+.step:first-child{ padding-top:0; }
+
+.step:not(:last-child){
+  border-bottom:var(--wf-rule) solid var(--wf-rule-ink);
+}
+
+.step.is-active{ padding-bottom:0; }
 
 .step__bar{
   grid-column:1; grid-row:1;
@@ -3062,6 +3077,7 @@ h3{ font-family:var(--fd); }
 .step__body{
   grid-column:2; grid-row:2;
   display:grid; grid-template-rows:0fr;
+  overflow:hidden;                       /* nothing leaks past the rule */
   transition:grid-template-rows var(--t-state) var(--e-elegant);
 }
 
@@ -3069,7 +3085,7 @@ h3{ font-family:var(--fd); }
 
 .step.is-active .step__body > p{
   padding-top:var(--wf-open-gap);
-  clip-path:inset(0 0 0 0);
+  padding-bottom:var(--wf-rule-gap);
 }
 
 .step__body > p{
@@ -3077,10 +3093,15 @@ h3{ font-family:var(--fd); }
   /* a 0fr grid track cannot absorb padding — it floors the row at the
      padding box, which left every closed row taller at the bottom than at
      the top. The gap exists only while the row is open. */
+  /* no clip: the row's own overflow does the masking, and the row's bottom
+     edge is the rule. A clip-path here would cut the text somewhere the line
+     is not. */
+  /* A 0fr track cannot absorb padding — it floors the row at the padding box,
+     which is how a closed row ended up showing the first line of a paragraph
+     it was supposed to have swallowed. BOTH paddings belong to the open state. */
   padding-top:0;
-  clip-path:inset(0 0 100% 0);
-  transition:padding-top var(--t-state) var(--e-elegant),
-             clip-path var(--t-state) var(--e-elegant);
+  padding-bottom:0;
+  transition:padding var(--t-state) var(--e-elegant);
   font-family:inherit;
   font-size:var(--wf-body); line-height:var(--wf-body-lh);
   font-weight:var(--wf-title-wt);
@@ -3142,18 +3163,15 @@ h3{ font-family:var(--fd); }
   background:var(--wf-media-bg);
 }
 
-/* The ground is a painting, and a painting at full strength competes with a
-   screen full of 13px text — it tints the white and pulls the eye off the
-   product. Blurred and scaled past the edges it becomes a FIELD of the brand's
-   colour instead of a pattern, which is what it is here to be. */
+/* The ground is shown as it was painted. The veil under the screen is what
+   keeps it from competing — see below — not a blur. */
 .ladder__panel::before{
   content:"";
   position:absolute; inset:0;
   background-image:var(--ground);
   background-size:cover;
   background-position:center;
-  filter:blur(26px) saturate(var(--sat, 1));
-  transform:scale(1.14);
+  filter:saturate(var(--sat, 1));
 }
 
 /* then one flat step of ink, so every ground lands the screen on the same
