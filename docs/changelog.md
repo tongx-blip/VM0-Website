@@ -6,6 +6,66 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-20 · a stated type scale, a progress rule, and the shutter finally lines up
+
+**The scale had sizes but no rule.** Nine values whose ratios ran 1.74, 1.77,
+1.5, 1.21, 1.14, 1.12, 1.18 — a list, not a gradient, which is why the reading
+end felt cramped. It now has two regions and a stated reason for each:
+
+- **Reading** — 12 · 13.5 · 15 · 17 · 21, ratio ≈ 1.12, **fixed px**. Fine steps
+  because a single pixel is visible at reading size. Fixed rather than fluid
+  because prose that resizes with the window stops honouring the measure its
+  line-length was chosen for.
+- **Display** — 23 · 30 · 54 · 66 · 96 · 108, ratio ≈ 1.3, **all fluid**. Coarse
+  because at these sizes a small difference reads as a mistake rather than as
+  hierarchy, and a headline should track the viewport.
+- **The floor** — no page-level prose under 15px, no page-level label under 12px.
+  Product mocks are exempt: they draw the app's sizes, which are the app's call.
+
+Body 16.5 → **17**, secondary 14.5 → **15**, labels 11 → **12**, lede 20 → **21**.
+Nine strays that belonged to no token were pulled onto it (`--t-tag`, the hero
+body, the pull-quote, two footer sizes, the wordmark) and four display roles that
+were one-off clamps got names (`--t-d-hero`, `--t-d-section`, and `--t-figure` /
+`--t-statement` now point at existing steps). **19 distinct page sizes → 11**,
+and the only one that is not a token is an em-relative inline icon.
+
+**The ladder joins the page's scale.** Its sizes came from the Figma's own 16px
+and sat outside this page entirely, which is precisely why that column read
+small. A list title is a lede (21px), its paragraph is prose (17px at the page's
+1.55 leading, not the Figma's 1.21 — that is a title's leading and it crowds four
+lines), the closing note is secondary prose (15px).
+
+**The open row's rule is a progress bar.** The pin's travel divides evenly
+between the four rows, so how far through *this* row's share you have scrolled is
+a real number: `pinProgress()` returns `p × n`, its integer part picks the row and
+its fraction fills the bar. The bar filling and the step tipping over are
+therefore the same number — the screen beside it can never slide early. Track is
+the resting rule's grey, fill is that row's own hue, hoisted to `--marker` so the
+marker in front of the title, the bar under it and the ground behind the screen
+all read from one source.
+
+**And the shutter finally lines up.** Two rounds of "the text should appear from
+the line" and it still cut in mid-air, because two things kept the edge and the
+rule apart *during* the motion while leaving them flush at both endpoints — which
+is exactly the wrong way round:
+
+1. `.step.is-active{ padding-bottom: 0 }` **animating** from 29px. The rule sits
+   on the row's border box; the shutter is the growing box inside it. While that
+   padding animated, they were up to 29px apart. The row's bottom padding is now
+   **0 at all times**, and a closed row's air is the title's own `margin-bottom`,
+   which never animates.
+2. The paragraph's own `padding-bottom` animating for the same reason. Padding is
+   the wrong tool: a `0fr` track cannot absorb it (hence the animation in the
+   first place) and it pushes the text off the edge for the whole transition. The
+   settled air above the rule is a **content-flow spacer** (`p::after` with a
+   height) — content height a `0fr` track *does* collapse, and it never moves
+   relative to the edge.
+
+Measured: a closed row's rule sits 30px under its title; an open row's first line
+starts 29px under its title. The text emerges from exactly where the line was.
+
+---
+
 ## 2026-08-20 · the grounds are shown, and the rule is the mask
 
 **The blur is gone.** The paintings render as painted — only the per-ground

@@ -407,12 +407,31 @@ to cover it.
 
 ## 5. Type scale
 
-`tools/audit.js` §2. Page-level sizes should be the nine scale steps plus the
-hero lead and the chrome sizes — roughly ten distinct values. If the list grows,
-a hard-coded `font-size` has crept in. (For reference: the pre-rebuild page had
-25.)
+`docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every
+one a token:
 
-## 6. Grid and breakpoints
+```js
+const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl';
+const sizes = {};
+document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
+  if (el.closest(MOCK) || !el.textContent.trim()) return;
+  const s = getComputedStyle(el).fontSize; sizes[s] = (sizes[s] || 0) + 1;
+});
+Object.keys(sizes).length   // 11 — anything more is a stray clamp() in a rule
+```
+
+Then the floor:
+
+```js
+[...document.querySelectorAll('main *,.footer *,.nav *')]
+  .filter(el => !el.closest(MOCK) && el.textContent.trim() && !el.children.length)
+  .filter(el => parseFloat(getComputedStyle(el).fontSize) < 12)   // must be []
+```
+
+A stray reads as a token at 1440 and diverges everywhere else, so check the
+count at one width and trust it — the values are what matter, not the viewport.
+
+## 6. Grid and breakpoints## 6. Grid and breakpoints
 
 Check `390 / 768 / 1024 / 1280 / 1920`:
 

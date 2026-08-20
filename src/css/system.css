@@ -123,24 +123,42 @@
   --fb: "Instrument Sans", Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --fm: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* one type scale, seven steps — not twenty-five sizes */
-  --t-d1:   clamp(42px, 6.4vw, 96px);
-  --t-d2:   clamp(29px, 3.7vw, 54px);
-  --t-d3:   clamp(21px, 2.2vw, 30px);
-  --t-h:    clamp(17px, 1.35vw, 19px);
-  --t-lead: clamp(17px, 1.45vw, 20px);
-  --t-body: 16.5px;
-  --t-sm:   14.5px;
-  --t-meta: 13px;
-  --t-mono: 11px;
+  /* ── THE TYPE SCALE, and the rule behind it ──────────────────────
+     It has TWO regions, because one ratio cannot serve both ends.
+
+     READING (12 · 13.5 · 15 · 17 · 21) — ratio ≈ 1.12, fixed px.
+     Fine steps, because at reading size a single pixel is visible and
+     the difference between 15 and 17 is a real change in comfort. Fixed
+     rather than fluid: prose should not resize with the window, or the
+     measure the line-length was chosen for stops being true.
+
+     DISPLAY (23 · 30 · 54 · 96) — ratio ≈ 1.3, all fluid.
+     Coarse steps, because at these sizes a small difference reads as a
+     mistake rather than as hierarchy. Fluid, because a headline SHOULD
+     track the viewport.
+
+     THE FLOOR: no page-level prose below 15px and no page-level label
+     below 12px. Product mocks are exempt — they draw the app's own
+     sizes, and those are the app's decision, not this page's. */
+  --t-d-hero:   clamp(46px, 7.2vw, 108px);  /* the hero, and only the hero */
+  --t-d1:   clamp(42px, 6.4vw, 96px);   /* the page's one loud voice   */
+  --t-d2:   clamp(30px, 3.7vw, 54px);   /* a second-order headline     */
+  --t-d3:   clamp(23px, 2.2vw, 30px);   /* a card heading, large       */
+  --t-h:    clamp(19px, 1.6vw, 23px);   /* a card heading              */
+  --t-lead: clamp(18px, 1.5vw, 21px);   /* a lede, and a list title    */
+  --t-body: 17px;                       /* prose                       */
+  --t-sm:   15px;                       /* secondary prose · the floor */
+  --t-meta: 13.5px;                     /* captions, data              */
+  --t-mono: 12px;                       /* uppercase labels · the floor*/
 
   /* named fluid steps — these were in the CSS as one-off clamps, which is
      what made the page look like it had 24 type sizes */
-  --t-figure:   clamp(34px, 4vw, 56px);      /* a metric numeral      */
-  --t-unit:     clamp(16px, 1.6vw, 22px);    /* its unit              */
-  --t-tag:      clamp(14px, 1.15vw, 17px);   /* the hero tag          */
-  --t-statement:clamp(19px, 1.95vw, 27px);   /* the rotating statement*/
-  --t-wordmark: 14px;                        /* the logo lockup       */
+  --t-d-section:clamp(32px, 4.6vw, 66px);    /* a section's headline  */
+  --t-figure:   var(--t-d2);                 /* a metric numeral      */
+  --t-unit:     var(--t-h);                  /* its unit              */
+  --t-tag:      var(--t-body);               /* the hero tag          */
+  --t-statement:var(--t-d3);                 /* the rotating statement*/
+  --t-wordmark: var(--t-meta);               /* the logo lockup       */
 
   /* motion: the premium-microinteraction standard, tokenised.
      Browser defaults (ease / linear) are not used anywhere. */
@@ -213,8 +231,8 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 }
 .display .line{ display:block; }
 .display--center{ text-align:left; }
-.panel:not(.hero) .display{ font-size:clamp(33px, 4.6vw, 66px); letter-spacing:-.034em; }
-.panel--cta .display{ font-size:clamp(33px, 4.6vw, 66px); }
+.panel:not(.hero) .display{ font-size:var(--t-d-section); letter-spacing:-.034em; }
+.panel--cta .display{ font-size:var(--t-d-section); }
 .display--tail{ text-align:left; }
 
 .sentence{
@@ -566,12 +584,12 @@ h3{ font-family:var(--fd); }
 }
 .hero .display{
   max-width:16ch;
-  font-size:clamp(46px, 7.2vw, 108px);
+  font-size:var(--t-d-hero);
 }
 .hero .display .line{ white-space:nowrap; }
 .hero__body{
   max-width:58ch;
-  font-size:clamp(15px, 1.15vw, 16.5px); line-height:1.6;
+  font-size:var(--t-body); line-height:1.6;
   text-align:center;
   color:var(--ink-soft);
 }
@@ -584,7 +602,7 @@ h3{ font-family:var(--fd); }
 .hero .display--tail{
   max-width:none;
   font-family:var(--fd); font-weight:500;
-  font-size:clamp(17px, 4.1vw, 30px);
+  font-size:var(--t-d3);
   line-height:1.2; letter-spacing:-.026em;
   color:var(--ink-mute);
   text-align:center;
@@ -870,8 +888,13 @@ h3{ font-family:var(--fd); }
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
   --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
   --wf-rule:.5px;  --wf-rule-ink:rgba(0,0,0,.12);
-  --wf-title:clamp(15px, 1.25vw, 18px);     /* 16                                 */
-  --wf-title-lh:1.21;                       /* 19.36 / 16                         */
+  --wf-bar-h-track:3px;                     /* the open row's progress bar */
+  /* The reference's own 16px sat outside this page's scale, which is why
+     this one column read smaller than everything around it. The roles map
+     onto the scale instead: a list title is a lede, its paragraph is prose,
+     and the closing note is secondary prose. */
+  --wf-title:var(--t-lead);
+  --wf-title-lh:1.25;
   --wf-title-wt:300;
   --wf-title-ink:rgba(0,0,0,.6);
   /* One size for every title. The open row is told apart by weight and ink
@@ -880,10 +903,12 @@ h3{ font-family:var(--fd); }
   --wf-title-on:var(--wf-title);
   --wf-title-on-lh:1.21;                    /* 38.73 / 32                         */
   --wf-title-on-wt:400;
-  --wf-body:clamp(15px, 1.25vw, 18px);      /* 16                                 */
-  --wf-body-lh:1.21;
-  --wf-foot:clamp(12px, .97vw, 14px);       /* 12                                 */
-  --wf-foot-lh:1.21;
+  --wf-body:var(--t-body);
+  --wf-body-lh:1.55;                        /* the page's own leading for prose;
+                                               1.21 is a title's leading, and on
+                                               a four-line paragraph it crowds  */
+  --wf-foot:var(--t-sm);
+  --wf-foot-lh:1.5;
   --wf-media-r:clamp(16px, 1.5vw, 22px);    /* 16                                 */
 
   /* the mat. The reference fills its box with the picture, so its ground never
@@ -954,25 +979,70 @@ h3{ font-family:var(--fd); }
    air to the paragraph — so the rule ends up flush against the growing box and
    the text slides out from under it, and back under it on the way closed. */
 .step{
+  position:relative;
   padding-top:var(--wf-rule-gap);
-  padding-bottom:var(--wf-rule-gap);
-  transition:padding-bottom var(--t-state) var(--e-elegant);
+  padding-bottom:0;                    /* CONSTANT — see below */
 }
 .step:first-child{ padding-top:0; }
 .step:not(:last-child){
   border-bottom:var(--wf-rule) solid var(--wf-rule-ink);
 }
-.step.is-active{ padding-bottom:0; }
+/* The air under a closed row's title is the title's OWN margin (set above),
+   and it never animates. That is the whole trick: with the row's bottom
+   padding animating instead, the shutter edge and the rule only lined up at
+   the two endpoints and drifted apart by up to 29px in between — which is
+   exactly the middle of the motion, and exactly where you look. The row's
+   bottom padding is zero at all times now, so the growing box's bottom edge
+   IS the rule, in every frame, in both directions. */
+
+/* ── the open row's rule is a progress bar ─────────────────────────
+   The pin's travel is divided evenly between the four rows, so how far
+   through this row's share you have scrolled is a real number between 0
+   and 1 — app.js writes it to --p every frame. The bar reads it, and
+   when it fills, the same number tips the step over and the screen
+   beside it slides away. The track is the resting rule's grey; the fill
+   is this row's own hue, the one in front of its title and behind its
+   screen. */
+.step.is-active::after,
+.step.is-active::before{
+  content:"";
+  position:absolute; left:0; bottom:calc(-1 * var(--wf-bar-h-track) / 2);
+  height:var(--wf-bar-h-track);
+  border-radius:var(--r-pill);
+  pointer-events:none;
+}
+.step.is-active::after{                 /* the track */
+  right:0;
+  background:var(--wf-rule-ink);
+}
+.step.is-active::before{                /* the fill  */
+  z-index:1;
+  width:100%;
+  background:var(--marker);
+  transform:scaleX(var(--p, 0));
+  transform-origin:left center;
+}
+/* the resting hairline steps aside while the bar is there */
+.step.is-active:not(:last-child){ border-bottom-color:transparent; }
 .step__bar{
   grid-column:1; grid-row:1;
   width:var(--wf-bar-w); height:var(--wf-bar-h);
   border-radius:var(--r-pill);
 }
-.step:nth-child(1) .step__bar{ background:#F8A100; }
-.step:nth-child(2) .step__bar{ background:#E24E4A; }
-.step:nth-child(3) .step__bar{ background:#E4ABC8; }
-.step:nth-child(4) .step__bar{ background:#3758A2; }
-.step__h{ grid-column:2; grid-row:1; margin:0; font:inherit; }
+/* one source for each row's hue: the marker in front of the title, the
+   progress bar under it, and the ground behind the screen beside it */
+.step:nth-child(1){ --marker:#F8A100; }
+.step:nth-child(2){ --marker:#E24E4A; }
+.step:nth-child(3){ --marker:#E4ABC8; }
+.step:nth-child(4){ --marker:#3758A2; }
+.step__bar{ background:var(--marker); }
+.step__h{
+  grid-column:2; grid-row:1;
+  font:inherit;
+  /* the air under a title, in BOTH states — this is the height the closed
+     row's rule sits at, and therefore the height the paragraph emerges from */
+  margin:0 0 var(--wf-rule-gap);
+}
 .step__t{
   display:block;
   padding:0; margin:0; border:0; background:none;
@@ -1003,9 +1073,11 @@ h3{ font-family:var(--fd); }
   transition:grid-template-rows var(--t-state) var(--e-elegant);
 }
 .step.is-active .step__body{ grid-template-rows:1fr; }
-.step.is-active .step__body > p{
-  padding-top:var(--wf-open-gap);
-  padding-bottom:var(--wf-rule-gap);
+/* the settled air between the last line and the rule, as content, not padding */
+.step__body > p::after{
+  content:"";
+  display:block;
+  height:var(--wf-rule-gap);
 }
 .step__body > p{
   overflow:hidden; min-height:0;
@@ -1015,12 +1087,15 @@ h3{ font-family:var(--fd); }
   /* no clip: the row's own overflow does the masking, and the row's bottom
      edge is the rule. A clip-path here would cut the text somewhere the line
      is not. */
-  /* A 0fr track cannot absorb padding — it floors the row at the padding box,
-     which is how a closed row ended up showing the first line of a paragraph
-     it was supposed to have swallowed. BOTH paddings belong to the open state. */
-  padding-top:0;
-  padding-bottom:0;
-  transition:padding var(--t-state) var(--e-elegant);
+  /* NO padding on this element, in either state. A 0fr track cannot absorb
+     padding — it floors the row at the padding box — and padding that has to
+     animate to get around that pushes the text away from the shutter edge for
+     the whole of the motion, which is the one place the effect has to hold.
+     The settled air above the rule is a spacer in the CONTENT flow instead
+     (::after below): content height a 0fr track does collapse, and it never
+     moves relative to the edge. No padding-top either — the text emerges from
+     exactly the height the closed row's rule was sitting at. */
+  padding:0;
   font-family:inherit;
   font-size:var(--wf-body); line-height:var(--wf-body-lh);
   font-weight:var(--wf-title-wt);
@@ -1207,7 +1282,7 @@ h3{ font-family:var(--fd); }
 .quote blockquote{
   margin:0 0 24px;
   font-family:var(--fd); font-weight:500;
-  font-size:clamp(17px,1.5vw,20px);
+  font-size:var(--t-lead);
   line-height:1.3; letter-spacing:-.024em;
   color:var(--ink); flex:1;
 }
@@ -1215,7 +1290,7 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:center; gap:12px;
   padding-top:4px;
 }
-.quote figcaption b{ font-family:var(--fb); font-size:13px; font-weight:600; color:var(--ink); }
+.quote figcaption b{ font-family:var(--fb); font-size:var(--t-meta); font-weight:600; color:var(--ink); }
 .quote figcaption i{
   font-family:var(--fm); font-style:normal;
   font-size:var(--t-mono); letter-spacing:.015em; text-transform:none;
@@ -1410,7 +1485,7 @@ h3{ font-family:var(--fd); }
 }
 .footer__disclaimer{
   max-width:62ch; margin:clamp(10px,1.4vw,20px) 0 0;
-  font-size:13px; line-height:1.7; text-align:center;
+  font-size:var(--t-meta); line-height:1.7; text-align:center;
   color:rgba(255,255,255,.56);
 }
 .footer__links{
@@ -1426,7 +1501,7 @@ h3{ font-family:var(--fd); }
 .footer__links a:hover{ color:var(--paper-ink); background-size:100% 1px; }
 .footer__copy{
   margin-top:6px;
-  font-size:11px; letter-spacing:.09em;
+  font-size:var(--t-mono); letter-spacing:.09em;
   color:rgba(255,255,255,.6);
 }
 
@@ -1509,6 +1584,10 @@ h3{ font-family:var(--fd); }
   }
   .step.is-active .step__t{ color:#000; }
   .step__body{ grid-template-rows:1fr; opacity:1; }   /* nothing is hidden */
+  /* no pin here, so there is no progress to report — the rule stays a rule */
+  .step.is-active::before,
+  .step.is-active::after{ display:none; }
+  .step.is-active:not(:last-child){ border-bottom-color:var(--wf-rule-ink); }
   .step__body > p,.ladder__foot > p{ max-width:64ch; }
   .step__body > p{ padding-top:8px; }
   .ladder__foot{ margin-top:0; }

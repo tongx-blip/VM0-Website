@@ -305,6 +305,7 @@
     cur = i;
     steps.forEach(function (s, n) {
       var on = n === i;
+      if (!on) s.style.removeProperty('--p');
       s.classList.toggle('is-active', on);
       var t = s.querySelector('.step__t');
       if (t) t.setAttribute('aria-expanded', on ? 'true' : 'false');
@@ -321,11 +322,19 @@
     return t === t ? t : 0;                 // NaN when `top` reads `auto`
   }
 
-  function readStep() {
+  // How far through the pin you are, as one number. Its integer part is which
+  // row is open; its fraction is how full that row's progress bar should be —
+  // so the bar filling and the step tipping over are the SAME number, and the
+  // screen beside it can never slide before the bar reaches the end.
+  function pinProgress() {
     var travel = pinTravel();
     if (travel <= 0) return 0;
     var p = (pinTop() - ladder.getBoundingClientRect().top) / travel;
-    return Math.max(0, Math.min(steps.length - 1, Math.floor(p * steps.length)));
+    return Math.max(0, Math.min(0.99999, p)) * steps.length;
+  }
+
+  function readStep() {
+    return Math.min(steps.length - 1, Math.floor(pinProgress()));
   }
 
   /* Fit each screen into the mat. Every stage lays out at one design width
@@ -351,13 +360,21 @@
     });
   }
 
+  function paintProgress() {
+    if (!pinned.matches || !view || cur < 0) return;
+    var local = pinProgress() - cur;
+    steps[cur].style.setProperty('--p', Math.max(0, Math.min(1, local)).toFixed(4));
+  }
+
   function readScroll() {
     if (nav) nav.classList.toggle('is-stuck', window.scrollY > 28);
     // stacked, the frame is stuck over the list and all four paragraphs are
     // open at once: there is no scroll distance left to read a step from, so
     // the frame follows taps instead and nothing is hidden if nobody taps
-    if (steps.length && view && pinned.matches && performance.now() >= lock)
+    if (steps.length && view && pinned.matches && performance.now() >= lock) {
       setStep(readStep());
+      paintProgress();
+    }
   }
 
   var ticking = false;

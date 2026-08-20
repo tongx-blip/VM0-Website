@@ -110,3 +110,40 @@ a webfont), then adds `.is-in` with a 110ms cascade: headline → thesis + actio
   contrast ratio. Once per page load is an artifact; every twelve seconds,
   forever, is a defect. Reveal text-bearing elements with `clip-path` — painted
   or not painted, never half-legible. Fades stay for surfaces and decoration.
+
+## A rule that masks text sliding past it
+
+The gesture: a divider is a shutter, and a paragraph appears from behind it and
+retreats behind it. It is easy to get 90% right and have it read as broken,
+because **the two ways it fails both look correct at the endpoints**.
+
+The shutter is the growing box (`grid-template-rows: 0fr → 1fr` + `overflow:
+hidden`). The rule has to be that box's own bottom edge, in every frame. Which
+means **nothing between them may animate**:
+
+- The row's `padding-bottom` must be **constant** (zero). A closed row's air is
+  the title's `margin-bottom`, which never changes. If the padding animates to
+  make room, the shutter and the rule drift by that padding for the whole of the
+  transition — flush at 0% and at 100%, up to 29px apart in the middle.
+- The paragraph must carry **no padding at all**. A `0fr` track cannot absorb
+  padding, so any padding has to animate to avoid leaking a closed row's first
+  line — and animating padding pushes the text off the shutter edge. Put the
+  settled air in the **content flow** instead:
+
+```css
+.step__body > p::after{ content:""; display:block; height:var(--wf-rule-gap); }
+```
+
+  Content height is what a `0fr` track *does* collapse, and it never moves
+  relative to the edge.
+
+**Check it by measuring, then by looking.** A closed row's rule and an open row's
+first line should sit the same distance under their titles — the text emerges
+from exactly where the line was. Then force a transition and screenshot mid-way:
+one row's last line must be sliced by its rule with no gap, and the next row's
+first line sliced by its own.
+
+```js
+document.querySelectorAll('.step').forEach(s => s.classList.remove('is-active'));
+document.querySelectorAll('.step')[2].classList.add('is-active');   // screenshot now
+```

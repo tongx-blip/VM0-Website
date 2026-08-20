@@ -57,42 +57,58 @@ private to the mocks; new work uses the named tokens above.
 
 | Role | Token | Family |
 |---|---|---|
-| Display | `--fd` | Archivo 600/700 |
+| Display | `--fd` | Archivo **500** |
 | Body | `--fb` | Instrument Sans 400/500 |
 | Utility | `--fm` | IBM Plex Mono 500, uppercase, `letter-spacing:.075–.16em` |
+| The ladder | Inter 300/400 | the one component built to a supplied design (§14) |
 
-Scale — nine steps, no ad-hoc sizes:
+### The scale has two regions, and a rule for each
 
-| Token | Value | Used by |
-|---|---|---|
-| `--t-d1` | `clamp(42px, 6.4vw, 96px)` | hero headline (hero overrides to `clamp(46px,7.4vw,112px)`) |
-| `--t-d2` | `clamp(29px, 3.7vw, 54px)` | `.sentence`, metric numerals, footer line |
-| `--t-d3` | `clamp(21px, 2.2vw, 30px)` | hero rotator, step headings, `.vs h3` |
-| `--t-h` | `clamp(17px, 1.35vw, 19px)` | card headings |
-| `--t-lead` | `clamp(17px, 1.45vw, 20px)` | section lede |
-| `--t-body` | `16.5px` | prose |
-| `--t-sm` | `14.5px` | secondary prose, card copy |
-| `--t-meta` | `13px` | attributions, disclaimers |
-| `--t-mono` | `11px` | every utility label and control |
+One ratio cannot serve a 12px label and a 108px headline. So:
 
-Five more fluid steps carry the components that need their own size. They are
-named for the same reason the others are — the page measured 24 distinct sizes
-while these lived as one-off `clamp()`s inside rules:
+**Reading — ratio ≈ 1.12, fixed px.** Fine steps, because at reading size one
+pixel is visible and the difference between 15 and 17 is a real change in
+comfort. **Fixed, not fluid**: prose that resizes with the window stops honouring
+the measure its line-length was chosen for.
 
 | Token | Value | Used by |
 |---|---|---|
-| `--t-figure` | `clamp(34px, 4vw, 56px)` | a metric numeral |
-| `--t-unit` | `clamp(16px, 1.6vw, 22px)` | its unit (`hrs`, `+`) |
-| `--t-statement` | `clamp(19px, 1.95vw, 27px)` | the rotating statement |
-| `--t-tag` | `clamp(14px, 1.15vw, 17px)` | the hero tag |
-| `--t-wordmark` | `14px` | the logo lockup |
+| `--t-lead` | `clamp(18px, 1.5vw, 21px)` | a section lede, a list title |
+| `--t-body` | `17px` | prose |
+| `--t-sm` | `15px` | secondary prose, card copy — **the prose floor** |
+| `--t-meta` | `13.5px` | attributions, disclaimers |
+| `--t-mono` | `12px` | every utility label and control — **the label floor** |
 
-**The whole page measures 16 distinct sizes, and every one is a token.** If a new
-rule needs a size that is not on this list, the rule is wrong — or the step
-belongs here, named.
+**Display — ratio ≈ 1.3, all fluid.** Coarse steps, because at these sizes a
+small difference reads as a mistake rather than as hierarchy. Fluid, because a
+headline *should* track the viewport.
 
-Section headings step down from the hero: `clamp(33px, 4.6vw, 66px)`. At 96px a
-two-line heading wrapped to four lines inside the reading column.
+| Token | Value | Used by |
+|---|---|---|
+| `--t-d-hero` | `clamp(46px, 7.2vw, 108px)` | the hero, and only the hero |
+| `--t-d1` | `clamp(42px, 6.4vw, 96px)` | the loudest voice elsewhere |
+| `--t-d-section` | `clamp(32px, 4.6vw, 66px)` | a section headline |
+| `--t-d2` | `clamp(30px, 3.7vw, 54px)` | `.sentence`, metric numerals |
+| `--t-d3` | `clamp(23px, 2.2vw, 30px)` | large card headings, the rotator |
+| `--t-h` | `clamp(19px, 1.6vw, 23px)` | card headings |
+
+Four roles are aliases rather than new steps, so a component that needs its own
+name still lands on the scale: `--t-figure` → `--t-d2`, `--t-unit` → `--t-h`,
+`--t-statement` → `--t-d3`, `--t-tag` → `--t-body`, `--t-wordmark` → `--t-meta`.
+
+### The floor
+
+**No page-level prose under 15px. No page-level label under 12px.** Product mocks
+are exempt — they draw the app's own sizes, and those are the app's decision, not
+this page's.
+
+### Checking it
+
+**The whole page measures 11 distinct sizes, and every one is a token** — the
+single exception is an em-relative inline icon. If a new rule needs a size that
+is not on this list, the rule is wrong, or the step belongs here with a name. It
+was 19 before this was written down, most of them one-off `clamp()`s buried in
+rules. QA §5 counts them.
 
 ## 3. Space and measure
 
