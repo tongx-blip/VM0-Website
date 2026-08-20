@@ -177,9 +177,20 @@ getComputedStyle(document.querySelector('.appui__nav li.is-on')).backgroundColor
 // expect rgb(222, 228, 235) — rgb(231, 235, 240) is the HOVER colour
 ```
 
-- **The window may be short; the chrome may not be cropped.** The sidebar footer
-  and the composer must both be visible at every width. If they are not, the
-  scrolling regions are missing `flex:1; min-height:0; overflow:hidden`.
+- **The mock lays out at the product's size and scales as one object.** Check
+  the natural size is the design size and nothing inside is clipped:
+
+```js
+const a = document.querySelector('.appui');
+[a.offsetWidth,                                  // 1280 — the DESIGN width
+ [...a.querySelectorAll('*')].filter(el =>
+   !el.closest('.appui__slackbox') &&            // the app's own scale-[2.2] mark
+   el.scrollHeight - el.clientHeight > 1).length] // 0 — nothing clips anywhere
+```
+
+  A mock that needs any element to scroll, fade or absorb height is laid out at
+  the wrong size. The sidebar footer, the full reply and the composer must all
+  be present in the natural layout, not rescued by overflow tricks.
 
 - **Read the reference, don't approximate.** Open the captured screenshot beside
   the build and account for every control: the collapse toggle, top-right

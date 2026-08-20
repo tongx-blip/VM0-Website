@@ -4342,6 +4342,20 @@ h3{ font-family:var(--fd); }
    Manage nav, PanelLeftClose, LayoutGrid, Hourglass + ChevronRight
    for the run row, Paperclip / Image / SlidersHorizontal / Globe /
    Mic / ArrowUp in the composer. Nothing here is drawn by hand. */
+/* the scaled window's footprint in the page: app.js sets --app-fit to
+   columnWidth / --app-dw and --app-nh to the window's natural height */
+.stage__app{
+  position:relative;
+  height:calc(var(--app-nh, 800px) * var(--app-fit, .65));
+}
+
+.stage__app .appui{
+  position:absolute; top:0; left:0;
+  transform:scale(var(--app-fit, .65));
+  transform-origin:top left;
+}
+
+
 .appui{
   /* ── PLATFORM TOKENS, read out of vm0-ai/vm0, light theme ──
      turbo/packages/ui/src/styles/globals.css. Nothing here is chosen. */
@@ -4368,11 +4382,17 @@ h3{ font-family:var(--fd); }
     0 2px 12px hsl(220 12% 50% / .04),
     0 0 0 .5px hsl(220 12% 50% / .02);   /* --zero-card-shadow            */
 
-  --gl:32px;                                   /* the content column, left  */
-  --gr:32px;                                   /* …and right                */
   --sp:8px;                                    /* px-2, the sidebar inset   */
-  width:100%;
-  height:var(--app-h);
+  /* THE WINDOW IS LAID OUT AT ITS REAL DESKTOP SIZE — 1280px wide, its own
+     natural height, the thread in the product's centred max-w-[900px]
+     column — and then scaled into the marketing column by ONE factor
+     (app.js measures it, .stage__app holds the scaled footprint). A mock
+     laid out at the marketing column's width is a cramped little window
+     with desktop-sized text in it; a full window scaled down is a product
+     shot. Nothing in here may be clipped, absorbed or faded: at design
+     size everything fits, which is the point. */
+  --app-dw:1280px;
+  width:var(--app-dw);
   display:grid; grid-template-columns:255px minmax(0,1fr);
   border-radius:var(--p-r-card);
   background:var(--p-card);
@@ -4388,21 +4408,13 @@ h3{ font-family:var(--fd); }
 
 /* ── sidebar ── w-[255px] bg-sidebar, nav px-2 pt-1, footer p-2 ── */
 .appui__side{
-  display:flex; flex-direction:column; min-height:0;
+  display:flex; flex-direction:column;
   padding:8px var(--sp);
   background:var(--p-side);
   color:var(--p-fg);
-  overflow:hidden;
 }
 
-/* ExpandedSidebarSections: flex-1 min-h-0 overflow-hidden — the pinned and
-   thread lists are what absorb a short window, so the footer stays put */
-.appui__sections{
-  flex:1; min-height:0;
-  display:flex; flex-direction:column;
-  margin-top:8px;
-  overflow:hidden;
-}
+.appui__sections{ margin-top:8px; }
 
 /* org switcher: w-full flex items-center gap-2.5 px-2 py-2 rounded-lg */
 .appui__wsrow{ display:flex; align-items:center; gap:0; margin-bottom:4px; }
@@ -4441,7 +4453,11 @@ h3{ font-family:var(--fd); }
   padding:0 var(--sp) 0 var(--sp);
   border-radius:var(--p-r);
   font-size:13px; font-weight:500; line-height:16px;
-  color:color-mix(in srgb, var(--p-fg) 50%, transparent);
+  /* the app writes sidebar-foreground/50 here, which is 3.2:1 — inside the
+     product that is the product's call, but this page holds itself to axe 0,
+     so the label steps to the app's own muted-foreground (gray-800, 6.2:1).
+     At this scale the two are indistinguishable; the deviation is stated. */
+  color:var(--p-muted);
 }
 
 .appui__grp em{ font-style:normal; display:flex; }
@@ -4476,7 +4492,7 @@ h3{ font-family:var(--fd); }
 
 .appui__chat{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-.appui__foot{ flex:none; padding-top:8px; }
+.appui__foot{ margin-top:auto; padding-top:8px; }
 
 /* SidebarUpgradeCard: gap-3 p-2.5, zero-card at 12px, its own softer shadow */
 .appui__pro{
@@ -4517,11 +4533,11 @@ h3{ font-family:var(--fd); }
 
 
 /* ── the thread ── */
-.appui__main{ display:flex; flex-direction:column; min-width:0; min-height:0; }
+.appui__main{ display:flex; flex-direction:column; min-width:0; }
 
 .appui__top{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:14px var(--gr) 14px var(--gl);
+  padding:14px 24px;
   font-size:14px; font-weight:500;
 }
 
@@ -4529,16 +4545,13 @@ h3{ font-family:var(--fd); }
 
 .appui__topact{ display:flex; align-items:center; gap:14px; color:var(--p-muted); }
 
+/* the product's own thread column: max-w-[900px] centred, px-6 on the
+   scroll region, gap-6 between messages */
 .appui__thread{
-  flex:1; min-height:0;
-  display:flex; flex-direction:column; gap:14px;
-  padding:4px var(--gr) 12px var(--gl);
-  overflow:hidden;
-  /* the window is shorter than the thread, so the thread continues past the
-     bottom of it and fades there — the ask, the run and the artifact it made
-     are what this tab is about, so they are what stays in view */
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 44px), transparent);
-          mask-image:linear-gradient(to bottom, #000 calc(100% - 44px), transparent);
+  width:100%; max-width:calc(900px + 48px);
+  margin-inline:auto;
+  display:flex; flex-direction:column; gap:24px;
+  padding:12px 24px 16px;
 }
 
 /* zero-chat-bubble-user: rounded-xl max-w-[85%] text-[0.9375rem]
@@ -4559,7 +4572,6 @@ h3{ font-family:var(--fd); }
    ChevronRight 14 at 70% */
 .appui__worked{
   display:flex; align-items:center; gap:10px;
-  margin:0 0 0 -32px;                /* the avatar hangs in the gutter */
   color:var(--p-muted);
 }
 
@@ -4576,7 +4588,7 @@ h3{ font-family:var(--fd); }
 
 /* zero-card: 0.7px gray-400, --zero-card-radius, --zero-card-shadow */
 .appui__art{
-  margin:0; width:min(100%, 300px);
+  margin:0; width:min(100%, 340px);
   border-radius:var(--p-r-card);
   border:.7px solid var(--p-line);
   background:var(--p-card);
@@ -4589,7 +4601,7 @@ h3{ font-family:var(--fd); }
   font-size:14px; font-weight:500; color:#2563EB;
 }
 
-.appui__art img{ display:block; width:100%; height:132px; object-fit:cover; }
+.appui__art img{ display:block; width:100%; height:190px; object-fit:cover; }
 
 .appui__say{ margin:0; font-size:15px; line-height:1.7; color:var(--p-fg); }
 
@@ -4608,7 +4620,8 @@ h3{ font-family:var(--fd); }
 /* .zero-composer: white, 0.7px gray-400, 1.5rem radius, card shadow */
 .appui__composer{
   display:flex; flex-direction:column; gap:12px;
-  margin:0 var(--gr) 16px var(--gl);
+  width:calc(100% - 48px); max-width:900px;
+  margin:0 auto 20px;
   padding:14px 12px 10px;
   border-radius:var(--p-r-composer);
   border:.7px solid var(--p-line);
@@ -4675,7 +4688,8 @@ h3{ font-family:var(--fd); }
 .stage{
   --stage-gap:clamp(20px, 2.4vw, 34px);   /* between the two columns  */
   --conn-gap:clamp(12px, 1.3vw, 18px);    /* inside the right column  */
-  --app-h:clamp(380px, 38vw, 540px);
+  /* the rendered height of the scaled window — app.js keeps it current */
+  --app-h:calc(var(--app-nh, 800px) * var(--app-fit, .65));
   position:relative;
   margin:clamp(40px, 4.4vw, 64px) 0 0;
   display:grid;
@@ -4825,12 +4839,21 @@ h3{ font-family:var(--fd); }
 @media (max-width:1080px){
   /* one column: the product, then the same right-hand block underneath it,
      still sharing its two edges and its one gap */
-  .stage{
-    grid-template-columns:minmax(0,1fr);
-    --app-h:clamp(420px, 62vw, 560px);
-  }
+  .stage{ grid-template-columns:minmax(0,1fr); }
 
   .stage__right{ height:auto; }
+
+  /* no column to fit here: the window lays out at the container's own
+     width like any block, unscaled and unclipped */
+  .stage__app{ height:auto; }
+
+  .stage__app .appui{ position:static; width:100%; transform:none; }
+
+  .appui__thread{ padding-inline:16px; }
+
+  .appui__composer{ width:calc(100% - 32px); }
+
+  .appui__top{ padding-inline:16px; }
 
   .tplwin{ height:clamp(340px, 58vw, 460px); flex:none; }
 
@@ -4842,8 +4865,6 @@ h3{ font-family:var(--fd); }
   .appui{ grid-template-columns:minmax(0,1fr); }
 
   .appui__side{ display:none; }
-
-  .appui{ --gl:18px; --gr:18px; }
 
   .stage__conn{ grid-template-columns:1fr; }
 

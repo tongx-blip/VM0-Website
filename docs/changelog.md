@@ -6,6 +6,50 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-20 · the product window is laid out at its real size, then scaled
+
+Feedback, verbatim: "我说你可以把界面整个还原然后按比例缩小。你怎么给我做一个
+这么小的窗口？" The window was being laid out at the marketing column's width
+(~840px) with the app's real font sizes inside it — which is not a scaled-down
+product, it is a cramped little window with desktop-sized text: the sidebar ate
+30% of it, the thread had room for nothing, and every trick I had added to cope
+(the sections that absorb height, the thread fade, the clipped artifact) was a
+symptom of that one wrong decision.
+
+**The window now lays out at its real desktop size and is scaled as ONE object.**
+
+- `.appui` is a fixed **1280px** wide and its natural height (758px). At that
+  size everything fits *by construction*: the full sidebar (Manage nav, Pinned,
+  Chats with Zero with its thread row, Get Pro, footer pinned to the bottom by
+  `margin-top:auto`), the thread title bar, the bubble, the run row, the whole
+  artifact card, the full reply paragraph, the jump button, the composer.
+- The thread sits in the product's own column: **`max-w-[900px]` centred**, 24px
+  side padding, **`gap-6`** between messages — read out of
+  `zero-chat-thread-page.tsx` (`mx-auto max-w-[900px]`, the composer in the same
+  column), not guessed.
+- **Every cope is deleted**: no `overflow:hidden` absorbing sections, no
+  bottom-fade mask on the thread, no fixed `--app-h` crushing the window, no
+  avatar hanging in a gutter that no longer exists.
+- `app.js` scales it into the column by one factor —
+  `--app-fit = columnWidth / 1280` — and publishes the rendered height so the
+  right-hand column still stands one gap taller. At 1440 that is ×0.685:
+  864 × 511 rendered, text at ~9–10px, exactly the miniature the reference was.
+- Below 1080 nothing scales: the window lays out at the container's width like
+  any block, unclipped, sidebar hidden under 720 as before.
+
+One deliberate deviation, stated: the sidebar section labels are the app's
+`sidebar-foreground/50`, which is 3.2:1 — inside the product that is the
+product's call, but this page holds itself to axe 0, so the labels step to the
+app's own `muted-foreground` (gray-800, 6.2:1). At ×0.685 the two are
+indistinguishable.
+
+**The lesson, for §13:** a faithful mock has TWO sizes — the size it is laid out
+at, which must be the product's, and the size it is shown at, which is the
+page's. Conflating them is how you get a small window instead of a small
+product. Same rule as the ladder deck's fit, same mechanism.
+
+---
+
 ## 2026-08-20 · two regressions from one margin
 
 Fixing the shutter alignment introduced `margin-bottom` on the title, and that

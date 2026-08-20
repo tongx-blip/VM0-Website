@@ -265,6 +265,39 @@
     });
   }
 
+  /* ── 3c. the product window, scaled as one object ─────────────
+     The window is laid out at its real desktop size (--app-dw) and scaled
+     into the marketing column by one factor. offsetHeight reads the
+     natural, untransformed height, so the wrapper can hold the scaled
+     footprint and the right-hand column can match it. */
+  var stageApp = doc.querySelector('.stage__app');
+  var appWin = stageApp ? stageApp.querySelector('.appui') : null;
+  var appWide = window.matchMedia('(min-width: 1081px)');
+
+  function fitAppWindow() {
+    if (!stageApp || !appWin) return;
+    var stage = stageApp.closest('.stage');
+    if (!appWide.matches) {
+      stageApp.style.removeProperty('height');
+      if (stage) { stage.style.removeProperty('--app-fit'); stage.style.removeProperty('--app-nh'); }
+      return;
+    }
+    var w = stageApp.clientWidth;
+    var dw = parseFloat(getComputedStyle(appWin).width) || 1280;
+    if (!(w > 0)) return;
+    var fit = Math.min(1, w / dw);
+    var nh = appWin.offsetHeight;
+    if (stage) {
+      stage.style.setProperty('--app-fit', fit.toFixed(4));
+      stage.style.setProperty('--app-nh', nh + 'px');
+    }
+  }
+
+  fitAppWindow();
+  window.addEventListener('resize', fitAppWindow, { passive: true });
+  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fitAppWindow).catch(function () {});
+  window.addEventListener('load', fitAppWindow);
+
   /* ── 4. one scroll loop: header state + step ladder ───────────
      The ladder is a pinned section taller than its own viewport, and how
      far you have scrolled through that pin IS which step is open — one

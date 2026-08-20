@@ -451,11 +451,16 @@ translucent layer over whatever surface they land on:
 every selected row one step too light, and no amount of looking at a screenshot
 will tell you that. Composite the layer.
 
-**When the window is shorter than the app.** Do not scale the chrome and do not
-crop a control. Copy what the app itself does: `ExpandedSidebarSections` is
-`flex-1 min-h-0 overflow-hidden`, so the pinned and thread lists absorb the
-shrink and the footer stays pinned. The thread does the same, and fades where it
-runs past the bottom.
+**A mock has two sizes, and they are different decisions.** The size it is LAID
+OUT at must be the product's own — `.appui` is a fixed 1280px wide, its natural
+height, the thread in the product's centred `max-w-[900px]` column — so nothing
+ever needs clipping, fading or absorbing. The size it is SHOWN at is the page's:
+one scale factor (`--app-fit = columnWidth / 1280`, measured in `app.js`), the
+wrapper holding the scaled footprint. Laying a mock out at the marketing
+column's width instead produces a cramped little window with desktop-sized text
+in it — every clip and fade it then needs is a symptom of that one decision.
+Below the two-column breakpoint the scale comes off and the window flows like
+any block.
 
 ## 14. The pinned ladder, and fitting a screen to a frame
 
