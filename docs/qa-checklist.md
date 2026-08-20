@@ -351,6 +351,18 @@ Two causes, both invisible in the CSS:
 - **A decoration taller than the text sets the row height.** A marker bar at
   `clamp(19px, 1.8vw, 26px)` beside an 18px title makes the row 26px and pushes
   the title off centre. Derive it from the text it marks.
+- **A margin added for spacing re-decides every `align-items` in that row.**
+  A `margin-bottom` on the title makes row 1 taller than the title's line box,
+  so anything `center`-aligned beside it drops by half that margin. Measure the
+  marker against the text, never against the row:
+
+```js
+[...document.querySelectorAll('.step')].filter(s => {
+  const b = s.querySelector('.step__bar').getBoundingClientRect();
+  const t = s.querySelector('.step__t').getBoundingClientRect();
+  return Math.abs(b.top - t.top) > 1;        // must be []
+})
+```
 
 ## 4k2. Nothing hidden is still focusable
 

@@ -6,6 +6,34 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-20 · two regressions from one margin
+
+Fixing the shutter alignment introduced `margin-bottom` on the title, and that
+one property broke two other things I did not re-check:
+
+- **The marker sat below its title.** `.step` was `align-items:center`, so the
+  marker was centred in row 1 — and row 1's height is the title's line box *plus
+  its margin*. The marker ended up half that margin (14px) low. It is
+  `align-items:start` now, and since `--wf-bar-h` is defined as the title's own
+  line box, the two are flush by construction with no nudge.
+- **The gap between a title and its paragraph was too large.** That gap and the
+  air around a rule are the same value by design — the paragraph appears from
+  exactly where the closed row's rule sits — so 29px, which was comfortable
+  around a rule, opened a hole under a title. `--wf-rule-gap` is
+  `clamp(15px, 1.45vw, 21px)` now: 21px at 1440, tighter rows throughout and a
+  21px gap under a title.
+
+Measured after: marker top = title top (offset 0), marker height = title line
+box (26px), title→paragraph 21px, closed rows' rules 21–22px under their titles,
+zero leak, and the mid-transition frame still cuts both texts exactly at their
+rules.
+
+**The lesson for the gate:** a margin added to solve a spacing problem changes
+every `align-items` decision in the same grid row. QA §4k now measures the
+marker against its title rather than trusting that it looks right.
+
+---
+
 ## 2026-08-20 · a stated type scale, a progress rule, and the shutter finally lines up
 
 **The scale had sizes but no rule.** Nine values whose ratios ran 1.74, 1.77,

@@ -2942,7 +2942,12 @@ h3{ font-family:var(--fd); }
      while giving the section a size that suits the viewport it is in. */
   --wf-gap:clamp(48px, 4.4vw, 64px);        /* 48  · the two frames' facing pads */
   --wf-row-gap:clamp(12px, 1.12vw, 16px);   /* 12  · inside a row                 */
-  --wf-rule-gap:clamp(20px, 2vw, 29px);     /* the air on each side of a rule     */
+  /* The air on each side of a rule — and therefore also the gap between a
+     title and its paragraph, because the paragraph appears from exactly where
+     the closed row's rule sits. One value has to serve both, so it is set by
+     the tighter of the two needs: 29px around a rule was comfortable, but the
+     same 29px under a title left a hole between it and its own text. */
+  --wf-rule-gap:clamp(15px, 1.45vw, 21px);
   --wf-open-gap:clamp(8px, .75vw, 11px);    /*  8  · open title → its paragraph  */
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
   --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
@@ -3035,7 +3040,12 @@ h3{ font-family:var(--fd); }
   display:grid;
   grid-template-columns:var(--wf-bar-w) minmax(0,1fr);
   column-gap:var(--wf-row-gap);
-  align-items:center;                     /* the rail centres on the title */
+  /* START, not centre. The title carries a bottom margin, so row 1 is taller
+     than the title's own line box — centring put the marker half that margin
+     below the text it marks. The marker IS the title's line box (see
+     --wf-bar-h), so aligning both to the top makes them flush by construction
+     and no nudge is needed. */
+  align-items:start;
   cursor:pointer;
 }
 
