@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=26c75f16">
+<link rel="stylesheet" href="styles.css?r=41781c8c">
 </head>
 <body>
 
@@ -373,6 +373,8 @@
     <div class="ladder__view">
       <div class="ladder__stage">
         <div class="ladder__frame">
+          <div class="ladder__deck" id="wfDeck">
+          <div class="ladder__panel" data-step="1" style="--ground:url(assets/ground/run-green.jpg); --veil:.04; --sat:.9">
         <div class="wfstage is-on" data-step="1">
         <div class="absui">
         <div class="absui__bar"><i></i><i></i><i></i><span>October newsletter</span></div>
@@ -388,6 +390,8 @@
         <div class="absui__composer"><span>Type your next message&hellip;</span><span class="absui__stop"></span></div>
         </div>
         </div>
+          </div>
+          <div class="ladder__panel" data-step="2" style="--ground:url(assets/ground/save-red.jpg); --veil:.37; --sat:.92">
         <div class="wfstage" data-step="2">
         <div class="absui flowui">
         <div class="flowui__top">
@@ -430,6 +434,8 @@
         </div>
         </div>
         </div>
+          </div>
+          <div class="ladder__panel" data-step="3" style="--ground:url(assets/ground/hand-pink.jpg); --veil:.51; --sat:1.4">
         <div class="wfstage" data-step="3"><div class="slackui reveal" id="slackui">
         <div class="slackui__side"><p class="slackui__team">vm0 <b>&#9662;</b></p><p class="slackui__grp">Channels</p><ul class="slackui__list"><li class="slackui__ch is-on" data-ch="content"><i>#</i>newsletter</li><li class="slackui__ch" data-ch="marketing"><i>#</i>marketing-and-community</li><li class="slackui__ch" data-ch="bugs"><i>#</i>bug-report</li><li class="slackui__ch" data-ch="customer"><i>#</i>customer</li></ul></div>
         <div class="slackui__main"><div class="slackui__pane" data-ch="marketing"><div class="slackui__head"><b># marketing-and-community</b><span>12 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png" alt=""></span><div>
@@ -488,6 +494,8 @@
         <p class="slackui__text">subject B reads better. sending after standup &mdash; nobody had to write it this month.</p>
         <p class="slackui__reacts"><span class="slackui__react">&#128200; 5</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #newsletter<span class="slackui__send">&#10148;</span></div></div></div>
         </div></div>
+          </div>
+          <div class="ladder__panel" data-step="4" style="--ground:url(assets/ground/auto-blue.jpg); --veil:.29; --sat:1.0">
         <div class="wfstage" data-step="4">
         <div class="absui">
         <div class="absui__bar"><i></i><i></i><i></i><span>Workflows</span></div>
@@ -503,8 +511,11 @@
         </div>
         </div>
         </div>
+          </div>
+          </div>
         </div>
       </div>
+
       <div class="ladder__col">
         <ol class="ladder__steps">
         <li class="step is-active" data-step="1">
@@ -842,6 +853,6 @@
   <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
 </footer>
 
-<script src="app.js?r=b7c1e43c"></script>
+<script src="app.js?r=b87a75fc"></script>
 </body>
 </html>

@@ -532,3 +532,27 @@ dark mat and a real inset, or the frame reads as nothing at all.
 - `.panel--card` around a pinned section must use `overflow:clip`, not
   `overflow:hidden` — the latter makes the card a scroll container and
   `position:sticky` inside it has nothing to stick to.
+
+## 15. Photographic grounds under a product screen
+
+A painted ground behind a screen full of 13px text has two jobs and one trap:
+it must carry the brand's colour, and it must not compete for the eye.
+
+- **Blur it past being a pattern.** `filter: blur(26px)` with
+  `transform: scale(1.14)` (the scale hides the blurred edges). What survives is
+  a field of the painting's colour, which is what it is there for.
+- **Derive the veil from the image, don't pick it.** Measure each ground's mean
+  luminance and set `--veil: 1 − target ÷ L`. Four paintings ranging 95→204 need
+  veils of .04→.51 to land a white screen on the same value; one flat veil
+  leaves the pale ones washing the screen out and the dark ones nearly black.
+
+```bash
+ffmpeg -i ground.jpg -vf scale=1:1 -f rawvideo -pix_fmt rgb24 - | od -An -tu1
+# L = .2126R + .7152G + .0722B
+```
+
+- **Tie it to something.** Each ground is the hue of the marker beside its step,
+  so the two columns are related by more than adjacency.
+- **Switch by transform, not display** — a deck of panels scrolled by one
+  `translate3d` reads as one object seen from four angles. Then make the three
+  that are not showing `inert` (§4k2 of the QA gate).

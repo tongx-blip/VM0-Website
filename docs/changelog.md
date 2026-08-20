@@ -6,6 +6,65 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-20 · one title size, a stroke-led reveal, and a deck of painted grounds
+
+**The list.** Every title is one size now — the open row is told apart by weight
+and ink alone (400/`#000` against 300/`rgba(0,0,0,.6)`), which is how the
+supplied Lovable reference does it and which stops the list jumping as you scroll
+past it. The air on each side of a rule is its own token, `--wf-rule-gap`
+(20→29px), separate from the 12→16px inside a row; they had been sharing one
+value, which is why the rules sat too close to the text.
+
+**The reveal is led by the stroke.** The row grows, which pushes the rule under
+it downwards, and the paragraph is uncovered from the top by a `clip-path` at
+exactly the same duration and curve — so the text reads as being drawn down *by*
+the rule rather than fading in behind it. Both halves share `--t-state` and
+`--e-elegant`; if they ever diverge the gesture comes apart.
+
+**One section padding, derived.** `--pad-section` 24→72px becomes 20→48px, and
+the block padding is `× 1.35` of it rather than its own clamp — a card whose top
+gap has no relationship to its side gap reads as two decisions. At 1440 that is
+58 / 43, down from 78 / 63.
+
+**The right column is a deck.** Four panels stacked inside the frame and scrolled
+by one transform, so changing step *slides* rather than cuts — the same gesture
+the pin itself is making. Each screen sits on one of the four painted brand
+grounds, matched by hue to the marker beside its step.
+
+**The grounds are computed, not placed.** At full strength a painting fights a
+screen full of 13px text and tints its white. Each ground is blurred 26px and
+scaled past its own edges, so it becomes a *field* of colour rather than a
+pattern, and then veiled by an amount derived from its own mean luminance:
+
+| | mean L | veil | |
+|---|---|---|---|
+| green | 95 | .04 | `1 − 100 ÷ L` |
+| blue | 141 | .29 | |
+| red | 159 | .37 | |
+| pink | 204 | .51 | |
+
+One flat veil had left the pale pink washing out the screen and the deep green
+nearly black. 436KB for all four at 1280px wide.
+
+**Three things I broke and fixed in the same round:**
+
+- **I deleted 1084 lines of `system.css`.** A slice from `.ladder__frame{` to
+  `/* ── the layout ──` — anchors I assumed were adjacent and which were 1000
+  lines apart. It took the nav's roll-hover, the whole product mock and §14–§24
+  with it; the symptom was the header rendering every label twice. Reverted and
+  re-applied as targeted replacements. **Never slice a file between two anchors
+  without asserting the distance between them.**
+- **The 1320px measure cap was gone.** Setting `.panel--card`'s
+  `padding-inline` to `--pad-section` alone silently dropped
+  `max(…, --edge − --card-gap)`, and a card at 1920 ran 1772px wide. The floor
+  and the cap are both in the rule now.
+- **`aria-hidden` on a panel full of buttons.** With all four panels in the DOM
+  and visible, hiding three from a reader without also taking them out of the
+  tab order left keyboard focus walking into a panel nobody can see. They are
+  `inert` now.
+
+---
+
 ## 2026-08-19 · the parallel figure stops describing a run and performs one
 
 The section's claim is *you ask once → four chats open → each reports back as it

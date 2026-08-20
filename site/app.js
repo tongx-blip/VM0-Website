@@ -281,8 +281,23 @@
   var lock = 0;
   var cur = -1;
 
+  var deck = ladder ? ladder.querySelector('.ladder__deck') : null;
+  var panels = ladder ? [].slice.call(ladder.querySelectorAll('.ladder__panel')) : [];
+
   function syncStages(n) {
     stages.forEach(function (s) { s.classList.toggle('is-on', s.dataset.step === n); });
+    // the deck scrolls to the step instead of the panels being swapped out,
+    // so the three that are not showing have to be hidden from a reader
+    panels.forEach(function (p, i) {
+      var on = p.dataset.step === n;
+      // `inert`, not just aria-hidden: these panels are on screen-adjacent and
+      // still hold real buttons, so hiding them from a reader without also
+      // taking them out of the tab order leaves keyboard focus walking into
+      // a panel nobody can see.
+      if ('inert' in p) p.inert = !on;
+      p.setAttribute('aria-hidden', on ? 'false' : 'true');
+      if (on && deck) deck.style.setProperty('--i', i);
+    });
   }
 
   function setStep(i) {
@@ -319,11 +334,11 @@
   var FIT_W = 760;
 
   function fitStages() {
-    var frame = ladder && ladder.querySelector('.ladder__frame');
-    if (!frame || !stages.length) return;
-    var cs = getComputedStyle(frame);
-    var bw = frame.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    var bh = frame.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    var panel = ladder && ladder.querySelector('.ladder__panel');
+    if (!panel || !stages.length) return;
+    var cs = getComputedStyle(panel);
+    var bw = panel.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var bh = panel.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     if (!(bw > 0 && bh > 0)) return;
     stages.forEach(function (st) {
       st.style.setProperty('--dw', FIT_W + 'px');

@@ -307,6 +307,21 @@ Re-run the width check at **390 / 768 / 1024 / 1280 / 1920** — the failure mod
 is a header whose width expression happens to agree with the cards at the one
 width you looked at.
 
+## 4j2. The measure is still capped
+
+Changing a card's `padding-inline` is the one edit that silently removes the
+1320px cap, because the cap *lives* in that padding:
+
+```js
+[1280, 1440, 1920].forEach(w => { /* set the viewport, then */ });
+Math.round(document.querySelector('.ladder__view').getBoundingClientRect().width)
+// must never exceed 1320
+```
+
+The floor and the cap are one rule:
+`max(var(--pad-section), calc(var(--edge) - var(--card-gap)))`. Setting it to
+`--pad-section` alone reads correctly at 1440 and runs 450px too wide at 1920.
+
 ## 4k. Rows that look symmetric and are not
 
 Measure, don't eyeball. For any list of rows separated by a rule:
@@ -329,6 +344,20 @@ Two causes, both invisible in the CSS:
 - **A decoration taller than the text sets the row height.** A marker bar at
   `clamp(19px, 1.8vw, 26px)` beside an 18px title makes the row 26px and pushes
   the title off centre. Derive it from the text it marks.
+
+## 4k2. Nothing hidden is still focusable
+
+Any panel, tab or slide that is present-but-not-showing — anything switched by
+`transform` rather than `display` — must be `inert`, not merely `aria-hidden`.
+A product mock is full of real `<button>` elements:
+
+```js
+[...document.querySelectorAll('[aria-hidden="true"]')]
+  .filter(el => el.querySelector('a[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])'))
+  .filter(el => !el.inert)          // must be []
+```
+
+axe catches this as `aria-hidden-focus`, but only once the element is on screen.
 
 ## 4l. A marquee actually closes its loop
 

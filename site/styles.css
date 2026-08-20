@@ -2007,7 +2007,11 @@ a.acard .acard__txt i{ color:var(--ink); }
      edge and its content. Every section gets the same two, so nothing on this
      page ever sits closer to an edge than anything else. */
   --card-gap:    clamp(12px, 1.8vw, 26px);
-  --pad-section: clamp(24px, 4.4vw, 72px);
+  /* ONE section padding, and the block padding is DERIVED from it rather than
+     picked separately — a card whose top gap has no relationship to its side
+     gap reads as two decisions instead of one. */
+  --pad-section: clamp(20px, 3vw, 48px);
+  --pad-section-block: calc(var(--pad-section) * 1.35);
   --edge:   max(
     calc(var(--card-gap) + var(--pad-section)),
     calc((100vw - 1320px) / 2)
@@ -2488,8 +2492,12 @@ h3{ font-family:var(--fd); }
 .panel--card{
   margin-inline:var(--card-gap);
   margin-block:clamp(10px, 1.4vw, 22px);   /* grey shows above and below */
-  padding-inline:var(--pad-section);
-  padding-block:clamp(52px, 5.4vw, 84px);
+  /* --pad-section is the FLOOR; past 1320px of content the padding grows
+     instead, which is what keeps the measure capped. Setting the padding
+     to --pad-section alone silently removed that cap and let a 1920 card
+     run 1772px wide. */
+  padding-inline:max(var(--pad-section), calc(var(--edge) - var(--card-gap)));
+  padding-block:var(--pad-section-block);
   background:var(--paper);
   border-radius:var(--r-section);
   /* no shadow: a white card on a grey page is already a separate object, and
@@ -2915,7 +2923,8 @@ h3{ font-family:var(--fd); }
      the 2× title jump, the 40-character measure, the 649 : 498 media —
      while giving the section a size that suits the viewport it is in. */
   --wf-gap:clamp(48px, 4.4vw, 64px);        /* 48  · the two frames' facing pads */
-  --wf-row-gap:clamp(12px, 1.12vw, 16px);   /* 12  · list gap, each side of a rule */
+  --wf-row-gap:clamp(12px, 1.12vw, 16px);   /* 12  · inside a row                 */
+  --wf-rule-gap:clamp(20px, 2vw, 29px);     /* the air on each side of a rule     */
   --wf-open-gap:clamp(8px, .75vw, 11px);    /*  8  · open title → its paragraph  */
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
   --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
@@ -2924,7 +2933,10 @@ h3{ font-family:var(--fd); }
   --wf-title-lh:1.21;                       /* 19.36 / 16                         */
   --wf-title-wt:300;
   --wf-title-ink:rgba(0,0,0,.6);
-  --wf-title-on:clamp(30px, 2.5vw, 36px);   /* 32  · exactly 2× the resting one   */
+  /* One size for every title. The open row is told apart by weight and ink
+     alone — a row that also grows makes the list jump as you scroll past it,
+     and the marker plus the paragraph already say which one is open. */
+  --wf-title-on:var(--wf-title);
   --wf-title-on-lh:1.21;                    /* 38.73 / 32                         */
   --wf-title-on-wt:400;
   --wf-body:clamp(15px, 1.25vw, 18px);      /* 16                                 */
@@ -2986,7 +2998,7 @@ h3{ font-family:var(--fd); }
 
 .ladder__steps{
   display:flex; flex-direction:column;
-  gap:var(--wf-row-gap);
+  gap:var(--wf-rule-gap);
 }
 
 .step{
@@ -3002,7 +3014,7 @@ h3{ font-family:var(--fd); }
    drawn on the border, so the padding above the title owes back its width */
 .step + .step{
   border-top:var(--wf-rule) solid var(--wf-rule-ink);
-  padding-top:calc(var(--wf-row-gap) - var(--wf-rule));
+  padding-top:calc(var(--wf-rule-gap) - var(--wf-rule));
 }
 
 .step__bar{
@@ -3038,23 +3050,27 @@ h3{ font-family:var(--fd); }
 .step__t:focus-visible{ color:var(--ink); }
 
 .step.is-active .step__t{
-  font-size:var(--wf-title-on); line-height:var(--wf-title-on-lh);
   font-weight:var(--wf-title-on-wt);
   color:#000;
 }
 
 /* the paragraph belongs to the open row and to nothing else */
+/* The row grows, which pushes the rule under it downwards, and the paragraph
+   is uncovered from the top at exactly the same rate — so the text reads as
+   being drawn down BY the rule rather than fading in behind it. Both halves of
+   that gesture share one duration and one curve or it comes apart. */
 .step__body{
   grid-column:2; grid-row:2;
   display:grid; grid-template-rows:0fr;
-  opacity:0;
-  transition:grid-template-rows var(--t-state) var(--e-elegant),
-             opacity 240ms var(--e-out);
+  transition:grid-template-rows var(--t-state) var(--e-elegant);
 }
 
-.step.is-active .step__body{ grid-template-rows:1fr; opacity:1; }
+.step.is-active .step__body{ grid-template-rows:1fr; }
 
-.step.is-active .step__body > p{ padding-top:var(--wf-open-gap); }
+.step.is-active .step__body > p{
+  padding-top:var(--wf-open-gap);
+  clip-path:inset(0 0 0 0);
+}
 
 .step__body > p{
   overflow:hidden; min-height:0;
@@ -3062,7 +3078,9 @@ h3{ font-family:var(--fd); }
      padding box, which left every closed row taller at the bottom than at
      the top. The gap exists only while the row is open. */
   padding-top:0;
-  transition:padding-top var(--t-state) var(--e-elegant);
+  clip-path:inset(0 0 100% 0);
+  transition:padding-top var(--t-state) var(--e-elegant),
+             clip-path var(--t-state) var(--e-elegant);
   font-family:inherit;
   font-size:var(--wf-body); line-height:var(--wf-body-lh);
   font-weight:var(--wf-title-wt);
@@ -3094,11 +3112,69 @@ h3{ font-family:var(--fd); }
 .ladder__frame{
   position:relative;
   height:100%;
-  padding:var(--wf-pad);
   border-radius:var(--wf-media-r);
   background:var(--wf-media-bg);
   overflow:hidden;
 }
+
+/* ── the deck ──────────────────────────────────────────────────────
+   Four panels stacked vertically inside the frame and scrolled by one
+   transform. Changing step SLIDES rather than cuts, so the four screens
+   read as one thing being looked through rather than four unrelated
+   pictures — and it is the same gesture the pin itself is making. */
+.ladder__deck{
+  position:absolute; inset:0;
+  display:grid; grid-auto-rows:100%;
+  transform:translate3d(0, calc(var(--i, 0) * -100%), 0);
+  transition:transform 640ms var(--e-elegant);
+  will-change:transform;
+}
+
+/* Each screen sits ON a painted ground rather than on a flat mat: the brand
+   layer carries the colour and the product keeps its own white. The marker
+   beside each step is the hue of the ground behind it, so the two columns are
+   tied together by something other than being next to each other. */
+.ladder__panel{
+  position:relative;
+  display:grid; place-items:center;
+  padding:var(--wf-pad);
+  overflow:hidden;
+  background:var(--wf-media-bg);
+}
+
+/* The ground is a painting, and a painting at full strength competes with a
+   screen full of 13px text — it tints the white and pulls the eye off the
+   product. Blurred and scaled past the edges it becomes a FIELD of the brand's
+   colour instead of a pattern, which is what it is here to be. */
+.ladder__panel::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:var(--ground);
+  background-size:cover;
+  background-position:center;
+  filter:blur(26px) saturate(var(--sat, 1));
+  transform:scale(1.14);
+}
+
+/* then one flat step of ink, so every ground lands the screen on the same
+   value no matter how light or dark the painting under it is */
+.ladder__panel::after{
+  content:"";
+  position:absolute; inset:0;
+  /* --veil is per-ground and COMPUTED, not chosen: 1 − target ÷ that
+     painting's own mean luminance, so a pale pink and a deep green both land
+     the screen on the same value. */
+  background:
+    radial-gradient(120% 96% at 50% 46%,
+      rgba(12,15,18, calc(var(--veil, .2) * .55)), transparent 74%),
+    linear-gradient(rgba(12,15,18, var(--veil, .2)),
+                    rgba(12,15,18, var(--veil, .2)));
+  pointer-events:none;
+}
+
+/* every panel is in the DOM at once now, so the switch is position rather
+   than display — app.js hides the three closed ones from a reader */
+.ladder__panel .wfstage{ display:block; }
 
 /* the switch itself is `display:none / block` in the component layer, which
    also keeps the three closed steps out of the accessibility tree.
@@ -3110,7 +3186,7 @@ h3{ font-family:var(--fd); }
    cropping here: the bottom of these screens is the action row and the
    composer, which is the point of the picture. */
 .wfstage{
-  position:absolute; top:50%; left:50%;
+  position:absolute; z-index:1; top:50%; left:50%;
   width:var(--dw, 760px);
   height:var(--dh, 520px);
   transform:translate(-50%, -50%) scale(var(--fit, 1));
@@ -3135,7 +3211,7 @@ h3{ font-family:var(--fd); }
 .ladder__frame .slackui{
   height:100%; min-height:0;
   border-radius:var(--r-card);
-  box-shadow:none;
+  box-shadow:0 2px 10px rgba(12,15,18,.12), 0 30px 60px -26px rgba(12,15,18,.5);
 }
 
 .ladder__frame .absui__body,
@@ -3678,7 +3754,7 @@ h3{ font-family:var(--fd); }
      drift out of line with the header above it. */
   :root{
     --card-gap:12px;
-    --pad-section:clamp(18px, 3.4vw, 28px);
+    --pad-section:clamp(16px, 2.8vw, 24px);
     --nav-pad:8px;
     --nav-h:56px;
     --nav-h-stuck:50px;
