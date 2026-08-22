@@ -305,8 +305,12 @@
   var ochat = doc.getElementById('ochat');
   if (ochat && !reduce) {
     var beats = [].slice.call(ochat.querySelectorAll('.ochat__row'));
-    var CUE = [0, 900, 2100, 3000];          // ms, and the typing row leaves
-                                             // exactly when the reply lands
+    // Staggered so each beat SETTLES before the next starts — with 3+ moving
+    // parts no more than one should be in flight at a time, or the panel reads
+    // as a flurry instead of an exchange. The gap before the result is the
+    // longest: it is the hero, and a beat of stillness is what makes it land.
+    var CUE = [0, 1000, 2200, 3400];         // ms; the typing row leaves
+                                             // exactly when the reply arrives
     var oT0 = null, oRaf = 0, oSeen = false;
 
     function oPaint(now) {
@@ -540,22 +544,23 @@
     var tabs = [].slice.call(wrap.querySelectorAll('.scenes__tab'));
     var panes = [].slice.call(wrap.querySelectorAll('.scene'));
     var line = doc.getElementById('scene-line');
+    // No emoji: it was the one pictogram on a page that has none, and it read
+    // as decoration bolted onto a sentence rather than part of it.
     var LINES = {
-      marketing:  ['builds', 'Maya’s', '🛍️', 'storefront.'],
-      ads:        ['optimizes', 'Maya’s', '📣', 'ad spend.'],
-      sales:      ['scores', 'Ravi’s', '📇', 'pipeline.'],
-      engineering:['triages', 'Lin’s', '🐞', 'error queue.'],
-      product:    ['writes', 'Sofia’s', '📄', 'export spec.'],
-      ops:        ['sends', 'Noah’s', '🗂️', 'Monday digest.'],
-      leadership: ['rebuilds', 'Dana’s', '📊', 'board deck.']
+      marketing:  ['builds', 'Maya’s', '', 'storefront.'],
+      ads:        ['optimizes', 'Maya’s', '', 'ad spend.'],
+      sales:      ['scores', 'Ravi’s', '', 'pipeline.'],
+      engineering:['triages', 'Lin’s', '', 'error queue.'],
+      product:    ['writes', 'Sofia’s', '', 'export spec.'],
+      ops:        ['sends', 'Noah’s', '', 'Monday digest.'],
+      leadership: ['rebuilds', 'Dana’s', '', 'board deck.']
     };
     var writeLead = function (key) {
       if (!line || !LINES[key]) return;
       var p = LINES[key];
       // no accent here: at this size, on the grey ground, orange text
       // cannot clear 4.5:1. The lead is emphasised by ink + weight.
-      line.innerHTML = 'Okou ' + p[0] + ' ' + p[1] +
-        ' <span class="inline-ic">' + p[2] + '</span> ' + p[3];
+      line.textContent = 'Okou ' + p[0] + ' ' + p[1] + ' ' + p[3];
     };
     var show = function (key) {
       if (line) {

@@ -4398,7 +4398,9 @@ h3{ font-family:var(--fd); }
    computed veil: a painting at full strength eats white bubbles. */
 .ochat{
   position:relative;
-  display:flex; flex-direction:column; justify-content:flex-end;
+  /* TOP aligned. A conversation reads downward from where it started; anchored
+     to the bottom it left a dead green field above the first thing said. */
+  display:flex; flex-direction:column; justify-content:flex-start;
   gap:clamp(10px, 1.1vw, 14px);
   padding:var(--o-pad);
   border-radius:var(--o-r);
@@ -4430,6 +4432,11 @@ h3{ font-family:var(--fd); }
 
 .ochat__row--user{ justify-content:flex-end; }
 
+/* the result takes whatever height is left in the panel — the largest it can
+   be without ever running past the bottom, which a fixed aspect ratio cannot
+   promise once the messages above it reflow */
+.ochat__row[data-beat="result"]{ align-items:stretch; flex:1; min-height:0; }
+
 .ochat__ava{
   width:var(--o-ava); height:var(--o-ava); flex:none;
   border-radius:50%; overflow:hidden;
@@ -4447,18 +4454,24 @@ h3{ font-family:var(--fd); }
   color:var(--ink);
 }
 
-.ochat__row--user .ochat__bubble{ max-width:78%; }
+.ochat__row--user .ochat__bubble{ max-width:82%; }
 
-.ochat__row--okou .ochat__bubble{ max-width:72%; }
+.ochat__row--okou .ochat__bubble{ max-width:78%; }
 
 
 /* the result, as the reference draws it: a titled card holding the page */
+/* The result is the point of the panel, so it is the largest thing in it —
+   the reference gives it most of the column and a tall crop of the page. */
 .oresult{
-  margin:0; min-width:0; max-width:78%;
+  margin:0; min-width:0; min-height:0;
+  flex:1;
+  display:flex; flex-direction:column;
   border-radius:12px;
   background:var(--paper);
   overflow:hidden;
 }
+
+.oresult figcaption{ flex:none; }
 
 .oresult figcaption{
   padding:9px 12px;
@@ -4467,7 +4480,8 @@ h3{ font-family:var(--fd); }
 }
 
 .oresult img{
-  display:block; width:100%; height:clamp(96px, 11vw, 150px);
+  display:block; width:100%;
+  flex:1; min-height:0;
   object-fit:cover; object-position:top;
 }
 
@@ -4480,9 +4494,19 @@ h3{ font-family:var(--fd); }
   transition:opacity 320ms var(--e-out), transform 460ms var(--e-out);
 }
 
-.ochat.is-live .ochat__row{ opacity:0; transform:translateY(10px); }
+/* ONE spatial origin — every message rises from below. Mixed directions read
+   as chaos, and the user's sideways drift was the only thing on this panel
+   moving on a different axis from everything else. The result is the panel's
+   hero, so it gets the largest displacement and the only curve with any spring
+   in it; the messages that set it up are subtler in every dimension.
+   (LottieFiles motion-design: lead with the hero, keep the origin consistent,
+   vary start time and not the curve.) */
+.ochat.is-live .ochat__row{ opacity:0; transform:translateY(12px); }
 
-.ochat.is-live .ochat__row--user{ transform:translateY(10px) translateX(8px); }
+.ochat.is-live .ochat__row[data-beat="result"]{
+  transform:translateY(22px) scale(.985);
+  transition:opacity 380ms var(--e-out), transform 620ms var(--e-spring);
+}
 
 .ochat.is-live .ochat__row.is-on{ opacity:1; transform:none; }
 
@@ -4513,7 +4537,11 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* ── the page it shipped ── the third column of the reference ── */
+/* ── the page it shipped ── the third column of the reference ──
+   The chrome bar is white in the reference, which on a white section makes
+   the whole window dissolve into the page. It needs to read as an object:
+   the window sits on the panel grey and carries a soft lift, and the bar
+   keeps a hairline of its own ground under the pill. */
 .tplwin{
   position:relative;
   min-height:0; height:100%;
@@ -4521,25 +4549,33 @@ h3{ font-family:var(--fd); }
   display:flex; flex-direction:column;
   border-radius:var(--o-r, 16px);
   background:var(--o-fill, #F6F6F6);
+  box-shadow:0 1px 2px rgba(12,15,18,.05), 0 18px 44px -22px rgba(12,15,18,.28);
   overflow:hidden;
 }
 
+/* the reference's own chrome: three 8px lights, then a pill holding the URL
+   centred in it — 12px at #0009 on #EEE */
 .tplwin__bar{
-  display:flex; align-items:center; gap:6px;
-  flex:none; padding:10px 12px;
+  display:flex; align-items:center; gap:4px;
+  flex:none; padding:8px 8px 8px 12px;
   background:var(--paper);
 }
+
+.tplwin__bar i{ width:8px; height:8px; }
 
 .tplwin__bar i{ width:8px; height:8px; border-radius:50%; background:var(--wash-2); }
 
 .tplwin__bar i:first-child{ background:var(--accent-solid); }
 
 .tplwin__url{
-  flex:1; min-width:0; margin-left:6px;
-  padding:4px 10px;
+  flex:1; min-width:0; margin-left:8px;
+  padding:4px 12px;
   border-radius:var(--r-pill);
-  background:var(--wash);
-  font-family:var(--fm); font-size:9.5px; color:var(--ink-mute);
+  background:#EEEEEE;
+  font-family:var(--fb);
+  font-size:clamp(10px, .85vw, 12px); line-height:1.3;
+  color:rgba(0,0,0,.6);
+  text-align:center;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
