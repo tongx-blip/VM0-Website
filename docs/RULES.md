@@ -62,7 +62,8 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | N5 | **Lead with the hero**: the most important element gets the largest displacement and the only sprung curve. **One spatial origin** — mixed directions read as chaos. **Stagger so each beat settles before the next starts.** | LottieFiles motion-design. | — |
 | N6 | **Write the irregularity down.** Four tasks finishing 1-3-2-4 read as independent runs; 1-2-3-4 reads as a progress bar. | | — |
 | N7 | **Anything present-but-not-showing must be `inert`**, not merely `aria-hidden` — a product mock is full of real buttons. | | QA §4k2 |
-| N8 | **Auto-advancing anything pauses** off screen, in a background tab, on hover, on focus-within, and under reduced motion; a click parks it for good. | Nobody should have the thing they are reading taken away from them. | QA §4m |
+| N8 | **Auto-advancing anything pauses** off screen, in a background tab, on keyboard focus, and under reduced motion; a click parks it for good. It does **not** pause on hover. | The progress is what says the panel will change; freezing it under the pointer makes the section feel stuck. A keyboard user has no other way to hold it. | QA §4m |
+| N9 | **A looping reel clones, and only the middle set is real.** Clones are `aria-hidden`, roleless and out of the tab order; selection is marked on the centred slot, never by matching a data attribute. | Matching lights every copy and shows a second highlighted item at the mask edge — the seam the clones exist to hide. | QA §4m |
 
 ## Product mocks
 

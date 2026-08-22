@@ -2114,6 +2114,9 @@ h3{ font-family:var(--fd); }
      to the bottom it left a dead green field above the first thing said. */
   display:flex; flex-direction:column; justify-content:flex-start;
   gap:clamp(10px, 1.1vw, 14px);
+  /* Okou's replies are a run of one voice, so they sit close; the turn
+     changes hands between the ask and the first reply, and that gap is
+     what says so. */
   padding:var(--o-pad);
   border-radius:var(--o-r);
   overflow:hidden;
@@ -2138,15 +2141,15 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:flex-start; gap:10px;
   max-width:100%;
 }
-.ochat__row--user{ justify-content:flex-end; }
-/* The result takes what is left in the panel, but not more than its own share:
-   filling every remaining pixel made it the only thing you saw and the two
-   messages that set it up stopped reading as a conversation. */
-.ochat__row[data-beat="result"]{
-  align-items:stretch;
-  flex:0 1 auto; min-height:0;
-  max-height:56%;
+.ochat__row--user{
+  justify-content:flex-end;
+  margin-bottom:clamp(14px, 1.8vw, 26px);
 }
+/* The result is sized by WIDTH and lets its height follow the page it is
+   showing. Capping the height instead cropped the image, and the crop landed
+   through the headline — a preview sliced across its own type reads as a
+   rendering fault, not as a preview. */
+.ochat__row[data-beat="result"]{ align-items:flex-start; }
 .ochat__ava{
   width:var(--o-ava); height:var(--o-ava); flex:none;
   border-radius:50%; overflow:hidden;
@@ -2168,9 +2171,8 @@ h3{ font-family:var(--fd); }
 /* The result is the point of the panel, so it is the largest thing in it —
    the reference gives it most of the column and a tall crop of the page. */
 .oresult{
-  margin:0; min-width:0; min-height:0;
-  flex:1;
-  display:flex; flex-direction:column;
+  margin:0; min-width:0;
+  flex:0 1 auto; width:66%;
   border-radius:12px;
   background:var(--paper);
   overflow:hidden;
@@ -2182,9 +2184,7 @@ h3{ font-family:var(--fd); }
   color:var(--ink);
 }
 .oresult img{
-  display:block; width:100%;
-  flex:1; min-height:0;
-  object-fit:cover; object-position:top;
+  display:block; width:100%; height:auto;
 }
 
 /* ── the exchange plays, so it reads as a conversation ──
@@ -2290,7 +2290,7 @@ h3{ font-family:var(--fd); }
      A hairline does — it is the product's own window edge, not page furniture,
      which is why the no-rules audit exempts .tplwin. */
   box-shadow:
-    0 0 0 1px rgba(12,15,18,.11),
+    0 0 0 .5px rgba(12,15,18,.22),
     0 1px 2px rgba(12,15,18,.05),
     0 18px 44px -22px rgba(12,15,18,.28);
   overflow:hidden;

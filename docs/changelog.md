@@ -6,6 +6,47 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · the reel loops, the turn changes hands, and the bar does not stop
+
+**The tab row loops.** Three copies of the strip live in the rail —
+`[clones][real][clones]` — and only the middle set is a real tablist: the outer
+two are `aria-hidden`, out of the tab order and carry no role, so a screen
+reader still hears seven tabs rather than twenty-one. Advancing off either end
+animates *into* a clone and then re-seats on the matching real tab with the
+transition switched off; same picture, so the seam is never seen. Verified
+through a full cycle: 9 → 10 → 11 → 12 → 13 → wrap → 7 → 8, always exactly one
+tab lit and always 0px from the centre line.
+
+The first attempt lit **every copy** of the active scene, which put a second
+highlighted tab at the edge of the mask — the exact seam the clones exist to
+hide. Selection is now marked on the centred rail *slot*, not by matching
+`data-scene`.
+
+**The bar no longer stops on hover.** It was pausing whenever a pointer crossed
+the section, which made the whole thing feel stuck — and the progress is
+precisely what tells you the panel is going to change. It still pauses off
+screen, in a background tab and under reduced motion; **keyboard focus** still
+parks it, because a keyboard user has no other way to hold it; and any click
+parks it for good.
+
+**The user's avatar is gone.** You are the user — the only face that needs to
+be there is the one you are talking to. Removing it also lets the ask run to
+the panel's edge, which is what separates it from the replies.
+
+**The turn changes hands visibly.** Okou's replies are a run of one voice and sit
+close; the ask now carries `margin-bottom: clamp(14px, 1.8vw, 26px)` under it,
+and that gap is what says the turn passed.
+
+**The result preview is sized by width, not capped by height.** Capping the
+height cropped the image, and the crop landed through the page's own headline —
+a preview sliced across its type reads as a rendering fault, not a preview. At
+66% of the column it shows the whole hero band with no crop at all.
+
+**The browser's hairline is 0.5px** (`rgba(12,15,18,.22)` — the alpha comes up
+as the line comes down, so it reads the same weight).
+
+---
+
 ## 2026-08-22 · the tab reel, rectangles everywhere, and the rules in one file
 
 **The tab strip is a centred reel.** The selected tab is always on the

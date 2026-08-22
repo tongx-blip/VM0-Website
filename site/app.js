@@ -558,42 +558,75 @@
   if (wrap) {
     var rail = wrap.querySelector('.tabs__rail');
     var viewport = wrap.querySelector('.tabs');
-    var tabs = [].slice.call(wrap.querySelectorAll('.tab'));
+    var real = [].slice.call(wrap.querySelectorAll('.tab'));
     var panes = [].slice.call(wrap.querySelectorAll('.scene'));
     var line = doc.getElementById('scene-line');
-    // No emoji: it was the one pictogram on a page that has none, and it read
-    // as decoration bolted onto a sentence rather than part of it.
-    var LINES = {
-      marketing:  ['builds', 'Maya’s', 'storefront.'],
-      ads:        ['optimizes', 'Maya’s', 'ad spend.'],
-      sales:      ['scores', 'Ravi’s', 'pipeline.'],
-      engineering:['triages', 'Lin’s', 'error queue.'],
-      product:    ['writes', 'Sofia’s', 'export spec.'],
-      ops:        ['sends', 'Noah’s', 'Monday digest.'],
-      leadership: ['rebuilds', 'Dana’s', 'board deck.']
-    };
-    var writeLead = function (key) {
-      if (!line || !LINES[key]) return;
-      var p = LINES[key];
-      // no accent here: at this size, on the grey ground, orange text
-      // cannot clear 4.5:1. The lead is emphasised by ink + weight.
-      line.textContent = 'Okou ' + p[0] + ' ' + p[1] + ' ' + p[2];
-    };
+    var N = real.length;
 
-    var cur = 0;
+    /* ── the reel loops ─────────────────────────────────────────────
+       Three copies of the strip: [clones][real][clones]. Only the middle
+       set is a real tablist — the outer two are decoration, hidden from
+       assistive tech and out of the tab order, so a screen reader still
+       hears seven tabs and not twenty-one.
 
-    // Slide the rail so the selected tab sits on the viewport's centre line.
-    // The selection is the fixed thing and the rail moves under it.
-    function centreTab(i) {
-      if (!rail || !viewport || !tabs[i]) return;
-      var t = tabs[i];
-      var x = (viewport.clientWidth / 2) - (t.offsetLeft + t.offsetWidth / 2);
-      rail.style.setProperty('--x', Math.round(x) + 'px');
+       Advancing off either end animates into a clone and then silently
+       re-seats on the matching real tab with the transition switched off.
+       The visitor sees one continuous reel; the DOM never grows. */
+    var clonesBefore = [], clonesAfter = [];
+    if (rail && !reduce) {
+      real.forEach(function (t) {
+        [clonesBefore, clonesAfter].forEach(function (bucket) {
+          var c = t.cloneNode(true);
+          c.removeAttribute('role');
+          c.removeAttribute('aria-selected');
+          c.setAttribute('aria-hidden', 'true');
+          c.tabIndex = -1;
+          c.classList.remove('is-on');
+          bucket.push(c);
+        });
+      });
+      clonesBefore.forEach(function (c) { rail.insertBefore(c, real[0]); });
+      clonesAfter.forEach(function (c) { rail.appendChild(c); });
+      // a clone is still clickable: it selects the tab it is a copy of
+      clonesBefore.concat(clonesAfter).forEach(function (c) {
+        c.addEventListener('click', function () { show(c.dataset.scene, true); });
+      });
     }
 
-    var show = function (key, fromUser) {
+    // every element in the rail, in order — index N…2N-1 is the real set
+    function railItems() {
+      return rail ? [].slice.call(rail.children) : real;
+    }
+
+    var cur = 0;          // index into the REAL set
+    var slot = clonesBefore.length ? N : 0;   // which rail item is centred
+
+    function markSlot(i) {
+      railItems().forEach(function (t, n) {
+        var on = n === i;
+        t.classList.toggle('is-on', on);
+        if (!on) t.style.removeProperty('--p');
+      });
+    }
+
+    // Slide the rail so the chosen item sits on the viewport's centre line.
+    // The selection is the fixed thing and the rail moves under it.
+    function centreSlot(i, animate) {
+      if (!rail || !viewport) return;
+      var t = railItems()[i];
+      if (!t) return;
+      if (!animate) rail.style.transition = 'none';
+      var x = (viewport.clientWidth / 2) - (t.offsetLeft + t.offsetWidth / 2);
+      rail.style.setProperty('--x', Math.round(x) + 'px');
+      if (!animate) { void rail.offsetWidth; rail.style.transition = ''; }
+    }
+
+    /* Move to a real tab index, optionally by way of a clone so the reel
+       appears to keep going in one direction. `viaSlot` is the rail item to
+       animate to; once it lands we re-seat silently on the real one. */
+    var show = function (key, fromUser, viaSlot) {
       var i = 0;
-      tabs.forEach(function (t, n) { if (t.dataset.scene === key) i = n; });
+      real.forEach(function (t, n) { if (t.dataset.scene === key) i = n; });
       cur = i;
       if (line) {
         line.classList.add('is-swapping');
@@ -602,24 +635,42 @@
           line.classList.remove('is-swapping');
         }, reduce ? 0 : 240);
       }
-      tabs.forEach(function (t, n) {
-        var on = n === i;
-        t.classList.toggle('is-on', on);
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-        t.tabIndex = on ? 0 : -1;
-        if (!on) t.style.removeProperty('--p');
+      real.forEach(function (t, n) {
+        t.setAttribute('aria-selected', n === i ? 'true' : 'false');
+        t.tabIndex = n === i ? 0 : -1;
       });
       panes.forEach(function (p) {
         var on = p.dataset.scene === key;
         p.classList.remove('is-on');
         if (on) { void p.offsetWidth; p.classList.add('is-on'); }
       });
-      centreTab(i);
+
+      // ONE item is selected — the one on the centre line. Lighting every
+      // copy of the scene would show a second highlighted tab at the edge
+      // of the mask, which is the seam the clones exist to hide.
+      var home = clonesBefore.length ? N + i : i;
+      var target = (viaSlot !== undefined) ? viaSlot : home;
+      markSlot(target);
+      if (target !== home) {
+        slot = target;
+        centreSlot(slot, true);
+        // when the slide finishes, re-seat on the identical real tab with
+        // the transition off — same picture, so nothing is seen
+        window.setTimeout(function () {
+          slot = home;
+          markSlot(slot);
+          markSlot(slot);
+    centreSlot(slot, false);
+        }, 660);
+      } else {
+        slot = home;
+        centreSlot(slot, true);
+      }
       t0 = null;                       // a new tab gets a full turn
       if (fromUser) held = true;       // and a click parks the carousel
     };
 
-    tabs.forEach(function (t) {
+    real.forEach(function (t) {
       t.addEventListener('click', function () { show(t.dataset.scene, true); });
     });
     // arrow keys move through the reel, as a tablist should
@@ -628,36 +679,44 @@
         var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if (!d) return;
         e.preventDefault();
-        var n = (cur + d + tabs.length) % tabs.length;
-        show(tabs[n].dataset.scene, true);
-        tabs[n].focus();
+        var n = (cur + d + N) % N;
+        show(real[n].dataset.scene, true, clonesBefore.length ? slot + d : undefined);
+        real[n].focus();
       });
     }
-    window.addEventListener('resize', function () { centreTab(cur); }, { passive: true });
+    window.addEventListener('resize', function () { centreSlot(slot, false); }, { passive: true });
     if (doc.fonts && doc.fonts.ready) {
-      doc.fonts.ready.then(function () { centreTab(cur); }).catch(function () {});
+      doc.fonts.ready.then(function () { centreSlot(slot, false); }).catch(function () {});
     }
-    centreTab(0);
+    centreSlot(slot, false);
 
     /* ── the tab is its own progress bar ────────────────────────────
-       It fills across its width and hands over to the next one. Paused
-       off screen, in a background tab, and whenever a pointer or the
-       keyboard is on the strip — nobody should have the thing they are
-       reading taken away from them. A click parks it for good: at that
-       point the visitor is driving. */
+       It fills across its width and hands over to the next one, and the
+       reel always travels the same way so it reads as one continuous
+       strip rather than snapping back to the start.
+
+       It pauses off screen, in a background tab and under reduced motion.
+       It does NOT pause on hover: the progress is what tells you the
+       thing is going to change, and freezing it the moment a pointer
+       crosses the section makes the whole section feel stuck. Keyboard
+       focus still parks it — a keyboard user has no other way to hold it
+       — and any click parks it for good, because from then on the
+       visitor is driving. */
     var DWELL = 7200;                 // ms per tab
-    var t0 = null, tRaf = 0, onScreen = false, held = false, hover = false;
+    var t0 = null, tRaf = 0, onScreen = false, held = false, kbd = false;
 
     function tick(now) {
       tRaf = 0;
-      if (!onScreen || held || hover || document.hidden || reduce) { t0 = null; return; }
+      if (!onScreen || held || kbd || document.hidden || reduce) { t0 = null; return; }
       if (t0 === null) t0 = now;
       var p = (now - t0) / DWELL;
       if (p >= 1) {
-        show(tabs[(cur + 1) % tabs.length].dataset.scene);
+        var next = (cur + 1) % N;
+        show(real[next].dataset.scene, false, clonesBefore.length ? slot + 1 : undefined);
         p = 0;
       }
-      if (tabs[cur]) tabs[cur].style.setProperty('--p', Math.min(1, p).toFixed(4));
+      var onEl = railItems()[slot];
+      if (onEl) onEl.style.setProperty('--p', Math.min(1, p).toFixed(4));
       tRaf = requestAnimationFrame(tick);
     }
     function pump() { if (!tRaf) tRaf = requestAnimationFrame(tick); }
@@ -670,12 +729,8 @@
         });
       }, { threshold: 0.2 }).observe(wrap);
     }
-    ['pointerenter', 'focusin'].forEach(function (ev) {
-      wrap.addEventListener(ev, function () { hover = true; t0 = null; });
-    });
-    ['pointerleave', 'focusout'].forEach(function (ev) {
-      wrap.addEventListener(ev, function () { hover = false; pump(); });
-    });
+    wrap.addEventListener('focusin', function () { kbd = true; t0 = null; });
+    wrap.addEventListener('focusout', function () { kbd = false; pump(); });
     doc.addEventListener('visibilitychange', function () {
       if (!document.hidden) pump();
     });

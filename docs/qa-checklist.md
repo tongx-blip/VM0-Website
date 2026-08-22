@@ -447,6 +447,25 @@ t.querySelector('.tab').focus();                     // keyboard
 document.querySelector('.tab.is-on').style.getPropertyValue('--p')  // '' under reduced motion
 ```
 
+It must **not** pause on hover — the progress is what tells a visitor the panel
+is going to change, and freezing it whenever a pointer crosses the section makes
+the section feel stuck. Keyboard focus is the exception: a keyboard user has no
+other way to hold it.
+
+If the reel loops by cloning, check the seam:
+
+```js
+const r = document.querySelector('.tabs__rail');
+[r.children.length,                              // 3 × the real count
+ r.querySelectorAll('[role=tab]').length,        // the real count only
+ [...r.querySelectorAll('[aria-hidden=true]')].filter(e => e.tagName === 'BUTTON' && e.tabIndex >= 0).length,  // 0
+ r.querySelectorAll('.is-on').length]            // exactly 1, at every moment
+```
+
+Selection must be marked on the centred **slot**, never by matching a data
+attribute — matching lights every copy and puts a second highlighted item at
+the edge of the mask, which is the seam the clones exist to hide.
+
 A click must **park it for good** — at that point the visitor is driving, and
 taking the wheel back is worse than never having offered it.
 
