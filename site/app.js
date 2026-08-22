@@ -556,28 +556,45 @@
   /* ── 10. role scenes: tabs swap the stage and the sentence ──── */
   var wrap = doc.getElementById('scenes');
   if (wrap) {
-    var tabs = [].slice.call(wrap.querySelectorAll('.scenes__tab'));
+    var rail = wrap.querySelector('.tabs__rail');
+    var viewport = wrap.querySelector('.tabs');
+    var tabs = [].slice.call(wrap.querySelectorAll('.tab'));
     var panes = [].slice.call(wrap.querySelectorAll('.scene'));
     var line = doc.getElementById('scene-line');
     // No emoji: it was the one pictogram on a page that has none, and it read
     // as decoration bolted onto a sentence rather than part of it.
     var LINES = {
-      marketing:  ['builds', 'Maya’s', '', 'storefront.'],
-      ads:        ['optimizes', 'Maya’s', '', 'ad spend.'],
-      sales:      ['scores', 'Ravi’s', '', 'pipeline.'],
-      engineering:['triages', 'Lin’s', '', 'error queue.'],
-      product:    ['writes', 'Sofia’s', '', 'export spec.'],
-      ops:        ['sends', 'Noah’s', '', 'Monday digest.'],
-      leadership: ['rebuilds', 'Dana’s', '', 'board deck.']
+      marketing:  ['builds', 'Maya’s', 'storefront.'],
+      ads:        ['optimizes', 'Maya’s', 'ad spend.'],
+      sales:      ['scores', 'Ravi’s', 'pipeline.'],
+      engineering:['triages', 'Lin’s', 'error queue.'],
+      product:    ['writes', 'Sofia’s', 'export spec.'],
+      ops:        ['sends', 'Noah’s', 'Monday digest.'],
+      leadership: ['rebuilds', 'Dana’s', 'board deck.']
     };
     var writeLead = function (key) {
       if (!line || !LINES[key]) return;
       var p = LINES[key];
       // no accent here: at this size, on the grey ground, orange text
       // cannot clear 4.5:1. The lead is emphasised by ink + weight.
-      line.textContent = 'Okou ' + p[0] + ' ' + p[1] + ' ' + p[3];
+      line.textContent = 'Okou ' + p[0] + ' ' + p[1] + ' ' + p[2];
     };
-    var show = function (key) {
+
+    var cur = 0;
+
+    // Slide the rail so the selected tab sits on the viewport's centre line.
+    // The selection is the fixed thing and the rail moves under it.
+    function centreTab(i) {
+      if (!rail || !viewport || !tabs[i]) return;
+      var t = tabs[i];
+      var x = (viewport.clientWidth / 2) - (t.offsetLeft + t.offsetWidth / 2);
+      rail.style.setProperty('--x', Math.round(x) + 'px');
+    }
+
+    var show = function (key, fromUser) {
+      var i = 0;
+      tabs.forEach(function (t, n) { if (t.dataset.scene === key) i = n; });
+      cur = i;
       if (line) {
         line.classList.add('is-swapping');
         window.setTimeout(function () {
@@ -585,19 +602,82 @@
           line.classList.remove('is-swapping');
         }, reduce ? 0 : 240);
       }
-      tabs.forEach(function (t) {
-        var on = t.dataset.scene === key;
+      tabs.forEach(function (t, n) {
+        var on = n === i;
         t.classList.toggle('is-on', on);
         t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+        if (!on) t.style.removeProperty('--p');
       });
       panes.forEach(function (p) {
         var on = p.dataset.scene === key;
         p.classList.remove('is-on');
         if (on) { void p.offsetWidth; p.classList.add('is-on'); }
       });
+      centreTab(i);
+      t0 = null;                       // a new tab gets a full turn
+      if (fromUser) held = true;       // and a click parks the carousel
     };
+
     tabs.forEach(function (t) {
-      t.addEventListener('click', function () { show(t.dataset.scene); });
+      t.addEventListener('click', function () { show(t.dataset.scene, true); });
+    });
+    // arrow keys move through the reel, as a tablist should
+    if (rail) {
+      rail.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        var n = (cur + d + tabs.length) % tabs.length;
+        show(tabs[n].dataset.scene, true);
+        tabs[n].focus();
+      });
+    }
+    window.addEventListener('resize', function () { centreTab(cur); }, { passive: true });
+    if (doc.fonts && doc.fonts.ready) {
+      doc.fonts.ready.then(function () { centreTab(cur); }).catch(function () {});
+    }
+    centreTab(0);
+
+    /* ── the tab is its own progress bar ────────────────────────────
+       It fills across its width and hands over to the next one. Paused
+       off screen, in a background tab, and whenever a pointer or the
+       keyboard is on the strip — nobody should have the thing they are
+       reading taken away from them. A click parks it for good: at that
+       point the visitor is driving. */
+    var DWELL = 7200;                 // ms per tab
+    var t0 = null, tRaf = 0, onScreen = false, held = false, hover = false;
+
+    function tick(now) {
+      tRaf = 0;
+      if (!onScreen || held || hover || document.hidden || reduce) { t0 = null; return; }
+      if (t0 === null) t0 = now;
+      var p = (now - t0) / DWELL;
+      if (p >= 1) {
+        show(tabs[(cur + 1) % tabs.length].dataset.scene);
+        p = 0;
+      }
+      if (tabs[cur]) tabs[cur].style.setProperty('--p', Math.min(1, p).toFixed(4));
+      tRaf = requestAnimationFrame(tick);
+    }
+    function pump() { if (!tRaf) tRaf = requestAnimationFrame(tick); }
+
+    if ('IntersectionObserver' in window && !reduce) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          onScreen = e.isIntersecting;
+          if (onScreen) pump(); else t0 = null;
+        });
+      }, { threshold: 0.2 }).observe(wrap);
+    }
+    ['pointerenter', 'focusin'].forEach(function (ev) {
+      wrap.addEventListener(ev, function () { hover = true; t0 = null; });
+    });
+    ['pointerleave', 'focusout'].forEach(function (ev) {
+      wrap.addEventListener(ev, function () { hover = false; pump(); });
+    });
+    doc.addEventListener('visibilitychange', function () {
+      if (!document.hidden) pump();
     });
   }
 

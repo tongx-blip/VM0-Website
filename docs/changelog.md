@@ -6,6 +6,55 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-22 · the tab reel, rectangles everywhere, and the rules in one file
+
+**The tab strip is a centred reel.** The selected tab is always on the
+viewport's centre line — the rail slides under a fixed centre rather than the
+selection jumping around a static strip, so the eye never goes looking for what
+is active and the seven cases read as one thing you are moving through.
+Verified: the active tab's centre is 0px from the viewport's at every width,
+after fonts load and on resize.
+
+**Each tab carries its own hue and doubles as a progress bar.** It fills across
+its width and hands over to the next one — 7.2s each. The first version wiped
+the hue across the whole button and it was wrong twice over: the label sat on
+two grounds at once, and half these hues (amber, pink) cannot carry white text
+at any opacity. It is a **tint behind the label plus a solid bar under it**,
+which is legible on every hue and is the same rule-as-progress-bar the ladder
+already uses — one idea used twice rather than two ways of saying "how far
+through".
+
+It yields, as anything that moves on its own must: paused off screen, in a
+background tab, on hover, on focus-within, and disabled entirely under reduced
+motion. **A click parks it for good** — at that point the visitor is driving.
+Arrow keys move through the reel.
+
+**Two shapes, and only two — applied to the whole page.**
+
+- **Every component with a box is a rectangle** (`--r-btn`). `--r-pill` is now
+  only for things that are actually round. The chip, the tags, the tabs and the
+  hero's serif lead were lozenges; the audit found the last one (`.serif-lead`,
+  336 × 41 at radius 999) and the page now measures **zero** of them.
+- **Every section is a white card on the grey page.** It had been mixing three
+  shapes — grey bands (`parallel`, `positioning`), white bands (`control`,
+  `proof`) and cards (`outputs`, `reach`, `workflows`) — so a reader had to work
+  out what a section was three different ways. All seven are cards now; the hero
+  and the closing CTA band are the two deliberate exceptions.
+
+**Also:** the Outputs chip drops its shadow and pill for a `--wash-2` rectangle
+(and no longer needs a per-section ground flip); the heading-to-tabs gap comes
+down from 40–64px to 22–34px; and the lede is shortened so **every** tab's
+version lands in exactly two lines, with the block reserving two so switching
+tab never moves the strip underneath it.
+
+**`docs/RULES.md` is new** — every rule this page is held to, one line each,
+with a pointer to where it is argued and where it is machine-checked. Thirty-odd
+rules across shape, measure, type, colour, motion, product mocks, content and
+process. `design-principles.md` and `qa-checklist.md` now point at it. The
+point is to stop re-litigating settled decisions three rounds later.
+
+---
+
 ## 2026-08-22 · the generated page is real, and the three columns became one run
 
 **The artefact is now an actual Blueprint Grid page.** It was a hand-coded

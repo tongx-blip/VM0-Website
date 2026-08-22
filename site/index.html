@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=3570e0e4">
+<link rel="stylesheet" href="styles.css?r=a1d04812">
 </head>
 <body>
 
@@ -92,13 +92,29 @@
 
   <p class="section-body reveal" id="sceneCopy">
     <span class="lead-in" id="scene-line">Okou builds Maya’s storefront.</span>
-    Hire it into a role, not a task. Okou proposes the workflows, runs the recurring ones on its
-    own, and does the rest when you ask.
+    Hire it into a role, not a task — it proposes the workflows and runs them.
   </p>
 
   <!-- product mock: workspace + chat -->
   <div class="scenes" id="scenes" data-reveal="scale">
-      <div class="scenes__tabs" role="tablist"><button class="scenes__tab is-on" role="tab" data-scene="marketing" aria-selected="true">Storefront Launch</button><button class="scenes__tab" role="tab" data-scene="ads" aria-selected="false">Ad Campaign</button><button class="scenes__tab" role="tab" data-scene="sales" aria-selected="false">Lead Scoring</button><button class="scenes__tab" role="tab" data-scene="engineering" aria-selected="false">Incident Triage</button><button class="scenes__tab" role="tab" data-scene="product" aria-selected="false">Spec Writing</button><button class="scenes__tab" role="tab" data-scene="ops" aria-selected="false">Team Digest</button><button class="scenes__tab" role="tab" data-scene="leadership" aria-selected="false">Board Deck</button></div>
+      <div class="tabs" id="sceneTabs">
+          <div class="tabs__rail" role="tablist" aria-label="What Okou can be asked for">
+            <button class="tab is-on" role="tab" data-scene="marketing" style="--tab:#F8A100"
+                    aria-selected="true" tabindex="0"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Storefront Launch</span></button>
+            <button class="tab" role="tab" data-scene="ads" style="--tab:#E24E4A"
+                    aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Ad Campaign</span></button>
+            <button class="tab" role="tab" data-scene="sales" style="--tab:#C77BA6"
+                    aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Lead Scoring</span></button>
+            <button class="tab" role="tab" data-scene="engineering" style="--tab:#3758A2"
+                    aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Incident Triage</span></button>
+            <button class="tab" role="tab" data-scene="product" style="--tab:#0E8C99"
+                    aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Spec Writing</span></button>
+            <button class="tab" role="tab" data-scene="ops" style="--tab:#6E8C3A"
+                    aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Team Digest</span></button>
+            <button class="tab" role="tab" data-scene="leadership" style="--tab:#6E5AA8"
+                    aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Board Deck</span></button>
+          </div>
+        </div>
       <div class="scenes__stage">
         <div class="scene scene--built is-on" data-scene="marketing" role="tabpanel">
           <!-- the Outputs content, from the Figma (node 676:2222):
@@ -486,7 +502,7 @@
 </section>
 
 <!-- ═══════════════ 03 / AT ONCE ═══════════════ -->
-<section class="panel" id="parallel">
+<section class="panel panel--card" id="parallel">
   <p class="chip reveal">At once</p>
 
   <h2 class="display display--center" data-reveal="mask">
@@ -548,7 +564,7 @@
 </section>
 
 <!-- ═══════════════ 04 / CONTROL ═══════════════ -->
-<section class="panel" id="control">
+<section class="panel panel--card" id="control">
   <p class="chip reveal">Control</p>
 
   <h2 class="display display--center" data-reveal="mask">
@@ -639,7 +655,7 @@
 </section>
 
 <!-- ═══════════════ 04 / POSITIONING ═══════════════ -->
-<section class="panel" id="positioning">
+<section class="panel panel--card" id="positioning">
   <p class="chip reveal">Positioning</p>
 
   <h2 class="display display--center" data-reveal="mask">
@@ -679,7 +695,7 @@
 </section>
 
 <!-- ═══════════════ 05 / PROOF ═══════════════ -->
-<section class="panel" id="proof">
+<section class="panel panel--card" id="proof">
   <p class="chip reveal">Proof</p>
 
   <h2 class="display display--center" data-reveal="mask">
@@ -767,6 +783,6 @@
   <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
 </footer>
 
-<script src="app.js?r=8e5ad36b"></script>
+<script src="app.js?r=f1ce76ae"></script>
 </body>
 </html>

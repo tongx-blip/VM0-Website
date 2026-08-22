@@ -6,6 +6,22 @@ later instead of cargo-culted.
 
 ---
 
+> Every rule on this page is indexed in **`RULES.md`**. This file argues the
+> visual ones; the values live in `design-system.md`.
+
+## 0. Two shapes, and only two
+
+**Every component with a box is a rectangle** (`--r-btn`, 10px). `--r-pill` is
+reserved for things that are actually round — an avatar, a status dot, the cap
+of a progress bar. A page that mixes lozenges and rectangles has two ideas about
+what a control is, and a reader has to hold both.
+
+**Every section is a white card on the grey page** (`--r-section`, 16px, no
+shadow). The hero and the closing CTA band are the two deliberate exceptions:
+the hero is the page opening full-bleed, the CTA is the dark chapter that ends
+it. Before this was settled the page mixed grey bands, white bands and cards —
+three ways of answering "what is a section".
+
 ## 1. No structural lines
 
 **Nothing on this page is separated by a rule.** No section dividers, no column

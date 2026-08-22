@@ -98,7 +98,11 @@
   --r-card:  12px;                           /* surfaces, tiles             */
   --r-lg:    clamp(16px, 1.8vw, 26px);       /* a component-scale card      */
   --r-xl:    clamp(20px, 2.2vw, 34px);       /* a section-scale card        */
-  --r-pill:  999px;                          /* anything genuinely round    */
+  /* --r-pill is for things that are actually ROUND — an avatar, a status
+     dot, the cap of a progress bar. Every component with a box is a
+     rectangle with --r-btn. A page that mixes lozenges and rectangles has
+     two ideas about what a control is. */
+  --r-pill:  999px;
   --r-section: 16px;                         /* every section's own corner  */
   /* The header is a rounded box holding rounded controls, so its corner is
      the control's corner PLUS the space between them. Anything else and the
@@ -200,7 +204,7 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 }
 .btn,.scenes__tab{ border-radius:var(--r-btn); }
 .step{ border-radius:0; }
-.tag,.state,.pill-mini{ border-radius:var(--r-pill); }
+.tag,.state,.pill-mini{ border-radius:var(--r-btn); }
 
 /* every page-level rule inherited from the component layer comes off:
    this page separates with grounds, space and shadow, never with a line */
@@ -476,11 +480,11 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center; gap:9px;
   width:max-content;
   margin:0 auto clamp(18px, 2vw, 26px);
-  padding:8px 16px 8px 13px;
+  padding:7px 14px 7px 11px;
   border:0;
-  border-radius:var(--r-pill);
-  background:var(--paper);
-  box-shadow:var(--e-tag);
+  border-radius:var(--r-btn);
+  background:var(--wash-2);
+  box-shadow:none;
   font-size:var(--t-mono); letter-spacing:.16em;
   color:var(--ink);
   line-height:1.4;
@@ -491,11 +495,7 @@ h3{ font-family:var(--fd); }
   border-radius:50%;
   background:var(--accent-solid);
 }
-/* on a white section the tag takes the inset ground instead of a shadow */
-#workflows > .chip,#control > .chip,#proof > .chip{
-  background:var(--wash-2);
-  box-shadow:none;
-}
+/* one fill for the tag on every ground; the CTA band inverts it */
 .panel--cta > .chip{
   background:rgba(255,255,255,.1);
   box-shadow:none;
@@ -515,8 +515,14 @@ h3{ font-family:var(--fd); }
    Order: hero · outputs · [reach card] · workflows · parallel · control ·
    positioning · proof · (cta + footer, ink). Two neighbours must never
    share a ground — it is the only thing separating them. */
-#parallel,#positioning{ background:transparent; }
-#workflows,#control,#proof{ background:var(--paper); }
+/* EVERY section is a white card on the grey page. The page used to mix
+   three shapes — grey bands, white bands and cards — which meant a reader
+   had to work out what a section was three different ways. The hero and
+   the closing band are the two deliberate exceptions: the hero is the
+   page opening full-bleed, and the CTA is the dark chapter that ends it. */
+#outputs,#reach,#workflows,#parallel,#control,#positioning,#proof{
+  background:var(--paper);
+}
 /* this card holds a pinned section, and `overflow:hidden` would make it a
    scroll container and kill the sticky. `clip` clips without doing that. */
 #workflows.panel--card{ overflow:clip; }
@@ -567,7 +573,7 @@ h3{ font-family:var(--fd); }
   max-width:none;
   margin-inline:auto;
   padding:9px 20px 9px 16px;
-  border-radius:var(--r-pill);
+  border-radius:var(--r-btn);
   background:var(--paper);
   box-shadow:0 1px 2px rgba(12,15,18,.05), 0 12px 26px -16px rgba(12,15,18,.32);
   font-size:var(--t-tag);
@@ -670,26 +676,75 @@ h3{ font-family:var(--fd); }
    The screenshot is the subject; the connector cards and the
    deliverable sit BESIDE it, so nothing covers the product and no
    sentence is cropped mid-word. */
-.scenes{ margin:clamp(40px,4.6vw,64px) 0 0; }
-.scenes__tabs{
-  display:flex; flex-wrap:wrap; gap:8px;
-  padding:0;
+.scenes{ margin:clamp(22px,2.4vw,34px) 0 0; }
+/* ── the tab rail ──────────────────────────────────────────────────
+   The selected tab is always in the MIDDLE. The rail slides under a
+   fixed centre line rather than the selection jumping around a static
+   strip — so the eye never has to go looking for what is active, and
+   the seven cases read as one reel you are moving through.
+
+   Each tab carries its own hue and doubles as a progress bar: the fill
+   sweeps its width and, when it reaches the end, hands over to the next
+   one. Same language as the ladder's rule-as-progress-bar — one idea,
+   used twice, rather than two ways of saying "how far through". */
+.tabs{
+  position:relative;
+  overflow:hidden;
+  /* the rail can be wider than the section, so the ends fade rather than
+     being cut off square */
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.scenes__tab{
-  border:1px solid transparent;
+.tabs__rail{
+  display:flex; gap:8px;
+  width:max-content;
+  transform:translate3d(var(--x, 0px), 0, 0);
+  transition:transform 640ms var(--e-elegant);
+  will-change:transform;
+}
+.tab{
+  position:relative;
+  flex:none;
+  overflow:hidden;
+  border:0;
+  border-radius:var(--r-btn);
   background:var(--wash-2);
-  padding:9px 15px;
-  font-size:var(--t-mono); letter-spacing:.075em;
+  padding:9px 16px 11px;
+  font-family:var(--fm);
+  font-size:var(--t-mono); letter-spacing:.075em; text-transform:uppercase;
   color:var(--ink-soft); cursor:pointer;
-  transition:background var(--t-hover) var(--e-snap),
-             color var(--t-hover) var(--e-snap),
-             border-color var(--t-hover) var(--e-snap),
-             transform var(--t-hover) var(--e-snap);
+  transition:color var(--t-hover) var(--e-snap),
+             background var(--t-hover) var(--e-snap);
 }
-.scenes__tab:hover{ color:var(--ink); transform:translateY(-1px); }
-.scenes__tab.is-on{
-  background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink);
+.tab:hover{ color:var(--ink); }
+.tab__label{ position:relative; z-index:1; }
+
+/* The tab's own hue is a TINT behind the label and a solid bar under it —
+   not a wipe across the whole button. A wipe leaves the label sitting on
+   two different grounds at once, and half these hues (amber, pink) cannot
+   carry white text at any opacity. Tint + bar is legible on every hue, and
+   it is the same rule-as-progress-bar the ladder already uses: one idea,
+   used twice, instead of two ways of saying "how far through". */
+.tab.is-on{
+  color:var(--ink);
+  background:color-mix(in srgb, var(--tab) 16%, var(--wash-2));
 }
+.tab__fill{
+  position:absolute; left:0; right:0; bottom:0;
+  height:3px;
+  background:var(--tab);
+  transform:scaleX(var(--p, 0)); transform-origin:left;
+  opacity:0;
+}
+.tab.is-on .tab__fill{ opacity:1; }
+/* the track the bar runs along, so an untravelled tab still reads as chosen */
+.tab.is-on::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:3px;
+  background:color-mix(in srgb, var(--tab) 26%, transparent);
+}
+
 .scenes__stage{ position:relative; margin-top:clamp(24px,2.8vw,38px); }
 .scene{ display:none; }
 .scene.is-on{
@@ -1877,9 +1932,11 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-sm); line-height:1.6;
   color:var(--ink-mute);
 }
-#sceneCopy{ min-height:4.4em; }        /* the lead is one or two lines;
-                                          reserve both so the tabs below
-                                          never move when it swaps */
+/* Every tab's version of this lands in exactly two lines, and the block
+   reserves two — so switching tab never moves the strip underneath it.
+   The longest phrase ("Okou rebuilds Dana's board deck.") is what the
+   measure was set against. */
+#sceneCopy{ min-height:calc(2 * 1.55em); }
 
 /* the three figures and their note read as one object on the page */
 .figures{

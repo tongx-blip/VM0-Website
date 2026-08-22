@@ -1,5 +1,9 @@
 # QA gate
 
+> The rules themselves are indexed in **`RULES.md`** — one line each, with a
+> pointer to where each is argued and where it is checked. This file is the
+> machine half.
+
 Run all of it before publishing, even for a one-line change. Every check here
 exists because something slipped past without it. The audit snippets live in
 `tools/audit.js`.
@@ -428,6 +432,31 @@ rgba(12,15,18,.72) over white → #4C4F52 → white text 7.4:1   ✓
 
 Backdrop blur is what makes such a control read as frosted. Transparency is not
 — reach for the blur and keep the fill opaque enough to be legible anywhere.
+
+## 4m. An auto-advancing carousel yields
+
+Anything that advances on its own must stop when a person is using it:
+
+```js
+const t = document.getElementById('sceneTabs');
+// each of these must freeze the fill and the advance
+t.dispatchEvent(new PointerEvent('pointerenter'));   // hover
+t.querySelector('.tab').focus();                     // keyboard
+// plus: off screen (IntersectionObserver), background tab
+// (visibilitychange), and prefers-reduced-motion — which disables it wholly
+document.querySelector('.tab.is-on').style.getPropertyValue('--p')  // '' under reduced motion
+```
+
+A click must **park it for good** — at that point the visitor is driving, and
+taking the wheel back is worse than never having offered it.
+
+Also check the selection stays centred at every width and after fonts load:
+
+```js
+const v = document.querySelector('.tabs').getBoundingClientRect();
+const t2 = document.querySelector('.tab.is-on').getBoundingClientRect();
+Math.round((t2.left + t2.width / 2) - (v.left + v.width / 2))   // 0
+```
 
 ## 4l. A marquee actually closes its loop
 
