@@ -6,6 +6,60 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-22 · the generated page is real, and the three columns became one run
+
+**The artefact is now an actual Blueprint Grid page.** It was a hand-coded
+miniature that only resembled a website. The real one: a content plan authored
+against `template:blueprint-grid`, rendered with the template's own engine
+(`node render.mjs`), six media slots filled — three existing coastal photos plus
+three generated with `seedream4` — captured full-length at 1280 and shipped as
+one tall image the visitor scrolls. Subject unchanged: Litoral, the coastal
+hotel. The same page's hero is the card inside the chat, so the thing Okou is
+handing over and the thing in the window are visibly the same object. Plan kept
+at `generated/litoral-plan.json`; 328KB for both assets, and three now-unused
+`assets/template/*.jpg` are gone.
+
+**The three columns are one run now.** They had been three unrelated pictures in
+a row — two dead connector cards, a conversation talking to itself, and a window
+that was simply always there. The section claims *you ask once, Okou reaches into
+the tools you already use, something real ships*, so the columns say that in
+order, off one timeline:
+
+| t | what |
+|---|---|
+| 0.0s | the ask arrives |
+| 0.7s | Google Drive lights — greyscale lifts, the card rises, a hairline of accent runs its width and goes out |
+| 1.0s | Okou's typing dots |
+| 1.25s | Gmail lights the same way |
+| 2.2s | the dots are replaced by the reply |
+| 3.4s | the result lands in the chat **and the window arrives with it** |
+
+Everything is scoped to `.is-live`, added by JS only, so the resting page —
+reduced motion, no JS, before the observer fires — has every column at full
+strength.
+
+**The five specific notes:**
+
+- **Bubble padding** 14/16 → 11/14. At 15px text the old padding read as a
+  speech-bubble sticker rather than a message.
+- **The result card** was taking every remaining pixel, which made it the only
+  thing in the panel and stopped the two messages above it reading as a
+  conversation. Capped at 56% of the panel.
+- **The window has an outline.** A shadow alone could not separate a white
+  chrome bar from a white section; `0 0 0 1px rgba(12,15,18,.11)` does — the
+  product's own window edge, which is why `.tplwin` is exempt from the
+  no-rules audit.
+- **The scroll hint is dark, frosted and worded** — "Scroll the page" on
+  `rgba(12,15,18,.72)` with `backdrop-filter: blur(10px) saturate(1.3)`. A pale
+  circle was a shape, not an instruction. **.72, not the .62 it looked best at**:
+  over a pale photo .62 leaves white text at ~4.3:1, and axe cannot compute it
+  because the backdrop is a scrolling image, so it has to be safe by
+  construction. The blur is what makes it read as frosted, not the transparency.
+- **`#ochat` carried `aria-label` on a bare `<div>`**, which is prohibited —
+  `role="group"` now.
+
+---
+
 ## 2026-08-21 · Outputs rebuilt from the Figma: three columns, a conversation, a hint
 
 Figma node `676:2222` ("Outputs"), one to one on **structure**, adapted on size.

@@ -1,0 +1,480 @@
+{
+  "title": "BRAND — sample",
+  "desc": "Per-skin starting point mirroring this template's example.html (sections, order, variants). Replace the copy with the real brief.",
+  "brand": "BRAND",
+  "navLinks": [
+    {
+      "label": "Features",
+      "href": "#features"
+    },
+    {
+      "label": "Work",
+      "href": "#work"
+    },
+    {
+      "label": "Pricing",
+      "href": "#pricing"
+    },
+    {
+      "label": "Contact",
+      "href": "#contact"
+    }
+  ],
+  "navCta": {
+    "label": "Get started",
+    "href": "#contact"
+  },
+  "hero": {
+    "wordmark": "BRAND",
+    "title": "A clear one-line headline",
+    "lead": "One or two sentences that set up the page.",
+    "dots": [
+      "Keep scrolling"
+    ],
+    "ctas": [
+      {
+        "label": "Events",
+        "href": "#features"
+      },
+      {
+        "label": "Request proposal",
+        "href": "#cta"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "fn": "gridEditorial",
+      "id": "about",
+      "args": {
+        "eyebrow": "Who we are",
+        "title": "A structural four-column intro",
+        "body": [
+          "A first paragraph of the story. Keep it concrete.",
+          "A second paragraph that adds one new fact."
+        ],
+        "ctas": [
+          {
+            "label": "Learn more",
+            "href": "#features"
+          }
+        ],
+        "photo": "modern sports club interior wide"
+      }
+    },
+    {
+      "fn": "logos",
+      "args": {
+        "label": "Trusted by",
+        "marquee": true,
+        "items": [
+          "Northwind",
+          "Acme",
+          "Globex",
+          "Initech",
+          "Umbra",
+          "Soylent"
+        ]
+      }
+    },
+    {
+      "fn": "featureSplit",
+      "args": {
+        "heading": "Built to scale",
+        "ratio": "media-wide",
+        "items": [
+          {
+            "icon": "bolt",
+            "eyebrow": "One",
+            "title": "A capability worth a row of its own",
+            "body": "Two plain lines describing it.",
+            "reverse": false
+          },
+          {
+            "icon": "shield",
+            "eyebrow": "Two",
+            "title": "A second capability, mirrored",
+            "body": "Two plain lines describing it.",
+            "reverse": true
+          }
+        ]
+      }
+    },
+    {
+      "fn": "featureGrid",
+      "id": "features",
+      "args": {
+        "heading": "Built for momentum",
+        "sub": "What you get, at a glance.",
+        "cols": 3,
+        "layout": "cards",
+        "items": [
+          {
+            "icon": "rocket",
+            "title": "First capability",
+            "body": "One or two plain sentences on what this does for the reader and why it matters to them."
+          },
+          {
+            "icon": "lock",
+            "title": "Second capability",
+            "body": "One or two plain sentences on what this does for the reader and why it matters to them."
+          },
+          {
+            "icon": "chart",
+            "title": "Third capability",
+            "body": "One or two plain sentences on what this does for the reader and why it matters to them."
+          },
+          {
+            "icon": "layers",
+            "title": "Fourth capability",
+            "body": "One or two plain sentences on what this does for the reader and why it matters to them."
+          },
+          {
+            "icon": "globe",
+            "title": "Fifth capability",
+            "body": "One or two plain sentences on what this does for the reader and why it matters to them."
+          },
+          {
+            "icon": "heart",
+            "title": "Sixth capability",
+            "body": "One or two plain sentences on what this does for the reader and why it matters to them."
+          }
+        ]
+      }
+    },
+    {
+      "fn": "fixedShowcase",
+      "id": "clubs",
+      "args": {
+        "label": "The rooms",
+        "hint": "Keep scrolling",
+        "backdrop": "modern architecture interior wide",
+        "slides": [
+          {
+            "title": "First room",
+            "body": "Two plain lines about it.",
+            "photo": "indoor tennis court"
+          },
+          {
+            "title": "Second room",
+            "body": "Two plain lines about it.",
+            "photo": "modern gym interior"
+          },
+          {
+            "title": "Third room",
+            "body": "Two plain lines about it.",
+            "photo": "sauna spa interior warm"
+          }
+        ]
+      }
+    },
+    {
+      "fn": "statsBand",
+      "ground": "dark",
+      "args": {
+        "items": [
+          {
+            "value": "12k+",
+            "label": "first metric"
+          },
+          {
+            "value": "99.9%",
+            "label": "second metric"
+          },
+          {
+            "value": "4.9/5",
+            "label": "third metric"
+          },
+          {
+            "value": "40+",
+            "label": "fourth metric"
+          }
+        ]
+      }
+    },
+    {
+      "fn": "steps",
+      "args": {
+        "heading": "Three steps to live",
+        "items": [
+          {
+            "title": "Describe it",
+            "body": "What the reader does first."
+          },
+          {
+            "title": "Pick a look",
+            "body": "What happens next."
+          },
+          {
+            "title": "Publish",
+            "body": "How it wraps up."
+          }
+        ]
+      }
+    },
+    {
+      "fn": "indexTiles",
+      "args": {
+        "heading": "Index",
+        "sub": "Numbered photo tiles — the number comes from position.",
+        "items": [
+          {
+            "title": "Worldview",
+            "caption": "One short caption line.",
+            "photo": "minimal architecture"
+          },
+          {
+            "title": "Structure",
+            "caption": "One short caption line.",
+            "photo": "concrete building"
+          },
+          {
+            "title": "Craft",
+            "caption": "One short caption line.",
+            "photo": "minimal interior"
+          },
+          {
+            "title": "Perception",
+            "caption": "One short caption line.",
+            "photo": "city night"
+          }
+        ]
+      }
+    },
+    {
+      "fn": "cardGrid",
+      "id": "work",
+      "args": {
+        "heading": "Selected work",
+        "sub": "Filterable — the tabs come from `filters[]`.",
+        "filters": [
+          {
+            "key": "all",
+            "label": "All"
+          },
+          {
+            "key": "a",
+            "label": "First category"
+          },
+          {
+            "key": "b",
+            "label": "Second category"
+          }
+        ],
+        "batch": 6,
+        "cards": [
+          {
+            "cat": "a",
+            "tag": "Tag",
+            "meta": "2026",
+            "title": "First item",
+            "role": "Detail line",
+            "cta": "View",
+            "photo": "abstract expressionist oil painting"
+          },
+          {
+            "cat": "a",
+            "tag": "Tag",
+            "meta": "2026",
+            "title": "Second item",
+            "role": "Detail line",
+            "cta": "View",
+            "photo": "modernist portrait painting"
+          },
+          {
+            "cat": "b",
+            "tag": "Tag",
+            "meta": "2025",
+            "title": "Third item",
+            "role": "Detail line",
+            "cta": "View",
+            "photo": "nocturne moonlight seascape painting"
+          },
+          {
+            "cat": "a",
+            "tag": "Tag",
+            "meta": "2025",
+            "title": "Fourth item",
+            "role": "Detail line",
+            "cta": "View",
+            "photo": "vintage botanical still life painting"
+          },
+          {
+            "cat": "b",
+            "tag": "Tag",
+            "meta": "2024",
+            "title": "Fifth item",
+            "role": "Detail line",
+            "cta": "View",
+            "photo": "expressionist horse painting"
+          },
+          {
+            "cat": "a",
+            "tag": "Tag",
+            "meta": "2024",
+            "title": "Sixth item",
+            "role": "Detail line",
+            "cta": "View",
+            "photo": "impressionist harbour painting"
+          }
+        ]
+      }
+    },
+    {
+      "fn": "testimonial",
+      "args": {
+        "heading": "Why teams switch",
+        "layout": "cards",
+        "quotes": [
+          {
+            "text": "A concrete result in the customer’s own words.",
+            "name": "R. Mensah",
+            "role": "Founder, Lumen"
+          },
+          {
+            "text": "A second quote naming a specific outcome.",
+            "name": "S. Alvarez",
+            "role": "Head of Marketing"
+          },
+          {
+            "text": "A third quote about what changed after.",
+            "name": "D. Cole",
+            "role": "Growth, Atlas"
+          }
+        ]
+      }
+    },
+    {
+      "fn": "pricing",
+      "id": "pricing",
+      "args": {
+        "heading": "Pricing",
+        "sub": "Start free, upgrade when you grow.",
+        "plans": [
+          {
+            "tier": "Starter",
+            "price": "$0",
+            "unit": "/mo",
+            "features": [
+              "A feature",
+              "A feature",
+              "A feature"
+            ]
+          },
+          {
+            "tier": "Pro",
+            "price": "$29",
+            "unit": "/mo",
+            "popular": true,
+            "features": [
+              "Everything in Starter",
+              "A feature",
+              "A feature",
+              "A feature"
+            ]
+          },
+          {
+            "tier": "Team",
+            "price": "$99",
+            "unit": "/mo",
+            "features": [
+              "Everything in Pro",
+              "A feature",
+              "A feature"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fn": "faq",
+      "id": "faq",
+      "args": {
+        "heading": "Questions",
+        "layout": "list",
+        "items": [
+          {
+            "q": "A common question a real visitor asks?",
+            "a": "A clear, direct answer in one or two sentences."
+          },
+          {
+            "q": "A second question about scope or price?",
+            "a": "A clear, direct answer in one or two sentences."
+          },
+          {
+            "q": "A third question about how it works?",
+            "a": "A clear, direct answer in one or two sentences."
+          },
+          {
+            "q": "A fourth question about getting started?",
+            "a": "A clear, direct answer in one or two sentences."
+          }
+        ]
+      }
+    },
+    {
+      "fn": "contactForm",
+      "args": {
+        "heading": "Get in touch",
+        "sub": "Tell them what to expect — what to send, and how fast you reply."
+      }
+    },
+    {
+      "fn": "ctaBand",
+      "args": {
+        "title": "Ready to start?",
+        "sub": "One encouraging line.",
+        "cta": {
+          "label": "Get started",
+          "href": "#contact"
+        }
+      }
+    }
+  ],
+  "footer": {
+    "brand": "BRAND",
+    "tagline": "One-line tagline.",
+    "year": "2026",
+    "columns": [
+      {
+        "title": "Product",
+        "links": [
+          {
+            "label": "Features",
+            "href": "#features"
+          },
+          {
+            "label": "Pricing",
+            "href": "#pricing"
+          }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          {
+            "label": "Work",
+            "href": "#work"
+          },
+          {
+            "label": "Contact",
+            "href": "#contact"
+          }
+        ]
+      },
+      {
+        "title": "Legal",
+        "links": [
+          {
+            "label": "Privacy",
+            "href": "#top"
+          },
+          {
+            "label": "Terms",
+            "href": "#top"
+          }
+        ]
+      }
+    ]
+  }
+}

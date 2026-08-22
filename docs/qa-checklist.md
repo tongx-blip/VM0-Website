@@ -413,6 +413,22 @@ document.querySelectorAll('.step')[2].classList.add('is-active');
 One row should be sinking behind its rule while the next rises from behind its
 own.
 
+## 4k4. Translucent chrome over an image
+
+Any pill, bar or overlay that floats over a photo cannot be verified by axe —
+the backdrop is an image, so the tool reports it as *incomplete* or flags it
+intermittently depending on what has scrolled under it. It has to be safe by
+construction: compute the effective background against the **lightest** thing it
+can ever sit on (white) and check from there.
+
+```
+rgba(12,15,18,.62) over white → #6B6E71 → white text 4.3:1   ✗
+rgba(12,15,18,.72) over white → #4C4F52 → white text 7.4:1   ✓
+```
+
+Backdrop blur is what makes such a control read as frosted. Transparency is not
+— reach for the blur and keep the fill opaque enough to be legible anywhere.
+
 ## 4l. A marquee actually closes its loop
 
 A track duplicated once is only seamless if **one copy is at least as wide as the

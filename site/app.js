@@ -324,7 +324,21 @@
         }
         row.classList.toggle('is-on', on);
       });
-      if (t < CUE[CUE.length - 1] + 700) oRaf = requestAnimationFrame(oPaint);
+      oSide(t);
+      if (t < CUE[CUE.length - 1] + 900) oRaf = requestAnimationFrame(oPaint);
+    }
+
+    // the two side columns are part of the same run
+    var ostage = ochat.closest('.ostage');
+    var ocards = ostage ? [].slice.call(ostage.querySelectorAll('.ocard')) : [];
+    var owin = ostage ? ostage.querySelector('.tplwin') : null;
+    // connectors are read while Okou is working, and the page it shipped
+    // arrives on the same beat as the result in the chat
+    var SIDE = [700, 1250];
+
+    function oSide(t) {
+      ocards.forEach(function (c, i) { c.classList.toggle('is-on', t >= SIDE[i]); });
+      if (owin) owin.classList.toggle('is-on', t >= CUE[3]);
     }
 
     if ('IntersectionObserver' in window) {
@@ -333,6 +347,7 @@
           if (!e.isIntersecting || oSeen) return;
           oSeen = true;
           ochat.classList.add('is-live');
+          if (ostage) ostage.classList.add('is-live');
           oRaf = requestAnimationFrame(oPaint);
           obs.disconnect();
         });

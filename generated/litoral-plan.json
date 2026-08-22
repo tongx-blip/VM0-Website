@@ -1,0 +1,106 @@
+{
+  "title": "Litoral — a quiet house above the water",
+  "desc": "Eleven rooms on a lime-washed terrace in Cala Blanca. One olive tree, and the sea doing the talking.",
+  "brand": "LITORAL",
+  "navLinks": [
+    { "label": "Rooms", "href": "#rooms" },
+    { "label": "The house", "href": "#house" },
+    { "label": "Table", "href": "#table" }
+  ],
+  "navCta": { "label": "Book", "href": "#book" },
+  "hero": {
+    "wordmark": "LITORAL",
+    "title": "A quiet house above the water",
+    "lead": "Eleven rooms on a lime-washed terrace in Cala Blanca. One olive tree, breakfast late, and the afternoon entirely yours.",
+    "dots": ["Cala Blanca · since 1974"],
+    "ctas": [
+      { "label": "See the rooms", "href": "#rooms" },
+      { "label": "Reserve a night", "href": "#book" }
+    ]
+  },
+  "sections": [
+    {
+      "fn": "gridEditorial",
+      "id": "house",
+      "args": {
+        "eyebrow": "The house",
+        "title": "Built for the hours nobody schedules",
+        "body": [
+          "The terrace was laid in 1974 and has been re-limed every spring since. Nothing about it has been modernised for the sake of it.",
+          "Doors stay open from May. The olive tree is older than the house and the shade it throws is the reason most of the chairs face the way they do."
+        ]
+      }
+    },
+    {
+      "fn": "indexTiles",
+      "id": "rooms",
+      "args": {
+        "heading": "Three ways to stay",
+        "sub": "Every room opens onto the terrace or the water. None of them have a television.",
+        "layout": "grid",
+        "items": [
+          { "title": "Terrace", "caption": "Shuttered doors onto the pool deck, and the olive tree for shade." },
+          { "title": "Garden", "caption": "Rosemary under the window, quietest of the three at night." },
+          { "title": "Sea View", "caption": "Two windows facing east. The light arrives before you do." },
+          { "title": "The Long Room", "caption": "Under the eaves, for anyone staying more than a week." }
+        ]
+      }
+    },
+    {
+      "fn": "steps",
+      "id": "table",
+      "args": {
+        "heading": "The table",
+        "items": [
+          { "title": "Breakfast is late", "body": "Served from nine until it stops. Bread from the village, tomatoes from the terrace, coffee for as long as you sit there." },
+          { "title": "Lunch is whatever came in", "body": "One plate, decided at the market. If the boats had a poor morning, it is vegetables, and it is still good." },
+          { "title": "Dinner is at eight", "body": "Six tables under the tree. Guests eat together unless they would rather not, which is also fine." }
+        ]
+      }
+    },
+    {
+      "fn": "statsBand",
+      "args": {
+        "layout": "band",
+        "eyebrow": "The house in numbers",
+        "items": [
+          { "value": "11", "label": "rooms" },
+          { "value": "1974", "label": "first season" },
+          { "value": "1", "label": "olive tree" },
+          { "value": "40m", "label": "to the water" }
+        ]
+      }
+    },
+    {
+      "fn": "faq",
+      "args": {
+        "heading": "Before you book",
+        "layout": "list",
+        "items": [
+          { "q": "Is there a minimum stay?", "a": "Two nights, and three over the August weekends. Off season, one night is fine." },
+          { "q": "Can we bring a dog?", "a": "Yes, in the Garden and Terrace rooms. There is a bowl by the door already." },
+          { "q": "How do we get there?", "a": "Forty minutes from the airport. We will send a car if you tell us the flight." }
+        ]
+      }
+    },
+    {
+      "fn": "ctaBand",
+      "id": "book",
+      "args": {
+        "title": "Come in the shoulder season",
+        "sub": "May and late September are the best of it — warm water, no queue for the table.",
+        "cta": { "label": "Check the calendar", "href": "#book" }
+      }
+    }
+  ],
+  "footer": {
+    "brand": "LITORAL",
+    "tagline": "Cala Blanca · a quiet house above the water",
+    "year": "2026",
+    "columns": [
+      { "title": "Stay", "links": [ { "label": "Rooms", "href": "#rooms" }, { "label": "The house", "href": "#house" } ] },
+      { "title": "Eat", "links": [ { "label": "The table", "href": "#table" } ] },
+      { "title": "Reach us", "links": [ { "label": "Book a night", "href": "#book" } ] }
+    ]
+  }
+}

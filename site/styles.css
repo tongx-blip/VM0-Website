@@ -4432,10 +4432,14 @@ h3{ font-family:var(--fd); }
 
 .ochat__row--user{ justify-content:flex-end; }
 
-/* the result takes whatever height is left in the panel — the largest it can
-   be without ever running past the bottom, which a fixed aspect ratio cannot
-   promise once the messages above it reflow */
-.ochat__row[data-beat="result"]{ align-items:stretch; flex:1; min-height:0; }
+/* The result takes what is left in the panel, but not more than its own share:
+   filling every remaining pixel made it the only thing you saw and the two
+   messages that set it up stopped reading as a conversation. */
+.ochat__row[data-beat="result"]{
+  align-items:stretch;
+  flex:0 1 auto; min-height:0;
+  max-height:56%;
+}
 
 .ochat__ava{
   width:var(--o-ava); height:var(--o-ava); flex:none;
@@ -4447,7 +4451,7 @@ h3{ font-family:var(--fd); }
 
 .ochat__bubble{
   margin:0; min-width:0;
-  padding:14px 16px;
+  padding:11px 14px;
   border-radius:12px;
   background:var(--paper);
   font-size:var(--t-sm); line-height:1.45;
@@ -4537,6 +4541,64 @@ h3{ font-family:var(--fd); }
 }
 
 
+/* ── the three columns are ONE run ────────────────────────────────
+   They used to be three unrelated pictures sitting in a row: two dead
+   connector cards, a conversation that played to itself, and a window
+   that was simply always there. The section's claim is that you ask
+   once, Okou reaches into the tools you already use, and something real
+   ships — so the columns now say that IN ORDER, off one timeline.
+
+   Reading left to right: the connectors light as Okou reaches for them,
+   the exchange happens, and the page arrives at the moment the result
+   does. Everything below only applies under `.is-live`, so the resting
+   page — reduced motion, no JS, before the observer fires — is the
+   finished state with every column at full strength. */
+.ostage.is-live .ocard{
+  opacity:.55;
+  transform:translateY(6px);
+  transition:opacity 420ms var(--e-out), transform 520ms var(--e-out);
+}
+
+.ostage.is-live .ocard__ic{
+  filter:grayscale(1);
+  transition:filter 520ms var(--e-out);
+}
+
+.ostage.is-live .ocard.is-on{ opacity:1; transform:none; }
+
+.ostage.is-live .ocard.is-on .ocard__ic{ filter:none; }
+
+/* the thread of light that says "this one is being read right now" */
+.ocard{ position:relative; overflow:hidden; }
+
+.ostage.is-live .ocard::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:2px;
+  background:var(--accent-solid);
+  transform:scaleX(0); transform-origin:left;
+}
+
+.ostage.is-live .ocard.is-on::after{
+  animation:ocardRead 900ms var(--e-elegant) forwards;
+}
+
+@keyframes ocardRead{
+  0%  { transform:scaleX(0);   opacity:1 }
+  70% { transform:scaleX(1);   opacity:1 }
+  100%{ transform:scaleX(1);   opacity:0 }
+}
+
+
+/* the window arrives WITH the result, not before it */
+.ostage.is-live .tplwin{
+  opacity:0; transform:translateY(18px) scale(.99);
+  transition:opacity 420ms var(--e-out), transform 680ms var(--e-spring);
+}
+
+.ostage.is-live .tplwin.is-on{ opacity:1; transform:none; }
+
+
 /* ── the page it shipped ── the third column of the reference ──
    The chrome bar is white in the reference, which on a white section makes
    the whole window dissolve into the page. It needs to read as an object:
@@ -4549,8 +4611,19 @@ h3{ font-family:var(--fd); }
   display:flex; flex-direction:column;
   border-radius:var(--o-r, 16px);
   background:var(--o-fill, #F6F6F6);
-  box-shadow:0 1px 2px rgba(12,15,18,.05), 0 18px 44px -22px rgba(12,15,18,.28);
+  /* A shadow alone did not separate a white chrome bar from a white section.
+     A hairline does — it is the product's own window edge, not page furniture,
+     which is why the no-rules audit exempts .tplwin. */
+  box-shadow:
+    0 0 0 1px rgba(12,15,18,.11),
+    0 1px 2px rgba(12,15,18,.05),
+    0 18px 44px -22px rgba(12,15,18,.28);
   overflow:hidden;
+}
+
+/* the published page, as a single tall image the visitor scrolls */
+.tplwin__page{
+  display:block; width:100%; height:auto;
 }
 
 /* the reference's own chrome: three 8px lights, then a pill holding the URL
@@ -4583,28 +4656,40 @@ h3{ font-family:var(--fd); }
    The right column scrolls, and nothing about a still frame says so.
    A chevron on a loop, resting at the foot of the window: it recedes
    the moment you actually scroll, because then it has done its job. */
+/* A pale circle on a pale page was a shape, not an instruction. Dark, frosted
+   and worded, it reads as an affordance — and the blur ties it to whatever it
+   happens to be sitting over as the page scrolls under it. */
 .tplwin__hint{
   position:absolute; z-index:2;
   left:50%; bottom:12px;
-  width:30px; height:30px;
-  display:grid; place-items:center;
-  border-radius:50%;
-  background:rgba(255,255,255,.92);
-  box-shadow:0 1px 2px rgba(12,15,18,.06), 0 8px 20px -10px rgba(12,15,18,.36);
-  color:var(--ink-soft);
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 13px 7px 10px;
+  border-radius:var(--r-pill);
+  /* .62 over a pale photo leaves white text at ~4.3:1 — under AA, and axe
+     cannot compute it because the backdrop is a scrolling image. .72 clears
+     7:1 against the lightest thing it can ever sit on, and the blur is what
+     makes it read as frosted, not the transparency. */
+  background:rgba(12,15,18,.72);
+  -webkit-backdrop-filter:blur(10px) saturate(1.3);
+          backdrop-filter:blur(10px) saturate(1.3);
+  box-shadow:0 6px 20px -8px rgba(12,15,18,.5);
+  color:rgba(255,255,255,.94);
+  font-size:var(--t-meta); line-height:1.2; white-space:nowrap;
   pointer-events:none;
-  animation:tplHint 2.2s var(--e-elegant) infinite;
-  transition:opacity 260ms var(--e-out);
+  animation:tplHint 2.4s var(--e-elegant) infinite;
+  transition:opacity 260ms var(--e-out), transform 260ms var(--e-out);
 }
 
-.tplwin__hint svg{ width:16px; height:16px; }
+.tplwin__hint svg{ width:14px; height:14px; }
+
+.tplwin.is-scrolled .tplwin__hint{ transform:translate(-50%, 6px); }
 
 .tplwin.is-scrolled .tplwin__hint{ opacity:0; }
 
 @keyframes tplHint{
-  0%,100%{ transform:translate(-50%, 0);    opacity:.55 }
-  45%    { transform:translate(-50%, 5px);  opacity:1 }
-  70%    { transform:translate(-50%, 0);    opacity:.85 }
+  0%,100%{ transform:translate(-50%, 0);   opacity:.82 }
+  45%    { transform:translate(-50%, 4px); opacity:1 }
+  70%    { transform:translate(-50%, 0);   opacity:.94 }
 }
 
 
@@ -4617,84 +4702,6 @@ h3{ font-family:var(--fd); }
 .tplwin__scroll::-webkit-scrollbar{ width:5px; }
 
 .tplwin__scroll::-webkit-scrollbar-thumb{ background:rgba(12,15,18,.18); border-radius:99px; }
-
-
-/* the page itself — its own little design system, nothing shared */
-.tpl{
-  --sand:#F6F1E8; --shell:#FBF8F3; --deep:#2F3A36;
-  --sea:#5E8C7D;        /* the accent at display sizes            */
-  --sea-ink:#456B5E;    /* …and its legible sibling for small text */
-  background:var(--shell);
-  color:var(--deep);
-  font-family:"Instrument Sans", system-ui, sans-serif;
-}
-
-.tpl__nav{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 16px;
-  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--deep);
-  background:var(--shell);
-}
-
-.tpl__mark{ font-weight:600; letter-spacing:.26em; }
-
-.tpl__hero{ width:100%; height:210px; object-fit:cover; display:block; }
-
-.tpl__wide{ width:100%; height:150px; object-fit:cover; display:block; }
-
-.tpl__pad{ padding:20px 18px 24px; }
-
-.tpl__eyebrow{
-  margin:0 0 10px;
-  font-size:9px; letter-spacing:.18em; text-transform:uppercase;
-  color:var(--sea-ink);
-}
-
-.tpl__h1{
-  margin:0 0 12px;
-  font-family:"Cormorant Garamond", Georgia, serif;
-  font-size:30px; line-height:1.08; font-weight:500; letter-spacing:-.01em;
-  color:var(--deep);
-}
-
-.tpl__lede{ margin:0; font-size:12px; line-height:1.65; color:rgba(47,58,54,.78); }
-
-.tpl__rooms{ list-style:none; margin:0; padding:0; }
-
-.tpl__rooms li{
-  display:grid; grid-template-columns:minmax(0,1fr) auto;
-  gap:2px 10px;
-  padding:12px 0;
-  border-bottom:1px solid rgba(47,58,54,.12);
-}
-
-.tpl__rooms li:last-child{ border-bottom:0; }
-
-.tpl__rooms b{ grid-column:1; grid-row:1; font-size:13px; font-weight:600; }
-
-.tpl__rooms i{
-  grid-column:1; grid-row:2;
-  font-style:normal; font-size:11px;
-  color:rgba(47,58,54,.7);
-}
-
-.tpl__rooms em{
-  grid-column:2; grid-row:1 / span 2; align-self:center; text-align:right;
-  font-style:normal; font-size:11px; color:var(--sea-ink);
-}
-
-.tpl__quote{
-  margin:0 0 16px;
-  font-family:"Cormorant Garamond", Georgia, serif;
-  font-size:17px; line-height:1.35; color:var(--deep);
-}
-
-.tpl__foot{
-  margin:0;
-  font-size:9px; letter-spacing:.12em; text-transform:uppercase;
-  color:rgba(47,58,54,.55);
-}
 
 
 @media (max-width:1080px){
