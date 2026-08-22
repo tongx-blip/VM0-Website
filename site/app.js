@@ -298,6 +298,53 @@
   if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fitAppWindow).catch(function () {});
   window.addEventListener('load', fitAppWindow);
 
+  /* ── 3d. the Outputs exchange, played once on arrival ─────────
+     Four beats: the ask, Okou thinking, its reply, the page it made.
+     Every beat is in the resting DOM — `.is-live` is added by JS only —
+     so reduced motion and no-JS get the finished exchange. */
+  var ochat = doc.getElementById('ochat');
+  if (ochat && !reduce) {
+    var beats = [].slice.call(ochat.querySelectorAll('.ochat__row'));
+    var CUE = [0, 900, 2100, 3000];          // ms, and the typing row leaves
+                                             // exactly when the reply lands
+    var oT0 = null, oRaf = 0, oSeen = false;
+
+    function oPaint(now) {
+      oRaf = 0;
+      if (oT0 === null) oT0 = now;
+      var t = now - oT0;
+      beats.forEach(function (row, i) {
+        var on = t >= CUE[i];
+        if (row.classList.contains('ochat__row--typing')) {
+          on = t >= CUE[1] && t < CUE[2];    // thinking, then it is replaced
+        }
+        row.classList.toggle('is-on', on);
+      });
+      if (t < CUE[CUE.length - 1] + 700) oRaf = requestAnimationFrame(oPaint);
+    }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting || oSeen) return;
+          oSeen = true;
+          ochat.classList.add('is-live');
+          oRaf = requestAnimationFrame(oPaint);
+          obs.disconnect();
+        });
+      }, { threshold: 0.35 }).observe(ochat);
+    }
+  }
+
+  /* the published page scrolls; the hint stands down once it has been used */
+  var tplwin = doc.querySelector('.tplwin');
+  var tplscroll = tplwin ? tplwin.querySelector('.tplwin__scroll') : null;
+  if (tplwin && tplscroll) {
+    tplscroll.addEventListener('scroll', function () {
+      tplwin.classList.toggle('is-scrolled', tplscroll.scrollTop > 12);
+    }, { passive: true });
+  }
+
   /* ── 4. one scroll loop: header state + step ladder ───────────
      The ladder is a pinned section taller than its own viewport, and how
      far you have scrolled through that pin IS which step is open — one

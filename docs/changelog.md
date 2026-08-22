@@ -6,6 +6,52 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-21 · Outputs rebuilt from the Figma: three columns, a conversation, a hint
+
+Figma node `676:2222` ("Outputs"), one to one on **structure**, adapted on size.
+The tab strip above it is explicitly not from the reference — that stays ours.
+
+**The row is three columns**, at the reference's own proportions (200 : 437 : 330,
+16px gutter, 553px tall) expressed as `fr` so they hold at any width:
+
+| | the reference | here |
+|---|---|---|
+| left | two 200 × 268 panels, `r16`, `#F6F6F6`, 20px pad, space-between | `.ocard` ×2 |
+| middle | 437 × 553, `r16`, a painting behind white bubbles | `.ochat` |
+| right | 330 × 553, chrome bar + the page | `.tplwin` |
+
+**Sizes are adapted, not copied.** The reference is Inter 16px throughout; at our
+measure that reads small, so the roles map onto this page's scale instead
+(`--t-body` for a card title, `--t-sm` for its line and for a bubble,
+`--t-meta` for the result caption) — `docs/design-system.md` §2. Radius is
+`--r-section`, the same 16 the reference uses and the same every card here uses.
+
+**The section is a card now**, like every other one — `.panel--card`, so the
+grey page shows around it and `#outputs` comes off the transparent list.
+
+**The exchange plays.** Four beats over ~3.7s, once, when the panel comes into
+view: the ask arrives, Okou's typing dots appear, the dots are replaced by its
+reply, then the page it built. One rAF timeline, no timers. Every beat is in the
+resting DOM and `.is-live` is added by JS only, so reduced motion and no-JS show
+the finished exchange rather than an empty green panel — the typing row is the
+one thing that stays hidden, because it is a placeholder, not a message.
+
+**The right column says it scrolls.** A chevron on a 2.2s loop rests at the foot
+of the window and steps aside the moment `scrollTop > 12` — once it has been
+used it has done its job. `pointer-events:none`, so it never eats a drag.
+
+**New copy, permitted this round** ("你可以看是用现在网站上的还是重新生成"): Okou's
+reply, "Something simple, then — one page, publishing as soon as it reads right."
+The reference has "something simple" as a second user message; as Okou's answer
+it does more work — it acknowledges the brief and says what happens next, which
+is what makes the panel read as a conversation rather than two captions.
+
+Below 1080 the three columns would be 63px wide on a phone, so the row unstacks:
+the conversation leads, its connectors sit under it two across, the page goes
+last. Below 620 the connectors stack too.
+
+---
+
 ## 2026-08-20 · the product window is laid out at its real size, then scaled
 
 Feedback, verbatim: "我说你可以把界面整个还原然后按比例缩小。你怎么给我做一个

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=91558be4">
+<link rel="stylesheet" href="styles.css?r=7a814c3e">
 </head>
 <body>
 
@@ -82,7 +82,7 @@
 </section>
 
 <!-- ═══════════════ 01 / OUTPUTS ═══════════════ -->
-<section class="panel" id="outputs">
+<section class="panel panel--card" id="outputs">
   <p class="chip reveal">Outputs</p>
 
   <h2 class="display display--center" data-reveal="mask">
@@ -102,152 +102,85 @@
       <div class="scenes__tabs" role="tablist"><button class="scenes__tab is-on" role="tab" data-scene="marketing" aria-selected="true">Storefront Launch</button><button class="scenes__tab" role="tab" data-scene="ads" aria-selected="false">Ad Campaign</button><button class="scenes__tab" role="tab" data-scene="sales" aria-selected="false">Lead Scoring</button><button class="scenes__tab" role="tab" data-scene="engineering" aria-selected="false">Incident Triage</button><button class="scenes__tab" role="tab" data-scene="product" aria-selected="false">Spec Writing</button><button class="scenes__tab" role="tab" data-scene="ops" aria-selected="false">Team Digest</button><button class="scenes__tab" role="tab" data-scene="leadership" aria-selected="false">Board Deck</button></div>
       <div class="scenes__stage">
         <div class="scene scene--built is-on" data-scene="marketing" role="tabpanel">
-          <div class="stage">
+          <!-- the Outputs content, from the Figma (node 676:2222):
+               connectors · the conversation on the painted ground · the page
+               it shipped, in a window the visitor can actually scroll -->
+          <div class="ostage">
 
-            <!-- the product, drawn in code -->
-            <div class="stage__app">
-            <div class="appui">
-              <aside class="appui__side">
-                <div class="appui__wsrow">
-                  <p class="appui__ws">
-                    <span class="appui__wsic"><img src="assets/okou-icon.svg" alt="" width="16" height="16"></span>
-                    <span class="appui__wsname">My Organization</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                  </p>
-                  <span class="appui__collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M9 3v18" /> <path d="m16 15-3-3 3-3" /></svg></span>
-                </div>
-
-                <p class="appui__grp">Manage</p>
-                <ul class="appui__nav">
-                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></svg><span>Agents</span></li>
-                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="3" /> <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /> <circle cx="18" cy="5" r="3" /></svg><span>Workflows</span></li>
-                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5" /> <path d="M15 8V2" /> <path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z" /> <path d="M9 8V2" /></svg><span>Connectors</span></li>
-                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></svg><span>Artifacts</span></li>
-                </ul>
-
-                <div class="appui__sections">
-                <p class="appui__grp">Pinned <em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /> <path d="M12 5v14" /></svg></em></p>
-                <ul class="appui__nav">
-                  <li class="is-on"><img class="appui__av" src="assets/brand/avatar-1.png" alt=""><span>Zero</span></li>
-                </ul>
-
-                <p class="appui__grp">Chats with Zero <em class="appui__dots" aria-hidden="true">&hellip;</em></p>
-                <ul class="appui__nav">
-                  <li class="is-on"><span class="appui__chat">Litoral Coastal Hotel Site</span></li>
-                </ul>
-
-                </div>
-                <div class="appui__foot">
-                  <p class="appui__pro">
-                    <span><b>Get Pro</b><i>More credits &amp; concurrent runs</i></span>
-                    <img src="assets/brand/sticker-draft.png" alt="" width="30" height="30">
-                  </p>
-                  <ul class="appui__nav">
-                    <li><span class="appui__slackbox"><img class="appui__slack" src="assets/connectors/slack.svg" alt="" width="14" height="14"></span><span>Where Zero works</span></li>
-                    <li><img class="appui__av" src="assets/brand/avatar-2.png" alt=""><span>User</span></li>
-                  </ul>
-                </div>
-              </aside>
-
-              <div class="appui__main">
-                <div class="appui__top">
-                  <span class="appui__title">
-                    <img class="appui__av appui__av--sm" src="assets/brand/avatar-1.png" alt="">
-                    Litoral Coastal Hotel Site
-                  </span>
-                  <span class="appui__topact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></svg></span>
-                </div>
-
-                <div class="appui__thread">
-                  <p class="appui__ask">Build a one-page site for a coastal hotel called Litoral: a hero with the
-                    name, a short story, and three room tiles. Keep it minimal and elegant, then publish it and
-                    send me the link.</p>
-
-                  <div class="appui__reply">
-                    <p class="appui__worked">
-                      <img class="appui__av" src="assets/brand/avatar-1.png" alt="">
-                      <span class="appui__workedbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14" /> <path d="M5 2h14" /> <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /> <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /></svg> Worked for 3m <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></span>
-                    </p>
-
-                    <figure class="appui__art">
-                      <figcaption>Litoral</figcaption>
-                      <img src="assets/template/coast-hero.jpg" alt="The page Okou built for Litoral" loading="lazy">
-                    </figure>
-
-                    <p class="appui__say">It&rsquo;s a single, self-contained page built in a minimal editorial
-                      style &mdash; a warm sand palette with a sea-green accent, a Cormorant Garamond serif for
-                      the brand voice, and photography instead of stock illustration. It includes the hero with
-                      the name and tagline, a short story, and three room tiles &mdash; Terrace, Garden and Sea
-                      View &mdash; each with its own description. It&rsquo;s fully responsive, and the source
-                      lives at <a href="#outputs">index.html</a> if you&rsquo;d like any tweaks to copy, colours
-                      or layout.</p>
-                  </div>
-
-                  <span class="appui__jump"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14" /> <path d="m19 12-7 7-7-7" /></svg></span>
-                </div>
-
-                <div class="appui__composer">
-                  <span class="appui__ph">Ask me to automate workflows, manage tasks&hellip;</span>
-                  <span class="appui__bar">
-                    <span class="appui__tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5H3" /> <path d="M12 19H3" /> <path d="M14 3v4" /> <path d="M16 17v4" /> <path d="M21 12h-9" /> <path d="M21 19h-5" /> <path d="M21 5h-7" /> <path d="M8 10v4" /> <path d="M8 12H3" /></svg><span class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /></svg></span></span>
-                    <span class="appui__model"><img src="assets/connectors/deepseek.svg" alt="" width="14" height="14">DeepSeek V4 Flash <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></span>
-                    <span class="appui__mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /> <path d="M19 10v2a7 7 0 0 1-14 0v-2" /> <rect x="9" y="2" width="6" height="13" rx="3" /></svg></span>
-                    <span class="appui__send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /> <path d="M12 19V5" /></svg></span>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- what the run reached into -->
-            </div>
-
-            <div class="stage__right">
-            <aside class="stage__conn">
-              <article class="acard acard--conn" style="--i:1">
-                <span class="acard__ic"><img src="assets/connectors/google-drive_marketing.svg" alt="" width="24" height="24"></span>
-                <span class="acard__txt"><b>Google Drive</b><i>Brand brief read from the shared folder</i></span>
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/google-drive_marketing.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Google Drive</b><i>Brand brief read from the shared folder</i></span>
               </article>
-              <article class="acard acard--conn" style="--i:2">
-                <span class="acard__ic"><img src="assets/connectors/gmail.svg" alt="" width="24" height="24"></span>
-                <span class="acard__txt"><b>Gmail</b><i>Launch announcement drafted, unsent</i></span>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/gmail.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Gmail</b><i>Launch announcement drafted, unsent</i></span>
               </article>
             </aside>
 
-            <!-- what it shipped: a real page, scrollable -->
-            <figure class="tplwin">
-              <figcaption class="tplwin__bar">
-                <i></i><i></i><i></i>
-                <span class="tplwin__url">okou-artifact-litoral-hotel.sites.vm0.io</span>
-              </figcaption>
-              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of the page Okou published">
-                <div class="tpl">
-                  <header class="tpl__nav"><span class="tpl__mark">LITORAL</span><span>Rooms &middot; Table &middot; Book</span></header>
-                  <img class="tpl__hero" src="assets/template/coast-hero.jpg" alt="" loading="lazy">
-                  <div class="tpl__pad">
-                    <p class="tpl__eyebrow">Cala Blanca &middot; Since 1974</p>
-                    <h1 class="tpl__h1">A quiet house<br>above the water</h1>
-                    <p class="tpl__lede">Eleven rooms on a lime-washed terrace, one olive tree, and the sea doing
-                      the talking. Breakfast is late and the afternoon is yours.</p>
-                  </div>
-                  <img class="tpl__wide" src="assets/template/coast-room.jpg" alt="" loading="lazy">
-                  <div class="tpl__pad">
-                    <p class="tpl__eyebrow">The rooms</p>
-                    <ul class="tpl__rooms">
-                      <li><b>Terrace</b><i>Shuttered doors onto the pool deck</i><em>from &euro;180</em></li>
-                      <li><b>Garden</b><i>Rosemary, shade and a stone bath</i><em>from &euro;210</em></li>
-                      <li><b>Sea View</b><i>Two windows, both of them water</i><em>from &euro;260</em></li>
-                    </ul>
-                  </div>
-                  <img class="tpl__wide" src="assets/template/coast-still.jpg" alt="" loading="lazy">
-                  <div class="tpl__pad">
-                    <p class="tpl__quote">&ldquo;We came for two nights and rebooked from the terrace.&rdquo;</p>
-                    <p class="tpl__foot">Litoral &middot; Cala Blanca &middot; hola@litoral.example</p>
-                  </div>
-                </div>
+            <div class="ochat" id="ochat" aria-label="The conversation">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Build a one-page site for a coastal hotel called Litoral: a hero with
+                  the name, a short story, and three room tiles. Keep it minimal and elegant, then publish it
+                  and send me the link.</p>
+                <span class="ochat__ava"><img src="assets/brand/avatar-2.png" alt="" width="48" height="48"></span>
               </div>
-            </figure>
+
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">Something simple, then &mdash; one page, publishing as soon as
+                  it reads right.</p>
+              </div>
+
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Litoral Coastal Hotel Site</figcaption>
+                  <img src="assets/template/coast-hero.jpg" alt="The published Litoral page" loading="lazy">
+                </figure>
+              </div>
             </div>
 
+          <figure class="tplwin">
+            <figcaption class="tplwin__bar">
+              <i></i><i></i><i></i>
+              <span class="tplwin__url">okou-artifact-litoral-hotel.sites.vm0.io</span>
+            </figcaption>
+            <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of the page Okou published">
+              <div class="tpl">
+                <header class="tpl__nav"><span class="tpl__mark">LITORAL</span><span>Rooms &middot; Table &middot; Book</span></header>
+                <img class="tpl__hero" src="assets/template/coast-hero.jpg" alt="" loading="lazy">
+                <div class="tpl__pad">
+                  <p class="tpl__eyebrow">Cala Blanca &middot; Since 1974</p>
+                  <h1 class="tpl__h1">A quiet house<br>above the water</h1>
+                  <p class="tpl__lede">Eleven rooms on a lime-washed terrace, one olive tree, and the sea doing
+                    the talking. Breakfast is late and the afternoon is yours.</p>
+                </div>
+                <img class="tpl__wide" src="assets/template/coast-room.jpg" alt="" loading="lazy">
+                <div class="tpl__pad">
+                  <p class="tpl__eyebrow">The rooms</p>
+                  <ul class="tpl__rooms">
+                    <li><b>Terrace</b><i>Shuttered doors onto the pool deck</i><em>from &euro;180</em></li>
+                    <li><b>Garden</b><i>Rosemary, shade and a stone bath</i><em>from &euro;210</em></li>
+                    <li><b>Sea View</b><i>Two windows, both of them water</i><em>from &euro;260</em></li>
+                  </ul>
+                </div>
+                <img class="tpl__wide" src="assets/template/coast-still.jpg" alt="" loading="lazy">
+                <div class="tpl__pad">
+                  <p class="tpl__quote">&ldquo;We came for two nights and rebooked from the terrace.&rdquo;</p>
+                  <p class="tpl__foot">Litoral &middot; Cala Blanca &middot; hola@litoral.example</p>
+                </div>
+              </div>
+            </div>
+            <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              </span>
+          </figure>
           </div>
         </div>
         <div class="scene" data-scene="ads" role="tabpanel">
@@ -856,6 +789,6 @@
   <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
 </footer>
 
-<script src="app.js?r=993a761d"></script>
+<script src="app.js?r=d611ac97"></script>
 </body>
 </html>

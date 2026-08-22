@@ -515,7 +515,7 @@ h3{ font-family:var(--fd); }
    Order: hero · outputs · [reach card] · workflows · parallel · control ·
    positioning · proof · (cta + footer, ink). Two neighbours must never
    share a ground — it is the only thing separating them. */
-#outputs,#parallel,#positioning{ background:transparent; }
+#parallel,#positioning{ background:transparent; }
 #workflows,#control,#proof{ background:var(--paper); }
 /* this card holds a pinned section, and `overflow:hidden` would make it a
    scroll container and kill the sticky. `clip` clips without doing that. */
@@ -543,7 +543,6 @@ h3{ font-family:var(--fd); }
    and the fill carries them on a wash ground. Only the small pills flip,
    and never in their active state. */
 .tag,.scenes__tab:not(.is-on){ background:var(--wash-2); }
-#outputs .tag,#outputs .scenes__tab:not(.is-on){ background:var(--paper); }
 
 /* ─────────────── 8. hero ───────────────
    The composition rule at full size: one centred stack, then the
@@ -1686,6 +1685,7 @@ h3{ font-family:var(--fd); }
   .scene__side .acard{ flex:1; }
 }
 @media (max-width:620px){
+  .ostage__conn{ grid-template-columns:1fr; }
   .announce{ font-size:10px; letter-spacing:.06em; gap:4px 10px; }
   .scene__side{ flex-direction:column; }
   .step{ grid-template-columns:18px minmax(0,1fr); column-gap:10px; }
@@ -1991,337 +1991,166 @@ h3{ font-family:var(--fd); }
    captured screenshots.
    ================================================================ */
 .scene--built.is-on{ display:block; }
-.stage{
-  position:relative;
-  margin:clamp(72px, 7.4vw, 116px) 0 0;   /* room for the cards above it */
-  padding-bottom:clamp(60px, 7vw, 130px);   /* the page window hangs below */
-}
 
-/* ── the product ──────────────────────────────────────────────────
-   Every value below is the platform's own, read out of vm0-ai/vm0
-   (turbo/packages/ui/src/styles/globals.css and the zero-page views):
-   Noto Sans, the cool gray ramp, --radius 8px, primary-700 #ED4E01,
-   and lucide-react glyphs — Users / Route / Plug / Package for the
-   Manage nav, PanelLeftClose, LayoutGrid, Hourglass + ChevronRight
-   for the run row, Paperclip / Image / SlidersHorizontal / Globe /
-   Mic / ArrowUp in the composer. Nothing here is drawn by hand. */
-/* the scaled window's footprint in the page: app.js sets --app-fit to
-   columnWidth / --app-dw and --app-nh to the window's natural height */
-.stage__app{
-  position:relative;
-  height:calc(var(--app-nh, 800px) * var(--app-fit, .65));
-}
-.stage__app .appui{
-  position:absolute; top:0; left:0;
-  transform:scale(var(--app-fit, .65));
-  transform-origin:top left;
-}
-
-.appui{
-  /* ── PLATFORM TOKENS, read out of vm0-ai/vm0, light theme ──
-     turbo/packages/ui/src/styles/globals.css. Nothing here is chosen. */
-  --p-card:#FFFFFF;        /* --card                                      */
-  --p-side:#F3F5F8;        /* --sidebar            = gray-50              */
-  --p-fg:#14171D;          /* --foreground         = gray-950             */
-  --p-muted:#525B68;       /* --muted-foreground   = gray-800             */
-  --p-border:#DCE1E8;      /* --border             = gray-200             */
-  --p-line:#C5CCD7;        /* gray-400 — the 0.7px card border            */
-  --p-bubble:#E7EBF0;      /* gray-100 — .zero-chat-bubble-user           */
-  --p-primary:#ED4E01;     /* --primary            = primary-700          */
-  /* The interaction ladder is a translucent layer, not a flat grey:
-     --state-layer 215 100% 19% at 5% / 8.5%. Composited onto the sidebar
-     those land here — hover is exactly gray-100, selected is a step past
-     it. The old mock used the HOVER colour for the SELECTED row. */
-  --p-hover:#E7EBF0;
-  --p-selected:#DEE4EB;
-  --p-r:8px;               /* --radius                                    */
-  --p-r-md:6px;            /* --radius-md                                 */
-  --p-r-xl:14px;           /* --radius-xl — rounded-xl, the chat bubble   */
-  --p-r-card:20px;         /* --zero-card-radius     1.25rem              */
-  --p-r-composer:24px;     /* --zero-composer-radius 1.5rem               */
-  --p-shadow:
-    0 2px 12px hsl(220 12% 50% / .04),
-    0 0 0 .5px hsl(220 12% 50% / .02);   /* --zero-card-shadow            */
-
-  --sp:8px;                                    /* px-2, the sidebar inset   */
-  /* THE WINDOW IS LAID OUT AT ITS REAL DESKTOP SIZE — 1280px wide, its own
-     natural height, the thread in the product's centred max-w-[900px]
-     column — and then scaled into the marketing column by ONE factor
-     (app.js measures it, .stage__app holds the scaled footprint). A mock
-     laid out at the marketing column's width is a cramped little window
-     with desktop-sized text in it; a full window scaled down is a product
-     shot. Nothing in here may be clipped, absorbed or faded: at design
-     size everything fits, which is the point. */
-  --app-dw:1280px;
-  width:var(--app-dw);
-  display:grid; grid-template-columns:255px minmax(0,1fr);
-  border-radius:var(--p-r-card);
-  background:var(--p-card);
-  border:.7px solid var(--p-line);
-  box-shadow:var(--p-shadow), 0 30px 64px -30px rgba(12,15,18,.28);
-  overflow:hidden;
-  font-family:"Noto Sans", system-ui, sans-serif;
-  color:var(--p-fg);
-}
-.appui svg{ width:16px; height:16px; flex:none; }
-
-/* ── sidebar ── w-[255px] bg-sidebar, nav px-2 pt-1, footer p-2 ── */
-.appui__side{
-  display:flex; flex-direction:column;
-  padding:8px var(--sp);
-  background:var(--p-side);
-  color:var(--p-fg);
-}
-.appui__sections{ margin-top:8px; }
-/* org switcher: w-full flex items-center gap-2.5 px-2 py-2 rounded-lg */
-.appui__wsrow{ display:flex; align-items:center; gap:0; margin-bottom:4px; }
-.appui__ws{
-  display:flex; align-items:center; gap:10px;
-  flex:1; min-width:0;
-  padding:8px var(--sp);
-  border-radius:var(--p-r);
-  font-size:14px; font-weight:600; line-height:1.25;
-}
-.appui__wsic{
-  width:24px; height:24px; flex:none;
-  display:grid; place-items:center;
-  border-radius:var(--p-r-md);
-  background:#FFE9DE;
-}
-.appui__wsname{ flex:1; min-width:0; }
-.appui__ws svg{ width:16px; height:16px; color:var(--p-fg); }
-.appui__collapse{
-  display:grid; place-items:center;
-  width:32px; height:32px; flex:none;
-  border-radius:var(--p-r);
-  color:var(--p-muted);
-}
-/* section label: h-8 pl-2, text-[13px] font-medium leading-4,
-   text-sidebar-foreground/50 */
-.appui__grp{
-  display:flex; align-items:center; justify-content:space-between;
-  height:32px; margin:0;
-  padding:0 var(--sp) 0 var(--sp);
-  border-radius:var(--p-r);
-  font-size:13px; font-weight:500; line-height:16px;
-  /* the app writes sidebar-foreground/50 here, which is 3.2:1 — inside the
-     product that is the product's call, but this page holds itself to axe 0,
-     so the label steps to the app's own muted-foreground (gray-800, 6.2:1).
-     At this scale the two are indistinguishable; the deviation is stated. */
-  color:var(--p-muted);
-}
-.appui__grp em{ font-style:normal; display:flex; }
-.appui__grp svg{ width:14px; height:14px; }
-.appui__dots{ letter-spacing:.06em; }
-/* nav + thread rows: flex w-full h-8 items-center gap-2 rounded-lg p-2
-   text-sm leading-5 */
-.appui__nav{ list-style:none; margin:0; padding:0;
-  display:flex; flex-direction:column; gap:4px; }
-.appui__nav li{
-  display:flex; align-items:center; gap:8px;
-  height:32px;
-  padding:0 var(--sp);
-  border-radius:var(--p-r);
-  font-size:14px; line-height:20px;
-  color:var(--p-fg);
-}
-.appui__nav li svg{ color:var(--p-fg); }
-.appui__nav li.is-on{ background:var(--p-selected); font-weight:500; }
-.appui__nav + .appui__grp{ margin-top:8px; }
-.appui__av{ width:20px; height:20px; border-radius:50%; object-fit:cover; flex:none; }
-.appui__av--sm{ width:20px; height:20px; }
-.appui__chat{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.appui__foot{ margin-top:auto; padding-top:8px; }
-/* SidebarUpgradeCard: gap-3 p-2.5, zero-card at 12px, its own softer shadow */
-.appui__pro{
-  display:flex; align-items:center; gap:12px;
-  padding:10px;
-  margin:0 0 8px;
-  border-radius:12px;
-  border:.7px solid var(--p-line);
-  background:var(--p-card);
-  box-shadow:0 1px 2px hsl(220 12% 20% / .04), 0 4px 12px hsl(220 12% 20% / .03);
-}
-.appui__pro span{ display:block; min-width:0; flex:1; }
-.appui__pro b{ display:block; font-size:14px; font-weight:500; color:var(--p-fg); }
-.appui__pro i{
-  display:block; margin-top:2px;
-  font-style:normal; font-size:11px; color:var(--p-muted);
-}
-.appui__pro img{ width:56px; height:56px; flex:none; object-fit:contain; margin:-12px 0; }
-/* FOOTER_NAV: the Slack mark ships with heavy internal padding, so the app
-   draws it at h-3.5 w-3.5 scale-[2.2] inside a 14px box */
-.appui__slackbox{
-  width:16px; height:16px; flex:none;
-  display:grid; place-items:center; overflow:visible;
-}
-.appui__slack{ width:14px; height:14px; transform:scale(2.2); }
-/* the h-px bg-border/30 mx-1 my-1 above the account row */
-.appui__foot hr{
-  height:1px; margin:4px; border:0;
-  background:color-mix(in srgb, var(--p-border) 30%, transparent);
-}
-
-/* ── the thread ── */
-.appui__main{ display:flex; flex-direction:column; min-width:0; }
-.appui__top{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:14px 24px;
-  font-size:14px; font-weight:500;
-}
-.appui__title{ display:flex; align-items:center; gap:10px; min-width:0; }
-.appui__topact{ display:flex; align-items:center; gap:14px; color:var(--p-muted); }
-/* the product's own thread column: max-w-[900px] centred, px-6 on the
-   scroll region, gap-6 between messages */
-.appui__thread{
-  width:100%; max-width:calc(900px + 48px);
-  margin-inline:auto;
-  display:flex; flex-direction:column; gap:24px;
-  padding:12px 24px 16px;
-}
-/* zero-chat-bubble-user: rounded-xl max-w-[85%] text-[0.9375rem]
-   leading-[1.7], background gray-100 */
-.appui__ask{
-  align-self:flex-end; max-width:85%;
-  margin:0;
-  padding:12px 16px;
-  border-radius:var(--p-r-xl);
-  background:var(--p-bubble);
-  font-size:15px; line-height:1.7;
-}
-.appui__reply{ display:flex; flex-direction:column; gap:12px; }
-/* the run row: mt-1.5 inline-flex min-h-9 items-center gap-2 rounded-lg
-   px-2 py-1.5 text-muted-foreground, Hourglass 14 + text-[13px] +
-   ChevronRight 14 at 70% */
-.appui__worked{
-  display:flex; align-items:center; gap:10px;
-  color:var(--p-muted);
-}
-.appui__workedbtn{
-  display:inline-flex; align-items:center; gap:8px;
-  min-height:36px; padding:6px 8px;
-  border-radius:var(--p-r);
-  font-size:13px;
-}
-.appui__workedbtn svg{ width:14px; height:14px; }
-.appui__workedbtn svg:last-child{ color:color-mix(in srgb, var(--p-muted) 70%, transparent); }
-/* zero-card: 0.7px gray-400, --zero-card-radius, --zero-card-shadow */
-.appui__art{
-  margin:0; width:min(100%, 340px);
-  border-radius:var(--p-r-card);
-  border:.7px solid var(--p-line);
-  background:var(--p-card);
-  box-shadow:var(--p-shadow);
-  overflow:hidden;
-}
-.appui__art figcaption{
-  padding:12px 14px 10px;
-  font-size:14px; font-weight:500; color:#2563EB;
-}
-.appui__art img{ display:block; width:100%; height:190px; object-fit:cover; }
-.appui__say{ margin:0; font-size:15px; line-height:1.7; color:var(--p-fg); }
-.appui__say a{ color:#2563EB; }
-.appui__jump{
-  align-self:center; margin-top:auto;
-  width:32px; height:32px; flex:none;
-  display:grid; place-items:center;
-  border-radius:50%;
-  border:.7px solid var(--p-line);
-  background:var(--p-card);
-  color:var(--p-muted);
-}
-/* .zero-composer: white, 0.7px gray-400, 1.5rem radius, card shadow */
-.appui__composer{
-  display:flex; flex-direction:column; gap:12px;
-  width:calc(100% - 48px); max-width:900px;
-  margin:0 auto 20px;
-  padding:14px 12px 10px;
-  border-radius:var(--p-r-composer);
-  border:.7px solid var(--p-line);
-  background:var(--p-card);
-  box-shadow:var(--p-shadow);
-  font-size:15px; color:var(--p-muted);
-}
-.appui__ph{ padding:2px 6px 10px; }
-.appui__bar{ display:flex; align-items:center; gap:6px; }
-/* Button variant="quiet" size="icon-sm": h-8 w-8, muted, 16px glyph */
-.appui__tools{ display:flex; align-items:center; gap:2px; color:var(--p-muted); }
-.appui__tools > svg,
-.appui__tools > span{
-  width:32px; height:32px; flex:none;
-  display:grid; place-items:center;
-  border-radius:var(--p-r);
-}
-.appui__tools .is-on{ color:var(--p-primary); }
-/* Button variant="outline" size="sm": h-8 px-3, 0.7px gray-400, text-sm */
-.appui__model{
-  display:flex; align-items:center; gap:8px;
-  margin-left:auto;
-  height:32px; padding:0 12px;
-  border-radius:var(--p-r);
-  border:.7px solid var(--p-line);
-  background:var(--p-card);
-  font-size:14px; font-weight:500; color:var(--p-fg);
-  white-space:nowrap;
-}
-.appui__model svg{ width:16px; height:16px; color:var(--p-muted); }
-.appui__mic{
-  width:32px; height:32px; flex:none;
-  display:grid; place-items:center;
-  border-radius:var(--p-r);
-  color:var(--p-muted);
-}
-/* Button size="icon-sm": h-8 w-8 rounded-lg bg-primary, ArrowUp 18 */
-.appui__send{
-  width:32px; height:32px; flex:none;
-  display:grid; place-items:center;
-  border-radius:var(--p-r);
-  background:var(--p-primary); color:#fff;
-}
-.appui__send svg{ width:18px; height:18px; }
-
-/* ── the layout ────────────────────────────────────────────────────
-   Two columns on one grid, not three absolutely-positioned pieces.
-   The right column is ONE width: the two connector cards share it with
-   a single gap between them, and that same gap is the distance down to
-   the published page. Everything on the right therefore lines up on the
-   same two edges, and the whole column is a little taller than the
-   product beside it. */
-.stage{
-  --stage-gap:clamp(20px, 2.4vw, 34px);   /* between the two columns  */
-  --conn-gap:clamp(12px, 1.3vw, 18px);    /* inside the right column  */
-  /* the rendered height of the scaled window — app.js keeps it current */
-  --app-h:calc(var(--app-nh, 800px) * var(--app-fit, .65));
-  position:relative;
-  margin:clamp(40px, 4.4vw, 64px) 0 0;
+/* ── the Outputs content ───────────────────────────────────────────
+   Figma node 676:2222, one to one on structure: three columns on one
+   row — the connectors it reached into, the conversation on a painted
+   ground, and the page it shipped. The reference's own 999 × 553 with
+   a 16px gutter, scaled to this page's measure; its 16px Inter maps
+   onto our reading scale rather than being copied literally, because
+   at our width the literal 16 reads small (docs/design-system.md §2).
+   The tab strip above is NOT from the reference — that stays ours. */
+.ostage{
+  --o-gap:clamp(14px, 1.6vw, 20px);        /* 16 · between the columns   */
+  --o-pad:clamp(16px, 1.9vw, 24px);        /* 20/32 · inside a panel     */
+  --o-r:var(--r-section);                  /* 16 · every panel's corner  */
+  --o-fill:#F6F6F6;                        /* the reference's panel grey */
+  --o-h:clamp(420px, 40vw, 553px);         /* 553 · the row's height     */
+  --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
+  margin-top:clamp(28px, 3.2vw, 44px);
   display:grid;
-  grid-template-columns:minmax(0, 1fr) clamp(260px, 30%, 400px);
-  gap:var(--stage-gap);
-  align-items:center;                      /* the taller column overhangs
-                                              evenly, top and bottom     */
+  grid-template-columns:minmax(0,200fr) minmax(0,437fr) minmax(0,330fr);
+  gap:var(--o-gap);
+  height:var(--o-h);
+  align-items:stretch;
 }
-.stage__right{
-  display:flex; flex-direction:column;
-  gap:var(--conn-gap);
-  height:calc(var(--app-h) + 2 * var(--conn-gap));
+
+/* ── what the run reached into ── 200 wide, two panels, 16 apart ── */
+.ostage__conn{
+  display:grid; grid-template-rows:1fr 1fr;
+  gap:var(--o-gap);
+  min-width:0;
 }
-.stage__conn{
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:var(--conn-gap);
+.ocard{
+  display:flex; flex-direction:column; justify-content:space-between;
+  gap:10px;
+  padding:var(--o-pad);
+  border-radius:var(--o-r);
+  background:var(--o-fill);
+  min-width:0;
+}
+.ocard__ic{
+  display:block; width:var(--o-ava); height:var(--o-ava);
   flex:none;
 }
-.stage__conn .acard{ width:auto; }
-.scene--built .acard{ padding:12px 13px; }
+.ocard__ic img{ width:100%; height:100%; object-fit:contain; display:block; }
+.ocard__txt{ display:block; min-width:0; }
+.ocard__txt b{
+  display:block;
+  font-size:var(--t-body); font-weight:500; line-height:1.25;
+  color:var(--ink);
+}
+.ocard__txt i{
+  display:block; margin-top:8px;
+  font-style:normal;
+  font-size:var(--t-sm); line-height:1.4;
+  color:var(--ink-soft);
+}
 
-/* ── the page it shipped ── */
+/* ── the conversation, on the painted ground ──
+   The reference fills this panel with one of the brand paintings and
+   floats the exchange on top. Same grounds the ladder uses, same
+   computed veil: a painting at full strength eats white bubbles. */
+.ochat{
+  position:relative;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  gap:clamp(10px, 1.1vw, 14px);
+  padding:var(--o-pad);
+  border-radius:var(--o-r);
+  overflow:hidden;
+  min-width:0;
+  background:var(--o-fill);
+}
+.ochat::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url(assets/ground/run-green.jpg);
+  background-size:cover; background-position:center;
+}
+.ochat::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(rgba(12,15,18,.14), rgba(12,15,18,.14));
+}
+.ochat__row{
+  position:relative; z-index:1;
+  /* the reference aligns an avatar to the TOP of the message it belongs to,
+     which is what keeps a tall bubble from dragging its avatar to the floor */
+  display:flex; align-items:flex-start; gap:10px;
+  max-width:100%;
+}
+.ochat__row--user{ justify-content:flex-end; }
+.ochat__ava{
+  width:var(--o-ava); height:var(--o-ava); flex:none;
+  border-radius:50%; overflow:hidden;
+  background:var(--paper);
+}
+.ochat__ava img{ width:100%; height:100%; object-fit:cover; display:block; }
+.ochat__bubble{
+  margin:0; min-width:0;
+  padding:14px 16px;
+  border-radius:12px;
+  background:var(--paper);
+  font-size:var(--t-sm); line-height:1.45;
+  color:var(--ink);
+}
+.ochat__row--user .ochat__bubble{ max-width:78%; }
+.ochat__row--okou .ochat__bubble{ max-width:72%; }
+
+/* the result, as the reference draws it: a titled card holding the page */
+.oresult{
+  margin:0; min-width:0; max-width:78%;
+  border-radius:12px;
+  background:var(--paper);
+  overflow:hidden;
+}
+.oresult figcaption{
+  padding:9px 12px;
+  font-size:var(--t-meta); line-height:1.25;
+  color:var(--ink);
+}
+.oresult img{
+  display:block; width:100%; height:clamp(96px, 11vw, 150px);
+  object-fit:cover; object-position:top;
+}
+
+/* ── the exchange plays, so it reads as a conversation ──
+   One rAF timeline in app.js sets --beat 0…3. Every beat is present in
+   the resting DOM, so reduced motion and no-JS show the finished
+   exchange rather than an empty panel. */
+.ochat__row{
+  transition:opacity 320ms var(--e-out), transform 460ms var(--e-out);
+}
+.ochat.is-live .ochat__row{ opacity:0; transform:translateY(10px); }
+.ochat.is-live .ochat__row--user{ transform:translateY(10px) translateX(8px); }
+.ochat.is-live .ochat__row.is-on{ opacity:1; transform:none; }
+.ochat__row--typing{ display:none; }
+.ochat.is-live .ochat__row--typing{ display:flex; }
+.ochat.is-live .ochat__row--typing:not(.is-on){ display:none; }
+.ochat__bubble--typing{
+  display:flex; align-items:center; gap:5px;
+  padding:16px;
+}
+.ochat__bubble--typing i{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--ink-mute);
+  animation:oType 1.25s var(--e-elegant) infinite;
+}
+.ochat__bubble--typing i:nth-child(2){ animation-delay:.16s; }
+.ochat__bubble--typing i:nth-child(3){ animation-delay:.32s; }
+@keyframes oType{
+  0%,60%,100%{ transform:translateY(0); opacity:.45 }
+  30%        { transform:translateY(-4px); opacity:1 }
+}
+
+/* ── the page it shipped ── the third column of the reference ── */
 .tplwin{
-  flex:1; min-height:0;
+  position:relative;
+  min-height:0; height:100%;
   width:100%; margin:0;
   display:flex; flex-direction:column;
-  border-radius:var(--p-r-card, 20px);
-  background:var(--paper);
-  box-shadow:0 2px 12px hsl(220 12% 50% / .04),
-             0 30px 64px -30px rgba(12,15,18,.28);
+  border-radius:var(--o-r, 16px);
+  background:var(--o-fill, #F6F6F6);
   overflow:hidden;
 }
 .tplwin__bar{
@@ -2339,6 +2168,31 @@ h3{ font-family:var(--fd); }
   font-family:var(--fm); font-size:9.5px; color:var(--ink-mute);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
+/* ── the hint ──────────────────────────────────────────────────────
+   The right column scrolls, and nothing about a still frame says so.
+   A chevron on a loop, resting at the foot of the window: it recedes
+   the moment you actually scroll, because then it has done its job. */
+.tplwin__hint{
+  position:absolute; z-index:2;
+  left:50%; bottom:12px;
+  width:30px; height:30px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 1px 2px rgba(12,15,18,.06), 0 8px 20px -10px rgba(12,15,18,.36);
+  color:var(--ink-soft);
+  pointer-events:none;
+  animation:tplHint 2.2s var(--e-elegant) infinite;
+  transition:opacity 260ms var(--e-out);
+}
+.tplwin__hint svg{ width:16px; height:16px; }
+.tplwin.is-scrolled .tplwin__hint{ opacity:0; }
+@keyframes tplHint{
+  0%,100%{ transform:translate(-50%, 0);    opacity:.55 }
+  45%    { transform:translate(-50%, 5px);  opacity:1 }
+  70%    { transform:translate(-50%, 0);    opacity:.85 }
+}
+
 .tplwin__scroll{
   flex:1; min-height:0;
   overflow-y:auto; overscroll-behavior:contain;
@@ -2409,6 +2263,23 @@ h3{ font-family:var(--fd); }
 }
 
 @media (max-width:1080px){
+  /* Three columns of a 999px reference do not survive being squeezed into a
+     phone: the connectors would be 63px wide. The row unstacks instead —
+     the conversation leads, its connectors sit under it two across, and the
+     page it shipped goes last, each at the full width. */
+  .ostage{
+    grid-template-columns:minmax(0,1fr);
+    height:auto;
+    gap:var(--o-gap);
+  }
+  .ostage__conn{
+    order:2;
+    grid-template-rows:none; grid-template-columns:1fr 1fr;
+  }
+  .ochat{ order:1; min-height:clamp(360px, 62vw, 470px); }
+  .tplwin{ order:3; height:clamp(340px, 58vw, 460px); }
+  .ocard{ min-height:0; }
+
   /* one column: the product, then the same right-hand block underneath it,
      still sharing its two edges and its one gap */
   .stage{ grid-template-columns:minmax(0,1fr); }
