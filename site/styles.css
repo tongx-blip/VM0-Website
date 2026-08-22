@@ -826,64 +826,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   align-items:center;
 }
 
-.scene__ui{ min-width:0; }
-
-.scene__shot{
-  width:100%; height:auto;
-  border:1px solid var(--hairline);
-  border-radius:var(--r-card);
-  background:var(--paper);
-  box-shadow:0 2px 6px rgba(0,0,0,.05), 0 22px 52px -24px rgba(0,0,0,.30);
-}
-
-.scene__side{ display:flex; flex-direction:column; gap:12px; min-width:0; }
-
-
-/* the artifact cards, re-played on every tab switch */
-.acard{
-  display:flex; align-items:center; gap:12px;
-  padding:14px;
-  border:1px solid var(--hairline);
-  border-radius:var(--r-card);
-  background:var(--paper);
-  box-shadow:0 1px 2px rgba(0,0,0,.03), 0 12px 30px -18px rgba(0,0,0,.22);
-  transition:transform .2s var(--ease), box-shadow .2s;
-}
-
-.acard:hover{ transform:translateY(-3px); box-shadow:0 2px 6px rgba(0,0,0,.05), 0 20px 44px -20px rgba(0,0,0,.3); }
-
 .scene.is-on .acard{ animation:acardIn .5s var(--ease) both; animation-delay:calc(var(--i) * .09s); }
-
-.scene__side--l .acard{ --from:-16px; }
-
-.scene__side--r .acard{ --from:16px; }
 
 @keyframes acardIn{
   from{ opacity:0; transform:translateX(var(--from,0)) translateY(6px); }
   to{ opacity:1; transform:none; }
-}
-
-/* published artifacts show the deliverable itself */
-.acard--thumb{ flex-direction:column; align-items:stretch; gap:10px; padding:10px 10px 12px; }
-
-.acard__img{
-  width:100%; height:auto; display:block;
-  border:1px solid var(--hairline);
-  border-radius:10px;
-  background:#fff;
-}
-
-.acard--thumb .acard__txt{ padding:0 4px; }
-
-.acard__txt{ display:flex; flex-direction:column; line-height:1.35; min-width:0; }
-
-.acard__txt b{ font-size:13.5px; font-weight:600; letter-spacing:-.01em; }
-
-.acard__txt i{
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-style:normal; font-size:10.5px; letter-spacing:.04em;
-  color:var(--ink-mute);
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 
 .okoui__side ul li.is-on{ color:var(--ink); font-weight:600; }
@@ -891,21 +838,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 @media (max-width:1080px){
   .scene.is-on{ grid-template-columns:1fr; }
-
-  .scene__side{ flex-direction:row; }
-
-  .scene__side .acard{ flex:1; }
-
-  .scene__side--l{ order:2; }
-
-  .scene__ui{ order:1; }
-
-  .scene__side--r{ order:3; }
-
-}
-
-@media (max-width:640px){
-  .scene__side{ flex-direction:column; }
 
 }
 
@@ -1011,83 +943,9 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .slackui__filetxt i{ font-style:normal; font-size:12px; color:#616061; }
 
-a.acard{ text-decoration:none; color:inherit; }
-
-a.acard:hover{ border-color:var(--blue); }
-
-a.acard .acard__txt i{ color:var(--ink); }
-
-
-/* connector step cards: which tool the run actually reached into */
-.acard--conn .acard__ic{ background:#fff; }
-
-.acard__ic--slack img{ transform:scale(1.35); }
-
-.acard--conn .acard__txt i{ white-space:normal; line-height:1.4; }
-
-/* connector marks: percentage-sized SVGs need a fixed box to paint into */.acard__ic img,.perms__list img,.vs__label img{ width:100%; height:100%; }
-
-.acard__ic img{ width:22px; height:22px; }
+/* connector marks: percentage-sized SVGs need a fixed box to paint into */.perms__list img,.vs__label img{ width:100%; height:100%; }
 
 .vs__label img{ width:20px; height:20px; }
-
-/* deliverable thumbnails are full-page renders, so crop to the masthead */
-.acard__img{ aspect-ratio:16/10; object-fit:cover; object-position:top center; }
-
-
-/* ─────────── deliverable card: a browsable page, not a thumbnail ───────── */
-.scene__side--l{ left:clamp(20px, 5vw, 96px); }
-
-.scene__side--r{ right:clamp(20px, 4vw, 72px); }
-
-.scene__side--r{ width:clamp(300px, 30vw, 430px); }
-
-
-.acard--thumb{
-  padding:0; gap:0; overflow:hidden;
-  box-shadow:0 6px 16px rgba(0,0,0,.10), 0 40px 80px -28px rgba(0,0,0,.42);
-}
-
-.acard--thumb:hover{ transform:translateY(-5px); }
-
-.acard__chrome{
-  display:flex; align-items:center; gap:6px;
-  padding:11px 14px;
-  background:#fff;
-  border-bottom:1px solid var(--hairline);
-}
-
-.acard__chrome i{ width:9px; height:9px; border-radius:50%; background:rgba(0,0,0,.14); flex:none; }
-
-.acard__chrome i:first-child{ background:var(--orange); }
-
-.acard__chrome i:nth-child(2){ background:var(--yellow); }
-
-.acard__chrome i:nth-child(3){ background:var(--green); }
-
-.acard__url{
-  flex:1; margin-left:8px;
-  padding:4px 10px; border-radius:var(--r-pill);
-  background:var(--paper-2);
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:10px; color:var(--ink-mute);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-
-.acard--thumb .acard__img{
-  border:0; border-radius:0;
-  aspect-ratio:4/3;
-}
-
-.acard--thumb .acard__txt{
-  padding:16px 18px 18px;
-  border-top:1px solid var(--hairline);
-  background:#fff;
-}
-
-.acard--thumb .acard__txt b{ font-size:18px; letter-spacing:-.02em; }
-
-.acard--thumb .acard__txt i{ font-size:12.5px; color:var(--ink); }
 
 
 /* ─────────── workflow stage: one abstract UI per step ─────────── */
@@ -2099,7 +1957,7 @@ img{ filter:none; }
 
 /* radius policy, restated in one place */
 .panel{ border-radius:0; }
-.feat,.vs,.quote,.perms,.slackui,.absui,.acard,.scene__shot,.a2a__card,.a2a__ask{
+.feat,.vs,.quote,.perms,.slackui,.absui,.a2a__card,.a2a__ask{
   border-radius:var(--r-card);
 }
 .btn{ border-radius:var(--r-btn); }
@@ -2109,7 +1967,7 @@ img{ filter:none; }
 
 
 /* every page-level rule inherited from the component layer comes off:
-   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,.metrics li,.step,.nav,.panel,.perms__list,.a2a__ask{
+   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.footnote,.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.metrics,.metrics li,.step,.nav,.panel,.perms__list,.a2a__ask{
   border:0;
 }
 .hero__body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
@@ -2156,7 +2014,7 @@ h3{ font-family:var(--fd); }
 
 
 /* utility face: labels, data, captions, controls — the signal that a
-   string is metadata and not prose */.chip,.footnote,.metrics span,.vs__label,.state,.quote__tag,.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,.footer__links,.footer__links a,.footer__copy,.a2a__step,.a2a__label,.a2a__back{
+   string is metadata and not prose */.chip,.footnote,.metrics span,.vs__label,.state,.quote__tag,.nav__links a,.nav__signin,.btn,.linkline a,.footer__links,.footer__links a,.footer__copy,.a2a__step,.a2a__label,.a2a__back{
   font-family:var(--fm);
   font-weight:500;
   text-transform:uppercase;
@@ -2183,9 +2041,16 @@ h3{ font-family:var(--fd); }
   color:var(--ink-mute);
 }
 
+/* A caveat under a KPI row must not be dressed as a fourth label. In the
+   utility face, uppercase and letter-spaced it read as another stat; in prose
+   at caption size it reads as what it is — a note about the numbers above.
+   (dataviz: the stat-tile contract is label + value, and nothing else in the
+   row may borrow the label's clothes.) */
 .footnote{
-  margin-top:14px;
-  font-size:var(--t-mono);
+  margin-top:clamp(18px, 2vw, 26px);
+  font-family:var(--fb);
+  font-size:var(--t-meta);
+  letter-spacing:0; text-transform:none;
   color:var(--ink-mute);
 }
 
@@ -2657,6 +2522,12 @@ h3{ font-family:var(--fd); }
    used twice, rather than two ways of saying "how far through". */
 .tabs{
   position:relative;
+  /* The strip is deliberately narrower than the section. Seven tabs across
+     the full width read as a menu you are meant to scan; a short window with
+     the selection at its centre reads as a reel you are moving through, and
+     the fade at each end is what says there is more of it. */
+  max-width:min(100%, 720px);
+  margin-inline:auto;
   overflow:hidden;
   /* the rail can be wider than the section, so the ends fade rather than
      being cut off square */
@@ -2734,74 +2605,15 @@ h3{ font-family:var(--fd); }
   position:static; padding:0;
 }
 
-.scene__ui{ min-width:0; width:auto; margin:0; }
-
-.scene__shot{
-  width:100%; height:auto;
-  border:0;
-  background:var(--paper);
-  box-shadow:var(--e-3);
-}
-
-.scene__side{
-  position:static; transform:none; width:auto; z-index:auto;
-  display:flex; flex-direction:column; gap:12px; min-width:0;
-}
-
-.acard{
-  padding:15px;
-  border:0;
-  background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.04), 0 16px 34px -24px rgba(12,15,18,.24);
-  transition:transform var(--t-hover) var(--e-snap),
-             box-shadow var(--t-hover) var(--e-snap);
-}
-
-.acard:hover{
-  transform:translateY(-3px);
-  box-shadow:0 2px 6px rgba(12,15,18,.06), 0 26px 48px -26px rgba(12,15,18,.32);
-}
-
-.acard__ic{
-  width:40px; height:40px; flex:none;
-  display:grid; place-items:center;
-  border:0; border-radius:var(--r-btn);
-  background:var(--wash);
-}
-
-.acard__ic img{ width:22px; height:22px; }
-
-.acard__txt b{ font-family:var(--fb); font-size:14.5px; font-weight:600; letter-spacing:-.012em; color:var(--ink); }
-
-.acard__txt i{
-  font-size:11px; letter-spacing:.03em; text-transform:none;
-  color:var(--ink-mute); white-space:normal; line-height:1.45;
-}
-
-.acard--thumb{ padding:0; gap:0; overflow:hidden; }
-
-.acard--thumb .acard__txt{ padding:14px 16px 16px; }
-
-.acard--thumb .acard__txt b{ font-size:16px; letter-spacing:-.02em; }
-
-.acard--thumb .acard__txt i{ font-size:11px; color:var(--ink-mute); }
-
-.acard__url{
-  font-size:9.5px; letter-spacing:.02em; text-transform:none;
-  background:var(--wash-2); color:var(--ink-soft);
-}
-
-.acard__chrome{ background:var(--paper); border-bottom:0; }
-
-.acard__chrome i{ background:var(--g-600); }
-
-.acard__chrome i:first-child{ background:var(--accent); }
-
 
 /* ─────────────── 11. metrics: one ruled data row ─────────────── */
+/* Three figures spread across a 1300px card stop reading as one group —
+   they become three unrelated statements. The row keeps its own measure so
+   the eye takes them together. (dataviz: a KPI row is a row.) */
 .metrics{
   display:grid; grid-template-columns:repeat(3, 1fr);
-  gap:var(--gutter);
+  gap:clamp(20px, 3vw, 52px);
+  max-width:760px; margin-inline:auto;
   margin-top:clamp(48px,5vw,72px);
   border:0; border-radius:0; overflow:visible;
   background:transparent;
@@ -3772,10 +3584,6 @@ h3{ font-family:var(--fd); }
 /* the scene cards re-play on every tab switch, from their own side */
 .scene.is-on .acard{ animation:acardIn 520ms var(--e-out) both; animation-delay:calc(var(--i) * .08s); }
 
-.scene__side--l .acard{ --from:-14px; }
-
-.scene__side--r .acard{ --from:14px; }
-
 @keyframes acardIn{
   from{ opacity:0; transform:translate(var(--from,0), 8px); }
   to{ opacity:1; transform:none; }
@@ -3858,12 +3666,6 @@ h3{ font-family:var(--fd); }
 
   .scene.is-on{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); }
 
-  .scene__side--l{ order:2; }
-
-  .scene__ui{ order:1; grid-column:1 / 3; }
-
-  .scene__side--r{ order:3; }
-
 }
 
 /* the component layer drops the Slack channel column at this width, but a
@@ -3942,18 +3744,10 @@ h3{ font-family:var(--fd); }
 
   .scene.is-on{ grid-template-columns:1fr; }
 
-  .scene__ui{ grid-column:auto; }
-
-  .scene__side{ flex-direction:row; }
-
-  .scene__side .acard{ flex:1; }
-
 }
 
 @media (max-width:620px){
   .ostage__conn{ grid-template-columns:1fr; }
-
-  .scene__side{ flex-direction:column; }
 
   .step{ grid-template-columns:18px minmax(0,1fr); column-gap:10px; }
 
@@ -4232,11 +4026,15 @@ h3{ font-family:var(--fd); }
   color:var(--ink);
 }
 
+/* PROPORTIONAL figures at display size. `tabular-nums` gives every digit the
+   width of a zero, which is right in a column of numbers that must align and
+   wrong on a standalone figure — at 56px a "14" set tabular reads loose and
+   mechanical. Tabular is for tables. (dataviz: marks-and-anatomy.) */
 .metrics b i{
   font-style:normal; font-weight:500;
   font-size:var(--t-figure);
   line-height:1; letter-spacing:-.045em;
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric:proportional-nums;
 }
 
 .metrics b em{
@@ -4324,7 +4122,7 @@ h3{ font-family:var(--fd); }
 
 /* ── brand marks never stretch ─────────────────────────────────────
    Several connector SVGs are not square (Gmail is 4:3). Anywhere we
-   put one in a fixed box it has to letterbox, not squash. */.acard__ic img,.perms__list img,.vs__label img,.logo img,.btn img{
+   put one in a fixed box it has to letterbox, not squash. */.perms__list img,.vs__label img,.logo img,.btn img{
   object-fit:contain;
 }
 
@@ -4424,17 +4222,25 @@ h3{ font-family:var(--fd); }
   background:var(--o-fill);
 }
 
+/* the ground is per-tab: each scene sets --ground, and --veil computed from
+   that painting's own mean luminance so every one lands the bubbles on the
+   same value (docs/design-system.md §15) */
 .ochat::before{
   content:"";
   position:absolute; inset:0;
-  background-image:url(assets/ground/run-green.jpg);
+  background-image:var(--ground, url(assets/ground/run-green.jpg));
   background-size:cover; background-position:center;
+  filter:saturate(var(--sat, 1));
 }
 
 .ochat::after{
   content:"";
   position:absolute; inset:0;
-  background:linear-gradient(rgba(12,15,18,.14), rgba(12,15,18,.14));
+  background:
+    radial-gradient(120% 96% at 50% 46%,
+      rgba(12,15,18, calc(var(--veil, .14) * .5)), transparent 74%),
+    linear-gradient(rgba(12,15,18, var(--veil, .14)),
+                    rgba(12,15,18, var(--veil, .14)));
 }
 
 .ochat__row{

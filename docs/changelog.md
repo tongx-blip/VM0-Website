@@ -6,6 +6,56 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · all seven tabs, seven grounds, and the paragraph I deleted
+
+**The missing first sentence was my bug.** Two rounds ago I replaced the tab
+block wholesale and the replacement text did not carry `LINES` / `writeLead`
+with it. `writeLead` was still *called* — from inside the swap's `setTimeout` —
+so every call threw before `classList.remove('is-swapping')` ran, and the lede
+sat at `opacity: 0` forever with the tab strip frozen behind it. Restored.
+The failure is instructive: a function deleted from a block replacement fails
+**silently inside a timeout**, and the visible symptom (a missing paragraph) is
+nowhere near the cause.
+
+**All six remaining tabs are rebuilt to the first tab's structure** — three
+columns, the connectors it reached into, the exchange on a painted ground, the
+artefact in a scrollable window. Every one keeps its real connector copy and its
+real artefact screenshot; the conversations are written from what each run
+actually did.
+
+**Seven tabs, seven grounds.** Three more painted grounds generated
+(`amber`, `teal`, `violet`) so no two tabs share a background, each with its
+veil computed from its own mean luminance — 90 → 204 needs .04 → .51 to land the
+bubbles on one value.
+
+**Each pane plays its own exchange**, from the top, whenever the reel reaches it.
+One shared timeline; `.is-live` moves to the pane being played and comes off the
+one before it, so a pane at rest shows the finished conversation. The dwell goes
+7.2s → **9s**: the exchange runs 4.3s, and 7.2 left it barely three seconds at
+rest before the reel moved on.
+
+**The reel is narrower** — `max-width: 720px`, centred. Seven tabs across the
+full card read as a menu you are meant to scan; a short window with the
+selection at its centre reads as a reel you are moving through, and the fade at
+each end is what says there is more of it.
+
+**The KPI row, per the `dataviz` skill:**
+
+- **`tabular-nums` off.** Tabular gives every digit the width of a zero — right
+  in a column that must align, wrong on a standalone figure. At 56px a "14" set
+  tabular reads loose and mechanical. Tabular is for tables.
+- **The row keeps its own measure** (760px). Three figures spread across a
+  1300px card stop reading as one group and become three unrelated statements.
+- **The caveat stops dressing as a fourth label.** It was in the utility face,
+  uppercase and letter-spaced — exactly the label treatment — so it read as a
+  fourth stat. It is prose at caption size now.
+
+One deviation from the skill, stated: it asks for stat labels in sentence case;
+ours stay uppercase mono because that is this page's utility-text rule and it is
+applied everywhere else.
+
+---
+
 ## 2026-08-23 · the reel loops, the turn changes hands, and the bar does not stop
 
 **The tab row loops.** Three copies of the strip live in the rail —

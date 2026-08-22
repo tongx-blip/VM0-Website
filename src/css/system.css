@@ -292,9 +292,16 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-sm);
   color:var(--ink-mute);
 }
+/* A caveat under a KPI row must not be dressed as a fourth label. In the
+   utility face, uppercase and letter-spaced it read as another stat; in prose
+   at caption size it reads as what it is — a note about the numbers above.
+   (dataviz: the stat-tile contract is label + value, and nothing else in the
+   row may borrow the label's clothes.) */
 .footnote{
-  margin-top:14px;
-  font-size:var(--t-mono);
+  margin-top:clamp(18px, 2vw, 26px);
+  font-family:var(--fb);
+  font-size:var(--t-meta);
+  letter-spacing:0; text-transform:none;
   color:var(--ink-mute);
 }
 .linkline{ margin-top:clamp(26px,2.8vw,36px); }
@@ -689,6 +696,12 @@ h3{ font-family:var(--fd); }
    used twice, rather than two ways of saying "how far through". */
 .tabs{
   position:relative;
+  /* The strip is deliberately narrower than the section. Seven tabs across
+     the full width read as a menu you are meant to scan; a short window with
+     the selection at its centre reads as a reel you are moving through, and
+     the fade at each end is what says there is more of it. */
+  max-width:min(100%, 720px);
+  margin-inline:auto;
   overflow:hidden;
   /* the rail can be wider than the section, so the ends fade rather than
      being cut off square */
@@ -802,9 +815,13 @@ h3{ font-family:var(--fd); }
 .acard__chrome i:first-child{ background:var(--accent); }
 
 /* ─────────────── 11. metrics: one ruled data row ─────────────── */
+/* Three figures spread across a 1300px card stop reading as one group —
+   they become three unrelated statements. The row keeps its own measure so
+   the eye takes them together. (dataviz: a KPI row is a row.) */
 .metrics{
   display:grid; grid-template-columns:repeat(3, 1fr);
-  gap:var(--gutter);
+  gap:clamp(20px, 3vw, 52px);
+  max-width:760px; margin-inline:auto;
   margin-top:clamp(48px,5vw,72px);
   border:0; border-radius:0; overflow:visible;
   background:transparent;
@@ -1961,11 +1978,15 @@ h3{ font-family:var(--fd); }
   font-family:var(--fd);
   color:var(--ink);
 }
+/* PROPORTIONAL figures at display size. `tabular-nums` gives every digit the
+   width of a zero, which is right in a column of numbers that must align and
+   wrong on a standalone figure — at 56px a "14" set tabular reads loose and
+   mechanical. Tabular is for tables. (dataviz: marks-and-anatomy.) */
 .metrics b i{
   font-style:normal; font-weight:500;
   font-size:var(--t-figure);
   line-height:1; letter-spacing:-.045em;
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric:proportional-nums;
 }
 .metrics b em{
   font-style:normal; font-weight:500;
@@ -2123,16 +2144,24 @@ h3{ font-family:var(--fd); }
   min-width:0;
   background:var(--o-fill);
 }
+/* the ground is per-tab: each scene sets --ground, and --veil computed from
+   that painting's own mean luminance so every one lands the bubbles on the
+   same value (docs/design-system.md §15) */
 .ochat::before{
   content:"";
   position:absolute; inset:0;
-  background-image:url(assets/ground/run-green.jpg);
+  background-image:var(--ground, url(assets/ground/run-green.jpg));
   background-size:cover; background-position:center;
+  filter:saturate(var(--sat, 1));
 }
 .ochat::after{
   content:"";
   position:absolute; inset:0;
-  background:linear-gradient(rgba(12,15,18,.14), rgba(12,15,18,.14));
+  background:
+    radial-gradient(120% 96% at 50% 46%,
+      rgba(12,15,18, calc(var(--veil, .14) * .5)), transparent 74%),
+    linear-gradient(rgba(12,15,18, var(--veil, .14)),
+                    rgba(12,15,18, var(--veil, .14)));
 }
 .ochat__row{
   position:relative; z-index:1;

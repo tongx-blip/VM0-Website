@@ -302,57 +302,73 @@
      Four beats: the ask, Okou thinking, its reply, the page it made.
      Every beat is in the resting DOM — `.is-live` is added by JS only —
      so reduced motion and no-JS get the finished exchange. */
-  var ochat = doc.getElementById('ochat');
-  if (ochat && !reduce) {
-    var beats = [].slice.call(ochat.querySelectorAll('.ochat__row'));
-    // Staggered so each beat SETTLES before the next starts — with 3+ moving
-    // parts no more than one should be in flight at a time, or the panel reads
-    // as a flurry instead of an exchange. The gap before the result is the
-    // longest: it is the hero, and a beat of stillness is what makes it land.
-    var CUE = [0, 1000, 2200, 3400];         // ms; the typing row leaves
-                                             // exactly when the reply arrives
-    var oT0 = null, oRaf = 0, oSeen = false;
+  /* Every tab has its own exchange, and each one plays when its pane is shown
+     — the first on arrival, the rest when the reel reaches them. One shared
+     timeline function; `.is-live` is set only on the pane being played, so a
+     pane at rest (and reduced motion, and no JS) shows the finished
+     conversation rather than an empty ground. */
+  var ochats = [].slice.call(doc.querySelectorAll('.ochat'));
+  if (ochats.length && !reduce) {
+    var CUE = [0, 1000, 2200, 3400];   // ask · thinking · reply · result
+    var SIDE = [700, 1250];            // the two connectors, as Okou reaches
+    var oRaf = 0, oT0 = null, oPane = null;
 
-    function oPaint(now) {
+    function playPane(pane) {
+      if (!pane || pane === oPane) return;
+      if (oRaf) { cancelAnimationFrame(oRaf); oRaf = 0; }
+      // hand the previous pane back its finished state
+      if (oPane) {
+        oPane.classList.remove('is-live');
+        var prev = oPane.closest('.ostage');
+        if (prev) prev.classList.remove('is-live');
+      }
+      oPane = pane;
+      pane.classList.add('is-live');
+      var stage = pane.closest('.ostage');
+      if (stage) stage.classList.add('is-live');
+      oT0 = null;
+      oRaf = requestAnimationFrame(oTick);
+    }
+
+    function oTick(now) {
       oRaf = 0;
+      if (!oPane) return;
       if (oT0 === null) oT0 = now;
       var t = now - oT0;
-      beats.forEach(function (row, i) {
+      var stage = oPane.closest('.ostage');
+      [].slice.call(oPane.querySelectorAll('.ochat__row')).forEach(function (row, i) {
         var on = t >= CUE[i];
         if (row.classList.contains('ochat__row--typing')) {
-          on = t >= CUE[1] && t < CUE[2];    // thinking, then it is replaced
+          on = t >= CUE[1] && t < CUE[2];   // thinking, then it is replaced
         }
         row.classList.toggle('is-on', on);
       });
-      oSide(t);
-      if (t < CUE[CUE.length - 1] + 900) oRaf = requestAnimationFrame(oPaint);
-    }
-
-    // the two side columns are part of the same run
-    var ostage = ochat.closest('.ostage');
-    var ocards = ostage ? [].slice.call(ostage.querySelectorAll('.ocard')) : [];
-    var owin = ostage ? ostage.querySelector('.tplwin') : null;
-    // connectors are read while Okou is working, and the page it shipped
-    // arrives on the same beat as the result in the chat
-    var SIDE = [700, 1250];
-
-    function oSide(t) {
-      ocards.forEach(function (c, i) { c.classList.toggle('is-on', t >= SIDE[i]); });
-      if (owin) owin.classList.toggle('is-on', t >= CUE[3]);
-    }
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries, obs) {
-        entries.forEach(function (e) {
-          if (!e.isIntersecting || oSeen) return;
-          oSeen = true;
-          ochat.classList.add('is-live');
-          if (ostage) ostage.classList.add('is-live');
-          oRaf = requestAnimationFrame(oPaint);
-          obs.disconnect();
+      if (stage) {
+        [].slice.call(stage.querySelectorAll('.ocard')).forEach(function (c, i) {
+          c.classList.toggle('is-on', t >= SIDE[i]);
         });
-      }, { threshold: 0.35 }).observe(ochat);
+        var win = stage.querySelector('.tplwin');
+        if (win) win.classList.toggle('is-on', t >= CUE[3]);
+      }
+      if (t < CUE[CUE.length - 1] + 900) oRaf = requestAnimationFrame(oTick);
     }
+
+    // the visible pane is whichever scene is on; watch the section, not each pane
+    var outputs = doc.getElementById('outputs');
+    if (outputs && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var on = doc.querySelector('.scene.is-on .ochat');
+          if (on) playPane(on);
+        });
+      }, { threshold: 0.25 }).observe(outputs);
+    }
+    // and replay whenever the reel lands on a new pane
+    doc.addEventListener('okou:scene', function () {
+      var on = doc.querySelector('.scene.is-on .ochat');
+      if (on) playPane(on);
+    });
   }
 
   /* the published page scrolls; the hint stands down once it has been used */
@@ -563,6 +579,25 @@
     var line = doc.getElementById('scene-line');
     var N = real.length;
 
+    // The one sentence that changes with the tab. No emoji: it was the only
+    // pictogram on a page that has none.
+    var LINES = {
+      marketing:  ['builds', 'Maya’s', 'storefront.'],
+      ads:        ['optimizes', 'Maya’s', 'ad spend.'],
+      sales:      ['scores', 'Ravi’s', 'pipeline.'],
+      engineering:['triages', 'Lin’s', 'error queue.'],
+      product:    ['writes', 'Sofia’s', 'export spec.'],
+      ops:        ['sends', 'Noah’s', 'Monday digest.'],
+      leadership: ['rebuilds', 'Dana’s', 'board deck.']
+    };
+    function writeLead(key) {
+      if (!line || !LINES[key]) return;
+      var p = LINES[key];
+      // no accent here: at this size, on the grey ground, orange text cannot
+      // clear 4.5:1. The lead is emphasised by ink and weight.
+      line.textContent = 'Okou ' + p[0] + ' ' + p[1] + ' ' + p[2];
+    }
+
     /* ── the reel loops ─────────────────────────────────────────────
        Three copies of the strip: [clones][real][clones]. Only the middle
        set is a real tablist — the outer two are decoration, hidden from
@@ -644,6 +679,8 @@
         p.classList.remove('is-on');
         if (on) { void p.offsetWidth; p.classList.add('is-on'); }
       });
+      // the exchange in the pane that just arrived plays from the top
+      doc.dispatchEvent(new CustomEvent('okou:scene'));
 
       // ONE item is selected — the one on the centre line. Lighting every
       // copy of the scene would show a second highlighted tab at the edge
@@ -702,7 +739,10 @@
        focus still parks it — a keyboard user has no other way to hold it
        — and any click parks it for good, because from then on the
        visitor is driving. */
-    var DWELL = 7200;                 // ms per tab
+    // The exchange inside a pane runs ~4.3s; a dwell of 7.2 left it barely
+    // three seconds at rest before the reel moved on. Nine gives the finished
+    // state time to be looked at, which is the point of showing it.
+    var DWELL = 9000;                 // ms per tab
     var t0 = null, tRaf = 0, onScreen = false, held = false, kbd = false;
 
     function tick(now) {

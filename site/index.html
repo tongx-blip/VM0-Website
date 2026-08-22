@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=95ac4e6c">
+<link rel="stylesheet" href="styles.css?r=86d4c19e">
 </head>
 <body>
 
@@ -133,7 +133,8 @@
               </article>
             </aside>
 
-            <div class="ochat" id="ochat" role="group" aria-label="The conversation that produced this page">
+            <div class="ochat" id="ochat" role="group" aria-label="The conversation that produced this page"
+                 style="--ground:url(assets/ground/run-green.jpg); --veil:0.04; --sat:.9">
               <div class="ochat__row ochat__row--user">
                 <p class="ochat__bubble">Build a one-page site for a coastal hotel called Litoral: a hero with
                   the name, a short story, and three room tiles. Keep it minimal and elegant, then publish it
@@ -176,35 +177,323 @@
           </figure>
           </div>
         </div>
-        <div class="scene" data-scene="ads" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-analytics.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Analytics</b><i>10,220 sessions reviewed across three pages</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/meta-ads.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Meta Ads</b><i>$183 budget shift drafted for approval</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/ads.png" alt="An Okou run for automated ad planning" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://weekly-ad-operator-dashboard.sites.vm7.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">weekly-ad-operator-dashboard.sites.vm7.io</span></span><img class="acard__img" src="assets/artifacts/ads-v1.png" alt="Weekly Ad Operator Dashboard preview" loading="lazy"><span class="acard__txt"><b>Weekly Ad Operator Dashboard</b><i>Draft plan &middot; open the live dashboard &#8599;</i></span></a></aside>
+        <div class="scene scene--built" data-scene="ads" role="tabpanel">
+          <div class="ostage">
+
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/google-analytics.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Google Analytics</b><i>10,220 sessions reviewed across three pages</i></span>
+              </article>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/meta-ads.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Meta Ads</b><i>$183 budget shift drafted for approval</i></span>
+              </article>
+            </aside>
+
+            <div class="ochat" role="group" aria-label="The conversation that produced this"
+                 style="--ground:url(assets/ground/amber.jpg); --veil:0.41; --sat:.95">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Our CPC is drifting on the AI-tools keywords. Look at last week across search and Meta, tell me where the money is going, and draft the shift.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">Moved $183 out of the two weakest ad sets and left the rest alone — it is a draft in Meta, waiting on you.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Weekly Ad Operator Dashboard</figcaption>
+                  <img src="assets/artifact/ads-v1-card.jpg" alt="Weekly Ad Operator Dashboard" loading="lazy">
+                </figure>
+              </div>
+            </div>
+
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">weekly-ad-operator-dashboard.sites.vm7.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
+                <img class="tplwin__page" src="assets/artifact/ads-v1.jpg"
+                     alt="Weekly Ad Operator Dashboard" loading="lazy" width="880">
+              </div>
+              <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                Scroll it
+              </span>
+            </figure>
+
+          </div>
         </div>
-        <div class="scene" data-scene="sales" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-sheet.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Sheets</b><i>12 leads written with fit score and tier</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/hubspot.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>HubSpot</b><i>Tier A contacts queued for owner review</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/sales.png" alt="An Okou run for sales" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-lead-priority.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-lead-priority.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/sales-v2.png" alt="Lead Prioritization preview" loading="lazy"><span class="acard__txt"><b>Lead Prioritization</b><i>Open the live page &#8599;</i></span></a></aside>
+        <div class="scene scene--built" data-scene="sales" role="tabpanel">
+          <div class="ostage">
+
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/google-sheet.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Google Sheets</b><i>12 leads written with fit score and tier</i></span>
+              </article>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/hubspot.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>HubSpot</b><i>Tier A contacts queued for owner review</i></span>
+              </article>
+            </aside>
+
+            <div class="ochat" role="group" aria-label="The conversation that produced this"
+                 style="--ground:url(assets/ground/teal.jpg); --veil:0.04; --sat:.95">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Score the inbound from this week against our ICP and tell me who is worth a call on Monday.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">Twelve leads scored and written back to the sheet. The four Tier A ones are queued in HubSpot for their owners.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Lead Prioritization</figcaption>
+                  <img src="assets/artifact/sales-v2-card.jpg" alt="Lead Prioritization" loading="lazy">
+                </figure>
+              </div>
+            </div>
+
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">okou-artifact-lead-priority.sites.vm0.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
+                <img class="tplwin__page" src="assets/artifact/sales-v2.jpg"
+                     alt="Lead Prioritization" loading="lazy" width="880">
+              </div>
+              <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                Scroll it
+              </span>
+            </figure>
+
+          </div>
         </div>
-        <div class="scene" data-scene="engineering" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/sentry.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Sentry</b><i>1,111 events pulled and grouped by cause</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/github_marketing.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>GitHub</b><i>Issues opened for the 2 over threshold</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/engineering.png" alt="An Okou run for engineering" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-incident-triage.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-incident-triage.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/engineering-v2.png" alt="Incident Triage Report preview" loading="lazy"><span class="acard__txt"><b>Incident Triage Report</b><i>Open the live page &#8599;</i></span></a></aside>
+        <div class="scene scene--built" data-scene="engineering" role="tabpanel">
+          <div class="ostage">
+
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/sentry.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Sentry</b><i>1,111 events pulled and grouped by cause</i></span>
+              </article>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/github_marketing.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>GitHub</b><i>Issues opened for the 2 over threshold</i></span>
+              </article>
+            </aside>
+
+            <div class="ochat" role="group" aria-label="The conversation that produced this"
+                 style="--ground:url(assets/ground/save-red.jpg); --veil:0.37; --sat:.92">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Something broke overnight. Group the Sentry noise by cause and open issues for anything that actually matters.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">1,111 events, eight root causes. Two crossed the threshold, so those have GitHub issues; the rest are in the report.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Incident Triage Report</figcaption>
+                  <img src="assets/artifact/engineering-v2-card.jpg" alt="Incident Triage Report" loading="lazy">
+                </figure>
+              </div>
+            </div>
+
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">okou-artifact-incident-triage.sites.vm0.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
+                <img class="tplwin__page" src="assets/artifact/engineering-v2.jpg"
+                     alt="Incident Triage Report" loading="lazy" width="880">
+              </div>
+              <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                Scroll it
+              </span>
+            </figure>
+
+          </div>
         </div>
-        <div class="scene" data-scene="product" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/notion.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Notion</b><i>Spec filed in the product database</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/linear.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Linear</b><i>Six backlog issues linked to the theme</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/product.png" alt="An Okou run for product" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-export-spec.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-export-spec.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/product-v2.png" alt="Bulk CSV Export Spec preview" loading="lazy"><span class="acard__txt"><b>Bulk CSV Export Spec</b><i>Open the live page &#8599;</i></span></a></aside>
+        <div class="scene scene--built" data-scene="product" role="tabpanel">
+          <div class="ostage">
+
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/notion.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Notion</b><i>Spec filed in the product database</i></span>
+              </article>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/linear.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Linear</b><i>Six backlog issues linked to the theme</i></span>
+              </article>
+            </aside>
+
+            <div class="ochat" role="group" aria-label="The conversation that produced this"
+                 style="--ground:url(assets/ground/violet.jpg); --veil:0.19; --sat:1.15">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Customers keep asking for bulk export. Write the spec — pull what they actually said and link the backlog we already have.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">One page in Notion, with the current workaround and the open questions. Six Linear issues linked to the theme.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Bulk CSV Export Spec</figcaption>
+                  <img src="assets/artifact/product-v2-card.jpg" alt="Bulk CSV Export Spec" loading="lazy">
+                </figure>
+              </div>
+            </div>
+
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">okou-artifact-export-spec.sites.vm0.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
+                <img class="tplwin__page" src="assets/artifact/product-v2.jpg"
+                     alt="Bulk CSV Export Spec" loading="lazy" width="880">
+              </div>
+              <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                Scroll it
+              </span>
+            </figure>
+
+          </div>
         </div>
-        <div class="scene" data-scene="ops" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic acard__ic--slack"><img src="assets/connectors/slack.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Slack</b><i>Digest posted to #team every Monday</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/google-calendar.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Calendar</b><i>Recurring trigger, Mondays 09:00</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/ops.png" alt="An Okou run for team ops" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-weekly-report.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-weekly-report.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/ops-v2.png" alt="Weekly Team Report preview" loading="lazy"><span class="acard__txt"><b>Weekly Team Report</b><i>Open the live page &#8599;</i></span></a></aside>
+        <div class="scene scene--built" data-scene="ops" role="tabpanel">
+          <div class="ostage">
+
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/slack.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Slack</b><i>Digest posted to #team every Monday</i></span>
+              </article>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/google-calendar.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Google Calendar</b><i>Recurring trigger, Mondays 09:00</i></span>
+              </article>
+            </aside>
+
+            <div class="ochat" role="group" aria-label="The conversation that produced this"
+                 style="--ground:url(assets/ground/auto-blue.jpg); --veil:0.29; --sat:1.0">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Put together what the team shipped this week and post it to #team every Monday morning.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">Digest is written and the schedule is set — Mondays at nine, straight into #team. Nobody has to remember it now.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Weekly Team Report</figcaption>
+                  <img src="assets/artifact/ops-v2-card.jpg" alt="Weekly Team Report" loading="lazy">
+                </figure>
+              </div>
+            </div>
+
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">okou-artifact-weekly-report.sites.vm0.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
+                <img class="tplwin__page" src="assets/artifact/ops-v2.jpg"
+                     alt="Weekly Team Report" loading="lazy" width="880">
+              </div>
+              <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                Scroll it
+              </span>
+            </figure>
+
+          </div>
         </div>
-        <div class="scene" data-scene="leadership" role="tabpanel">
-          <aside class="scene__side scene__side--l"><article class="acard acard--conn" style="--i:1"><span class="acard__ic"><img src="assets/connectors/google-sheet.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Sheets</b><i>Quarter numbers pulled from the finance sheet</i></span></article><article class="acard acard--conn" style="--i:2"><span class="acard__ic"><img src="assets/connectors/google-calendar.svg" alt="" width="24" height="24"></span><span class="acard__txt"><b>Google Calendar</b><i>Rebuilt the night before every board meeting</i></span></article></aside>
-          <div class="scene__ui"><img class="scene__shot" src="assets/product/leadership.png" alt="An Okou run for leadership" width="2880" height="1800" loading="lazy"></div>
-          <aside class="scene__side scene__side--r"><a class="acard acard--thumb" style="--i:1" href="https://okou-artifact-q3-board-deck.sites.vm0.io/" target="_blank" rel="noopener"><span class="acard__chrome"><i></i><i></i><i></i><span class="acard__url">okou-artifact-q3-board-deck.sites.vm0.io</span></span><img class="acard__img" src="assets/artifacts/deck-v3.png" alt="Q3 board deck preview" loading="lazy"><span class="acard__txt"><b>Q3 board deck</b><i>8 slides &middot; open the live deck &#8599;</i></span></a></aside>
+        <div class="scene scene--built" data-scene="leadership" role="tabpanel">
+          <div class="ostage">
+
+            <aside class="ostage__conn" aria-label="What the run reached into">
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/google-sheet.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Google Sheets</b><i>Quarter numbers pulled from the finance sheet</i></span>
+              </article>
+              <article class="ocard">
+                <span class="ocard__ic"><img src="assets/connectors/google-calendar.svg" alt="" width="48" height="48"></span>
+                <span class="ocard__txt"><b>Google Calendar</b><i>Rebuilt the night before every board meeting</i></span>
+              </article>
+            </aside>
+
+            <div class="ochat" role="group" aria-label="The conversation that produced this"
+                 style="--ground:url(assets/ground/hand-pink.jpg); --veil:0.51; --sat:1.4">
+              <div class="ochat__row ochat__row--user">
+                <p class="ochat__bubble">Board is Thursday. Rebuild the deck off the Q3 numbers in the finance sheet and keep the shape we used last quarter.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble ochat__bubble--typing"><i></i><i></i><i></i></p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="reply">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <p class="ochat__bubble">Eight slides, same shape as last time, numbers pulled straight from the sheet. It rebuilds itself the night before each meeting.</p>
+              </div>
+              <div class="ochat__row ochat__row--okou" data-beat="result">
+                <span class="ochat__ava"><img src="assets/brand/avatar-1.png" alt="" width="48" height="48"></span>
+                <figure class="oresult">
+                  <figcaption>Q3 board deck</figcaption>
+                  <img src="assets/artifact/deck-v3-card.jpg" alt="Q3 board deck" loading="lazy">
+                </figure>
+              </div>
+            </div>
+
+            <figure class="tplwin">
+              <figcaption class="tplwin__bar">
+                <i></i><i></i><i></i>
+                <span class="tplwin__url">okou-artifact-q3-board-deck.sites.vm0.io</span>
+              </figcaption>
+              <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
+                <img class="tplwin__page" src="assets/artifact/deck-v3.jpg"
+                     alt="Q3 board deck" loading="lazy" width="880">
+              </div>
+              <span class="tplwin__hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                Scroll it
+              </span>
+            </figure>
+
+          </div>
         </div>
       </div>
     </div>
@@ -782,6 +1071,6 @@
   <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
 </footer>
 
-<script src="app.js?r=b1cd4efb"></script>
+<script src="app.js?r=933f4708"></script>
 </body>
 </html>
