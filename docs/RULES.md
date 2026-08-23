@@ -20,6 +20,8 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | S4 | **No structural lines.** Separate with grounds, space and the type scale. Exceptions are written down and scoped to one component by name. | Hairlines used as structure read as clutter. | QA §2 |
 | S5 | **A box inset to a section card's width takes a section card's corner** — `--r-section`, 16px. The old `--r-nav = --r-btn + --nav-pad` derived the header's corner from the control inside it and produced 22px, which on a 54px bar is a lozenge. | The relationship being stated does not make the result right; a corner belongs to the box's own scale, not its contents'. | QA §4o |
 | S6 | **The header has two states and the change between them is the message.** At rest it is full-bleed, flush, square, part of the page. Once the page moves it steps down by `--nav-top`, pulls in to `--card-gap`, takes `--r-section` and condenses to `--nav-h-stuck`. | A rounded bar floating above the first pixel of an unscrolled page is a decoration pretending to be a response to scroll. | QA §4o |
+| S7 | **The header's content is bounded by the measure, one `--card-gap` outside the section column** — the section card's own padding expression, taken from the window edge instead of the card edge. | Unbounded, the wordmark sat 600px outside the content it labels at 2560. Flush with the section column, two edges land on the same pixel from different systems and read as a coincidence. | QA §4o |
+| S8 | **The blur under the header is a ramp, not a switch.** Four masked backdrop layers of increasing radius. A single masked layer fades the blur's *opacity* and still starts it at full strength. | | QA §4o |
 
 ## Measure
 
@@ -45,12 +47,13 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 
 | # | Rule | Why | Checked |
 |---|---|---|---|
-| C1 | **One accent in three weights** — `--accent` for display-size marks, `--accent-solid` (4.5:1 both ways) for smaller text **on paper** and every fill, `--accent-wash` for accent text on a grey. | `--accent-solid` is tuned to *exactly* 4.5:1 on white, so it clears AA on white and on nothing else — it drops to 3.86:1 the moment the ground goes grey. | QA §1 |
+| C1 | **One accent, and which weight is safe depends entirely on the ground.** `--accent` for display marks **and for accent text on a dark ground** (4.7:1); `--accent-solid` for small text on paper and every fill; `--accent-wash` for accent text on a grey. | `--accent-solid` is tuned to *exactly* 4.5:1 on white, so it clears AA on white and nothing else — 3.86:1 on `--wash-2`, 3.84:1 on the dark header. The correction runs in **opposite directions** on the two grounds: darken for grey, and use the undarkened brand orange for dark. | QA §1 |
 | C2 | **Cool neutrals, never warm.** | Warm off-white reads as AI-generated. | — |
 | C3 | **State layers are composited, not picked.** Hover and selected are one translucent layer at two alphas; `#E7EBF0` is *hover*, `#DEE4EB` is *selected*. | No screenshot can tell you this, and using hover for selected makes every selected row a step too light. | QA §4f |
 | C4 | **A photographic ground's veil is computed** — `1 − target ÷ that image's mean luminance` — so images of different brightness land a screen on the same value. | | §15 |
 | C5 | **Translucent chrome over an image must be safe by construction**: compute against white, the lightest thing it can sit on. Blur makes it read as frosted; transparency is not what does that. | axe cannot evaluate a scrolling backdrop. | QA §4k4 |
 | C6 | **axe 0 violations.** Audit the *resting* frame — park any loop first, then sample ~20 times across it. | | QA §1 |
+| C7 | **A component that crosses grounds carries both versions as a token swap**, never as a second copy. The header defines `--nav-ground` / `--nav-ink` / `--nav-ink-hi` / `--nav-accent` / `--nav-chip`; no rule inside it names a colour. | Two copies drift the moment one of them is edited. | QA §4o |
 
 ## Motion
 

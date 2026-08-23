@@ -504,8 +504,28 @@
     steps[cur].style.setProperty('--p', Math.max(0, Math.min(1, local)).toFixed(4));
   }
 
+  /* ── the header reads the ground it is actually over ───────────
+     Not a scroll offset: the page's dark bands declare themselves with
+     data-ground="dark", and the header asks what is behind its own
+     midline. A section that moves, or a new dark band, needs no number
+     changed here — and the test stays true while the bar is mid-flight
+     between its resting and floating heights. */
+  var darkGrounds = [].slice.call(doc.querySelectorAll('[data-ground="dark"]'));
+
+  function readNavGround() {
+    if (!nav || !darkGrounds.length) return;
+    var bar = nav.getBoundingClientRect();
+    var line = bar.top + bar.height / 2;
+    var dark = darkGrounds.some(function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top <= line && r.bottom >= line;
+    });
+    nav.classList.toggle('is-dark', dark);
+  }
+
   function readScroll() {
     if (nav) nav.classList.toggle('is-stuck', window.scrollY > 28);
+    readNavGround();
     // stacked, the frame is stuck over the list and all four paragraphs are
     // open at once: there is no scroll distance left to read a step from, so
     // the frame follows taps instead and nothing is hidden if nobody taps

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=ed68883c">
+<link rel="stylesheet" href="styles.css?r=91e093d5">
 </head>
 <body>
 
@@ -32,6 +32,10 @@
   </div>
   <button class="nav__burger" id="burger" aria-label="Menu"><span></span><span></span></button>
 </header>
+<!-- the page does not end at the header's edge: it dissolves into it. Four
+     backdrop layers, each blurrier than the last and masked to its own band,
+     so the blur RAMPS instead of switching on. Painted behind the header. -->
+<div class="navveil" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
 <main id="top">
 
@@ -1031,7 +1035,7 @@
 </section>
 
 <!-- ═══════════════ CTA ═══════════════ -->
-<section class="panel panel--cta" id="cta">
+<section class="panel panel--cta" id="cta" data-ground="dark">
   <img class="cta__scene" src="assets/brand/scene-hills.png?v=760a9569" alt="" aria-hidden="true">
   <p class="chip reveal">For high-agency teams</p>
   <h2 class="display display--center" data-reveal="mask">
@@ -1051,7 +1055,7 @@
 </main>
 
 <!-- ═══════════════ FOOTER ═══════════════ -->
-<footer class="footer">
+<footer class="footer" data-ground="dark">
   <div class="footer__badge"><img src="assets/okou-icon.svg?v=77e4663f" alt="Okou"></div>
   <h2 class="display display--center footer__line" data-reveal="mask">
     <span class="line">Delegate more</span>
@@ -1071,6 +1075,6 @@
   <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
 </footer>
 
-<script src="app.js?r=42e17c67"></script>
+<script src="app.js?r=7d1cd0d3"></script>
 </body>
 </html>

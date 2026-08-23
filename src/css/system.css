@@ -45,8 +45,14 @@
      over — the white section cards for most of the page, and the page grey
      in the gaps between them — using tone alone, because it carries no
      shadow and no line. That is exactly what the second wash already is,
-     and --ink-mute is already measured against it (4.7:1). */
-  --nav-fill:  var(--wash-2);
+     and --ink-mute is already measured against it (4.7:1).
+     Its dark sibling keeps the same relationship, inverted: one step OFF
+     the ground it sits on rather than a fixed colour, so the header reads
+     as the same object over the closing band as it does over a white card. */
+  --nav-fill:      var(--wash-2);
+  --nav-fill-dark: var(--g-100);
+  /* how far the blur under the header takes to disappear */
+  --veil-fade: clamp(34px, 3.6vw, 56px);
   --hairline:   #DFE4E7;
   --rule:       #C9D0D5;
   --grid:       #EDF0F2;
@@ -371,17 +377,42 @@ h3{ font-family:var(--fd); }
    is legible over both without any furniture. That is the design system's
    own rule: a surface is a fill (RULES §S3). */
 .nav{
+  /* The two versions of the header, side by side and in one place. Everything
+     inside reads these four; nothing inside names a colour. Switching ground
+     is then a four-line swap rather than a second copy of the component. */
+  --nav-ground:var(--nav-fill);
+  --nav-ink:var(--ink-soft);
+  --nav-ink-hi:var(--ink);
+  --nav-accent:var(--accent-wash);
+  --nav-chip:var(--wash-2);
+
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
   gap:16px;
-  margin:0; padding:0 var(--nav-pad);
-  background:var(--nav-fill);
+  margin:0;
+  /* THE HEADER OBEYS THE MEASURE — but sits one --card-gap OUTSIDE it.
+     Left to --nav-pad the header was the only thing on the page ignoring the
+     1320px cap: at 2560 the wordmark sat 600px outside the content it labels
+     and the bar just kept stretching.
+     Matching the section column exactly is wrong in the other direction —
+     the header would read as one more column of the page rather than as the
+     frame around it, and two edges landing on the same pixel from different
+     systems looks like a coincidence, not a decision. So it takes the
+     section card's own padding expression (RULES §M2) measured from the
+     WINDOW edge rather than from the card edge, which lands its content
+     exactly one --card-gap outside the section column at every width.
+     Bounded, related, and deliberately not flush. */
+  padding-block:0;
+  padding-inline:max(var(--nav-pad), calc(var(--edge) - var(--card-gap)));
+  background:var(--nav-ground);
+  color:var(--nav-ink);
   border:0; border-radius:0;
   box-shadow:none;
   transition:top var(--t-state) var(--e-out),
+             color var(--t-state) var(--e-out),
              left var(--t-state) var(--e-out),
              right var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
@@ -397,13 +428,41 @@ h3{ font-family:var(--fd); }
   left:var(--card-gap); right:var(--card-gap);
   height:var(--nav-h-stuck);
   border-radius:var(--r-section);
-  background:var(--nav-fill);
+  /* The bar has just pulled in by --card-gap, so its padding gives the same
+     amount back and the CONTENT does not move between the two states. Only
+     the ground travels — which is the whole point of the transition. */
+  padding-inline:max(var(--nav-pad), calc(var(--edge) - 2 * var(--card-gap)));
 }
+
+/* ── the header over a dark ground ──────────────────────────────────
+   The page ends on two dark bands (the closing CTA and the footer), and a
+   pale grey bar sitting on them read as a leftover from the section above.
+   The header carries a second version of itself instead, and crosses into
+   it: `is-dark` is set from the ground actually behind the bar's midline,
+   not from a scroll offset, so it stays right if a section is ever moved.
+
+   Everything here is a token swap — no rule inside the header names a
+   colour, so this is the whole dark version. Each consuming property has
+   its own transition, which is what makes the change read as the header
+   travelling into the band rather than as a repaint.
+
+   The accent inverts direction. On a light ground the brand orange has to
+   be DARKENED to clear AA (--accent-wash); on this one --accent itself
+   clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
+.nav.is-dark{
+  --nav-ground:var(--nav-fill-dark);
+  --nav-ink:rgba(255,255,255,.72);
+  --nav-ink-hi:var(--paper-ink);
+  --nav-accent:var(--accent);
+  --nav-chip:rgba(255,255,255,.1);
+}
+
 .nav__logo{
   justify-self:start;
   display:inline-flex; align-items:center; gap:10px;
   padding:0; border:0; border-radius:0;
-  color:var(--ink);
+  color:var(--nav-ink-hi);
+  transition:color var(--t-state) var(--e-out);
 }
 .nav__logo img{
   width:20px; height:20px;
@@ -423,11 +482,11 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
-  color:var(--ink-soft);
+  color:var(--nav-ink);
   transition:color var(--t-hover) var(--e-snap),
              background var(--t-hover) var(--e-snap);
 }
-.nav__links a:hover{ color:var(--ink); background:transparent; }
+.nav__links a:hover{ color:var(--nav-ink-hi); background:transparent; }
 .nav__auth{
   justify-self:end;
   display:flex; align-items:center; gap:6px;
@@ -437,10 +496,61 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
-  color:var(--ink-soft);
+  color:var(--nav-ink);
   transition:color var(--t-hover) var(--e-snap), background var(--t-hover) var(--e-snap);
 }
-.nav__signin:hover{ color:var(--ink); background:transparent; }
+.nav__signin:hover{ color:var(--nav-ink-hi); background:transparent; }
+
+/* ── the veil under the header ──────────────────────────────────────
+   A backdrop-filter is a switch: content is either blurred or it is not,
+   and the boundary is a hard horizontal line across the page. Masking ONE
+   blurred layer only fades that line out — the blur still starts at full
+   strength. A ramp needs several layers, each blurrier than the last and
+   each masked to its own band, so what changes down the strip is the blur
+   RADIUS and not merely its opacity.
+
+   It is a sibling of the header rather than part of it, because it has to
+   paint BEHIND the bar: at rest the bar covers its top, and once the bar
+   floats the veil is what fills the strip above it and the gaps either
+   side, so the header reads as sitting ON something. */
+.navveil{
+  position:fixed; top:0; left:0; right:0; z-index:99;
+  height:calc(var(--nav-h) + var(--veil-fade));
+  pointer-events:none;
+  transition:height var(--t-state) var(--e-out);
+}
+.nav.is-stuck ~ .navveil{
+  height:calc(var(--nav-top) + var(--nav-h-stuck) + var(--veil-fade));
+}
+.navveil i{ position:absolute; inset:0; display:block; }
+.navveil i:nth-child(1){
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .55));
+          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .55));
+}
+.navveil i:nth-child(2){
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  -webkit-mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade)), #000 calc(100% - var(--veil-fade) * .75), transparent calc(100% - var(--veil-fade) * .3));
+          mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade)), #000 calc(100% - var(--veil-fade) * .75), transparent calc(100% - var(--veil-fade) * .3));
+}
+.navveil i:nth-child(3){
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  -webkit-mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .7), #000 calc(100% - var(--veil-fade) * .45), transparent calc(100% - var(--veil-fade) * .08));
+          mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .7), #000 calc(100% - var(--veil-fade) * .45), transparent calc(100% - var(--veil-fade) * .08));
+}
+.navveil i:nth-child(4){
+  -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+  -webkit-mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .4), #000 calc(100% - var(--veil-fade) * .18), transparent 100%);
+          mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .4), #000 calc(100% - var(--veil-fade) * .18), transparent 100%);
+}
+/* NO TINT. Carrying the header's grey down the strip was the obvious next
+   move and it undid the previous one: the tint filled the gaps around the
+   floating bar in the bar's own colour, so the bar stopped having edges and
+   the header read as full-bleed again at every scroll position. The veil
+   blurs; the bar colours. One job each. */
+@media (prefers-reduced-motion:reduce){
+  .navveil{ transition:none; }
+}
 
 /* ─────────────── 6. buttons ─────────────── */
 .btn{
@@ -1766,7 +1876,10 @@ h3{ font-family:var(--fd); }
   }
   .nav{
     display:flex; align-items:center; justify-content:space-between;
-    padding:0 var(--nav-pad);
+    /* the shorthand here used to reset the measure the wide layout sets —
+       narrow widths still have an --edge, and the logo still has to line up
+       with the cards under it */
+    padding-block:0;
   }
   .nav__logo{ order:1; }
   .nav__auth{ order:2; margin-left:auto; }
@@ -1774,10 +1887,15 @@ h3{ font-family:var(--fd); }
   .nav__links{ display:none; }
   .nav__burger{
     display:grid; gap:5px;
-    background:var(--wash-2); border:0;
+    background:var(--nav-chip); border:0;
     border-radius:var(--r-btn); padding:11px 10px; cursor:pointer;
+    transition:background var(--t-state) var(--e-out);
   }
-  .nav__burger span{ display:block; width:16px; height:1.5px; background:var(--ink); }
+  .nav__burger span{
+    display:block; width:16px; height:1.5px;
+    background:var(--nav-ink-hi);
+    transition:background var(--t-state) var(--e-out);
+  }
   .nav__signin{ display:none; }
   .nav.is-open .nav__links{
     display:flex; flex-direction:column; align-items:stretch;
@@ -2124,17 +2242,39 @@ h3{ font-family:var(--fd); }
   transition:transform 460ms var(--e-out), color 460ms var(--e-out);
   will-change:transform;
 }
-/* the copy that rolls in lives on the header's grey, not on paper, so it
-   takes the accent's grey-ground sibling — --accent-solid is 3.86:1 there */
+/* The copy that rolls in lives on the header's ground, so it takes whichever
+   accent that ground makes safe — and the two grounds want OPPOSITE
+   corrections (RULES §C1).
+
+   It is also `visibility:hidden` until hovered, and that is not a
+   micro-optimisation. While the header cross-fades from light to dark the
+   ground passes through mid-grey, and at that instant NO orange clears AA:
+   the contrast maths asks for a foreground at L ≤ 0.012 (near-black) or
+   L ≥ 1.20 (brighter than white). Both accents sit at L ≈ 0.13–0.24. So a
+   rolled-in accent label rendered through the transition is guaranteed to
+   fail for ~400ms, and axe reproducibly caught it.
+
+   The label is decorative, aria-hidden and clipped out of view at rest, so
+   the answer is not to tune the colour — it is to not render it until it is
+   wanted. The hide is delayed by the roll's own duration so the slide out
+   still plays; `visibility` is discrete, so it flips at the end, not over it. */
 .roll__t + .roll__t{
   position:absolute; inset:0;
   transform:translateY(100%);
-  color:var(--accent-wash);
+  color:var(--nav-accent);
+  visibility:hidden;
+  transition:transform 460ms var(--e-out), color 460ms var(--e-out),
+             visibility 0s linear 460ms;
 }
 .nav__links a:hover .roll__t,
 .nav__signin:hover .roll__t{ transform:translateY(-100%); }
 .nav__links a:hover .roll__t + .roll__t,
-.nav__signin:hover .roll__t + .roll__t{ transform:translateY(0); }
+.nav__signin:hover .roll__t + .roll__t{
+  transform:translateY(0);
+  visibility:visible;
+  transition:transform 460ms var(--e-out), color 460ms var(--e-out),
+             visibility 0s linear 0s;
+}
 
 /* the primary button answers with a press, not a colour change */
 .nav .btn--dark{ transition:transform 220ms var(--e-snap), box-shadow 220ms var(--e-snap); }

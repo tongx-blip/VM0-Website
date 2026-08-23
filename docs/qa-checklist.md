@@ -577,6 +577,60 @@ No shadow in **either** state (RULES §S3). The header separates by tone, so the
 thing to check is that its fill still differs from what it is over — sample it
 against a white section AND against the page grey in the gap between two.
 
+**Its content is bounded and deliberately not flush** (RULES §S7). At every
+width the header's content sits exactly one `--card-gap` outside the section
+column — never at the window edge, never on the section's own line:
+
+```js
+const logo = document.querySelector('.nav__logo').getBoundingClientRect().left;
+const sec  = document.querySelector('.panel--card');
+const col  = sec.getBoundingClientRect().left + parseFloat(getComputedStyle(sec).paddingLeft);
+// logo < col, and col - logo === --card-gap. Check 390 / 1440 / 2560.
+```
+
+**It reads the ground, not a scroll offset.** The dark bands declare themselves
+with `data-ground="dark"`; the header asks what is behind its own midline. Move
+a dark section and nothing here needs editing — so the check is that the class
+tracks the *element*, not a number:
+
+```js
+document.getElementById('nav').classList.contains('is-dark')
+// false over any card · true once #cta or .footer spans the bar's midline
+```
+
+Run axe in **both** grounds, and audit the transition too — **load the page and
+jump straight to `#cta`**, which is the path that finds what scrolling past it
+does not:
+
+```bash
+# open, settle, then: document.getElementById('cta').scrollIntoView()
+agent-browser a11y     # at ~1.6s AND at ~3s
+```
+
+The dark version is not a free repaint. The accent correction reverses
+direction there (RULES §C1) — `--accent-wash`, correct on grey, is 3.0:1 on the
+dark header. And **while the ground cross-fades it passes through mid-grey,
+where no orange clears AA at all**: the maths asks for L ≤ 0.012 or L ≥ 1.20
+and both accents sit at L ≈ 0.13–0.24. Any accent text rendered through that
+fade fails for ~400ms, for any brand colour. The answer is not to tune it —
+decorative, `aria-hidden`, clipped-out text must not be *rendered* at rest
+(`visibility:hidden`), which also stops axe reporting 44 nodes of "incomplete".
+
+Known and deliberately unfixed: `.cta__btns .btn--dark` fails for about a
+second on that same path. White on `--accent-solid` is exactly 4.5:1, so the
+reveal's opacity fade dips it under. It settles, and it is a decision about
+`.reveal` or `--accent-solid`, not about that button.
+
+**The veil is four layers, not one** (RULES §S8), and it carries no tint. A tint
+was tried: it filled the gaps around the floating bar in the bar's own colour,
+so the bar lost its edges and the header read as full-bleed at every scroll
+position. The veil blurs; the bar colours.
+
+```js
+document.querySelectorAll('.navveil i').length                          // 4
+getComputedStyle(document.querySelector('.navveil i')).backdropFilter   // blur(14px)
+```
+
 ## 4p. An absolutely-positioned child of a grid or flex parent
 
 `left:0; right:0` does **not** guarantee a stretched box. Box Alignment applies

@@ -6,6 +6,74 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · the header gets a measure, a veil, and a dark version
+
+**A measure.** The header was the one thing on the page ignoring the 1320px
+cap: at 2560 the wordmark sat 600px outside the content it labels while the bar
+kept stretching. Matching the section column exactly is wrong in the other
+direction — the header would read as one more column of the page rather than as
+the frame around it, and two edges landing on the same pixel from different
+systems looks like a coincidence rather than a decision. So it takes the
+section card's own padding expression *measured from the window edge instead of
+the card edge*, which lands its content exactly one `--card-gap` outside the
+section column at every width. Bounded, related, deliberately not flush. The
+content also does not move between the resting and floating states — the bar
+pulls in by `--card-gap` and its padding gives the same amount back, so only
+the ground travels.
+
+**A veil.** A `backdrop-filter` is a switch: content is blurred or it is not,
+and the boundary is a hard line across the page. Masking one blurred layer only
+fades that line's *opacity* — the blur still starts at full strength. A ramp
+needs several layers, each blurrier than the last and each masked to its own
+band, so what changes down the strip is the blur radius. Four of them, painted
+behind the header rather than inside it, so once the bar floats the veil is
+what fills the strip above it and the gaps either side.
+
+**No tint on it.** Carrying the header's grey down the strip was the obvious
+next move and it undid the previous round: the tint filled the gaps around the
+floating bar *in the bar's own colour*, so the bar stopped having edges and the
+header read as full-bleed again at every scroll position. The veil blurs; the
+bar colours. One job each.
+
+**A dark version.** The page ends on two dark bands and a pale grey bar sitting
+on them read as a leftover from the section above. The header now crosses into
+a dark version of itself — and it reads the *ground*, not a scroll offset: the
+bands declare themselves with `data-ground="dark"` and the header asks what is
+behind its own midline, so moving a section or adding a band needs no number
+changed. Everything inside the header reads five local tokens and no rule in it
+names a colour, so the dark version is a five-line swap rather than a second
+copy of the component.
+
+The accent is the part worth writing down. **The correction runs in opposite
+directions on the two grounds.** On grey, the brand orange has to be *darkened*
+to clear AA (`--accent-wash`, added last round). On the dark header that same
+darkened orange fails at 3.0:1, and it is `--accent` itself — the undarkened
+display weight — that clears, at 4.7:1. `--accent-solid` clears neither: it is
+tuned to exactly 4.5:1 on paper, so it is safe on white and on nothing else.
+
+**And a third thing, which axe found and which no amount of colour tuning
+fixes.** Loading the page and jumping straight to the closing band failed
+contrast on the nav's hover-roll labels, reproducibly, 4 runs out of 4. The
+cause is not either accent: while the header cross-fades between grounds it
+passes through mid-grey, and at that instant the maths asks for a foreground
+at L ≤ 0.012 (near-black) or L ≥ 1.20 (brighter than white). Both accents sit
+at L ≈ 0.13–0.24. **No orange survives the middle of that fade** — the failure
+is a property of animating between two grounds that pull the correction in
+opposite directions, and it would exist for any brand colour.
+
+So the fix is not a colour. The rolled-in label is decorative, `aria-hidden`
+and clipped out of view until hovered — it had no business being rendered at
+rest, where it was also giving axe 44 nodes of "incomplete" to chew on. It is
+`visibility:hidden` now, with the hide delayed by the roll's own duration so
+the slide still plays. Violations back to 0 on the reproducer.
+
+**One transient left, and it is not from this round.** The same reproducer
+still catches `.cta__btns .btn--dark` for about a second: the entrance reveal
+animates opacity, and white on `--accent-solid` is *exactly* 4.5:1, so any
+opacity below 1 dips under. It settles to 0 and it affects every text-on-accent
+element inside a `.reveal`, so the fix is a decision about `.reveal` or about
+`--accent-solid` rather than about this button. Left alone and written down.
+
 ## 2026-08-23 · the header stops pretending, and the KPI row becomes tiles
 
 Four notes in one round: the tab reel, the window edge, the data row, the
