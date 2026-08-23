@@ -88,7 +88,8 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 
 | # | Rule | Why |
 |---|---|---|
-| R1 | **Edit the source, never `site/styles.css`.** Run `tools/build-css.py`, which also stamps the `?r=` hashes. | A hand-kept hash shipped stale CSS across four deploys. |
+| R1 | **Edit the source, never `site/styles.css`.** Run `tools/build-css.py`, which stamps `?r=` on CSS/JS and `?v=<sha1>` on **every local asset**. | A hand-kept hash shipped stale CSS across four deploys; unversioned images then made two correct screenshot fixes invisible for two rounds. |
+| R7 | **Verify a fix against the SHIPPED bytes, not your build.** `curl` the live URL, check its hash, crop the image and look at it. | A local check cannot detect a delivery bug — the file was right on disk and right on the server, and still wrong on screen. |
 | R2 | **Never slice a file between two anchors without asserting the distance.** Prefer `replace(old, new, 1)` with the full block and an assert. | A two-anchor slice once deleted 1084 lines, and the symptom surfaced far from the cause. |
 | R3 | **`git diff --stat` before building**, and read the built file for the rule you just wrote — the pruner has silently eaten one before. | |
 | R6 | **After replacing a block, grep for every identifier the old block defined.** A function dropped from a replacement still *called* from a `setTimeout` throws silently, and the visible symptom lands nowhere near the cause. | A missing lede sentence turned out to be a `writeLead` deleted two rounds earlier. |

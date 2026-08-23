@@ -608,6 +608,23 @@ browser — the file having the text is not proof:
   .filter(r => r.selectorText && /YOUR-SELECTOR/.test(r.selectorText)).length   // > 0
 ```
 
+## 9c. Replaced assets actually reach people
+
+Changing a file in place does not change its URL, so browsers and CDN edges keep
+the old bytes. `build-css.py` stamps `?v=<sha1>` on every local asset for exactly
+this reason — confirm it did, and confirm the live copy is the one you built:
+
+```bash
+grep -c '?v=' site/index.html                       # every local asset
+curl -s "$LIVE/assets/artifact/ads-v1.jpg" -o /tmp/a.jpg
+md5sum /tmp/a.jpg site/assets/artifact/ads-v1.jpg   # must match
+ffmpeg -i /tmp/a.jpg -vf "crop=..." /tmp/look.png   # and LOOK at it
+```
+
+**A local check cannot detect a delivery bug.** If someone reports a fix has not
+landed, fetch the shipped bytes before re-fixing anything — twice now the file
+has been correct on disk and correct on the server and still wrong on screen.
+
 ## 9b. The asset links point at what you just built
 
 `tools/build-css.py` stamps `styles.css?r=<hash>` and `app.js?r=<hash>` from the

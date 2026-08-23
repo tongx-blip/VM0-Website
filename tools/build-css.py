@@ -138,6 +138,31 @@ def stamp(css_text):
     js_hash = hashlib.sha1(open(JS, 'rb').read()).hexdigest()[:8]
     new = re.sub(r'styles\.css\?r=[0-9a-z]+', 'styles.css?r=' + css_hash, html)
     new = re.sub(r'app\.js\?r=[0-9a-z]+', 'app.js?r=' + js_hash, new)
+
+    # Every local asset carries the hash of its own bytes.
+    #
+    # styles.css and app.js were versioned; images were not. So replacing an
+    # image in place — same path, new content — shipped the OLD picture to
+    # anyone who had visited before, and to any CDN edge holding it. Two
+    # rounds of a genuinely-fixed screenshot were invisible for exactly this
+    # reason. If it is a file we ship, it gets stamped.
+    site = os.path.dirname(HTML)
+    seen = {}
+
+    def stamp_asset(m):
+        pre, path, post = m.group(1), m.group(2), m.group(3)
+        full = os.path.join(site, path)
+        if not os.path.isfile(full):
+            return m.group(0)
+        if path not in seen:
+            seen[path] = hashlib.sha1(open(full, 'rb').read()).hexdigest()[:8]
+        return '%s%s?v=%s%s' % (pre, path, seen[path], post)
+
+    # src="assets/…" and url(assets/…) in inline styles, minus any old stamp
+    new = re.sub(r'((?:src|href)=")(assets/[^"?]+)(")', stamp_asset, new)
+    new = re.sub(r'(url\()(assets/[^)?]+)(\))', stamp_asset, new)
+    new = re.sub(r'\?v=[0-9a-f]{8}\?v=([0-9a-f]{8})', r'?v=\1', new)
+
     if new != html:
         open(HTML, 'w', encoding='utf-8').write(new)
     return css_hash, js_hash

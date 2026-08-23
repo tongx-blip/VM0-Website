@@ -6,6 +6,30 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · the fix was right; the delivery was not
+
+Two rounds of "the artefact is still cut off" when the artefact had already been
+fixed. The server was serving the corrected file — same sha1 as the local build,
+funnel fully rendered, checked by cropping the bytes off the live URL before
+writing a word of this. What was wrong is that **nobody could receive it.**
+
+`build-css.py` stamped `styles.css?r=` and `app.js?r=` and **nothing else**. So
+replacing an image in place — same path, new content — ships the *old* picture
+to every browser and CDN edge that already holds it. The picture was fixed; the
+URL never changed; so nothing changed on screen. This is the same failure as the
+hand-kept `?r=42` that once shipped stale CSS across four deploys, and the lesson
+was written down for CSS only.
+
+**Every local asset now carries the hash of its own bytes** — 136 of them,
+across `src=`, `href=` and `url()` in inline styles. Replace a file and its URL
+changes with it; there is no way to ship a stale asset by accident any more.
+
+The reason it took two rounds to see: I verified the fix by looking at *my*
+build, and it was correct there every time. A local check cannot detect a
+delivery bug. **Fetch the shipped bytes and inspect those.**
+
+---
+
 ## 2026-08-23 · the captures were blank below the fold
 
 The windows scrolled, but what they scrolled through was empty. Forcing every
