@@ -6,6 +6,31 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · the captures were blank below the fold
+
+The windows scrolled, but what they scrolled through was empty. Forcing every
+reveal open — `classList.add('is-in'); style.opacity = 1` — makes the *wrapper*
+visible without ever letting the page's own scroll observers fire, so anything
+those observers render (charts, tables, lazy sections) was still unbuilt when
+the capture ran. The ads dashboard's funnel section was two empty card outlines
+above 400px of nothing.
+
+**Capture by actually scrolling.** Walk the page in ~700px steps with a beat
+between each, sit at the bottom, return to the top, then capture. The site's own
+machinery does the rendering, which is the only way to be sure it happened.
+Checked each result by cropping its last 900px and looking at it.
+
+**`hidden` loses to any author `display`.** The scroll hint has
+`display: inline-flex`, which beats the UA sheet's `[hidden] { display: none }` —
+so a hint told to hide kept drawing itself. The ops report is a genuinely short
+page that fits its window, and its hint was still sitting on top of it.
+`.tplwin__hint[hidden] { display: none }`.
+
+Live now: ads 445px of scroll, sales 181, engineering 550, product 181,
+leadership 1304, Storefront 1476 — and ops 0, correctly, with no hint.
+
+---
+
 ## 2026-08-23 · real full pages in every window, and the frame that never leaves
 
 **Six of the seven windows had nothing to scroll.** Their artefacts were 2200 ×

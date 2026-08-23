@@ -446,8 +446,18 @@ window's width it lands within a few dozen pixels of the window's height:
 })
 ```
 
-Two traps:
+Three traps:
 
+- **Forcing reveals open does not render a page.** Adding `is-in` and setting
+  `opacity: 1` makes wrappers visible; it does not fire the page's scroll
+  observers, so anything they build is still missing when you capture. **Capture
+  by scrolling** — walk the page in viewport steps with a beat between each, sit
+  at the bottom, come back to the top, then shoot. Then crop the last 900px of
+  the result and look at it.
+- **`hidden` loses to any author `display` rule.** `[hidden] { display: none }`
+  lives in the UA sheet, so `display: inline-flex` on the same element beats it.
+  Anything toggled with `.hidden = true` needs `[hidden] { display: none }` in
+  the author sheet too.
 - **A hidden pane measures zero.** `display:none` gives
   `scrollHeight === clientHeight === 0`, so a check at load concludes "no
   overflow" for every pane but the first and hides their hints for good.

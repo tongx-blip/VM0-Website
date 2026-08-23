@@ -2389,6 +2389,9 @@ h3{ font-family:var(--fd); }
   transition:opacity 260ms var(--e-out), transform 260ms var(--e-out);
 }
 .tplwin__hint svg{ width:14px; height:14px; }
+/* the `hidden` attribute sets display:none in the UA sheet, and ANY author
+   display rule beats it — so a hint told to hide kept drawing itself */
+.tplwin__hint[hidden]{ display:none; }
 .tplwin.is-scrolled .tplwin__hint{ transform:translate(-50%, 6px); }
 .tplwin.is-scrolled .tplwin__hint{ opacity:0; }
 @keyframes tplHint{
