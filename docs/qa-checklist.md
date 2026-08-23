@@ -433,6 +433,29 @@ rgba(12,15,18,.72) over white → #4C4F52 → white text 7.4:1   ✓
 Backdrop blur is what makes such a control read as frosted. Transparency is not
 — reach for the blur and keep the fill opaque enough to be legible anywhere.
 
+## 4m2. A scrollable preview really scrolls
+
+An artefact shown "in a window the visitor can scroll" must actually overflow
+it. A *viewport* screenshot does not — it is a crop of a page, and at the
+window's width it lands within a few dozen pixels of the window's height:
+
+```js
+[...document.querySelectorAll('.scene')].map(s => {
+  const p = s.querySelector('.tplwin__scroll');
+  return s.dataset.scene + ':' + (p.scrollHeight - p.clientHeight);   // all > 0
+})
+```
+
+Two traps:
+
+- **A hidden pane measures zero.** `display:none` gives
+  `scrollHeight === clientHeight === 0`, so a check at load concludes "no
+  overflow" for every pane but the first and hides their hints for good.
+  Re-measure when a pane is shown.
+- **`querySelector` binds one of them.** Per-window behaviour needs
+  `querySelectorAll` — six of seven windows once shared a handler that only
+  ever ran for the first.
+
 ## 4m. An auto-advancing carousel yields
 
 Anything that advances on its own must stop when a person is using it:

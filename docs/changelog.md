@@ -6,6 +6,40 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · real full pages in every window, and the frame that never leaves
+
+**Six of the seven windows had nothing to scroll.** Their artefacts were 2200 ×
+1640 *viewport* screenshots — a 4:3 crop of a page, not the page — so at 880px
+wide they were 656 tall against a ~553 window and the visitor saw a cut-off
+picture with no way to move it. Only Storefront had a genuine full-page capture.
+
+All six artefact pages are still live, so they were re-captured properly:
+`--full` at 1280 with every reveal forced open first. Heights now 870 → 3713
+instead of a flat 656. The board deck is the exception worth noting — it is a
+**slide viewer**, so a full-page capture correctly returns one viewport; its six
+slides were captured through the arrow key and stacked, which is what "eight
+slides" should look like in a window you scroll.
+
+**The scroll hint was bound to `querySelector` — the first window only.** Six of
+the seven could never dismiss their hint. It is per-window now, and it hides
+itself where a page genuinely does not overflow. That check has its own trap: a
+pane at `display:none` measures `scrollHeight === clientHeight === 0`, so a
+check at load hid six hints permanently — it re-measures on `okou:scene`.
+
+**The frame never leaves.** Making the whole window arrive with the result put a
+3.4-second hole in the right-hand third on *every* tab change, and an empty
+column is a worse story than a slightly early one. The chrome, the URL and the
+window's edge are now there from the first frame — informative in themselves —
+and what arrives is the **page inside**, at 300ms. The causal beat is not lost:
+it belongs to the result card in the conversation, which is the panel's hero and
+still lands last.
+
+The whole exchange is tightened with it — `[0, 700, 1700, 2600]` from
+`[0, 1000, 2200, 3400]`. Each beat still settles before the next, and everything
+is on screen inside 2.6s instead of 3.4.
+
+---
+
 ## 2026-08-23 · all seven tabs, seven grounds, and the paragraph I deleted
 
 **The missing first sentence was my bug.** Two rounds ago I replaced the tab

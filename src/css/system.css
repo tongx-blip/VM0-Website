@@ -2296,12 +2296,24 @@ h3{ font-family:var(--fd); }
   100%{ transform:scaleX(1);   opacity:0 }
 }
 
-/* the window arrives WITH the result, not before it */
-.ostage.is-live .tplwin{
-  opacity:0; transform:translateY(18px) scale(.99);
-  transition:opacity 420ms var(--e-out), transform 680ms var(--e-spring);
+/* THE FRAME NEVER LEAVES. Making the whole window arrive with the result put a
+   three-second hole in the right-hand third on every tab change — and an empty
+   column is a worse story than a slightly early one. The chrome, the URL and
+   the window's own edge are there from the first frame, which is itself
+   informative: you can see where this is going before it gets there.
+
+   What arrives is the PAGE inside it, early and quickly. The causal beat is
+   not lost — it moves to the result card in the conversation, which is the
+   hero of the panel and lands last regardless. */
+.ostage.is-live .tplwin__page{
+  opacity:0; transform:scale(1.015);
+  transform-origin:top center;
+  transition:opacity 380ms var(--e-out), transform 620ms var(--e-out);
 }
-.ostage.is-live .tplwin.is-on{ opacity:1; transform:none; }
+.ostage.is-live .tplwin.is-on .tplwin__page{ opacity:1; transform:none; }
+/* while it is coming, the frame reads as a window waiting for a page rather
+   than as a blank rectangle */
+.ostage.is-live .tplwin:not(.is-on) .tplwin__scroll{ background:var(--o-fill); }
 
 /* ── the page it shipped ── the third column of the reference ──
    The chrome bar is white in the reference, which on a white section makes

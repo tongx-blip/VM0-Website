@@ -309,8 +309,12 @@
      conversation rather than an empty ground. */
   var ochats = [].slice.call(doc.querySelectorAll('.ochat'));
   if (ochats.length && !reduce) {
-    var CUE = [0, 1000, 2200, 3400];   // ask · thinking · reply · result
-    var SIDE = [700, 1250];            // the two connectors, as Okou reaches
+    // Tightened: the old 3.4s to the result was a long time to hold someone at
+    // a tab they did not choose. This still reads as an exchange — each beat
+    // settles before the next — and everything is on screen inside 2.6s.
+    var CUE = [0, 700, 1700, 2600];    // ask · thinking · reply · result
+    var SIDE = [450, 850];             // the two connectors, as Okou reaches
+    var PAGE = 300;                    // the page lands in its window, early
     var oRaf = 0, oT0 = null, oPane = null;
 
     function playPane(pane) {
@@ -348,7 +352,7 @@
           c.classList.toggle('is-on', t >= SIDE[i]);
         });
         var win = stage.querySelector('.tplwin');
-        if (win) win.classList.toggle('is-on', t >= CUE[3]);
+        if (win) win.classList.toggle('is-on', t >= PAGE);
       }
       if (t < CUE[CUE.length - 1] + 900) oRaf = requestAnimationFrame(oTick);
     }
@@ -371,14 +375,33 @@
     });
   }
 
-  /* the published page scrolls; the hint stands down once it has been used */
-  var tplwin = doc.querySelector('.tplwin');
-  var tplscroll = tplwin ? tplwin.querySelector('.tplwin__scroll') : null;
-  if (tplwin && tplscroll) {
-    tplscroll.addEventListener('scroll', function () {
-      tplwin.classList.toggle('is-scrolled', tplscroll.scrollTop > 12);
+  /* Every published page scrolls, and each window's hint stands down once its
+     own page has been used. This was bound to `querySelector` — the FIRST
+     window only — so six of the seven never dismissed their hint.
+
+     A hint is also a lie if there is nothing to scroll, so it only appears
+     once the image has loaded and is genuinely taller than the window. */
+  [].slice.call(doc.querySelectorAll('.tplwin')).forEach(function (win) {
+    var pane = win.querySelector('.tplwin__scroll');
+    var hint = win.querySelector('.tplwin__hint');
+    if (!pane) return;
+    pane.addEventListener('scroll', function () {
+      win.classList.toggle('is-scrolled', pane.scrollTop > 12);
     }, { passive: true });
-  }
+
+    function checkOverflow() {
+      if (!hint) return;
+      hint.hidden = pane.scrollHeight <= pane.clientHeight + 8;
+    }
+    var img = pane.querySelector('img');
+    if (img && !img.complete) img.addEventListener('load', checkOverflow);
+    window.addEventListener('resize', checkOverflow, { passive: true });
+    // A pane that is `display:none` measures 0 for both scrollHeight and
+    // clientHeight, so a check at load would hide the hint on six of the seven
+    // windows for good. Re-measure whenever a scene is actually shown.
+    doc.addEventListener('okou:scene', checkOverflow);
+    checkOverflow();
+  });
 
   /* ── 4. one scroll loop: header state + step ladder ───────────
      The ladder is a pinned section taller than its own viewport, and how
