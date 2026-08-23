@@ -559,6 +559,56 @@ into `base.css` twice.
 Non-square marks (Gmail 4:3, Meta, Zapier) are exempt on the short axis only:
 they letterbox, they never stretch.
 
+## 4o. The header is in the right state for the scroll position
+
+Two states, and each one is a claim about where the page is. At rest it is
+full-bleed and square; scrolled it is inset, rounded and shorter. Assert both,
+because the resting state is the one nobody ever screenshots:
+
+```js
+const n = document.getElementById('nav'), r = () => n.getBoundingClientRect();
+window.scrollTo(0, 0);   // rest: flush, full width, square
+// top 0 · left 0 · width === innerWidth · borderRadius 0px · boxShadow none
+window.scrollTo(0, 600); // stuck: stepped down, pulled in, --r-section
+// top --nav-top · left --card-gap · borderRadius 16px · boxShadow none
+```
+
+No shadow in **either** state (RULES §S3). The header separates by tone, so the
+thing to check is that its fill still differs from what it is over — sample it
+against a white section AND against the page grey in the gap between two.
+
+## 4p. An absolutely-positioned child of a grid or flex parent
+
+`left:0; right:0` does **not** guarantee a stretched box. Box Alignment applies
+to absolutely-positioned boxes too: a `justify-self` other than `normal`/
+`stretch` inherited from the parent's layout makes the box shrink-to-fit and
+align *inside* the insets. The mobile menu spent an unknown number of rounds
+114px wide, centred in a 374px header, with `left:0; right:0` in the CSS the
+whole time — and the insets were never the problem.
+
+```js
+const p = document.querySelector('.nav.is-open .nav__links');
+p.getBoundingClientRect().width === p.parentElement.clientWidth   // must be true
+```
+
+If a panel is narrower than its insets say it should be, read `justify-self`
+before you touch `left`, `right` or `width`.
+
+## 4q. A stat tile is label-then-value
+
+The row is `label` (prose, sentence case, `--t-sm`, `--ink-mute`) above `value`
+(`--t-figure`) with its unit at `--t-unit` on the same baseline, left-aligned on
+a `--tile` ground at `--r-section`. Nothing else in the row wears the label's
+clothes — the caveat under it is `.footnote` at `--t-meta`, not a fourth stat.
+
+```js
+[...document.querySelectorAll('.metrics li')].map(li => [
+  li.firstElementChild.tagName,                      // SPAN — the label leads
+  getComputedStyle(li.querySelector('span')).textTransform,   // none
+  li.querySelector('span').getClientRects().length,  // 1 — label on one line
+])
+```
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

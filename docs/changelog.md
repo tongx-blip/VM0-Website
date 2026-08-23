@@ -6,6 +6,75 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · the header stops pretending, and the KPI row becomes tiles
+
+Four notes in one round: the tab reel, the window edge, the data row, the
+header. Three of them were about a component claiming something it had not
+earned.
+
+**The tab reel.** Wider (720 → 820), and the end fade runs much further into
+the neighbouring tab (6%/94% → 14%/86%) — a short fade reads as a crop, not as
+"there is more of this". The third note was the real one: **a focused tab kept
+only two arcs of its ring.** `.tabs` clips horizontally so the reel can slide
+under a fixed centre line, and a clipping container clips *outlines* too — the
+box was exactly as tall as the tabs, so the top and bottom of the 2px/3px-offset
+ring were cut off. It now carries the ring's room vertically (`padding-block:6px`)
+and takes it straight back out of the layout (`margin-block:-6px`).
+
+**The window edge.** The 0.5px hairline was drawn as a spread shadow, which is
+an *outside* stroke: it grew the window by half a pixel all round and sat
+between the frame and its own drop shadow, which is what made it read heavy. It
+is an inside stroke now, and lighter (.22 → .14). It could not simply become an
+`inset` shadow: inset paints above the element's background but **below its
+children**, and the chrome bar and the scroller are opaque and cover the whole
+box. So it is an overlay pseudo-element, on top, `pointer-events:none`.
+
+**The data row**, rebuilt to the supplied design: label above figure, left
+aligned, each on its own tile. Two things were wrong before. The tiles did not
+exist — three bare figures floated on the white card — and the row's own
+`margin-inline:auto` was being overridden by `margin:0`, so the measure was
+kept and then hung off the **left** of a 1300px card. The reference's grey
+sampled at exactly `#F6F6F6`, the same panel grey as the connector cards six
+inches above it, which was living as a hard-coded literal inside one component;
+it is `--tile` now, with `--tile-pad` and `--tile-gap`, and the outputs panels
+reference the same three. Every size in the reference maps onto the existing
+scale to within a pixel — 15 / 53.3 / 23 against `--t-sm` / `--t-figure` /
+`--t-unit`, and the tile's 24px inner padding against `--tile-pad`. The label
+left the utility face: uppercase mono above a 54px numeral competes with it for
+the top of the tile instead of introducing it. The row also stopped stacking at
+960 — that breakpoint existed because three *bare* figures needed the width to
+stay apart, and a tile does that job down to 640.
+
+**The header.** It was floating from the very first pixel of an unscrolled
+page, which is a decoration pretending to be a response to scroll. It is now
+full-bleed, flush and square at rest, and becomes the floating bar on the way
+down: steps down by `--nav-top`, pulls in to `--card-gap`, takes `--r-section`,
+condenses to 54px. The corner came down 22 → 16: `--r-nav = --r-btn + --nav-pad`
+stated a real relationship and still produced a lozenge on a 54px bar, so the
+rule changed — a box inset to a section card's width takes a section card's
+corner.
+
+**And the shadow is gone.** Heavy enough to lift a white bar off a white
+section, it read as a bruise; light enough not to, it lifted nothing. The
+header carries its own ground instead — `--wash-2`, one step off the page grey
+and two off a section card — which is the design system's own rule that a
+surface is a fill. `--r-nav`, `--e-nav` and `--e-nav-stuck` are deleted rather
+than left lying around.
+
+That change cost one accessibility violation and it is worth writing down why:
+**`--accent-solid` is tuned to exactly 4.5:1 on paper, so it clears AA on white
+and on nothing else.** The nav links' hover copy rolls in in the accent; the
+moment the header went grey it fell to 3.86:1. There is now `--accent-wash`
+(#B93A00) for accent text on a grey — 4.9:1 on `--wash-2`, 5.3:1 on `--tile`.
+
+**One bug found while in there, not a regression.** The mobile menu has been
+opening 114px wide, centred inside a 374px header, with `left:0; right:0` in
+the CSS the whole time. Box Alignment applies to absolutely-positioned boxes:
+the panel inherited `justify-self:center` from the header's wide-layout grid,
+which makes an abs-pos box shrink-to-fit and centre itself *inside* its insets
+instead of stretching. The insets were never the problem. QA §4p now says to
+read `justify-self` before touching `left`, `right` or `width`.
+
 ## 2026-08-23 · the Slack mark was never small; its viewBox was
 
 "The Slack logo is too small, it should match the other logos." It did not match

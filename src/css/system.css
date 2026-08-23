@@ -33,6 +33,20 @@
                               5.1:1 on --wash, 4.7:1 on --wash-2 — AA on
                               every ground this page uses */
   --mat:        #171B1F;   /* the ground a product screen is matted on */
+  /* A surface INSIDE a white card — the outputs panels, the KPI tiles.
+     Distinct from --wash-2, which is the grey the PAGE sits on: a tile in
+     the page grey on a white card reads as a hole, not as a surface. It was
+     living as a hard-coded literal inside one component, which is how the
+     KPI row ended up unable to match the panels sitting six inches above it. */
+  --tile:      #F6F6F6;
+  --tile-pad:  clamp(16px, 1.9vw, 24px);
+  --tile-gap:  clamp(14px, 1.6vw, 20px);
+  /* The header's own ground. It has to separate from BOTH things it sits
+     over — the white section cards for most of the page, and the page grey
+     in the gaps between them — using tone alone, because it carries no
+     shadow and no line. That is exactly what the second wash already is,
+     and --ink-mute is already measured against it (4.7:1). */
+  --nav-fill:  var(--wash-2);
   --hairline:   #DFE4E7;
   --rule:       #C9D0D5;
   --grid:       #EDF0F2;
@@ -45,6 +59,11 @@
                      below display size uses this one. */
   --accent:       #ED4E01;
   --accent-solid: #D64300;
+  /* --accent-solid is tuned to EXACTLY 4.5:1 on paper, which means it clears
+     AA on white and on nothing else. The moment a ground goes grey it fails
+     (3.86:1 on --wash-2). This is its sibling for accent text on a grey:
+     4.9:1 on --wash-2, 5.3:1 on --tile, 5.7:1 on paper. */
+  --accent-wash:  #B93A00;
   --accent-ink:   #D64300;   /* alias, kept for older references */
   --accent-2:     #FFF1EA;
 
@@ -104,22 +123,19 @@
      two ideas about what a control is. */
   --r-pill:  999px;
   --r-section: 16px;                         /* every section's own corner  */
-  /* The header is a rounded box holding rounded controls, so its corner is
-     the control's corner PLUS the space between them. Anything else and the
-     two curves fight: the button looks pinched in one corner and loose in
-     the next. State the relationship, do not eyeball it. */
+  /* The header used to derive its corner from the control it contains plus
+     the space around it (--r-nav, 22px). The relationship was sound and the
+     result was still wrong: on a 54px bar a 22px corner is a lozenge. It
+     takes --r-section now, because when it floats it is inset to exactly a
+     section card's width — so it is a card, and cards share one corner. */
   --nav-pad: 12px;
-  --r-nav:   calc(var(--r-btn) + var(--nav-pad));
 
   /* elevation — three steps. A surface is a fill plus one of these. */
   --e-1: 0 1px 2px rgba(12,15,18,.03), 0 14px 30px -24px rgba(12,15,18,.2);
   --e-2: 0 1px 2px rgba(12,15,18,.04), 0 22px 54px -40px rgba(12,15,18,.26);
   --e-3: 0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
   --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
-  --e-nav: 0 1px 2px rgba(12,15,18,.06), 0 10px 24px -14px rgba(12,15,18,.22),
-           0 30px 60px -40px rgba(12,15,18,.34);
-  --e-nav-stuck: 0 1px 2px rgba(12,15,18,.07), 0 12px 26px -14px rgba(12,15,18,.26),
-                 0 34px 66px -40px rgba(12,15,18,.42);
+  /* there is no --e-nav: the header separates by tone, not by elevation */
   --e-tag: 0 1px 2px rgba(12,15,18,.04), 0 10px 22px -16px rgba(12,15,18,.3);
 
   /* type roles */
@@ -262,7 +278,10 @@ h3{ font-family:var(--fd); }
 
 /* utility face: labels, data, captions, controls — the signal that a
    string is metadata and not prose */
-.chip,.footnote,.metrics span,.tag,.vs__label,.state,.quote__tag,
+/* .metrics span is NOT here: a stat tile's label is the first line you read
+   in that tile, and uppercase mono above a 54px numeral competes with it for
+   the top of the box instead of introducing it. It is set as prose. */
+.chip,.footnote,.tag,.vs__label,.state,.quote__tag,
 .acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,
 .footer__links,.footer__links a,.footer__copy,.hero__meta,.ladder__label,
 .a2a__step,.a2a__label,.a2a__back,.scenes__tab{
@@ -334,32 +353,51 @@ h3{ font-family:var(--fd); }
 .panel--cta .mark.is-lit,.footer .mark.is-lit{ color:var(--accent); }
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 
-/* ─────────────── 5. floating header ───────────────
-   Inset from every edge, floating over the page: logo left,
-   navigation centred, actions right. It condenses once the page
-   scrolls. */
+/* ─────────────── 5. the header, in two states ───────────────
+   AT REST it is not floating. It is a full-bleed bar flush to the top of
+   the window — part of the page, not an object on it. There is nothing to
+   float over yet, and a rounded card hovering above the very first pixel of
+   a page is a decoration pretending to be a response to scroll.
+
+   ONCE THE PAGE MOVES it becomes one: it steps down by --nav-top, pulls in
+   to the section cards' width, takes their corner and condenses. The
+   transition IS the information — the header changing shape is what tells
+   you the page is under it now.
+
+   NO SHADOW, in either state. A shadow heavy enough to separate a white bar
+   from a white section read as a bruise under the header, and a light one
+   did not separate it at all. It is a FILL instead — the header carries its
+   own ground, one step off the page grey and two off a section card, so it
+   is legible over both without any furniture. That is the design system's
+   own rule: a surface is a fill (RULES §S3). */
 .nav{
-  /* exactly as wide as a section card, and inset by the same grey */
-  position:fixed; top:var(--nav-top); left:var(--card-gap);
-  right:var(--card-gap); z-index:100;
+  position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
   display:grid;
   grid-template-columns:1fr auto 1fr;
   align-items:center;
   gap:16px;
   margin:0; padding:0 var(--nav-pad);
-  background:var(--paper);
-  border:0; border-radius:var(--r-nav);
-  box-shadow:var(--e-nav);
-  transition:transform var(--t-state) var(--e-out),
+  background:var(--nav-fill);
+  border:0; border-radius:0;
+  box-shadow:none;
+  transition:top var(--t-state) var(--e-out),
+             left var(--t-state) var(--e-out),
+             right var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
-             background var(--t-state) var(--e-out),
-             box-shadow var(--t-state) var(--e-out);
+             border-radius var(--t-state) var(--e-out),
+             background var(--t-state) var(--e-out);
 }
+/* floating: inset to a section card's width, so it takes a section card's
+   corner. The old --r-nav derived the corner from the CONTROL inside plus
+   its padding, which at 22px made a 54px bar read as a lozenge; the header
+   is the width of a card, so it is a card. */
 .nav.is-stuck{
+  top:var(--nav-top);
+  left:var(--card-gap); right:var(--card-gap);
   height:var(--nav-h-stuck);
-  background:var(--paper);
-  box-shadow:var(--e-nav-stuck);
+  border-radius:var(--r-section);
+  background:var(--nav-fill);
 }
 .nav__logo{
   justify-self:start;
@@ -700,13 +738,21 @@ h3{ font-family:var(--fd); }
      the full width read as a menu you are meant to scan; a short window with
      the selection at its centre reads as a reel you are moving through, and
      the fade at each end is what says there is more of it. */
-  max-width:min(100%, 720px);
+  max-width:min(100%, 820px);
   margin-inline:auto;
+  /* A clipping container clips OUTLINES too, and this one was exactly as tall
+     as the tabs — so a focused tab kept only the two arcs the pill's own width
+     spared, and the top and bottom of the ring were cut off. The reel only
+     needs to clip horizontally, so it is given the ring's room vertically
+     (2px outline at 3px offset) and takes it straight back out of the layout. */
+  padding-block:6px;
+  margin-block:-6px;
   overflow:hidden;
-  /* the rail can be wider than the section, so the ends fade rather than
-     being cut off square */
-  -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-          mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  /* The rail can be wider than the section, so the ends fade rather than being
+     cut off square. The fade is what says "there is more of this" — a short one
+     reads as a crop, so it runs well into the neighbouring tab. */
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+          mask-image:linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
 }
 .tabs__rail{
   display:flex; gap:8px;
@@ -1736,6 +1782,13 @@ h3{ font-family:var(--fd); }
   .nav.is-open .nav__links{
     display:flex; flex-direction:column; align-items:stretch;
     position:absolute; top:calc(100% + 8px); left:0; right:0;
+    /* The wide layout centres this in the header's middle grid column with
+       `justify-self:center`. Self-alignment applies to an ABSOLUTELY POSITIONED
+       box too: with left:0 and right:0 it stopped the panel stretching and
+       centred a shrink-to-fit box inside the insets instead, so the menu came
+       out 114px wide in the middle of a 374px header and looked like it had
+       been positioned by accident. The insets were never the problem. */
+    justify-self:stretch;
     margin:0; padding:8px;
     background:rgba(255,255,255,.97);
     -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
@@ -1750,8 +1803,7 @@ h3{ font-family:var(--fd); }
   .showcase__sticker{ width:clamp(40px,11vw,60px); }
   .showcase__sticker--tl{ left:-2%; top:-4%; }
   .showcase__sticker--tr{ right:-2%; top:-5%; }
-  .versus,.proof,.metrics{ grid-template-columns:1fr; }
-  .metrics li{ padding:0; }
+  .versus,.proof{ grid-template-columns:1fr; }
   .scene.is-on{ grid-template-columns:1fr; }
   .scene__ui{ grid-column:auto; }
   .scene__side{ flex-direction:row; }
@@ -1965,17 +2017,44 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-lg);
   box-shadow:var(--e-2);
 }
+/* ── the KPI row: three tiles, label over figure ───────────────────
+   Each figure sits on the same surface as the panels above it — same grey,
+   same corner, same inner padding — so the row reads as part of the section
+   rather than as three numbers floating on the white card.
+
+   LABEL FIRST. A stat tile is read label-then-value: what it is, then how
+   much. Value-first made three display numerals the first thing on the row
+   and turned the labels into a caption underneath, which is a scoreboard.
+   (dataviz: the stat-tile contract is label + value, in that order.)
+
+   Content is left-aligned and the air is all on the right. Centring three
+   short figures inside wide tiles gives each one a different left edge, and
+   the row loses the vertical the eye reads down. */
 .figures .metrics{
-  margin:0;
+  /* `margin:0` overrode the row's own `margin-inline:auto`, so the measure
+     was being kept but hung off the LEFT of a 1300px card. */
+  margin:0 auto;
   grid-column:auto;
-  gap:clamp(20px, 2.4vw, 40px);
+  max-width:1000px;
+  gap:var(--tile-gap);
 }
-.figures .metrics li{ align-items:center; text-align:center; }
+.figures .metrics li{
+  display:flex; flex-direction:column;
+  align-items:stretch; text-align:left;
+  gap:clamp(4px, .5vw, 7px);
+  /* Top and bottom are SHORTER than the sides on purpose: the label's leading
+     and the numeral's descent space are already inside their line boxes, so
+     equal padding on all four sides puts more air above and below the ink
+     than beside it. Padding is the box; the gap you see is the ink. */
+  padding:clamp(11px, 1.3vw, 16px) var(--tile-pad);
+  background:var(--tile);
+  border-radius:var(--r-section);
+}
 
 /* numeral and unit are two sizes, so the figure reads as a quantity
    rather than a slab of type */
 .metrics b{
-  display:flex; align-items:baseline; justify-content:center; gap:.14em;
+  display:flex; align-items:baseline; justify-content:flex-start; gap:.14em;
   font-family:var(--fd);
   color:var(--ink);
 }
@@ -1984,30 +2063,45 @@ h3{ font-family:var(--fd); }
    wrong on a standalone figure — at 56px a "14" set tabular reads loose and
    mechanical. Tabular is for tables. (dataviz: marks-and-anatomy.) */
 .metrics b i{
-  font-style:normal; font-weight:500;
+  font-style:normal; font-weight:600;
   font-size:var(--t-figure);
   line-height:1; letter-spacing:-.045em;
   font-variant-numeric:proportional-nums;
 }
+/* the unit is the quantity's second half, not a note about it — it sits in
+   the reading ink, one step down from the numeral, on its baseline */
 .metrics b em{
   font-style:normal; font-weight:500;
   font-size:var(--t-unit);
   line-height:1.1; letter-spacing:-.02em;
-  color:var(--ink-mute);
+  color:var(--ink-soft);
 }
+/* the label: prose, sentence case, caption size. Tight leading because it is
+   a single line introducing the figure, not a paragraph */
 .metrics span{
-  margin-top:clamp(8px, 1vw, 12px);
-  font-size:var(--t-mono); letter-spacing:.13em;
+  margin:0;
+  font-family:var(--fb); font-weight:400;
+  font-size:var(--t-sm); line-height:1.25;
+  letter-spacing:0; text-transform:none;
   color:var(--ink-mute);
 }
 
-/* the note belongs to the figures, so it sits with them */
+/* The row stacked at 960 because three BARE figures needed the width to stay
+   apart. Once each one is a tile, the tile keeps them apart and three columns
+   hold much further down — 640 is where the longest label ("Brief to first
+   draft") stops fitting on one line inside a third of the row. */
+@media (max-width:640px){
+  .figures .metrics{ grid-template-columns:1fr; }
+}
+
+/* The note belongs to the figures, so it sits with them — but as PROSE. Set
+   at label size and letter-spaced it read as a fourth stat in the row, which
+   is the one thing §the utility-face rule says a caveat must not do. It keeps
+   .footnote's own size and tracking; only the placement is local. */
 .figures .footnote{
   margin:clamp(20px, 2.4vw, 32px) auto 0;
   max-width:52ch;
   text-align:center;
-  font-size:var(--t-mono); letter-spacing:.1em;
-  color:var(--ink-mute);
 }
 
 @media (max-width:720px){
@@ -2030,10 +2124,12 @@ h3{ font-family:var(--fd); }
   transition:transform 460ms var(--e-out), color 460ms var(--e-out);
   will-change:transform;
 }
+/* the copy that rolls in lives on the header's grey, not on paper, so it
+   takes the accent's grey-ground sibling — --accent-solid is 3.86:1 there */
 .roll__t + .roll__t{
   position:absolute; inset:0;
   transform:translateY(100%);
-  color:var(--accent-solid);
+  color:var(--accent-wash);
 }
 .nav__links a:hover .roll__t,
 .nav__signin:hover .roll__t{ transform:translateY(-100%); }
@@ -2080,10 +2176,10 @@ h3{ font-family:var(--fd); }
    at our width the literal 16 reads small (docs/design-system.md §2).
    The tab strip above is NOT from the reference — that stays ours. */
 .ostage{
-  --o-gap:clamp(14px, 1.6vw, 20px);        /* 16 · between the columns   */
-  --o-pad:clamp(16px, 1.9vw, 24px);        /* 20/32 · inside a panel     */
+  --o-gap:var(--tile-gap);                 /* 16 · between the columns   */
+  --o-pad:var(--tile-pad);                 /* 20/32 · inside a panel     */
   --o-r:var(--r-section);                  /* 16 · every panel's corner  */
-  --o-fill:#F6F6F6;                        /* the reference's panel grey */
+  --o-fill:var(--tile);                    /* the reference's panel grey */
   --o-h:clamp(420px, 40vw, 553px);         /* 553 · the row's height     */
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   margin-top:clamp(28px, 3.2vw, 44px);
@@ -2332,10 +2428,23 @@ h3{ font-family:var(--fd); }
      A hairline does — it is the product's own window edge, not page furniture,
      which is why the no-rules audit exempts .tplwin. */
   box-shadow:
-    0 0 0 .5px rgba(12,15,18,.22),
     0 1px 2px rgba(12,15,18,.05),
     0 18px 44px -22px rgba(12,15,18,.28);
   overflow:hidden;
+}
+/* The window edge is an INSIDE stroke: it sits on the last half-pixel of the
+   window itself, not on the half-pixel outside it. Drawn as a spread shadow it
+   was an outside stroke — it grew the window by .5px all round and sat between
+   the frame and its own drop shadow, which is what made it read heavy.
+   It cannot be an `inset` shadow on .tplwin either: inset paints above the
+   element's background but BELOW its children, and the bar and the scroller
+   are opaque and cover the whole box. So it is an overlay, on top, inert. */
+.tplwin::before{
+  content:"";
+  position:absolute; inset:0; z-index:3;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 .5px rgba(12,15,18,.14);
 }
 /* the published page, as a single tall image the visitor scrolls */
 .tplwin__page{
