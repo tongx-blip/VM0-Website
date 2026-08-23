@@ -525,6 +525,40 @@ the screen — which reads as broken, not as a design:
 Watch a full cycle at 1920, where the rail is widest and one copy is least likely
 to cover it.
 
+## 4n. Brand marks fill their own box
+
+Connector SVGs arrive from brand kits with wildly different internal clearspace.
+Dropped into one fixed box they then read at wildly different sizes, and the
+tempting fix — `transform:scale()` on that one usage — leaves the *asset* wrong
+and every other usage of it still small. Slack shipped with **46% of its own
+viewBox** as ink and had accumulated four different corrections in three files;
+the cards, added later, had none, so it appeared there at half size.
+
+Measure the ink, do not eyeball it. Render each mark to a canvas and take the
+alpha bounding box — **every mark's long side is ≥ 90% of its viewBox**, and any
+that is not needs its `viewBox` cropped, not a CSS rule:
+
+```js
+// per SVG, drawn at 256², counting alpha > 8
+const d = ctx.getImageData(0,0,256,256).data;   // → bbox / 256
+```
+
+Then confirm nothing is compensating in CSS. A per-brand `scale()` is allowed
+only as an **optical** nudge on a mark that already measures ≥ 95% — anything
+above 1.06 is compensating for a crop, and belongs in the file:
+
+```bash
+grep -rn 'src\*=' src/css/ | grep -i 'scale('
+# today: exactly one line, .logo img[src*="notion"] at 1.06
+```
+
+This grep is what found the fifth and sixth Slack corrections after the first
+four had been removed — one of them inside a hero block that had been pasted
+into `base.css` twice.
+
+Non-square marks (Gmail 4:3, Meta, Zapier) are exempt on the short axis only:
+they letterbox, they never stretch.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every
@@ -615,10 +649,26 @@ the old bytes. `build-css.py` stamps `?v=<sha1>` on every local asset for exactl
 this reason — confirm it did, and confirm the live copy is the one you built:
 
 ```bash
-grep -c '?v=' site/index.html                       # every local asset
 curl -s "$LIVE/assets/artifact/ads-v1.jpg" -o /tmp/a.jpg
 md5sum /tmp/a.jpg site/assets/artifact/ads-v1.jpg   # must match
 ffmpeg -i /tmp/a.jpg -vf "crop=..." /tmp/look.png   # and LOOK at it
+```
+
+**Counting `?v=` proves nothing** — a stamp can be present and stale. The first
+version of the stamper matched `assets/[^"?]+`, which cannot match a URL that
+already carries a stamp, so it stamped each asset once and never re-stamped one;
+editing a file in place left its URL frozen at the hash it had the day it was
+added. Check the stamp against the bytes:
+
+```bash
+python3 - <<'EOF'
+import re, hashlib, os
+h = open('site/index.html').read()
+for p, stamp in re.findall(r'(assets/[^"?)\s]+)\?v=([0-9a-f]{8})', h):
+    real = hashlib.sha1(open(os.path.join('site', p), 'rb').read()).hexdigest()[:8]
+    if real != stamp: print('STALE', p, stamp, '->', real)
+EOF
+# must print nothing
 ```
 
 **A local check cannot detect a delivery bug.** If someone reports a fix has not

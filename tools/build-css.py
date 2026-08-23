@@ -158,10 +158,16 @@ def stamp(css_text):
             seen[path] = hashlib.sha1(open(full, 'rb').read()).hexdigest()[:8]
         return '%s%s?v=%s%s' % (pre, path, seen[path], post)
 
-    # src="assets/…" and url(assets/…) in inline styles, minus any old stamp
-    new = re.sub(r'((?:src|href)=")(assets/[^"?]+)(")', stamp_asset, new)
-    new = re.sub(r'(url\()(assets/[^)?]+)(\))', stamp_asset, new)
-    new = re.sub(r'\?v=[0-9a-f]{8}\?v=([0-9a-f]{8})', r'?v=\1', new)
+    # src="assets/…" and url(assets/…) in inline styles. The old stamp has to
+    # be part of the match and get thrown away: a pattern that stopped at the
+    # "?" simply never matched an already-stamped link, so the first build
+    # stamped every asset and no later build ever re-stamped one. Editing a
+    # file in place then left its URL frozen at the hash of the bytes it had
+    # the day it was added — the very failure the stamping was added to end.
+    new = re.sub(r'((?:src|href)=")(assets/[^"?]+)(?:\?v=[0-9a-f]{8})?(")',
+                 stamp_asset, new)
+    new = re.sub(r'(url\()(assets/[^)?]+)(?:\?v=[0-9a-f]{8})?(\))',
+                 stamp_asset, new)
 
     if new != html:
         open(HTML, 'w', encoding='utf-8').write(new)

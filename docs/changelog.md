@@ -6,6 +6,46 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-23 · the Slack mark was never small; its viewBox was
+
+"The Slack logo is too small, it should match the other logos." It did not match
+because **the asset ships with 27% clearspace on every side** — its ink fills
+46% of its own `viewBox`, where every other connector mark measures 88–100%.
+Dropped into the same 48px box, it renders at half the size of its neighbours.
+Measured, not guessed: each SVG drawn to a 256² canvas, alpha bounding box read
+back. Slack was the only outlier on the page, by a factor of two.
+
+Every previous encounter with this had been patched at the usage:
+`scale(1.25)` on tags and buttons, `scale(1.34)` in the logo rail, `scale(1.35)`
+twice in the hero, `scale(1.62)` plus a box override in the permissions list —
+**six corrections, four different numbers, three files**, and none of them
+agreed. The connector cards were built later and got none, which is where it
+was finally visible. Every one of those was a patch on a symptom; the file was
+wrong the whole time.
+
+Fixed in the file: `viewBox="0 0 270 270"` → `"73.6 73.6 122.8 122.8"`, the
+mark's own ink bounds, in both copies. Slack now measures 100% of its box with
+51.9% ink area — between Notion (51.1) and Linear (61.3). All six CSS
+corrections deleted; the `.perms__slack` class went with them. Removing them
+also surfaced that a 15-line hero block had been pasted into `base.css` twice.
+
+Two rules and a gate came out of it: crop the asset, never the CSS (**B1/B2**),
+and QA **§4n** measures every mark's ink rather than trusting the eye. That grep
+is what found the fifth and sixth corrections after the first four were gone.
+
+**And a second bug, found while fixing the first.** Yesterday's asset stamping
+was not actually re-stamping. The pattern `assets/[^"?]+` cannot match a URL
+that already carries `?v=`, so the first build stamped every asset and no later
+build ever updated one — editing a file in place left its URL frozen at the hash
+it had the day it was added. Exactly the failure the stamping was added to stop,
+reintroduced by the regex that implemented it. `slack.svg` changed content and
+kept `?v=b7a261cf` through a full rebuild before this was caught.
+
+The old stamp is now part of the match and gets discarded. Audited all 136
+stamped URLs against their bytes: 0 stale. QA §9c no longer says "count the
+`?v=`" — counting proves presence, not freshness; it now checks each stamp
+against the file's sha1.
+
 ## 2026-08-23 · the fix was right; the delivery was not
 
 Two rounds of "the artefact is still cut off" when the artefact had already been

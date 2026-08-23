@@ -927,9 +927,10 @@ h3{ font-family:var(--fd); }
   height:clamp(24px, 2.1vw, 30px);
   object-fit:contain;
 }
-/* these marks ship with heavy internal padding in their own SVG, so at the
-   same box size they read smaller than everything else */
-.logo img[src*="slack"]{ transform:scale(1.34); }
+/* Notion's mark is 96% of its own viewBox on the short axis; a hair of
+   scale puts it level. Nothing else needs a correction here — a mark that
+   needs more than a few percent has a badly cropped SVG, and the fix for
+   that is the file, not this rule. */
 .logo img[src*="notion"]{ transform:scale(1.06); }
 
 /* ─────────────── 13. the ladder ───────────────

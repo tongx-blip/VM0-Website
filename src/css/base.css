@@ -1182,16 +1182,9 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .slackui__msg:nth-child(3){ animation-delay:.12s; }
 @keyframes slackIn{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
 
-/* the Slack mark carries a lot of internal padding, so it needs a
-   larger box than the other connector logos to read at the same size */
+/* every connector mark in this list sits in the same box; the SVGs are
+   cropped to their own ink, so nothing here needs a per-brand correction */
 .perms__list img{ width:26px; height:26px; }
-.perms__slack{ width:32px !important; height:32px !important; margin:-3px; }
-.tag img[src*="slack"],.stage-card__head img[src*="slack"],
-.btn--ghost img[src*="slack"]{ transform:scale(1.25); }
-
-/* the Slack mark has ~30% internal padding in its SVG, so it needs to be
-   scaled up to sit optically level with Drive, Gmail, GitHub and Notion */
-.perms__slack{ width:26px !important; height:26px !important; transform:scale(1.62); }
 .perms__note{
   padding:14px 20px;
   border-top:1px solid var(--hairline);
@@ -1247,7 +1240,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 
 /* connector step cards: which tool the run actually reached into */
 .acard--conn .acard__ic{ background:#fff; }
-.acard__ic--slack img{ transform:scale(1.35); }
 .acard--conn .acard__txt i{ white-space:normal; line-height:1.4; }
 /* connector marks: percentage-sized SVGs need a fixed box to paint into */
 .acard__ic img,.perms__list img,.tag img,.vs__label img{ width:100%; height:100%; }
@@ -1598,10 +1590,9 @@ a.acard .acard__txt i{ color:var(--ink); }
 .perms__list li{ grid-template-columns:26px minmax(0,1fr) auto; }
 @media (max-width:520px){ .perms__list li{ grid-template-columns:22px minmax(0,1fr) auto; } }
 
-/* ── hero: both buttons on one row, and a Slack mark you can read ── */
+/* ── hero: both buttons sit on one row ── */
 .hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }
 .btn--ghost img{ width:20px; height:20px; }
-.btn--ghost img[src*="slack"]{ transform:scale(1.35); }
 
 /* ── hero: the tail headline cycles through a few short statements ── */
 #rotator{ position:relative; }
@@ -1615,10 +1606,6 @@ a.acard .acard__txt i{ color:var(--ink); }
   .rot.is-on{ animation:none; }
 }
 
-/* ── hero: both buttons on one row, and a Slack mark you can read ── */
-.hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }
-.btn--ghost img{ width:20px; height:20px; }
-.btn--ghost img[src*="slack"]{ transform:scale(1.35); }
 
 /* ── hero: the tail headline cycles through a few short statements ── */
 #rotator{ position:relative; }

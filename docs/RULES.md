@@ -75,6 +75,14 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | P4 | **Every glyph is a real Lucide icon** at the version the app ships; typeface and colours are platform tokens. | Hand-drawn paths are what made the mock read as "not our product". | QA §4f |
 | P5 | **Sentence case only.** The product never uses Title Case or CSS uppercase. | | QA §4f |
 
+## Brand marks
+
+| # | Rule | Why | Checked |
+|---|---|---|---|
+| B1 | **Every connector SVG is cropped to its own ink.** A mark that renders small is a badly-cropped `viewBox`; fix the file, once. | | QA §4n |
+| B2 | **Never correct a crop in CSS.** A per-brand `transform:scale()` patches one usage; the same asset then turns up somewhere else, still small, and earns a second number. Slack collected **six** — 1.25, 1.34, 1.35, 1.35, 1.62 and a box override, across three files — and was still half the size of its neighbours in the cards, where nobody had thought to add a seventh. Optical nudges ≤ 1.06 on an already-tight mark are fine. | | QA §4n |
+| B3 | **Marks letterbox, never stretch** — `object-fit:contain` in a fixed box. Non-square marks (Gmail, Meta, Zapier) keep their own aspect. | | QA §4n |
+
 ## Content
 
 | # | Rule | Why | Checked |
