@@ -988,6 +988,32 @@ mock's markup.
   overflows its container, the fade finishes outside the visible box and the
   crop is a hard cut. Put the mask on the box that does the clipping.
 
+### 4z. A component built to a supplied design
+
+- **Read the frame through the API, do not eyeball it.** Sizes, fills,
+  radii, letter spacing and auto-layout gaps are all in the node JSON.
+- **Write every value as `calc(<design number> * var(--unit))`.** The
+  design's own numbers stay readable in the CSS and the ratios cannot
+  drift as the component is edited.
+- **The scale unit must be a LENGTH.** A unitless scale cannot be built
+  from a viewport unit: CSS will not add a number to a length nor divide
+  one by another. `clamp(.8, .53 + .054vw, 1.32)` is invalid, silently.
+- **Scale off the component, not the viewport.** Use `cqw` on a wrapping
+  container. A viewport formula only holds at the one width it was solved
+  for, and breaks completely when the column count changes.
+- **Then MEASURE the rendered ratios against the design's** at every
+  breakpoint, and state where they deviate and why:
+
+```js
+const q = document.querySelector('.quote'), r = q.getBoundingClientRect();
+(q.querySelector('.quote__av').getBoundingClientRect().width / r.width)  // vs 48/317
+```
+
+- **Supplied art with a baked ground has to be keyed out** before it can
+  live on a themed surface, or the component only works in one mode.
+- **`margin-inline:auto` on a grid item** turns stretch into shrink-to-fit.
+  With a `flex:1 1 0%` child that resolves to zero width.
+
 ## 10. Publish
 
 ```bash

@@ -6,6 +6,88 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the testimonial section is built to the supplied Figma
+
+Tong supplied a Figma frame ("Testimonial Section Design", file
+`qOjbTX2K2K2YTobWMb6a1F`, node `700:269`) and three card-ground PNGs, and
+asked for it on the landing page — scaled up by ratio, using our design
+system, with a few more people.
+
+**The frame, read through the API rather than eyeballed:** 1047x496, three
+cards 317x448, 20px apart, 991 inner. Card radius 24, padding 24, vertical
+rhythm 24, avatar 48, quote 24/29.05, ornamental marks 64 in a 29px box,
+attribution rule 4x61 at #D9D9D9, name 500/16, role 300/16. Ground #F6F6F6
+— which is `--tile` exactly.
+
+**Scaling.** Our section's inner measure is 1302, so the design scales by
+1302/991 = 1.314. Every value in the component is written as
+`calc(<figma number> * var(--qu))` and nothing else, so the design's own
+numbers are readable straight out of the CSS and the ratios cannot drift.
+
+**The supplied art was a whole card ground** — doodle at top and bottom
+with a flat #F6F6F6 field between. That field was keyed out to
+transparency (distance-from-ground alpha, then un-compositing the colour)
+so the drawing can sit on any surface. It is the reason the section works
+in dark mode at all; as delivered it would have been a light rectangle on
+a dark page.
+
+**Six cards, and only four faces existed.** Our four avatars plus the two
+in the Figma turned out to be the same four people. Two more were
+generated in the same illustration style. They are slightly cleaner in
+line than the hand-drawn originals; at 63px it does not read, but they are
+generated and should be replaced when real ones exist.
+
+### Three defects, all caught by measuring
+
+**The scale factor was invalid CSS.** `clamp(.80, .5313 + .0543vw, 1.32)`
+adds a number to a length, which CSS will not do. The whole custom
+property was garbage, every value derived from it fell back, and the 48px
+avatar rendered at its natural size — a 430px portrait. A unitless
+viewport scale cannot be expressed at all; `--qu` is a *length* now, "one
+Figma pixel".
+
+**Then it tracked the wrong thing.** On the viewport the ratios were the
+design's at 1440 and nowhere else: at 1024 the grid was still three-up on
+a 294px card and the avatar came out 17.8% of it against the design's
+15.1%; at 768 one 701px card put it at 6.5%. `--qu` is now `.31546cqw`
+— 317 design px = 100cqw — so it measures the card, which is the thing the
+proportion is about. Measured 0.1514 against the design's 0.1514 at 390,
+768, 900, 1024, 1280, 1440 and 2560.
+
+**`margin-inline:auto` collapsed the card to 41px.** On a grid item it
+switches stretch to shrink-to-fit, and the only child is `flex:1 1 0%`
+with `min-width:0`, so the cell resolved to zero and the card rendered as
+nothing but its own padding. An explicit `width:min(100%,460px)` instead.
+
+### Two judgement calls
+
+**Not Inter.** The Figma is Inter Light and `.ladder` already sets that
+precedent for its own Figma, so Inter was tried first. It is wrong here
+for a reason only visible at 84px: Inter draws quotation marks as straight
+slanted bars and the design's are tapered curved wedges. Instrument Sans
+— the page's own prose face — is the closest shape we own, and it keeps a
+second prose face off the page. It has no 300, so Light lands on 400.
+
+**Two columns before one.** Straight from three to one made the cards
+700px wide, which is not the object the design describes, and it was the
+only place the proportions had to be clamped.
+
+### New copy, for approval
+
+Three sample quotes were added for the new cards. They are samples like
+the existing three, and the section still says so above them:
+
+- *"Every ticket gets a first answer with the account history already
+  attached, before anyone opens it."* — Support lead, 400+ tickets a week
+- *"The weekly report builds itself overnight, so the morning goes on
+  deciding instead of assembling."* — Operations manager, 6-person team
+- *"It picks up the repetitive engineering work, so the two of us stay on
+  the parts only we can do."* — Technical founder, 2-person team
+
+The wrapping quote marks were also removed from the three existing quotes,
+because the design carries them as the two large ornaments.
+
+
 ## 2026-08-24 · four comparison cards that are four different pictures
 
 Tong, twice: *"the other three cards are too uniform in form — go research how

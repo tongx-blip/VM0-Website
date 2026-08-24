@@ -250,6 +250,48 @@
      legs reads as a series of darts, not as breathing. */
   --e-inout:   cubic-bezier(.45, 0, .55, 1);
   --ease:      var(--e-out);
+  /* ── the testimonial card ──────────────────────────────────────────
+     Figma "Testimonial Section Design" (file qOjbTX2K2K2YTobWMb6a1F,
+     node 700:269): frame 1047x496, three cards 317x448, 20px between
+     them, 991 inner. Our section's inner measure is 1302, so the design
+     scales by 1302 / 991 = 1.314.
+
+     EVERY value below is the Figma number multiplied by that one factor
+     and nothing else. Written this way the ratios cannot drift: anyone
+     can read the design's own number straight out of the declaration,
+     and QA 4z measures the rendered card against them.
+
+     --qu is ONE FIGMA PIXEL, expressed as a length. It has to be a length:
+     a unitless scale cannot be built from a viewport unit, because CSS
+     will not add a number to a length and will not divide a length by
+     one. `clamp(.8, .53 + .054vw, 1.32)` parses as garbage, every value
+     derived from it falls back, and the 48px avatar rendered at its
+     natural size — which is exactly what the first build did.
+
+     IT TRACKS THE CARD, NOT THE VIEWPORT. Driven off vw the ratios were
+     the design's at 1440 and nowhere else: at 1024 the grid was still
+     three-up on a 294px card and the avatar came out 17.8% of it against
+     the design's 15.1%, and at 768 the grid had collapsed to one 701px
+     card where the avatar fell to 6.5%. A container query unit measures
+     the thing the proportion is actually about. 100 / 317 = 0.31546cqw
+     is one Figma pixel, exactly, at any card width.
+
+     The clamp is not fidelity, it is a type floor and ceiling: below
+     0.86 the 24px quote drops under our 20px floor, and a single card
+     stretched across a tablet would otherwise reach a 53px quote. */
+  --qu: clamp(.86px, .31546cqw, 1.42px);   /* 317 design px = 100cqw */
+  --q-radius:  calc(24 * var(--qu));
+  --q-pad:     calc(24 * var(--qu));
+  --q-gap:     calc(24 * var(--qu));   /* card's vertical rhythm      */
+  --q-avatar:  calc(48 * var(--qu));
+  --q-stack:   calc(16 * var(--qu));   /* inside the quote block      */
+  --q-mark:    calc(64 * var(--qu));   /* the two ornamental quotes   */
+  --q-quote:   calc(24 * var(--qu));
+  --q-name:    calc(16 * var(--qu));
+  --q-bar:     calc( 4 * var(--qu));   /* the attribution rule        */
+  --q-barpad:  calc(12 * var(--qu));
+  --q-namegap: calc( 4 * var(--qu));
+
   --t-hover:  220ms;
   --t-press:  120ms;
   --t-state:  420ms;
@@ -2333,32 +2375,88 @@ h3{ font-family:var(--fd); }
    token. */
 .vs__txt p{ font-size:var(--t-meta); line-height:1.6; color:var(--ink-soft); }
 
+/* ── the testimonial cards ───────────────────────────────────────────
+   Built to the supplied Figma (node 700:269), scaled by --qs and nothing
+   else — see the token block in 1.
+
+   OUR FACE, NOT THE DESIGN'S. The Figma is set in Inter Light, and Inter
+   was tried first because .ladder already does that for its own Figma.
+   It is wrong here for a reason that only shows at 84px: Inter draws its
+   quotation marks as straight slanted bars and the design's are tapered
+   curved wedges. Instrument Sans — the page's own prose face — is the
+   closest shape we own, so the marks come out right AND the card stops
+   putting a second prose face on the page. Instrument Sans has no 300,
+   so the design's Light lands on 400. */
 .proof{
   display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(12px,1.3vw,18px);
+  gap:clamp(16px, 1.39vw, 27px);   /* 20 design px x 1.314 = 26.3 */
   margin-top:clamp(44px,4.8vw,68px);
 }
-.quote{ margin:0; padding:clamp(24px,2.2vw,32px); display:flex; flex-direction:column; }
-.quote__tag{
-  font-size:var(--t-mono); letter-spacing:.13em;
-  color:var(--accent-wash); margin-bottom:20px;
+.qcell{ container-type:inline-size; display:flex; }
+.quote{
+  position:relative; overflow:hidden; isolation:isolate;
+  flex:1; min-width:0;
+  margin:0; padding:var(--q-pad);
+  display:flex; flex-direction:column; gap:var(--q-gap);
+  border-radius:var(--q-radius);
+  background-color:var(--tile);
+  font-family:var(--fb);
+
+  /* THE SAME IMAGE TWICE, anchored to opposite edges. The supplied art
+     arrived as a whole card ground with the doodle at the top and the
+     bottom and a flat #F6F6F6 field between; that field was keyed out to
+     transparency so the art can sit on any surface and survive dark mode.
+     One layer at `100% 100%` would have worked only while the card kept
+     the design's exact 317:448 ratio — the moment a longer quote makes a
+     card taller, it stretches the drawing. Anchored top and bottom at
+     `100% auto` each layer keeps the artwork's own proportions and the
+     now-empty middle simply shows nothing. */
+  background-repeat:no-repeat, no-repeat;
+  background-position:top center, bottom center;
+  background-size:100% auto, 100% auto;
+  background-image:var(--q-art), var(--q-art);
+  --q-art:url(assets/doodles/doodle-1.png);
 }
+.proof > :nth-child(3n+2) .quote{ --q-art:url(assets/doodles/doodle-2.png); }
+.proof > :nth-child(3n+3) .quote{ --q-art:url(assets/doodles/doodle-3.png); }
+
+.quote__av{
+  width:var(--q-avatar); height:var(--q-avatar);
+  border-radius:50%; object-fit:cover; flex:none;
+}
+.quote__body{ display:flex; flex-direction:column; gap:var(--q-stack); flex:1; }
+/* the ornamental marks are 64px glyphs sitting in a 29px box in the
+   design — they overhang deliberately, so the line box is collapsed
+   rather than allowed to open a gap the design does not have */
+.quote__mark{
+  margin:0; font-size:var(--q-mark); line-height:.46;   /* 64 x .46 = the
+        design's 29px box, so the glyph overhangs exactly as it does there */
+  font-weight:400; color:var(--ink);
+}
+.quote__mark--close{ text-align:right; }
 .quote blockquote{
-  margin:0 0 24px;
-  font-family:var(--fd); font-weight:500;
-  font-size:var(--t-lead);
-  line-height:1.3; letter-spacing:-.024em;
-  color:var(--ink); flex:1;
+  margin:0;
+  font-weight:400; font-size:var(--q-quote);
+  line-height:1.21; letter-spacing:0;
+  color:var(--ink);
 }
 .quote figcaption{
-  display:flex; align-items:center; gap:12px;
-  padding-top:4px;
+  display:flex; align-items:stretch; gap:var(--q-barpad);
 }
-.quote figcaption b{ font-family:var(--fb); font-size:var(--t-meta); font-weight:600; color:var(--ink); }
-.quote figcaption i{
-  font-family:var(--fm); font-style:normal;
-  font-size:var(--t-mono); letter-spacing:.015em; text-transform:none;
-  color:var(--ink-mute);
+/* #D9D9D9 in the design. As a channel alpha instead of a literal it
+   holds the same weight against the card on both grounds. */
+.quote__bar{
+  width:var(--q-bar); flex:none; border-radius:var(--r-pill);
+  background:rgb(var(--ink-rgb) / .15);
+}
+.quote__who{ display:flex; flex-direction:column; gap:var(--q-namegap); }
+.quote__who b{
+  font-family:inherit; font-weight:500;
+  font-size:var(--q-name); line-height:1.21; color:var(--ink);
+}
+.quote__who span{
+  font-weight:400; font-size:var(--q-name);
+  line-height:1.21; color:var(--ink);
 }
 
 /* ─────────────── 15. the parallel-work figure ─────────────── */
@@ -2754,7 +2852,12 @@ h3{ font-family:var(--fd); }
   .showcase__sticker{ width:clamp(40px,11vw,60px); }
   .showcase__sticker--tl{ left:-2%; top:-4%; }
   .showcase__sticker--tr{ right:-2%; top:-5%; }
-  .versus,.proof{ grid-template-columns:1fr; }
+  .versus{ grid-template-columns:1fr; }
+  /* the testimonial cards go two-up, not one. Straight to a single column
+     they became 700px wide, and a card that wide is no longer the object
+     the design describes — the scale clamp had to cap, which is the only
+     place the proportions stopped matching the Figma. */
+  .proof{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   /* the spans have to go with the twelve columns. `span 7` inside a
      one-column grid does not clamp — it generates six implicit columns
      and the section runs off the page. */
@@ -2768,6 +2871,14 @@ h3{ font-family:var(--fd); }
   .scene__ui{ grid-column:auto; }
   .scene__side{ flex-direction:row; }
   .scene__side .acard{ flex:1; }
+}
+@media (max-width:680px){
+  .proof{ grid-template-columns:1fr; }
+  /* an explicit width, not max-width. `margin-inline:auto` on a grid item
+     switches it from stretch to shrink-to-fit, and its only child is
+     `flex:1 1 0%` with `min-width:0` — so the cell resolved to 0 and the
+     card rendered as nothing but its own padding. */
+  .qcell{ width:min(100%, 460px); margin-inline:auto; }
 }
 @media (max-width:620px){
   .ostage__conn{ grid-template-columns:1fr; }
