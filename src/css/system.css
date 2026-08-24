@@ -1890,6 +1890,99 @@ h3{ font-family:var(--fd); }
   font-size:12px; color:var(--p-mute); white-space:nowrap;
 }
 
+/* ── the connector hub ──────────────────────────────────────────────
+   The Zapier card's claim is "reads the goal, picks the tools", so the
+   picture is the reach itself: every connector laid out on one regular
+   grid with Okou at the exact centre, and the rim masked away so a
+   9 x 5 crop reads as "and the rest of the thousand".
+
+   LIGHT, deliberately. The reference for this was a dark grid; a dark
+   panel here would be the only inverted surface on a light page and would
+   fight the Page Theme Lock. The tiles use the product's own gray-50
+   (#F3F5F8) and its 8px item radius, so they are the same chip the app
+   puts a connector mark in.
+
+   MULTI-STEP. Three tiles next to the centre light in sequence — read,
+   draft, post — and the ring leaves the centre on the same cycle. One
+   pass every 4.2s, so it reads as a run rather than as decoration. */
+.vs__viz--context{
+  display:grid; place-items:center;
+  padding:0;
+}
+.hub{
+  display:grid;
+  /* max-content, or the centred grid item shrinks to its container and the
+     grid stops reaching the card's edges — which is the one thing the rim
+     mask needs it to do */
+  width:max-content;
+  grid-template-columns:repeat(11, 52px);
+  gap:11px;
+  /* the rim is what says "there are more of these than fit" */
+  -webkit-mask-image:radial-gradient(ellipse 54% 76% at 50% 50%, #000 26%, transparent 74%);
+          mask-image:radial-gradient(ellipse 54% 76% at 50% 50%, #000 26%, transparent 74%);
+}
+.hub__t{
+  display:grid; place-items:center;
+  width:52px; height:52px;
+  border-radius:8px;                      /* the product's item radius */
+  background:#F3F5F8;                     /* the product's gray-50 */
+  /* Pinned light in BOTH modes, like every other product mock on this
+     page (P1). The first dark pass followed --paper and inverted only the
+     centre tile, so the hub became the darkest thing on its own grid — the
+     exact opposite of what it is for. */
+}
+.hub__t img{ width:22px; height:22px; object-fit:contain; }
+
+/* Okou at the centre, and the only tile with the accent on it */
+/* the hub reads as the hub: a size up, lifted, and the only tile the accent
+   touches. Everything else on this grid is a flat gray-50 chip. */
+.hub__t--me{
+  position:relative;
+  width:62px; height:62px;
+  margin:-5px;
+  border-radius:14px;                     /* the product's card radius */
+  background:#FFFFFF;
+  box-shadow:0 2px 4px rgb(var(--ink-rgb) / .07),
+             0 14px 34px -10px rgb(var(--accent-rgb) / .58);
+}
+.hub__t--me img{ width:30px; height:30px; }
+/* the ring that leaves the centre once per pass */
+.hub__t--me::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  border:1.5px solid var(--accent);
+  opacity:0;
+  animation:hubRing 4.2s var(--e-out) infinite;
+  animation-play-state:paused;
+}
+@keyframes hubRing{
+  0%      { transform:scale(1);    opacity:.55 }
+  34%,100%{ transform:scale(2.05); opacity:0 }
+}
+
+/* the three steps, in order, each holding briefly before the next */
+.hub__t--s1,.hub__t--s2,.hub__t--s3{
+  position:relative;
+  animation:hubStep 4.2s var(--e-out) infinite;
+  animation-play-state:paused;
+}
+.hub__t--s2{ animation-delay:.42s }
+.hub__t--s3{ animation-delay:.84s }
+@keyframes hubStep{
+  0%,4%   { background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--accent-rgb) / 0); }
+  10%,26% { background:#FFFFFF; box-shadow:0 0 0 1.5px rgb(var(--accent-rgb) / .55); }
+  40%,100%{ background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--accent-rgb) / 0); }
+}
+.vs.is-in .hub__t--me::after,
+.vs.is-in .hub__t--s1,
+.vs.is-in .hub__t--s2,
+.vs.is-in .hub__t--s3{ animation-play-state:running; }
+
+@media (prefers-reduced-motion:reduce){
+  .hub__t--me::after,.hub__t--s1,.hub__t--s2,.hub__t--s3{ animation:none; }
+}
+
 /* ── the text half ───────────────────────────────────────────────── */
 .vs__txt{ padding:clamp(20px,2vw,26px); }
 
@@ -1904,7 +1997,11 @@ h3{ font-family:var(--fd); }
 .vs__side{ display:inline-flex; align-items:center; gap:7px; }
 .vs__side img{ width:18px; height:18px; object-fit:contain; }
 .vs__side--us{ color:var(--ink); }
-.vs__vs{ opacity:.5; }
+/* --ink-mute is already the lightest ink the page allows, so an opacity on
+   top of it is under AA by construction. The word is made quieter by SIZE
+   instead — one dimension, and it still reads as the connector between the
+   two names rather than a third name. */
+.vs__vs{ font-size:.86em; }
 
 .vs h3{
   /* base.css sets `font-family:inherit` here, which lands on the body face —

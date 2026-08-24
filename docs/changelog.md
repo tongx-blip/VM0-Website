@@ -6,6 +6,45 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the Zapier card becomes the reach itself
+
+The claim on that card is *"reads the goal, picks the tools, and handles the
+multi-step work in between"*, and a four-row list of chosen tools was a
+literal reading of it. The picture is the **reach**: every connector on one
+regular grid, Okou at the exact centre, and the rim masked away so an 11 x 5
+crop reads as "and the rest of the thousand".
+
+**Light, in both modes.** The reference was a dark grid. A dark panel here
+would be the only inverted surface on a light page and would fight the Page
+Theme Lock — and in dark mode it is the *page* that inverts, not the mock. The
+first dark pass got this wrong in an instructive way: the tiles were pinned to
+gray-50 but the centre tile used `var(--paper)`, so it followed the theme and
+went darker than its neighbours. The hub became the darkest thing on its own
+grid, which is the exact opposite of what it is for. Pinned to white now, like
+every other product mock on this page.
+
+**The tiles are the product's chip**, not a marketing approximation: gray-50
+`#F3F5F8` at the 8px item radius, the same chip the app puts a connector mark
+in. Okou's tile is a size up at the 14px card radius, lifted, and the only
+tile the accent touches.
+
+**Multi-step, as a cascade.** Three tiles beside the centre light in order over
+a 4.2s pass, overlapping slightly so it reads as work in flight rather than a
+queue, and a ring leaves the centre on the same cycle. Sampled at 180ms the
+order is clean 1 → 2 → 3.
+
+Two things the grid needed that are worth remembering. `place-items:center`
+shrinks a grid item to its container, so the grid stopped reaching the card's
+edges until it was given `width:max-content` — and reaching the edges is the
+one thing the rim mask needs. And the marks are ranked by distance from the
+centre, so the ones a visitor actually recognises are the ones that survive the
+fade.
+
+**One contrast fix on the way.** `.vs__vs` — the word between the two logos —
+carried `opacity:.5` on top of `--ink-mute`, which is already the lightest ink
+the page allows, so it was under AA by construction. It is quieter by *size*
+now. One dimension, not two.
+
 ## 2026-08-24 · the card surfaces are read out of the product, not invented
 
 Tong: *"remember to use our components."* He was right, and the previous entry
