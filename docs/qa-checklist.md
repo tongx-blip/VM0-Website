@@ -663,6 +663,45 @@ clothes — the caveat under it is `.footnote` at `--t-meta`, not a fourth stat.
 ])
 ```
 
+## 4r. Token hygiene — nothing declared that is unused, nothing painted that is not a token
+
+Two greps and a diff. Run all three; the first two are cheap and the third is
+the only one that proves a colour refactor was safe.
+
+**a. No token is declared and never used.** 106 declared, 0 unused:
+
+```bash
+python3 - <<'EOF'
+import re
+src = open('src/css/system.css').read() + open('src/css/base.css').read() \
+    + open('site/index.html').read() + open('site/app.js').read()
+root = re.search(r':root\{(.*?)\n\}', src, re.S).group(1)
+for t in re.findall(r'(--[a-z0-9-]+)\s*:', root):
+    if not re.search(r'var\(\s*'+re.escape(t)+r'\s*[,)]', src): print('UNUSED', t)
+EOF
+```
+
+**b. Nothing in the design layer paints with a literal.** Everything left in
+`system.css` outside `:root` must be one of exactly three things: a **mask**
+alpha stop (`#000` in a `mask-image` — that is not a colour), a **component's
+own token declaration** (`.tpl`'s `--sand`, `.tplwin`'s `--chrome-pill`), or a
+**channel consumption** (`rgb(var(--ink-rgb) / .05)`). Anything else is a bug.
+`base.css` is exempt: a product mock draws the app's own colours, and Slack's
+aubergine is Slack's (RULES §P1).
+
+**c. A colour refactor must be a visual no-op, and you must prove it.** Capture
+every computed colour on the page before and after and diff them — a mechanical
+substitution across 66 sites cannot be eyeballed:
+
+```js
+// before AND after: for every element in body *, record
+// color, backgroundColor, border*Color, boxShadow, fill, stroke, backgroundImage, maskImage
+```
+
+The last run: 1290 elements, **8 differences**, every one of them the intended
+`--accent-solid` → `--accent` on a decorative shape. Anything you cannot name
+in advance is a regression.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

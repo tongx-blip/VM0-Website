@@ -6,6 +6,67 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the two oranges are one orange, and the tokens get an audit
+
+**The veil first.** Two complaints, one cause and one dial. The blur was
+showing *horizontal lines* because the first version's masks rose AND fell —
+each layer was a band, and where one band was descending while the next was
+still climbing the total coverage dipped and rose again, printing three or four
+hard lines across the strip. Every mask is monotonic now: opaque at the top,
+one fade, gone, widest radius let go first, so the accumulated blur can only
+decrease and there is no interior edge for a seam to form on. Reproduced and
+then disproved on a striped test backdrop, which makes blur strength directly
+visible — the seams are unmistakable on it and the fixed version is clean.
+`--veil-fade` also comes down from 56px to 22px at 1440.
+
+**The two buttons were never different colours.** Both are `#D64300`, in the
+rendered page and in the screenshot they were reported from — I sampled the
+screenshot to be sure. What differs is what is around them: the SIGN UP sits on
+the header's grey where its contrast with the ground is 3.86:1, the hero button
+on white where it is 4.5:1, and it is a fraction of the area. Same ink, two
+surrounds, two readings.
+
+**But the brand orange really was missing.** #ED4E01 was painting three things
+on the whole page; the darkened `--accent-solid` was painting fourteen. That
+sibling exists for exactly one reason — white text on the brand orange is
+3.69:1 — and it had spread to places with no text on them at all: a 6px chip
+dot, the section-label dot, the typing caret, the card read-bar, the window
+light. All five are the brand orange now. The four that remain on
+`--accent-solid` all carry text, which is the whole of its job.
+
+`--accent-solid` cannot become #ED4E01 while the buttons carry white 12px
+labels. That is not a tuning question: 3.69:1 against a 4.5:1 requirement, and
+the only ways out are a darker label on the fill or a label big enough to count
+as large text. Say the word and I will draw either.
+
+**The token audit.** 95 declared, and 104 distinct colour literals living
+outside them — 266 occurrences.
+
+- **7 deleted**: `--navy`, `--green-dk`, `--sec`, `--g-000` (a second name for
+  `--ink`), `--accent-ink` (a second name for `--accent-solid`), `--nav-bottom`,
+  `--r-xl`, `--e-tag`. None referenced anywhere.
+- **Channels added**, because a hex cannot carry an alpha and that is why the
+  literals bred: `rgba(12,15,18,…)` had been re-typed **41 times in 22 different
+  alphas**, none of which would have followed `--ink`. 66 sites now read
+  `rgb(var(--ink-rgb) / .05)` and friends.
+- **The scene hues got tokens.** Seven identity colours were sitting inline in
+  the markup as literals with nothing behind them — which is exactly why the
+  ladder had grown a fourth, nearly-matching set of its own in CSS, differing
+  in one pink. Named for the team each belongs to.
+- **Status inks**: `#0B6B40` and `#8F4207` were hard-coded inside `.state`.
+  They are the AA-safe siblings of `--ok` and `--wait` on their own 12% tints —
+  the same relationship `--accent` has to `--accent-solid`, so they are tokens
+  now for the same reason.
+- **A latent failure found on the way**: the wordmark's hover colour was
+  `--accent-solid`, which was correct when the header was white and became
+  3.86:1 the moment it went grey last round. axe never caught it because axe
+  does not hover. It reads `--nav-accent` now, so it follows the ground.
+
+Everything above is a visual no-op except the eight decorative shapes, and that
+is not an assertion: 1290 elements had every computed colour, shadow, gradient
+and mask captured before and after, and the diff is those eight and nothing
+else. QA §4r now requires that diff for any colour refactor.
+
 ## 2026-08-23 · the header gets a measure, a veil, and a dark version
 
 **A measure.** The header was the one thing on the page ignoring the 1320px

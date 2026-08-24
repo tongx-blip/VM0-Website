@@ -1769,6 +1769,21 @@ ul,ol{ margin:0; padding:0; list-style:none; }
                               5.1:1 on --wash, 4.7:1 on --wash-2 — AA on
                               every ground this page uses */
   --mat:        #171B1F;   /* the ground a product screen is matted on */
+
+  /* ── CHANNELS ─────────────────────────────────────────────────────
+     Every shadow, scrim and state layer on this page is one of these
+     colours at some alpha, and every one of them used to be re-typed as
+     a literal: `rgba(12,15,18,.05)` appeared 41 times in 22 different
+     alphas, none of which would have followed --ink if --ink had ever
+     moved. A hex cannot carry an alpha, so the channels are declared
+     separately and consumed as `rgb(var(--ink-rgb) / .05)`.
+     If you change --ink, change --ink-rgb in the same edit. */
+  --ink-rgb:          12 15 18;
+  --paper-rgb:        255 255 255;
+  --accent-rgb:       237 78 1;
+  --accent-solid-rgb: 214 67 0;
+  --ok-rgb:           14 124 74;
+  --wait-rgb:         180 83 9;
   /* A surface INSIDE a white card — the outputs panels, the KPI tiles.
      Distinct from --wash-2, which is the grey the PAGE sits on: a tile in
      the page grey on a white card reads as a hole, not as a surface. It was
@@ -1788,7 +1803,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --nav-fill:      var(--wash-2);
   --nav-fill-dark: var(--g-100);
   /* how far the blur under the header takes to disappear */
-  --veil-fade: clamp(34px, 3.6vw, 56px);
+  --veil-fade: clamp(14px, 1.5vw, 22px);
   --hairline:   #DFE4E7;
   --rule:       #C9D0D5;
   --grid:       #EDF0F2;
@@ -1806,23 +1821,47 @@ ul,ol{ margin:0; padding:0; list-style:none; }
      (3.86:1 on --wash-2). This is its sibling for accent text on a grey:
      4.9:1 on --wash-2, 5.3:1 on --tile, 5.7:1 on paper. */
   --accent-wash:  #B93A00;
-  --accent-ink:   #D64300;   /* alias, kept for older references */
   --accent-2:     #FFF1EA;
 
-  /* status hues: real, because the product screens are real */
+  /* status hues: real, because the product screens are real.
+     Each has an -ink sibling for the same reason --accent does: the hue
+     itself carries a 12% tint as a FILL, and the label sitting on that
+     tint has to clear AA against it. Both were hard-coded inside .state. */
   --ok:         #0E7C4A;
+  --ok-ink:     #0B6B40;
   --wait:       #B45309;
+  --wait-ink:   #8F4207;
   --blue:       #1D6FE0;
-  --navy:       #123A6B;
   --orange:     var(--accent);
   --yellow:     #F0B429;
   --green:      var(--ok);
-  --green-dk:   #0A3B26;
-  --sec:        var(--accent);
+
+  /* ── THE SCENE HUES ───────────────────────────────────────────────
+     One per worked example, named for the team it belongs to: the tab
+     that selects it, and the progress bar that fills across it. Identity,
+     not status — and after the accent these are the only colours the page
+     spends. They were living inline in the markup as seven literals with
+     no token behind them, which is why the ladder below grew a fourth,
+     nearly-matching set of its own. */
+  --hue-marketing:   #F8A100;
+  --hue-ads:         #E24E4A;
+  --hue-sales:       #C77BA6;
+  --hue-engineering: #3758A2;
+  --hue-product:     #0E8C99;
+  --hue-ops:         #6E8C3A;
+  --hue-leadership:  #6E5AA8;
+  /* the ladder's four steps borrow three of those and add one pale pink
+     of their own — kept explicit rather than silently reusing --hue-sales,
+     because they are a different set of four things */
+  --step-run:      var(--hue-marketing);
+  --step-save:     var(--hue-ads);
+  --step-hand:     #E4ABC8;
+  --step-auto:     var(--hue-engineering);
 
   /* the legacy nine-step ramp the product mocks are built on,
      re-cut on the cool neutral so they land in this palette */
-  --g-000:#0C0F12; --g-100:#171B1F; --g-200:#232A2F; --g-300:#454D54;
+  /* --g-000 was a second name for --ink and nothing used it */
+  --g-100:#171B1F; --g-200:#232A2F; --g-300:#454D54;
   --g-400:#636A70; --g-500:#949CA2; --g-600:#C2C9CE; --g-700:#DFE4E7;
   --g-800:#EDF0F2; --g-900:#F7F9FA;
   --paper-2:#F7F9FA;
@@ -1846,7 +1885,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --nav-h:  62px;                            /* 38px control + 2 × --nav-pad */
   --nav-top:12px;
   --nav-h-stuck:54px;                        /* the header once you scroll  */
-  --nav-bottom:calc(var(--nav-top) + var(--nav-h));
   /* anything that measures itself against the header while the page is
      scrolled must use the STUCK height — the header is never its resting
      size at the moment a pinned section is on screen */
@@ -1858,7 +1896,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --r-btn:   10px;                           /* small controls              */
   --r-card:  12px;                           /* surfaces, tiles             */
   --r-lg:    clamp(16px, 1.8vw, 26px);       /* a component-scale card      */
-  --r-xl:    clamp(20px, 2.2vw, 34px);       /* a section-scale card        */
   /* --r-pill is for things that are actually ROUND — an avatar, a status
      dot, the cap of a progress bar. Every component with a box is a
      rectangle with --r-btn. A page that mixes lozenges and rectangles has
@@ -1877,8 +1914,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --e-2: 0 1px 2px rgba(12,15,18,.04), 0 22px 54px -40px rgba(12,15,18,.26);
   --e-3: 0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
   --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
-  /* there is no --e-nav: the header separates by tone, not by elevation */
-  --e-tag: 0 1px 2px rgba(12,15,18,.04), 0 10px 22px -16px rgba(12,15,18,.3);
+  /* the header has no elevation token — it separates by tone (RULES S3) */
 
   /* type roles */
   --fd: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -2075,7 +2111,7 @@ h3{ font-family:var(--fd); }
 
 .linkline a span{ transition:transform var(--t-hover) var(--e-snap); }
 
-.linkline a:hover{ background-size:100% 1px; color:var(--accent-ink); }
+.linkline a:hover{ background-size:100% 1px; color:var(--accent-solid); }
 
 .linkline a:hover span{ transform:translateX(4px); }
 
@@ -2197,10 +2233,10 @@ h3{ font-family:var(--fd); }
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
   --nav-ground:var(--nav-fill-dark);
-  --nav-ink:rgba(255,255,255,.72);
+  --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
-  --nav-chip:rgba(255,255,255,.1);
+  --nav-chip:rgb(var(--paper-rgb) / .1);
 }
 
 
@@ -2283,28 +2319,37 @@ h3{ font-family:var(--fd); }
 
 .navveil i{ position:absolute; inset:0; display:block; }
 
+/* EVERY MASK IS MONOTONIC — opaque at the top, one fade, gone. That is the
+   whole trick, and the first version got it wrong: those masks rose AND fell,
+   so each layer was a BAND. Where one band was descending while the next was
+   still climbing, total coverage dipped and rose again, and the composite
+   showed three or four hard horizontal lines across the strip — visible on
+   any textured backdrop and obvious on text.
+   With each layer only ever fading OUT, and the widest radius let go first,
+   the accumulated blur can only decrease down the strip. There is no interior
+   edge left for a seam to form on. */
 .navveil i:nth-child(1){
-  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .55));
-          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .55));
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .60));
+          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .60));
 }
 
 .navveil i:nth-child(2){
-  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  -webkit-mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade)), #000 calc(100% - var(--veil-fade) * .75), transparent calc(100% - var(--veil-fade) * .3));
-          mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade)), #000 calc(100% - var(--veil-fade) * .75), transparent calc(100% - var(--veil-fade) * .3));
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .80), transparent calc(100% - var(--veil-fade) * .40));
+          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .80), transparent calc(100% - var(--veil-fade) * .40));
 }
 
 .navveil i:nth-child(3){
-  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
-  -webkit-mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .7), #000 calc(100% - var(--veil-fade) * .45), transparent calc(100% - var(--veil-fade) * .08));
-          mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .7), #000 calc(100% - var(--veil-fade) * .45), transparent calc(100% - var(--veil-fade) * .08));
+  -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .55), transparent calc(100% - var(--veil-fade) * .20));
+          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .55), transparent calc(100% - var(--veil-fade) * .20));
 }
 
 .navveil i:nth-child(4){
-  -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
-  -webkit-mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .4), #000 calc(100% - var(--veil-fade) * .18), transparent 100%);
-          mask-image:linear-gradient(to bottom, transparent calc(100% - var(--veil-fade) * .4), #000 calc(100% - var(--veil-fade) * .18), transparent 100%);
+  -webkit-backdrop-filter:blur(1.5px); backdrop-filter:blur(1.5px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .30), transparent 100%);
+          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .30), transparent 100%);
 }
 
 /* NO TINT. Carrying the header's grey down the strip was the obvious next
@@ -2342,7 +2387,7 @@ h3{ font-family:var(--fd); }
   /* the fill does not change on hover: any brighter orange drops white
      text under 4.5:1. The lift and the shadow carry the feedback. */
   transform:translateY(-1px);
-  box-shadow:0 12px 26px -12px rgba(214,67,0,.66);
+  box-shadow:0 12px 26px -12px rgb(var(--accent-solid-rgb) / .66);
 }
 
 .btn--ghost{ background:var(--wash-2); border-color:transparent; color:var(--ink); }
@@ -2350,7 +2395,7 @@ h3{ font-family:var(--fd); }
 .btn--ghost:hover{
   background:var(--wash-2); color:var(--ink);
   transform:translateY(-1px);
-  box-shadow:0 10px 22px -14px rgba(12,15,18,.35);
+  box-shadow:0 10px 22px -14px rgb(var(--ink-rgb) / .35);
 }
 
 .btn--ghost:hover img{ filter:none; }
@@ -2435,12 +2480,12 @@ h3{ font-family:var(--fd); }
   content:"";
   width:6px; height:6px; flex:none;
   border-radius:50%;
-  background:var(--accent-solid);
+  background:var(--accent);
 }
 
 /* one fill for the tag on every ground; the CTA band inverts it */
 .panel--cta > .chip{
-  background:rgba(255,255,255,.1);
+  background:rgb(var(--paper-rgb) / .1);
   box-shadow:none;
   color:var(--paper-ink);
 }
@@ -2527,7 +2572,7 @@ h3{ font-family:var(--fd); }
   padding:9px 20px 9px 16px;
   border-radius:var(--r-btn);
   background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.05), 0 12px 26px -16px rgba(12,15,18,.32);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05), 0 12px 26px -16px rgb(var(--ink-rgb) / .32);
   font-size:var(--t-tag);
   font-weight:500; letter-spacing:-.005em;
   color:var(--ink);
@@ -2538,7 +2583,7 @@ h3{ font-family:var(--fd); }
   display:inline-block; vertical-align:.15em;
   width:6px; height:6px; margin-right:10px;
   border-radius:50%;
-  background:var(--accent-solid);
+  background:var(--accent);
 }
 
 .hero .display{
@@ -2609,7 +2654,7 @@ h3{ font-family:var(--fd); }
 .showcase__sticker{
   position:absolute; z-index:2;
   width:clamp(52px, 6.2vw, 88px); height:auto;
-  filter:drop-shadow(0 12px 26px rgba(12,15,18,.18));
+  filter:drop-shadow(0 12px 26px rgb(var(--ink-rgb) / .18));
   pointer-events:none;
 }
 
@@ -2937,6 +2982,10 @@ h3{ font-family:var(--fd); }
   --wf-title-lh:1.25;
   --wf-title-wt:300;
   --wf-title-ink:rgba(0,0,0,.6);
+  /* the reference sets its open title in pure black, not this page's --ink;
+     it is a supplied design and that is its value — but it is a VALUE, and
+     it was being re-typed as a bare #000 in four rules */
+  --wf-title-ink-on:#000;
   /* One size for every title. The open row is told apart by weight and ink
      alone — a row that also grows makes the list jump as you scroll past it,
      and the marker plus the paragraph already say which one is open. */
@@ -3090,13 +3139,13 @@ h3{ font-family:var(--fd); }
 
 /* one source for each row's hue: the marker in front of the title, the
    progress bar under it, and the ground behind the screen beside it */
-.step:nth-child(1){ --marker:#F8A100; }
+.step:nth-child(1){ --marker:var(--step-run); }
 
-.step:nth-child(2){ --marker:#E24E4A; }
+.step:nth-child(2){ --marker:var(--step-save); }
 
-.step:nth-child(3){ --marker:#E4ABC8; }
+.step:nth-child(3){ --marker:var(--step-hand); }
 
-.step:nth-child(4){ --marker:#3758A2; }
+.step:nth-child(4){ --marker:var(--step-auto); }
 
 .step__bar{ background:var(--marker); }
 
@@ -3126,7 +3175,7 @@ h3{ font-family:var(--fd); }
 
 .step.is-active .step__t{
   font-weight:var(--wf-title-on-wt);
-  color:#000;
+  color:var(--wf-title-ink-on);
 }
 
 /* the paragraph belongs to the open row and to nothing else */
@@ -3170,7 +3219,7 @@ h3{ font-family:var(--fd); }
   font-family:inherit;
   font-size:var(--wf-body); line-height:var(--wf-body-lh);
   font-weight:var(--wf-title-wt);
-  color:#000;
+  color:var(--wf-title-ink-on);
 }
 
 
@@ -3189,7 +3238,7 @@ h3{ font-family:var(--fd); }
   font-family:inherit;
   font-size:var(--wf-foot); line-height:var(--wf-foot-lh);
   font-weight:var(--wf-title-wt);
-  color:#000;
+  color:var(--wf-title-ink-on);
 }
 
 
@@ -3249,9 +3298,9 @@ h3{ font-family:var(--fd); }
      the screen on the same value. */
   background:
     radial-gradient(120% 96% at 50% 46%,
-      rgba(12,15,18, calc(var(--veil, .2) * .55)), transparent 74%),
-    linear-gradient(rgba(12,15,18, var(--veil, .2)),
-                    rgba(12,15,18, var(--veil, .2)));
+      rgb(var(--ink-rgb) / calc(var(--veil, .2) * .55)), transparent 74%),
+    linear-gradient(rgb(var(--ink-rgb) / var(--veil, .2)),
+                    rgb(var(--ink-rgb) / var(--veil, .2)));
   pointer-events:none;
 }
 
@@ -3294,7 +3343,7 @@ h3{ font-family:var(--fd); }
 .ladder__frame .slackui{
   height:100%; min-height:0;
   border-radius:var(--r-card);
-  box-shadow:0 2px 10px rgba(12,15,18,.12), 0 30px 60px -26px rgba(12,15,18,.5);
+  box-shadow:0 2px 10px rgb(var(--ink-rgb) / .12), 0 30px 60px -26px rgb(var(--ink-rgb) / .5);
 }
 
 .ladder__frame .absui__body,
@@ -3378,7 +3427,7 @@ h3{ font-family:var(--fd); }
 
 .quote__tag{
   font-size:var(--t-mono); letter-spacing:.13em;
-  color:var(--accent-ink); margin-bottom:20px;
+  color:var(--accent-solid); margin-bottom:20px;
 }
 
 .quote blockquote{
@@ -3433,9 +3482,9 @@ h3{ font-family:var(--fd); }
   font-family:var(--fb); font-size:15.5px; font-weight:600;
 }
 
-.a2a__hub em{ color:rgba(255,255,255,.6); }
+.a2a__hub em{ color:rgb(var(--paper-rgb) / .6); }
 
-.a2a__hub .a2a__av{ background:rgba(255,255,255,.16); }
+.a2a__hub .a2a__av{ background:rgb(var(--paper-rgb) / .16); }
 
 .a2a__hub em{ font-family:var(--fm); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; }
 
@@ -3467,19 +3516,19 @@ h3{ font-family:var(--fd); }
 
 .a2a__card{
   border:0; background:var(--paper);
-  box-shadow:0 1px 2px rgba(12,15,18,.03), 0 12px 26px -22px rgba(12,15,18,.2);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .03), 0 12px 26px -22px rgb(var(--ink-rgb) / .2);
   transition:transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
 
 .a2a__card:hover{
   transform:translateY(-2px);
-  box-shadow:0 2px 6px rgba(12,15,18,.05), 0 20px 38px -24px rgba(12,15,18,.28);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .05), 0 20px 38px -24px rgb(var(--ink-rgb) / .28);
 }
 
 .a2a__t{ font-family:var(--fb); font-size:14.5px; font-weight:600; color:var(--ink); }
 
-.a2a__dot.is-run{ background:var(--accent); box-shadow:0 0 0 3px rgba(237,78,1,.16); }
+.a2a__dot.is-run{ background:var(--accent); box-shadow:0 0 0 3px rgb(var(--accent-rgb) / .16); }
 
 .a2a__dot.is-done{ background:var(--paper); box-shadow:inset 0 0 0 2px var(--ok); }
 
@@ -3549,7 +3598,7 @@ h3{ font-family:var(--fd); }
   display:inline-block;
   width:2px; height:1.05em; margin-left:1px;
   vertical-align:-.14em;
-  background:var(--accent-solid);
+  background:var(--accent);
   animation:a2aCaret 1.06s steps(1) infinite;
 }
 
@@ -3568,7 +3617,7 @@ h3{ font-family:var(--fd); }
   content:"";
   position:absolute; inset:-3px;
   border-radius:50%;
-  background:rgba(237,78,1,.2);
+  background:rgb(var(--accent-rgb) / .2);
   animation:a2aPulse 1.9s var(--e-elegant) infinite;
 }
 
@@ -3595,19 +3644,19 @@ h3{ font-family:var(--fd); }
 
 /* ─────────────── 16. the closing dark chapter ─────────────── */
 .panel--cta{
-  background:var(--ink); color:rgba(255,255,255,.72);
+  background:var(--ink); color:rgb(var(--paper-rgb) / .72);
   border-top:0;
   padding-top:clamp(88px,8vw,132px);
   padding-bottom:clamp(52px,4.6vw,78px);
 }
 
-.panel--cta .chip{ color:rgba(255,255,255,.6); }
+.panel--cta .chip{ color:rgb(var(--paper-rgb) / .6); }
 
 .panel--cta .display{ color:var(--paper-ink); }
 
 .panel--cta .mark{ --hl:var(--accent); }
 
-.panel--cta .section-body{ color:rgba(255,255,255,.72); }
+.panel--cta .section-body{ color:rgb(var(--paper-rgb) / .72); }
 
 .cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
 
@@ -3615,12 +3664,12 @@ h3{ font-family:var(--fd); }
 
 .panel--cta .btn--dark:hover{
   transform:translateY(-1px);
-  box-shadow:0 14px 30px -12px rgba(214,67,0,.8);
+  box-shadow:0 14px 30px -12px rgb(var(--accent-solid-rgb) / .8);
 }
 
-.panel--cta .btn--ghost{ background:rgba(255,255,255,.1); color:var(--paper-ink); }
+.panel--cta .btn--ghost{ background:rgb(var(--paper-rgb) / .1); color:var(--paper-ink); }
 
-.panel--cta .btn--ghost:hover{ background:rgba(255,255,255,.18); color:var(--paper-ink); }
+.panel--cta .btn--ghost:hover{ background:rgb(var(--paper-rgb) / .18); color:var(--paper-ink); }
 
 .panel--cta .btn--ghost img{ filter:brightness(0) invert(1); }
 
@@ -3632,7 +3681,7 @@ h3{ font-family:var(--fd); }
   gap:clamp(18px,2vw,26px);
   margin:0; border-radius:0;
   padding:clamp(56px,5.4vw,88px) var(--edge) clamp(34px,3.6vw,52px);
-  background:var(--ink); color:rgba(255,255,255,.7);
+  background:var(--ink); color:rgb(var(--paper-rgb) / .7);
   overflow:hidden;
 }
 
@@ -3640,7 +3689,7 @@ h3{ font-family:var(--fd); }
   width:44px; height:44px; margin:0;
   display:grid; place-items:center;
   border:0; border-radius:var(--r-btn);
-  background:rgba(255,255,255,.1);
+  background:rgb(var(--paper-rgb) / .1);
 }
 
 .footer__badge img{ width:19px; filter:brightness(0) invert(1); }
@@ -3652,7 +3701,7 @@ h3{ font-family:var(--fd); }
 .footer__disclaimer{
   max-width:62ch; margin:clamp(10px,1.4vw,20px) 0 0;
   font-size:var(--t-meta); line-height:1.7; text-align:center;
-  color:rgba(255,255,255,.56);
+  color:rgb(var(--paper-rgb) / .56);
 }
 
 .footer__links{
@@ -3662,8 +3711,8 @@ h3{ font-family:var(--fd); }
 }
 
 .footer__links a{
-  color:rgba(255,255,255,.72);
-  background:linear-gradient(#fff,#fff) no-repeat 0 100% / 0% 1px;
+  color:rgb(var(--paper-rgb) / .72);
+  background:linear-gradient(var(--paper),var(--paper)) no-repeat 0 100% / 0% 1px;
   transition:background-size var(--t-state) var(--e-out), color var(--t-hover) var(--e-snap);
 }
 
@@ -3672,7 +3721,7 @@ h3{ font-family:var(--fd); }
 .footer__copy{
   margin-top:6px;
   font-size:var(--t-mono); letter-spacing:.09em;
-  color:rgba(255,255,255,.6);
+  color:rgb(var(--paper-rgb) / .6);
 }
 
 
@@ -3772,7 +3821,7 @@ h3{ font-family:var(--fd); }
     font-size:var(--wf-title-on); line-height:var(--wf-title-on-lh);
   }
 
-  .step.is-active .step__t{ color:#000; }
+  .step.is-active .step__t{ color:var(--wf-title-ink-on); }
 
   .step__body{ grid-template-rows:1fr; opacity:1; }
    /* nothing is hidden */
@@ -3881,10 +3930,10 @@ h3{ font-family:var(--fd); }
        been positioned by accident. The insets were never the problem. */
     justify-self:stretch;
     margin:0; padding:8px;
-    background:rgba(255,255,255,.97);
+    background:rgb(var(--paper-rgb) / .97);
     -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
     border:0; border-radius:var(--r-lg);
-    box-shadow:0 24px 50px -30px rgba(12,15,18,.42);
+    box-shadow:0 24px 50px -30px rgb(var(--ink-rgb) / .42);
   }
 
   .nav.is-open .nav__links a{ padding:14px 12px; }
@@ -3956,13 +4005,13 @@ h3{ font-family:var(--fd); }
 
 .slackui{ box-shadow:var(--e-3); }
 
-.absui{ box-shadow:0 2px 8px rgba(12,15,18,.05), 0 30px 58px -32px rgba(12,15,18,.28); }
+.absui{ box-shadow:0 2px 8px rgb(var(--ink-rgb) / .05), 0 30px 58px -32px rgb(var(--ink-rgb) / .28); }
 
-.perms{ box-shadow:0 1px 3px rgba(12,15,18,.04), 0 20px 40px -26px rgba(12,15,18,.24); }
+.perms{ box-shadow:0 1px 3px rgb(var(--ink-rgb) / .04), 0 20px 40px -26px rgb(var(--ink-rgb) / .24); }
 
 .perms__list{ border-top:0; }
 
-.perms__list li{ border-bottom-color:rgba(12,15,18,.06); }
+.perms__list li{ border-bottom-color:rgb(var(--ink-rgb) / .06); }
 
 .perms__list li:hover{ background:var(--wash); }
 
@@ -3972,35 +4021,35 @@ h3{ font-family:var(--fd); }
 
 .perms__tabs{ background:var(--wash-2); }
 
-.perms__tabs span.is-on{ border-color:transparent; box-shadow:0 1px 2px rgba(12,15,18,.08); }
+.perms__tabs span.is-on{ border-color:transparent; box-shadow:0 1px 2px rgb(var(--ink-rgb) / .08); }
 
 
 /* status is carried by a tinted fill, not an outline */
 .state{ border:0; padding:5px 11px; font-size:10.5px; letter-spacing:.08em; }
 
-.state--ok{   background:rgba(14,124,74,.12);  color:#0B6B40 !important; }
+.state--ok{   background:rgb(var(--ok-rgb) / .12);  color:var(--ok-ink) !important; }
 
-.state--wait{ background:rgba(180,83,9,.14);   color:#8F4207 !important; }
+.state--wait{ background:rgb(var(--wait-rgb) / .14);   color:var(--wait-ink) !important; }
 
 .state--off{  background:var(--wash-2);        color:var(--ink-mute) !important; }
 
 
 /* the workflow windows keep their internal structure, minus the frame */
-.flowui__top{ border-bottom-color:rgba(12,15,18,.07); }
+.flowui__top{ border-bottom-color:rgb(var(--ink-rgb) / .07); }
 
-.flowchat{ border-right-color:rgba(12,15,18,.07); }
+.flowchat{ border-right-color:rgb(var(--ink-rgb) / .07); }
 
-.flowchat__composer,.absui__composer{ border-color:rgba(12,15,18,.1); }
-.flowsave,.flowlist__items{ border-color:rgba(12,15,18,.08); }
+.flowchat__composer,.absui__composer{ border-color:rgb(var(--ink-rgb) / .1); }
+.flowsave,.flowlist__items{ border-color:rgb(var(--ink-rgb) / .08); }
 
-.flowlist__items li{ border-bottom-color:rgba(12,15,18,.06); }
+.flowlist__items li{ border-bottom-color:rgb(var(--ink-rgb) / .06); }
 
 .flowlist__filters span,.flowlist__head > em,.absui__filters span,
-.flowsave__actions span{ border-color:rgba(12,15,18,.1); }
+.flowsave__actions span{ border-color:rgb(var(--ink-rgb) / .1); }
 .absui__wfs li{
-  border-bottom-color:rgba(12,15,18,.06);
+  border-bottom-color:rgb(var(--ink-rgb) / .06);
 }
-.absui__note{ border-top-color:rgba(12,15,18,.07); }
+.absui__note{ border-top-color:rgb(var(--ink-rgb) / .07); }
 
 
 /* ================================================================
@@ -4336,7 +4385,7 @@ h3{ font-family:var(--fd); }
 
 .nav .btn--dark:active{ transform:translateY(0) scale(.985); }
 
-.nav__logo:hover span{ color:var(--accent-solid); transition:color 220ms var(--e-snap); }
+.nav__logo:hover span{ color:var(--nav-accent); transition:color 220ms var(--e-snap); }
 
 
 @media (prefers-reduced-motion:reduce){
@@ -4468,9 +4517,9 @@ h3{ font-family:var(--fd); }
   position:absolute; inset:0;
   background:
     radial-gradient(120% 96% at 50% 46%,
-      rgba(12,15,18, calc(var(--veil, .14) * .5)), transparent 74%),
-    linear-gradient(rgba(12,15,18, var(--veil, .14)),
-                    rgba(12,15,18, var(--veil, .14)));
+      rgb(var(--ink-rgb) / calc(var(--veil, .14) * .5)), transparent 74%),
+    linear-gradient(rgb(var(--ink-rgb) / var(--veil, .14)),
+                    rgb(var(--ink-rgb) / var(--veil, .14)));
 }
 
 .ochat__row{
@@ -4623,7 +4672,7 @@ h3{ font-family:var(--fd); }
   content:"";
   position:absolute; left:0; right:0; bottom:0;
   height:2px;
-  background:var(--accent-solid);
+  background:var(--accent);
   transform:scaleX(0); transform-origin:left;
 }
 
@@ -4666,18 +4715,23 @@ h3{ font-family:var(--fd); }
    the window sits on the panel grey and carries a soft lift, and the bar
    keeps a hairline of its own ground under the pill. */
 .tplwin{
+  /* a browser's own chrome, drawn to the reference: a #EEE pill holding the
+     URL at 60% black. Not this page's palette — it is the browser's — but a
+     value that appears twice is a token either way. */
+  --chrome-pill:#EEEEEE;
+  --chrome-ink:rgba(0,0,0,.6);
   position:relative;
   min-height:0; height:100%;
   width:100%; margin:0;
   display:flex; flex-direction:column;
   border-radius:var(--o-r, 16px);
-  background:var(--o-fill, #F6F6F6);
+  background:var(--o-fill, var(--tile));
   /* A shadow alone did not separate a white chrome bar from a white section.
      A hairline does — it is the product's own window edge, not page furniture,
      which is why the no-rules audit exempts .tplwin. */
   box-shadow:
-    0 1px 2px rgba(12,15,18,.05),
-    0 18px 44px -22px rgba(12,15,18,.28);
+    0 1px 2px rgb(var(--ink-rgb) / .05),
+    0 18px 44px -22px rgb(var(--ink-rgb) / .28);
   overflow:hidden;
 }
 
@@ -4693,7 +4747,7 @@ h3{ font-family:var(--fd); }
   position:absolute; inset:0; z-index:3;
   border-radius:inherit;
   pointer-events:none;
-  box-shadow:inset 0 0 0 .5px rgba(12,15,18,.14);
+  box-shadow:inset 0 0 0 .5px rgb(var(--ink-rgb) / .14);
 }
 
 /* the published page, as a single tall image the visitor scrolls */
@@ -4713,16 +4767,16 @@ h3{ font-family:var(--fd); }
 
 .tplwin__bar i{ width:8px; height:8px; border-radius:50%; background:var(--wash-2); }
 
-.tplwin__bar i:first-child{ background:var(--accent-solid); }
+.tplwin__bar i:first-child{ background:var(--accent); }
 
 .tplwin__url{
   flex:1; min-width:0; margin-left:8px;
   padding:4px 12px;
   border-radius:var(--r-pill);
-  background:#EEEEEE;
+  background:var(--chrome-pill);
   font-family:var(--fb);
   font-size:clamp(10px, .85vw, 12px); line-height:1.3;
-  color:rgba(0,0,0,.6);
+  color:var(--chrome-ink);
   text-align:center;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
@@ -4744,11 +4798,11 @@ h3{ font-family:var(--fd); }
      cannot compute it because the backdrop is a scrolling image. .72 clears
      7:1 against the lightest thing it can ever sit on, and the blur is what
      makes it read as frosted, not the transparency. */
-  background:rgba(12,15,18,.72);
+  background:rgb(var(--ink-rgb) / .72);
   -webkit-backdrop-filter:blur(10px) saturate(1.3);
           backdrop-filter:blur(10px) saturate(1.3);
-  box-shadow:0 6px 20px -8px rgba(12,15,18,.5);
-  color:rgba(255,255,255,.94);
+  box-shadow:0 6px 20px -8px rgb(var(--ink-rgb) / .5);
+  color:rgb(var(--paper-rgb) / .94);
   font-size:var(--t-meta); line-height:1.2; white-space:nowrap;
   pointer-events:none;
   animation:tplHint 2.4s var(--e-elegant) infinite;
@@ -4780,7 +4834,7 @@ h3{ font-family:var(--fd); }
 
 .tplwin__scroll::-webkit-scrollbar{ width:5px; }
 
-.tplwin__scroll::-webkit-scrollbar-thumb{ background:rgba(12,15,18,.18); border-radius:99px; }
+.tplwin__scroll::-webkit-scrollbar-thumb{ background:rgb(var(--ink-rgb) / .18); border-radius:99px; }
 
 
 @media (max-width:1080px){
