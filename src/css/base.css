@@ -44,7 +44,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .btn,.nav__signin,.nav__burger{ border-radius:var(--r-btn); }
 /* left square on purpose: rules, dividers, underlined links and the
    bare eyebrow are not surfaces, so a radius would only blur them */
-.nav__logo,.nav__links,.nav__auth,.chip,.linkline a,
+.nav__logo,.nav__links,.nav__auth,.chip,
 .metrics li,.perms__list li{ border-radius:0; }
 .tag,.state,.pill-mini,.ws__badge{ border-radius:var(--r-pill); }
 .character img,.msg__av,.quote__av{ border-radius:50%; }
@@ -313,15 +313,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   padding-top:22px; border-top:1px solid var(--hairline);
   text-align:left; font-size:14px; color:var(--ink-mute);
 }
-.linkline{ margin-top:clamp(28px,3vw,40px); text-align:left; }
-.linkline a{
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
-  border-bottom:1px solid var(--accent);
-  padding-bottom:4px;
-  transition:color .18s;
-}
-.linkline a:hover{ color:var(--accent); }
 
 /* ─────────────── product mock ─────────────── */
 .mock{

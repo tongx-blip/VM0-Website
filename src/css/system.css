@@ -366,7 +366,7 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 /* every page-level rule inherited from the component layer comes off:
    this page separates with grounds, space and shadow, never with a line */
 .hero__body,.section-body,.section-body--tight,.note,.footnote,
-.linkline a,.quote figcaption,.footer__disclaimer,.footer__links,
+.quote figcaption,.footer__disclaimer,.footer__links,
 .footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,
 .metrics li,.scenes__tabs,.step,.nav,.panel,
 .perms__list,.a2a__ask{
@@ -423,7 +423,7 @@ h3{ font-family:var(--fd); }
    in that tile, and uppercase mono above a 54px numeral competes with it for
    the top of the box instead of introducing it. It is set as prose. */
 .chip,.footnote,.tag,.vs__label,.state,.quote__tag,
-.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,.linkline a,
+.acard__url,.acard__txt i,.nav__links a,.nav__signin,.btn,
 .footer__links,.footer__links a,.footer__copy,.hero__meta,.ladder__label,
 .a2a__step,.a2a__label,.a2a__back,.scenes__tab{
   font-family:var(--fm);
@@ -464,18 +464,6 @@ h3{ font-family:var(--fd); }
   letter-spacing:0; text-transform:none;
   color:var(--ink-mute);
 }
-.linkline{ margin-top:clamp(26px,2.8vw,36px); }
-.linkline a{
-  display:inline-flex; align-items:center; gap:8px;
-  padding-bottom:5px;
-  font-size:var(--t-mono);
-  color:var(--ink);
-  background:linear-gradient(var(--accent),var(--accent)) no-repeat 0 100% / 0% 1px;
-  transition:background-size var(--t-state) var(--e-out), color var(--t-hover) var(--e-snap);
-}
-.linkline a span{ transition:transform var(--t-hover) var(--e-snap); }
-.linkline a:hover{ background-size:100% 1px; color:var(--accent-wash); }
-.linkline a:hover span{ transform:translateX(4px); }
 
 /* emphasis is CARRIED BY COLOUR, not by a drawn rule — there are no
    decorative lines on this page. The phrase warms into the accent as it
@@ -830,7 +818,6 @@ h3{ font-family:var(--fd); }
 .panel > .section-body,
 .panel > .note,
 .panel > .footnote,
-.panel > .linkline,
 .panel > .cta__btns{
   justify-self:center;
   text-align:center;
@@ -845,7 +832,6 @@ h3{ font-family:var(--fd); }
 .panel > .sentence{ max-width:24ch; }
 .panel > .section-body{ max-width:54ch; margin-inline:auto; }
 .panel > .note,.panel > .footnote{ max-width:58ch; margin-inline:auto; }
-.panel > .linkline{ display:flex; justify-content:center; }
 .panel > .cta__btns{ display:flex; justify-content:center; }
 
 /* the rail head: an accent tick, the section number, and a spine

@@ -6,6 +6,19 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the security link is gone, and so is its CSS
+
+*"Read how security works →"* removed from the Control section. It pointed at
+`#cta` rather than at anything about security, so it promised a page that does
+not exist.
+
+The class went with it. `.linkline` was the page's only use of that component,
+so once the markup was gone every rule for it was dead code — 4 declarations in
+`system.css`, 3 in `base.css`, and its name inside two shared selector lists.
+The build's pruner drops rules whose class is absent from the markup, but it
+keeps compound selectors like `.panel > .linkline`, so "the stylesheet got
+smaller" would not have been true on its own. Removed at source.
+
 ## 2026-08-24 · I shipped a broken layout, and the whole gate passed on it
 
 Tong: *"did you break it? check yourself."* Yes. Two defects, both mine.
