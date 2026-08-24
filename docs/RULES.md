@@ -70,6 +70,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | N6 | **Write the irregularity down.** Four tasks finishing 1-3-2-4 read as independent runs; 1-2-3-4 reads as a progress bar. | | — |
 | N7 | **Anything present-but-not-showing must be `inert`**, not merely `aria-hidden` — a product mock is full of real buttons. | | QA §4k2 |
 | N8 | **Auto-advancing anything pauses** off screen, in a background tab, on keyboard focus, and under reduced motion; a click parks it for good. It does **not** pause on hover. | The progress is what says the panel will change; freezing it under the pointer makes the section feel stuck. A keyboard user has no other way to hold it. | QA §4m |
+| N10 | **A loop that returns to its start takes a symmetric curve** (`--e-inout`), and it is TWO keyframes with `alternate` — never three stops with an ease-out. A timing function applies between each pair of keyframes, so a multi-stop loop restarts its easing at every stop and reads as a series of darts. | The scroll hint ran 0/45/70/100 on `--e-elegant`: three ease-outs per cycle, plus a 30% dead hold and an opacity pulse on a fourth rhythm. | QA §7 |
 | N9 | **A looping reel clones, and only the middle set is real.** Clones are `aria-hidden`, roleless and out of the tab order; selection is marked on the centred slot, never by matching a data attribute. | Matching lights every copy and shows a second highlighted item at the mask edge — the seam the clones exist to hide. | QA §4m |
 
 ## Product mocks
@@ -95,7 +96,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | # | Rule | Why | Checked |
 |---|---|---|---|
 | K1 | **Copy is content.** Design work does not rewrite wording unless it is asked for, and then the diff is shown. | | QA §8 |
-| K2 | **Section labels**: uppercase, text only, no numbers, above the heading. | `01 / OUTPUTS` in a left rail is an AI tell and costs a quarter of the page. | QA §4j |
+| K2 | **No eyebrow above a heading. At all.** Not numbered, not lettered, not a plain word — the heading carries its own weight. | This rule used to say "uppercase, text only, no numbers". taste-skill gives eyebrows a budget; `pbakaus/impeccable` bans them, and the ban is right: with one centred composition for every section, the eyebrow was the only thing distinguishing one section head from the next, which is why the page had grown seven of them. | QA §4j |
 | K3 | **Real content or nothing.** Placeholders declare themselves. | | QA §4c |
 | K4 | **A generated artefact is really generated** — authored as a plan, rendered by the template's own engine, and shipped as what it produced. | A hand-coded thing that resembles a website is not the product's output. | — |
 

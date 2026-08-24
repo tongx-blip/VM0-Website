@@ -6,6 +6,49 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the scroll hint breathes, and every eyebrow goes
+
+**The hint's stutter had a specific cause, and it was the keyframes.** The loop
+ran `0% / 45% / 70% / 100%` with `--e-elegant` as its timing function — and a
+timing function applies **between each pair of keyframes**, not across the
+cycle. So a strong ease-out ran three separate times per loop, and every
+restart is a fresh burst of speed. That is the "fast, then slow, over and
+over". It also held perfectly still for the last 30% of every cycle and pulsed
+opacity on a fourth, unrelated rhythm.
+
+It is one oscillation now: two keyframes, `alternate`, and a **symmetric**
+curve. Sampled at 50ms, velocity builds to a peak mid-travel and decays to zero
+at each extreme, then reverses — a bob, not a series of darts.
+
+That needed a new token. Every easing in the file was an ease-**out**, which is
+right for something that arrives and stays and wrong for anything that returns
+to where it started; a loop eased out on both legs reads as twitching.
+`--e-inout` is the first symmetric curve in the set.
+
+The bob also moved off `transform` onto the independent `translate` property,
+so it composes with the centring `translateX(-50%)` instead of overwriting it —
+which is why the old rule needed two competing `transform` declarations to hide
+the hint.
+
+**The hint is back in all seven windows.** I removed six of them last round on
+taste-skill's "no scroll cues" rule; Tong overruled it, which is his call — the
+affordance is real, a scrollable region inside a window frame is genuinely not
+obvious, and it is not the page-level "↓ scroll" the rule is aimed at. Six show
+it. **Team Digest does not, and should not**: its artefact renders 426px inside
+a 513px window, so there is nothing to scroll and the existing overflow check
+correctly stands the hint down. A hint that points at nothing is a lie.
+
+It also gained a reduced-motion guard, which it has never had. An infinite loop
+is exactly what that media query is asking about.
+
+**Every eyebrow is gone.** Four of them, and this settles the conflict recorded
+last round: taste-skill gives eyebrows a budget (max 1 per 3 sections);
+`pbakaus/impeccable` bans them outright — *"This one is a ban, not a default:
+no brief earns it back. The heading carries its own weight."* We were compliant
+with the first and in breach of the second. Tong resolved it in impeccable's
+favour. The section heads read better without them, which is the argument the
+rule was making.
+
 ## 2026-08-24 · uneven pills, and the comparison section becomes a picture
 
 **"All the small tags have uneven padding, left small right big."** Two causes
