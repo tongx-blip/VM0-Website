@@ -42,6 +42,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | T4 | **Every site-level title is Archivo 500.** Nothing outside a mock is 700; 600 survives only on the wordmark. | A bold grotesque at display size reads as shouting. | QA §4i |
 | T5 | **Three faces**: Archivo display, Instrument Sans prose, IBM Plex Mono utility. Inter only inside the one component built to a supplied design. | | QA §4i |
 | T6 | **No emoji.** | It was the one pictogram on a page that has none, and it read as decoration bolted onto a sentence. | — |
+| T7 | **A tracked label in a pill compensates its trailing space** — `padding-right: calc(pad - Nem)` where N is that component's own tracking. `letter-spacing` is applied after the last glyph too, so a centred tracked label is off-centre by one tracking-unit, always to the right. | Reported as "left small, right big" across every small tag on the page. | QA §4t |
 
 ## Colour
 
@@ -104,6 +105,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 |---|---|---|
 | R1 | **Edit the source, never `site/styles.css`.** Run `tools/build-css.py`, which stamps `?r=` on CSS/JS and `?v=<sha1>` on **every local asset**. | A hand-kept hash shipped stale CSS across four deploys; unversioned images then made two correct screenshot fixes invisible for two rounds. |
 | R7 | **Verify a fix against the SHIPPED bytes, not your build.** `curl` the live URL, check its hash, crop the image and look at it. | A local check cannot detect a delivery bug — the file was right on disk and right on the server, and still wrong on screen. |
+| R8 | **Cache-bust the page URL when verifying in a browser**, not just the asset hash. `?r=` changes on the stylesheet, but a cached HTML never asks for the new one — three rebuilds in a row measured identical wrong numbers against correct CSS. | | QA §4t |
 | R2 | **Never slice a file between two anchors without asserting the distance.** Prefer `replace(old, new, 1)` with the full block and an assert. | A two-anchor slice once deleted 1084 lines, and the symptom surfaced far from the cause. |
 | R3 | **`git diff --stat` before building**, and read the built file for the rule you just wrote — the pruner has silently eaten one before. | |
 | R6 | **After replacing a block, grep for every identifier the old block defined.** A function dropped from a replacement still *called* from a `setTimeout` throws silently, and the visible symptom lands nowhere near the cause. | A missing lede sentence turned out to be a `writeLead` deleted two rounds earlier. |

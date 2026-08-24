@@ -2543,9 +2543,9 @@ h3{ font-family:var(--fd); }
              box-shadow var(--t-hover) var(--e-snap);
 }
 
-.btn--sm{ padding:10px 16px; }
+.btn--sm{ padding:10px calc(16px - .085em) 10px 16px; }
 
-.btn--lg{ padding:15px 24px; }
+.btn--lg{ padding:15px calc(24px - .085em) 15px 24px; }
 
 .btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink); }
 
@@ -2628,11 +2628,20 @@ h3{ font-family:var(--fd); }
 
 /* the rail head: an accent tick, the section number, and a spine
    that fills with how far into the section you have read */
+/* ── TRACKED LABELS SIT OFF-CENTRE, AND IT IS NOT AN ILLUSION ───────
+   `letter-spacing` is added after the LAST glyph as well as between glyphs,
+   so a tracked label in a pill is always one tracking-unit further from the
+   right edge than the left. Every pill below gives that space back with
+   `calc(pad - Nem)`, where N is that component's own tracking — em resolves
+   against the element's own font-size, so the two always agree.
+   Reported as "left small, right big" and it was BOTH this and a leftover:
+   .chip still carried padding shaped around a leading dot that was deleted
+   a round earlier, 11px left against 14px right, on top of the tracking. */
 .chip{
   display:inline-flex; align-items:center; gap:9px;
   width:max-content;
   margin:0 auto clamp(18px, 2vw, 26px);
-  padding:7px 14px 7px 11px;
+  padding:7px calc(14px - .16em) 7px 14px;
   border:0;
   border-radius:var(--r-btn);
   background:var(--wash-2);
@@ -2900,7 +2909,7 @@ h3{ font-family:var(--fd); }
   border:0;
   border-radius:var(--r-btn);
   background:var(--wash-2);
-  padding:9px 16px 11px;
+  padding:9px calc(16px - .075em) 11px 16px;
   font-family:var(--fm);
   font-size:var(--t-mono); letter-spacing:.075em; text-transform:uppercase;
   color:var(--ink-soft); cursor:pointer;
@@ -3061,7 +3070,14 @@ h3{ font-family:var(--fd); }
 
 /* here the phrase is already orange as it rises — no warm-up, no
    weight change, so the words never reflow */
-.reach__line .mark{ color:var(--accent-wash); font-weight:inherit; transition:none; }
+/* The reach statement is display-scale type that swaps on a timer. A stroke
+   under a phrase that is about to be replaced draws attention to the swap
+   rather than to the phrase, and at this size the colour already carries it
+   — same reason .display carries no stroke. */
+.reach__line .mark{
+  color:var(--accent-wash); font-weight:inherit; transition:none;
+  background-image:none;
+}
 
 
 /* the rails */
@@ -3565,7 +3581,160 @@ h3{ font-family:var(--fd); }
   margin-top:clamp(48px,5.5vw,80px);
 }
 
-.vs{ padding:clamp(24px,2.4vw,34px); }
+/* ── the comparison cards ────────────────────────────────────────────
+   These were a logo, a heading and a paragraph, four times: the identical
+   icon-plus-heading-plus-text grid that is the lazy container by default.
+   Each card now leads with the DIFFERENCE it is claiming, drawn.
+
+   One grammar across all four, because the section makes one argument four
+   times: the alternative's shape sits above in mute ink and does not move;
+   Okou's sits below in the accent and does. The comparison IS the picture,
+   so the card needs no third element to explain it.
+
+   Geometry, not illustration — lines, rounded rects and a travelling pip,
+   all specified exactly. Nothing here imitates a screenshot. */
+.vs{
+  display:flex; flex-direction:column;
+  padding:0; overflow:hidden;
+  background:var(--paper);
+  border-radius:var(--r-lg);
+}
+
+.vs__viz{
+  position:relative;
+  display:grid; place-items:center;
+  /* the panel is a fixed band, not a function of the drawing's aspect ratio —
+     four cards with four different drawings must still line up */
+  height:clamp(150px, 15vw, 196px);
+  padding:0 clamp(26px,2.6vw,36px);
+  background:
+    radial-gradient(120% 90% at 50% 0%,
+      rgb(var(--accent-rgb) / .07), transparent 70%),
+    var(--tile);
+}
+
+/* The drawing FITS the band; it does not set it. Without an explicit height
+   the SVG takes its intrinsic ratio at full width, overruns the band, and
+   `overflow:visible` then paints it straight over the heading underneath. */
+.vs__viz{ overflow:hidden; }
+
+.vs__viz svg{ display:block; width:100%; height:100%; }
+
+.vs__viz svg :is(path,rect,circle){
+  stroke-width:1.75; vector-effect:non-scaling-stroke;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+
+/* the alternative: present, mute, still */
+.vsv__was :is(path,rect,circle){ stroke:var(--ink-mute); opacity:.42; }
+
+/* Okou: the accent, and the only thing that moves */
+.vsv__is :is(path,rect,circle){ stroke:var(--accent); }
+
+.vsv__is rect{ fill:rgb(var(--accent-rgb) / .06); }
+
+.vsv__was rect{ fill:none; }
+
+.vsv__pip{ fill:var(--accent); stroke:none !important; }
+
+.vsv__was .vsv__pip{ fill:var(--ink-mute); }
+
+.vsv__tile{ fill:rgb(var(--accent-rgb) / .12) !important; }
+
+
+.vs__txt{ padding:clamp(22px,2.2vw,30px); }
+
+
+/* ── the four visuals move, and only after they arrive ───────────────
+   Every animation is gated on `.is-in`, which the page's one observer adds
+   when the card is on screen — so nothing runs off screen and the resting
+   DOM is already the finished frame (N2). The alternative never moves: that
+   contrast is the whole point, and a still shape beside a moving one reads
+   as "this one does not" without a word of copy.
+
+   N6, the irregularity written down: the three parallel pips run at 2.9s,
+   3.4s and 3.15s. Equal periods would read as one bar with three heads;
+   unequal ones read as three runs that happen to be going at once. */
+@keyframes vsRun{
+  0%        { transform:translateX(0);    opacity:0 }
+  8%,88%    { opacity:1 }
+  100%      { transform:translateX(192px); opacity:0 }
+}
+
+.vs__viz--parallel .vsv__was .vsv__pip{
+  animation:vsRun 3.1s var(--e-elegant) infinite;
+  animation-play-state:paused;
+}
+
+.vs__viz--parallel .vsv__is .vsv__pip{
+  animation:vsRun 2.9s var(--e-elegant) infinite;
+  animation-play-state:paused;
+}
+
+.vs__viz--parallel .vsv__pip--b{ animation-duration:3.4s; }
+
+.vs__viz--parallel .vsv__pip--c{ animation-duration:3.15s; }
+
+
+/* the artifact completes; the bubble alone does not */
+@keyframes vsFill{
+  0%,12%   { stroke-dashoffset:100 }
+  62%,100% { stroke-dashoffset:0 }
+}
+
+.vsv__fill{
+  stroke:var(--accent); stroke-width:3 !important;
+  stroke-dasharray:100; stroke-dashoffset:100;
+  animation:vsFill 3.2s var(--e-out) infinite;
+  animation-play-state:paused;
+}
+
+
+/* the goal picks a path instead of following a fixed one */
+@keyframes vsRay{
+  0%,10%   { stroke-dashoffset:100; opacity:.25 }
+  38%,72%  { stroke-dashoffset:0;  opacity:1 }
+  92%,100% { stroke-dashoffset:0;  opacity:.25 }
+}
+
+.vsv__ray{
+  stroke-dasharray:100; stroke-dashoffset:100;
+  animation:vsRay 3.6s var(--e-out) infinite;
+  animation-play-state:paused;
+}
+
+.vsv__ray--b{ animation-delay:.5s }
+
+.vsv__ray--c{ animation-delay:1s }
+
+
+/* one seat lights, then the others: shared, not single-player */
+@keyframes vsSeat{
+  0%,14%   { opacity:.3 }
+  30%,74%  { opacity:1 }
+  92%,100% { opacity:.3 }
+}
+
+.vsv__seat{ animation:vsSeat 3.4s var(--e-out) infinite; animation-play-state:paused; }
+
+.vsv__seat--b{ animation-delay:.34s }
+
+.vsv__seat--c{ animation-delay:.62s }
+
+
+.vs.is-in .vs__viz *{ animation-play-state:running; }
+
+
+@media (prefers-reduced-motion:reduce){
+  .vs__viz *{ animation:none !important; }
+
+  .vsv__fill{ stroke-dashoffset:0 }
+
+  .vsv__ray{ stroke-dashoffset:0; opacity:1 }
+
+  .vsv__seat{ opacity:1 }
+
+}
 
 .vs__label{
   display:flex; align-items:center; gap:10px;
@@ -4204,7 +4373,7 @@ h3{ font-family:var(--fd); }
 
 
 /* status is carried by a tinted fill, not an outline */
-.state{ border:0; padding:5px 11px; font-size:10.5px; letter-spacing:.08em; }
+.state{ border:0; padding:5px calc(11px - .08em) 5px 11px; font-size:10.5px; letter-spacing:.08em; }
 
 .state--ok{   background:rgb(var(--ok-rgb) / .12);  color:var(--ok-ink) !important; }
 
@@ -4242,9 +4411,9 @@ h3{ font-family:var(--fd); }
 /* ── controls become pills, as in the brand comps ── */
 .btn{ border-radius:var(--r-btn); }
 
-.btn--lg{ padding:16px 28px; }
+.btn--lg{ padding:16px calc(28px - .085em) 16px 28px; }
 
-.btn--sm{ height:38px; padding:0 18px; }
+.btn--sm{ height:38px; padding:0 calc(18px - .085em) 0 18px; }
 
 .nav__links a,.nav__signin{ border-radius:var(--r-btn); }
 

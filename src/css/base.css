@@ -506,7 +506,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .tag{
   display:inline-flex; align-items:center; gap:9px;
-  padding:8px 14px;
+  padding:8px calc(14px - .07em) 8px 14px;
   border:1px solid var(--hairline);
   background:var(--paper);
   font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;

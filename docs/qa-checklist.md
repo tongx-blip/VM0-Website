@@ -748,6 +748,42 @@ document.documentElement.setAttribute('data-theme', 'dark');   // or 'light'
   band vs page: each pair ≥ 1.05 in both modes. Compute it, do not squint.
 - **The mocks did not invert.** They should still look like the product.
 
+## 4t. Pills are optically centred, and you are not looking at a cache
+
+**Verify with a cache-buster.** `?r=` changes on the stylesheet, but a cached
+HTML never requests the new one. Three rebuilds in a row measured identical
+wrong numbers against correct CSS:
+
+```bash
+agent-browser open "http://localhost:8931/index.html?cb=$(date +%s%N)"
+```
+
+**Then check the trailing track.** `letter-spacing` is applied after the last
+glyph as well as between glyphs, so a tracked label sits one tracking-unit
+closer to the left edge than the right. `getBoundingClientRect` on a Range will
+NOT show it — the trailing space is outside the ink box, so the naive
+measurement reports a perfect balance:
+
+```js
+['.chip','.state','.tab','.btn--lg','.btn--sm','.tag'].map(sel => {
+  const c = getComputedStyle(document.querySelector(sel));
+  const track = parseFloat(c.letterSpacing) || 0;
+  return sel + ' ' + (parseFloat(c.paddingRight) + track - parseFloat(c.paddingLeft)).toFixed(1);
+})   // every one within 0.5 of zero
+```
+
+And when a decoration is deleted, **check what its padding was compensating
+for**: the chip kept `11px` left against `14px` right for a round after the
+dot on its left was removed.
+
+## 4u. A brand mark can be broken and still measure fine
+
+`zapier.svg` held one path — a single bar of a six-spoke asterisk. §4n measured
+its ink as 100 × 25 and it was filed as "a wide wordmark", which is exactly what
+a broken mark looks like to a bounding box. **Any mark whose aspect is stranger
+than about 3:1 gets looked at, not measured** — render it at 64px and compare
+it to the brand's real mark.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

@@ -6,6 +6,69 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · uneven pills, and the comparison section becomes a picture
+
+**"All the small tags have uneven padding, left small right big."** Two causes
+stacking, both pushing the same way.
+
+`letter-spacing` is applied after the LAST glyph as well as between glyphs, so
+a tracked label in a pill always sits one tracking-unit further from the right
+edge than the left. Every pill now gives that back with `calc(pad - Nem)`,
+where N is that component's own tracking — `em` resolves against the element's
+own font-size, so the two can never disagree. Chip, tag, state, tab and both
+button sizes.
+
+The chip had a second problem on top: it still carried `padding:7px 14px 7px
+11px`, shaped around a leading dot that was **deleted a round earlier**. 11
+left against 14 right, plus 1.92px of trailing track, on a label that had
+nothing on its left any more.
+
+**A process note that matters more than the fix.** Three rebuilds in a row
+measured the same wrong numbers, and the CSS was right every time —
+`agent-browser` was serving a cached page. The `?r=` hash changes on the
+stylesheet, but the HTML that references it was itself cached, so the browser
+never fetched the new one. **Cache-bust the page URL when verifying**, not just
+trust the asset hash. Some of this session's earlier "verified" measurements
+were taken the same way.
+
+**The comparison section is a picture now.** It was a logo, a heading and a
+paragraph, four times — the identical icon-plus-heading-plus-text grid that
+`pbakaus/impeccable` names as the lazy container by default. Each card leads
+with the difference it claims, drawn: the alternative's shape above in mute ink
+and still, Okou's below in the accent and moving. One grammar, four times,
+because the section makes one argument four times, and the comparison IS the
+picture so the card needs no third element to explain it.
+
+Geometry, not illustration — lines, rounded rects, circles and a travelling
+pip, every coordinate specified. Nothing imitates a screenshot, which is the
+line both skills draw. The section's placeholder band is gone with it: the
+cards carry the visual, so **one of the three missing assets is no longer
+missing**.
+
+Two SVG traps on the way. `vector-effect:non-scaling-stroke` puts
+`stroke-dasharray` in screen units while the path length stays in user units,
+so every dashed animation desynced as the card resized — fixed with an explicit
+`pathLength`. And an SVG with no height takes its intrinsic ratio at full
+width, overran its band, and `overflow:visible` painted it straight over the
+heading underneath.
+
+**`zapier.svg` was broken and my own audit had cleared it.** The file held one
+path — `M12 6H0V9H12V6Z` — a single horizontal bar of Zapier's asterisk, so
+every place it appeared rendered an orange dash. The brand-mark audit measured
+its ink as "100 × 25" and I filed that as "a wide wordmark, fine". It was not a
+wordmark; it was a mark with five of its six spokes missing. Rebuilt as the
+asterisk in Zapier's own orange.
+
+**The reach statement loses its underline.** Display-scale type that swaps on a
+timer: a stroke under a phrase that is about to be replaced draws the eye to
+the swap rather than the phrase, and at that size the colour already carries
+it. Same reason `.display` never took one.
+
+**Lighthouse, honestly.** Six samples on identical bytes ran 76, 85, 96, 97, 98,
+98 — median 96.5. There is no measurable regression from the new animations,
+and that also means last round's "96 → 99" was one sample each and I reported
+it with more confidence than one sample earns.
+
 ## 2026-08-24 · the whole taste-skill list, worked
 
 Nineteen items from `taste-skill-reconciliation.md` Part 2. Sixteen done, one
