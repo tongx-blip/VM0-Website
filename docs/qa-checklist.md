@@ -631,6 +631,31 @@ document.querySelectorAll('.navveil i').length                          // 4
 getComputedStyle(document.querySelector('.navveil i')).backdropFilter   // blur(14px)
 ```
 
+**Measure the ramp; do not look at it.** Blur is invisible over flat colour, so
+put a striped backdrop behind the veil and read the profile down a single
+column — horizontal stripes mean each *row* is uniform, so sample **vertically**
+(a scan across x reads 0 everywhere and looks like a pass):
+
+```html
+<!-- serve next to styles.css -->
+<body style="height:300vh;background:repeating-linear-gradient(180deg,#000 0 4px,#fff 4px 8px)">
+<div class="navveil"><i></i><i></i><i></i><i></i></div>
+```
+
+Two things must hold, and each one has already failed once:
+
+- **Every mask is monotonic.** Local vertical contrast may never *drop* as you
+  go down. Masks that rise and fall make each layer a band, and where one band
+  descends while the next climbs the coverage dips — that prints three or four
+  hard horizontal lines across the strip.
+- **The ramp starts at the top edge**, i.e. row 0 is already fully blurred and
+  contrast is climbing by the next sample. Holding every layer at full alpha
+  until a hem near the bottom makes the whole header region one flat slab; you
+  cannot see it while the bar sits opaque on top, and it appears the moment the
+  bar lifts and insets.
+
+Last run: contrast 2 → 255 over 66px, **0 non-monotonic steps**.
+
 ## 4p. An absolutely-positioned child of a grid or flex parent
 
 `left:0; right:0` does **not** guarantee a stretched box. Box Alignment applies

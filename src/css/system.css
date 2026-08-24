@@ -67,7 +67,9 @@
   --nav-fill:      var(--wash-2);
   --nav-fill-dark: var(--g-100);
   /* how far the blur under the header takes to disappear */
-  --veil-fade: clamp(14px, 1.5vw, 22px);
+  /* how far the veil reaches PAST the header. Not a fade zone — the whole
+     veil is the fade now, so this is only its tail. */
+  --veil-tail: clamp(14px, 1.5vw, 22px);
   --hairline:   #DFE4E7;
   --rule:       #C9D0D5;
   --grid:       #EDF0F2;
@@ -551,42 +553,45 @@ h3{ font-family:var(--fd); }
    side, so the header reads as sitting ON something. */
 .navveil{
   position:fixed; top:0; left:0; right:0; z-index:99;
-  height:calc(var(--nav-h) + var(--veil-fade));
+  height:calc(var(--nav-h) + var(--veil-tail));
   pointer-events:none;
   transition:height var(--t-state) var(--e-out);
 }
 .nav.is-stuck ~ .navveil{
-  height:calc(var(--nav-top) + var(--nav-h-stuck) + var(--veil-fade));
+  height:calc(var(--nav-top) + var(--nav-h-stuck) + var(--veil-tail));
 }
 .navveil i{ position:absolute; inset:0; display:block; }
-/* EVERY MASK IS MONOTONIC — opaque at the top, one fade, gone. That is the
-   whole trick, and the first version got it wrong: those masks rose AND fell,
-   so each layer was a BAND. Where one band was descending while the next was
-   still climbing, total coverage dipped and rose again, and the composite
-   showed three or four hard horizontal lines across the strip — visible on
-   any textured backdrop and obvious on text.
-   With each layer only ever fading OUT, and the widest radius let go first,
-   the accumulated blur can only decrease down the strip. There is no interior
-   edge left for a seam to form on. */
+/* EVERY LAYER STARTS FADING AT THE TOP EDGE. The stops are percentages of the
+   whole veil, not offsets from its bottom, because the progression has to be
+   under way from the first pixel — the previous version held every layer at
+   full alpha down to the last 22px, which made the entire header region one
+   flat slab of maximum blur with the ramp crammed into a hem below it. You
+   could not see that while the header sat opaque on top of it; the moment the
+   bar lifted and inset, the strip above it and the gaps either side were that
+   slab, arriving at full strength against the window edge.
+
+   Still monotonic, and still widest-radius-first: each layer only ever fades
+   OUT, and the biggest one is gone by mid-veil, so accumulated blur falls
+   continuously from the top edge to nothing. Nothing here can band. */
 .navveil i:nth-child(1){
-  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .60));
-          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade)), transparent calc(100% - var(--veil-fade) * .60));
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, transparent 55%);
+          mask-image:linear-gradient(to bottom, #000 0%, transparent 55%);
 }
 .navveil i:nth-child(2){
-  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .80), transparent calc(100% - var(--veil-fade) * .40));
-          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .80), transparent calc(100% - var(--veil-fade) * .40));
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, transparent 74%);
+          mask-image:linear-gradient(to bottom, #000 0%, transparent 74%);
 }
 .navveil i:nth-child(3){
-  -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .55), transparent calc(100% - var(--veil-fade) * .20));
-          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .55), transparent calc(100% - var(--veil-fade) * .20));
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, transparent 89%);
+          mask-image:linear-gradient(to bottom, #000 0%, transparent 89%);
 }
 .navveil i:nth-child(4){
-  -webkit-backdrop-filter:blur(1.5px); backdrop-filter:blur(1.5px);
-  -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .30), transparent 100%);
-          mask-image:linear-gradient(to bottom, #000 calc(100% - var(--veil-fade) * .30), transparent 100%);
+  -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, transparent 100%);
+          mask-image:linear-gradient(to bottom, #000 0%, transparent 100%);
 }
 /* NO TINT. Carrying the header's grey down the strip was the obvious next
    move and it undid the previous one: the tint filled the gaps around the

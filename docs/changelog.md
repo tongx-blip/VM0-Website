@@ -6,6 +6,30 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the veil ramps from the top edge
+
+The progression was starting in the wrong place. Every layer held **full alpha
+from the top of the veil down to a hem in the last 22px**, so the whole header
+region was one flat slab of maximum blur and the entire ramp was crammed
+underneath it. That is invisible while the bar sits opaque on top of it — and
+it is exactly what you see the moment the bar lifts and insets, because then
+the strip above it and the gaps either side *are* that slab, arriving at full
+strength against the window edge.
+
+The stops are percentages of the whole veil now, and every layer starts fading
+at 0%. Still monotonic and still widest-radius-first, so accumulated blur falls
+continuously from the first pixel to nothing. Measured on the striped
+instrument: contrast 2 → 255 over 66px with **0 non-monotonic steps**.
+
+`--veil-fade` is renamed `--veil-tail`, because it no longer describes a fade
+zone — the whole veil is the fade, and that number is only how far it reaches
+past the header.
+
+Also worth writing down, because it cost a detour: **the instrument has to be
+read vertically.** The test backdrop is horizontal stripes, so every *row* is
+uniform and a scan across x returns zero contrast at every height — which looks
+exactly like a perfect pass. Sample down a column instead.
+
 ## 2026-08-24 · the two oranges are one orange, and the tokens get an audit
 
 **The veil first.** Two complaints, one cause and one dial. The blur was
