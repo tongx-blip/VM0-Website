@@ -56,6 +56,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | C6 | **axe 0 violations.** Audit the *resting* frame — park any loop first, then sample ~20 times across it. | | QA §1 |
 | C7 | **A component that crosses grounds carries both versions as a token swap**, never as a second copy. The header defines `--nav-ground` / `--nav-ink` / `--nav-ink-hi` / `--nav-accent` / `--nav-chip`; no rule inside it names a colour. | Two copies drift the moment one of them is edited. | QA §4o |
 | C8 | **A colour used at an alpha is declared as channels** — `--ink-rgb`, `--paper-rgb`, `--accent-rgb`, `--accent-solid-rgb`, `--ok-rgb`, `--wait-rgb` — and consumed as `rgb(var(--ink-rgb) / .05)`. A hex cannot carry an alpha, which is the whole reason the literals bred. | `rgba(12,15,18,…)` was re-typed **41 times in 22 different alphas**, and not one of them would have followed `--ink` if `--ink` had moved. | QA §4r |
+| C10 | **An ink tuned against one ground is a colour plus an assumption.** Any ink that sits on a tint (`--accent-solid`, `--accent-wash`, `--ok-ink`, `--wait-ink`) needs a sibling for the other mode, and the correction usually REVERSES direction. | Three separate tokens have now needed this, each found only after dark mode existed: 3.86:1, 3.96:1, 2.3:1. | QA §1, §4s |
 | C9 | **The page has two modes and they are ONE token swap** — eleven grounds and inks redefined under `prefers-color-scheme: dark`, plus a `[data-theme]` pin so it can be forced. No second stylesheet, no `dark:` variant per rule. What carries over is the RELATIONSHIPS, not the values: a card is one step off the page ground, the header one step off the card, the band stays the darkest surface. Product mocks do **not** invert — they draw the app, and a real screenshot does not flip with the page around it (P1). | A second copy of a design drifts from the first the week after it is written. | QA §1, §4s |
 
 ## Motion
@@ -83,6 +84,8 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | P3 | **Nothing inside a mock may be clipped, faded or height-absorbed.** If it needs that, it is laid out at the wrong size. | | QA §4f |
 | P4 | **Every glyph is a real Lucide icon** at the version the app ships; typeface and colours are platform tokens. | Hand-drawn paths are what made the mock read as "not our product". | QA §4f |
 | P5 | **Sentence case only.** The product never uses Title Case or CSS uppercase. | | QA §4f |
+| P6 | **A product visual on a marketing card is a CROP, not a drawing.** Lay the surface out at the product's own size and let it run off the edge of its band. | A drawing that fits inside its frame reads as an illustration of the product; a fragment that continues outside the crop reads as the product. And left-pack the rows: meta pushed to the far right is exactly what the crop eats. | QA §4w |
+| P7 | **A comparison card carries BOTH marks.** Theirs and ours, with the word between them. | Showing only the competitor's logo describes them; it does not compare. | QA §4w |
 
 ## Brand marks
 

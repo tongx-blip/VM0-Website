@@ -306,6 +306,11 @@
     --grid:       #1B2027;
     --mat:        #05070A;
     --accent-wash:#FF7A3D;
+    /* Third time this correction has reversed on a dark ground. --ok-ink and
+       --wait-ink are tuned to sit on their own 12% tint over WHITE; on the
+       same tint over a dark card they fall to 2.3:1 and 2.1:1. */
+    --ok-ink:     #5FD99A;
+    --wait-ink:   #F5B33C;
     --nav-fill-dark:#2E3740;
   }
 }
@@ -323,6 +328,8 @@
   --grid:       #1B2027;
   --mat:        #05070A;
   --accent-wash:#FF7A3D;
+  --ok-ink:     #5FD99A;
+  --wait-ink:   #F5B33C;
   --nav-fill-dark:#2E3740;
 }
 
@@ -1711,7 +1718,10 @@ h3{ font-family:var(--fd); }
   transition:transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
-.feat:hover,.vs:hover,.quote:hover{
+/* .vs is NOT here. Those cards are not links and never were: a lift on
+   hover promises a click that does not exist, which is a worse lie than
+   no feedback at all. */
+.feat:hover,.quote:hover{
   transform:translateY(-3px);
   box-shadow:var(--e-hover);
 }
@@ -1728,143 +1738,155 @@ h3{ font-family:var(--fd); }
   margin-top:clamp(48px,5.5vw,80px);
 }
 /* ── the comparison cards ────────────────────────────────────────────
-   These were a logo, a heading and a paragraph, four times: the identical
-   icon-plus-heading-plus-text grid that is the lazy container by default.
-   Each card now leads with the DIFFERENCE it is claiming, drawn.
+   Each card compares Okou with one alternative, so BOTH marks are on it.
+   A card that shows only the competitor's logo is describing them, not
+   comparing; the pair row is the claim in miniature.
 
-   One grammar across all four, because the section makes one argument four
-   times: the alternative's shape sits above in mute ink and does not move;
-   Okou's sits below in the accent and does. The comparison IS the picture,
-   so the card needs no third element to explain it.
-
-   Geometry, not illustration — lines, rounded rects and a travelling pip,
-   all specified exactly. Nothing here imitates a screenshot. */
+   NO SHADOW AND NO LIFT. `--e-1` put a 30px blur under every card, which
+   is the largest shadow on a page whose own rule is that a surface is a
+   FILL (S3). And these cards are not links — a lift on hover promises a
+   click that does not exist. They separate from the section by tone now:
+   the card is --tile against the section's white, and the media band is
+   one solid step further, tinted per card so four surfaces read as four
+   subjects rather than one repeated template. Solid, not gradient. */
 .vs{
   display:flex; flex-direction:column;
   padding:0; overflow:hidden;
-  background:var(--paper);
+  background:var(--tile);
   border-radius:var(--r-lg);
+  box-shadow:none;
 }
+
+/* the media band: an oversized crop of a real product surface */
 .vs__viz{
   position:relative;
-  display:grid; place-items:center;
-  /* the panel is a fixed band, not a function of the drawing's aspect ratio —
-     four cards with four different drawings must still line up */
-  height:clamp(150px, 15vw, 196px);
-  padding:0 clamp(26px,2.6vw,36px);
-  background:
-    radial-gradient(120% 90% at 50% 0%,
-      rgb(var(--accent-rgb) / .07), transparent 70%),
-    var(--tile);
+  padding:clamp(20px,2vw,26px) 0 0 clamp(20px,2vw,26px);
+  height:clamp(196px, 19vw, 244px);
+  overflow:hidden;
+  background:var(--vs-tint);
+  --vs-tint:color-mix(in srgb, var(--vs-hue) 9%, var(--tile));
+  --vs-hue:var(--hue-engineering);
 }
-/* The drawing FITS the band; it does not set it. Without an explicit height
-   the SVG takes its intrinsic ratio at full width, overruns the band, and
-   `overflow:visible` then paints it straight over the heading underneath. */
-.vs__viz{ overflow:hidden; }
-.vs__viz svg{ display:block; width:100%; height:100%; }
-.vs__viz svg :is(path,rect,circle){
-  stroke-width:1.75; vector-effect:non-scaling-stroke;
-  stroke-linecap:round; stroke-linejoin:round;
-}
-/* the alternative: present, mute, still */
-.vsv__was :is(path,rect,circle){ stroke:var(--ink-mute); opacity:.42; }
-/* Okou: the accent, and the only thing that moves */
-.vsv__is :is(path,rect,circle){ stroke:var(--accent); }
-.vsv__is rect{ fill:rgb(var(--accent-rgb) / .06); }
-.vsv__was rect{ fill:none; }
-.vsv__pip{ fill:var(--accent); stroke:none !important; }
-.vsv__was .vsv__pip{ fill:var(--ink-mute); }
-.vsv__tile{ fill:rgb(var(--accent-rgb) / .12) !important; }
+.vs__viz--parallel{ --vs-hue:var(--hue-engineering); }
+.vs__viz--artifact{ --vs-hue:var(--hue-product); }
+.vs__viz--context { --vs-hue:var(--hue-marketing); }
+.vs__viz--shared  { --vs-hue:var(--hue-leadership); }
 
-.vs__txt{ padding:clamp(22px,2.2vw,30px); }
-
-/* ── the four visuals move, and only after they arrive ───────────────
-   Every animation is gated on `.is-in`, which the page's one observer adds
-   when the card is on screen — so nothing runs off screen and the resting
-   DOM is already the finished frame (N2). The alternative never moves: that
-   contrast is the whole point, and a still shape beside a moving one reads
-   as "this one does not" without a word of copy.
-
-   N6, the irregularity written down: the three parallel pips run at 2.9s,
-   3.4s and 3.15s. Equal periods would read as one bar with three heads;
-   unequal ones read as three runs that happen to be going at once. */
-@keyframes vsRun{
-  0%        { transform:translateX(0);    opacity:0 }
-  8%,88%    { opacity:1 }
-  100%      { transform:translateX(192px); opacity:0 }
+/* ── the surface itself ──────────────────────────────────────────────
+   Laid out at the product's own size and CROPPED by the band, the way a
+   real screenshot is: it runs off the right edge and off the bottom,
+   because a fragment reads as a real thing continuing and a fitted
+   diagram reads as an illustration of one (RULES P2). */
+.vsui{
+  /* WIDER THAN THE BAND, ON PURPOSE. A surface that fits inside its frame
+     reads as a small card someone drew; one that runs off the right edge and
+     past the bottom reads as a real screen continuing outside the crop. That
+     is the whole difference between an illustration of a product and a
+     fragment of one. */
+  width:calc(100% + 76px);
+  padding:14px 16px;
+  border-radius:var(--r-card);
+  background:var(--paper);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05);
+  font-family:var(--fb);
+  color:var(--ink);
 }
-.vs__viz--parallel .vsv__was .vsv__pip{
-  animation:vsRun 3.1s var(--e-elegant) infinite;
-  animation-play-state:paused;
-}
-.vs__viz--parallel .vsv__is .vsv__pip{
-  animation:vsRun 2.9s var(--e-elegant) infinite;
-  animation-play-state:paused;
-}
-.vs__viz--parallel .vsv__pip--b{ animation-duration:3.4s; }
-.vs__viz--parallel .vsv__pip--c{ animation-duration:3.15s; }
-
-/* the artifact completes; the bubble alone does not */
-@keyframes vsFill{
-  0%,12%   { stroke-dashoffset:100 }
-  62%,100% { stroke-dashoffset:0 }
-}
-.vsv__fill{
-  stroke:var(--accent); stroke-width:3 !important;
-  stroke-dasharray:100; stroke-dashoffset:100;
-  animation:vsFill 3.2s var(--e-out) infinite;
-  animation-play-state:paused;
-}
-
-/* the goal picks a path instead of following a fixed one */
-@keyframes vsRay{
-  0%,10%   { stroke-dashoffset:100; opacity:.25 }
-  38%,72%  { stroke-dashoffset:0;  opacity:1 }
-  92%,100% { stroke-dashoffset:0;  opacity:.25 }
-}
-.vsv__ray{
-  stroke-dasharray:100; stroke-dashoffset:100;
-  animation:vsRay 3.6s var(--e-out) infinite;
-  animation-play-state:paused;
-}
-.vsv__ray--b{ animation-delay:.5s }
-.vsv__ray--c{ animation-delay:1s }
-
-/* one seat lights, then the others: shared, not single-player */
-@keyframes vsSeat{
-  0%,14%   { opacity:.3 }
-  30%,74%  { opacity:1 }
-  92%,100% { opacity:.3 }
-}
-.vsv__seat{ animation:vsSeat 3.4s var(--e-out) infinite; animation-play-state:paused; }
-.vsv__seat--b{ animation-delay:.34s }
-.vsv__seat--c{ animation-delay:.62s }
-
-.vs.is-in .vs__viz *{ animation-play-state:running; }
-
-@media (prefers-reduced-motion:reduce){
-  .vs__viz *{ animation:none !important; }
-  .vsv__fill{ stroke-dashoffset:0 }
-  .vsv__ray{ stroke-dashoffset:0; opacity:1 }
-  .vsv__seat{ opacity:1 }
-}
-.vs__label{
-  display:flex; align-items:center; gap:10px;
-  margin-bottom:18px;
-  font-size:var(--t-mono); letter-spacing:.1em;
+.vsui__cap{
+  margin:0 0 9px;
+  font-family:var(--fm);
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--ink-mute);
 }
-.vs__label img{ width:20px; height:20px; }
+.vsui__row,.vsui__tool,.vsui__trail{
+  display:flex; align-items:center; gap:10px;
+  padding:7px 0;
+  font-size:12.5px; line-height:1.2;
+}
+.vsui__dot{ width:7px; height:7px; border-radius:50%; background:var(--d); flex:none; }
+.vsui__nm{ min-width:132px; white-space:nowrap; }
+.vsui__mk{ width:16px; height:16px; object-fit:contain; flex:none; }
+.vsui__tool span:nth-of-type(1){ min-width:118px; }
+.vsui__st{
+  flex:none;
+  padding:3px calc(8px - .04em) 3px 8px;
+  border-radius:var(--r-xs);
+  background:var(--wash-2);
+  font-family:var(--fm); font-size:9px; letter-spacing:.04em;
+  color:var(--ink-mute);
+}
+.vsui__st--ok{ background:rgb(var(--ok-rgb) / .12); color:var(--ok-ink); }
+.vsui__bar{
+  flex:none; width:52px; height:3px; border-radius:99px;
+  background:var(--wash-2); overflow:hidden;
+}
+.vsui__bar i{ display:block; height:100%; width:calc(var(--p) * 100%); background:var(--accent); }
+
+.vsui__file{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.vsui__thumb{
+  width:34px; height:34px; flex:none; border-radius:7px;
+  background:linear-gradient(150deg, var(--wash-2), var(--tile));
+}
+.vsui__fmeta{ flex:1; min-width:0; display:block; }
+.vsui__fmeta b{ display:block; font-size:12.5px; font-weight:500; white-space:nowrap; }
+.vsui__fmeta i{
+  display:block; margin-top:2px;
+  font-style:normal; font-family:var(--fm); font-size:9.5px;
+  color:var(--ink-mute); white-space:nowrap;
+}
+.vsui__trail span{ min-width:132px; }
+.vsui__trail em{ font-style:normal; font-family:var(--fm); font-size:9.5px; color:var(--ink-mute); }
+
+.vsui__goal{
+  margin:0 0 14px;
+  font-size:13px; line-height:1.4; color:var(--ink);
+}
+.vsui__wf{ padding:9px 0; }
+.vsui__wf b{ display:block; font-size:12.5px; font-weight:500; }
+.vsui__wf i{
+  display:block; margin-top:2px;
+  font-style:normal; font-size:11px; color:var(--ink-mute);
+}
+.vsui__wf--dim{ opacity:.42; }
+.vsui__faces{ display:flex; align-items:center; margin-top:9px; }
+.vsui__faces img{
+  width:26px; height:26px; border-radius:50%;
+  margin-right:-7px;
+  box-shadow:0 0 0 2px var(--paper);
+}
+.vsui__faces em{
+  margin-left:14px; font-style:normal;
+  font-family:var(--fm); font-size:10px; color:var(--ink-mute);
+}
+
+/* ── the text half ───────────────────────────────────────────────── */
+.vs__txt{ padding:clamp(20px,2vw,26px); }
+
+/* both marks, and the word between them */
+.vs__pair{
+  display:flex; align-items:center; gap:9px;
+  margin:0 0 12px;
+  font-family:var(--fm);
+  font-size:var(--t-mono); letter-spacing:.06em;
+  color:var(--ink-mute);
+}
+.vs__side{ display:inline-flex; align-items:center; gap:7px; }
+.vs__side img{ width:18px; height:18px; object-fit:contain; }
+.vs__side--us{ color:var(--ink); }
+.vs__vs{ opacity:.5; }
+
 .vs h3{
   /* base.css sets `font-family:inherit` here, which lands on the body face —
      a section heading in the prose face is the one type role that must not
      drift */
   font-family:var(--fd);
-  font-size:var(--t-d3); font-weight:500;
-  line-height:1.1; letter-spacing:-.03em;
-  margin-bottom:13px; color:var(--ink);
+  /* --t-d3 (up to 30px) made four card headings compete with the section
+     headline above them. --t-h is one step down and lets the section keep
+     its own voice. */
+  font-size:var(--t-h); font-weight:500;
+  line-height:1.18; letter-spacing:-.025em;
+  margin-bottom:10px; color:var(--ink);
 }
-.vs p{ font-size:var(--t-sm); line-height:1.65; color:var(--ink-soft); }
+.vs p{ font-size:var(--t-meta); line-height:1.6; color:var(--ink-soft); }
 
 .proof{
   display:grid; grid-template-columns:repeat(3,minmax(0,1fr));

@@ -615,13 +615,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   gap:clamp(12px,1.4vw,18px);
   margin-top:clamp(52px,6vw,84px);
 }
-.vs{
-  padding:clamp(26px,2.6vw,36px);
-  border:1px solid var(--hairline);
-  background:var(--paper);
-  transition:background .22s;
-}
-.vs:hover{ background:var(--paper-2); }
+.vs{ padding:0; border:0; background:var(--paper); }
 .vs__label{
   display:flex; align-items:center; gap:10px;
   font-size:10.5px; letter-spacing:.10em; text-transform:uppercase;

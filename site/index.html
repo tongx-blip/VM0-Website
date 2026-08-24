@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=c59b8683">
+<link rel="stylesheet" href="styles.css?r=8c83c090">
 </head>
 <body>
 
@@ -952,41 +952,37 @@
   <div class="versus" data-reveal="stagger">
     <article class="vs reveal">
       <div class="vs__viz vs__viz--parallel" aria-hidden="true">
-          <svg viewBox="0 0 220 128" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <g class="vsv__was">
-              <path d="M14 30h192"/><circle class="vsv__pip" cx="14" cy="30" r="4"/>
-            </g>
-            <g class="vsv__is">
-              <path d="M14 74h192"/><path d="M14 96h192"/><path d="M14 118h192"/>
-              <circle class="vsv__pip" cx="14" cy="74" r="4"/>
-              <circle class="vsv__pip vsv__pip--b" cx="14" cy="96" r="4"/>
-              <circle class="vsv__pip vsv__pip--c" cx="14" cy="118" r="4"/>
-            </g>
-          </svg>
+        <div class="vsui vsui--runs">
+          <p class="vsui__cap">Runs</p>
+          <div class="vsui__row"><span class="vsui__dot" style="--d:var(--hue-marketing)"></span><span class="vsui__nm">Storefront launch</span><span class="vsui__st">Running</span><span class="vsui__bar"><i style="--p:.62"></i></span></div>
+          <div class="vsui__row"><span class="vsui__dot" style="--d:var(--hue-ads)"></span><span class="vsui__nm">Ad campaign shift</span><span class="vsui__st">Running</span><span class="vsui__bar"><i style="--p:.34"></i></span></div>
+          <div class="vsui__row"><span class="vsui__dot" style="--d:var(--hue-ops)"></span><span class="vsui__nm">Weekly team digest</span><span class="vsui__st vsui__st--ok">Done</span><span class="vsui__bar"><i style="--p:1"></i></span></div>
+          <div class="vsui__row"><span class="vsui__dot" style="--d:var(--hue-product)"></span><span class="vsui__nm">Spec for bulk export</span><span class="vsui__st">Running</span><span class="vsui__bar"><i style="--p:.18"></i></span></div>
+        </div>
       </div>
       <div class="vs__txt">
-      <p class="vs__label"><img src="assets/connectors/openai.svg?v=9294228c" alt="" width="24" height="24">vs. Codex</p>
+      <p class="vs__pair"><span class="vs__side"><img src="assets/connectors/openai.svg?v=9294228c" alt="" width="18" height="18">Codex</span><span class="vs__vs">vs</span><span class="vs__side vs__side--us"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="18" height="18">Okou</span></p>
       <h3>Several AIs get more done at once.</h3>
       <p>Codex helps one person with one coding task. Okou divides the work between several AIs, so different jobs move forward at the same time and your whole team can work together in one place.</p>
       </div>
     </article>
     <article class="vs reveal">
       <div class="vs__viz vs__viz--artifact" aria-hidden="true">
-          <svg viewBox="0 0 220 128" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <g class="vsv__was">
-              <rect x="14" y="16" width="72" height="28" rx="8"/>
-              <path d="M96 30h40" stroke-dasharray="4 5"/>
-            </g>
-            <g class="vsv__is">
-              <rect x="14" y="80" width="72" height="28" rx="8"/>
-              <path d="M96 94h28"/>
-              <rect class="vsv__tile" x="134" y="72" width="72" height="44" rx="8"/>
-              <path class="vsv__fill" pathLength="100" d="M146 104h48"/>
-            </g>
-          </svg>
+        <div class="vsui vsui--art">
+          <div class="vsui__file">
+            <span class="vsui__thumb"></span>
+            <span class="vsui__fmeta"><b>Weekly Ad Operator Dashboard</b><i>okou-artifact-weekly.sites.vm0.io</i></span>
+            <span class="vsui__st vsui__st--ok">Published</span>
+          </div>
+          <p class="vsui__cap">Activity</p>
+          <div class="vsui__trail"><span>Read GA4 and Meta</span><em>2m</em></div>
+          <div class="vsui__trail"><span>Drafted the brief</span><em>40s</em></div>
+          <div class="vsui__trail"><span>Published the page</span><em>6s</em></div>
+          <div class="vsui__trail"><span>Posted the link to #team</span><em>2s</em></div>
+        </div>
       </div>
       <div class="vs__txt">
-      <p class="vs__label"><img src="assets/connectors/openai.svg?v=9294228c" alt="" width="24" height="24">vs. ChatGPT</p>
+      <p class="vs__pair"><span class="vs__side"><img src="assets/connectors/openai.svg?v=9294228c" alt="" width="18" height="18">ChatGPT</span><span class="vs__vs">vs</span><span class="vs__side vs__side--us"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="18" height="18">Okou</span></p>
       <h3>Does the work, not just the thinking.</h3>
       <p>ChatGPT gives you an answer to paste somewhere. Okou is connected to the tools, so the
          answer arrives as a shipped artifact with an activity trail behind it.</p>
@@ -994,27 +990,17 @@
     </article>
     <article class="vs reveal">
       <div class="vs__viz vs__viz--context" aria-hidden="true">
-          <svg viewBox="0 0 220 128" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <g class="vsv__was">
-              <rect x="14" y="16" width="44" height="26" rx="7"/>
-              <path d="M62 29h26"/>
-              <rect x="92" y="16" width="44" height="26" rx="7"/>
-              <path d="M140 29h26"/>
-              <rect x="170" y="16" width="36" height="26" rx="7"/>
-            </g>
-            <g class="vsv__is">
-              <rect x="14" y="82" width="54" height="28" rx="8"/>
-              <path class="vsv__ray" pathLength="100" d="M74 96h74"/>
-              <path class="vsv__ray vsv__ray--b" pathLength="100" d="M74 96c38 0 36-22 74-22"/>
-              <path class="vsv__ray vsv__ray--c" pathLength="100" d="M74 96c38 0 36 22 74 22"/>
-              <circle class="vsv__tile" cx="158" cy="96" r="9"/>
-              <circle cx="158" cy="74" r="9"/>
-              <circle cx="158" cy="118" r="9"/>
-            </g>
-          </svg>
+        <div class="vsui vsui--pick">
+          <p class="vsui__goal">“Move the budget to the ad set that is winning.”</p>
+          <p class="vsui__cap">Okou picked</p>
+          <div class="vsui__tool"><img class="vsui__mk" src="assets/connectors/google-analytics.svg?v=0e636954" alt="" width="18" height="18"><span>Google Analytics</span><span class="vsui__st vsui__st--ok">Read</span></div>
+          <div class="vsui__tool"><img class="vsui__mk" src="assets/connectors/meta-ads.svg?v=7ffbc5a0" alt="" width="18" height="18"><span>Meta Ads</span><span class="vsui__st vsui__st--ok">Drafted</span></div>
+          <div class="vsui__tool"><img class="vsui__mk" src="assets/connectors/slack.svg?v=55532dd8" alt="" width="18" height="18"><span>Slack</span><span class="vsui__st">Waiting</span></div>
+          <div class="vsui__tool"><img class="vsui__mk" src="assets/connectors/google-sheet.svg?v=9a0ec714" alt="" width="18" height="18"><span>Google Sheets</span><span class="vsui__st">Waiting</span></div>
+        </div>
       </div>
       <div class="vs__txt">
-      <p class="vs__label"><img src="assets/connectors/zapier.svg?v=7dd0201a" alt="" width="24" height="24">vs. Zapier</p>
+      <p class="vs__pair"><span class="vs__side"><img src="assets/connectors/zapier.svg?v=7dd0201a" alt="" width="18" height="18">Zapier</span><span class="vs__vs">vs</span><span class="vs__side vs__side--us"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="18" height="18">Okou</span></p>
       <h3>A doer with context, not a trigger.</h3>
       <p>Zapier runs the rule you wrote. Okou reads the goal, picks the tools, and handles the
          multi-step work in between.</p>
@@ -1022,22 +1008,31 @@
     </article>
     <article class="vs reveal">
       <div class="vs__viz vs__viz--shared" aria-hidden="true">
-          <svg viewBox="0 0 220 128" fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <g class="vsv__was">
-              <rect x="14" y="14" width="80" height="32" rx="9"/>
-              <circle cx="118" cy="30" r="7"/>
-            </g>
-            <g class="vsv__is">
-              <rect x="14" y="80" width="80" height="32" rx="9"/>
-              <circle class="vsv__seat" cx="118" cy="96" r="7"/>
-              <circle class="vsv__seat vsv__seat--b" cx="146" cy="96" r="7"/>
-              <circle class="vsv__seat vsv__seat--c" cx="174" cy="96" r="7"/>
-              <path d="M98 96h12"/>
-            </g>
-          </svg>
+        <div class="vsui vsui--team">
+          <p class="vsui__cap">Team workflows</p>
+          <div class="vsui__wf">
+            <b>Weekly team digest</b>
+            <i>Shared · Mondays 09:00</i>
+            <span class="vsui__faces">
+              <img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="26" height="26">
+              <img src="assets/brand/avatar-2.png?v=22fa90af" alt="" width="26" height="26">
+              <img src="assets/brand/avatar-3.png?v=c2b53996" alt="" width="26" height="26">
+              <img src="assets/brand/avatar-4.png?v=6fa57d60" alt="" width="26" height="26">
+              <em>+6</em>
+            </span>
+          </div>
+          <div class="vsui__wf vsui__wf--dim">
+            <b>Incident triage</b>
+            <i>Shared · on every alert</i>
+          </div>
+          <div class="vsui__wf vsui__wf--dim">
+            <b>Lead scoring</b>
+            <i>Shared · when a form lands</i>
+          </div>
+        </div>
       </div>
       <div class="vs__txt">
-      <p class="vs__label"><img src="assets/connectors/anthropic.svg?v=86ddcf34" alt="" width="24" height="24">vs. Claude Code</p>
+      <p class="vs__pair"><span class="vs__side"><img src="assets/connectors/anthropic.svg?v=86ddcf34" alt="" width="18" height="18">Claude Code</span><span class="vs__vs">vs</span><span class="vs__side vs__side--us"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="18" height="18">Okou</span></p>
       <h3>Built for shared work, not one terminal.</h3>
       <p>Claude Code lives on one engineer’s machine. Okou runs in the cloud, connects to the
          team’s tools, and turns one person’s know-how into shared capability.</p>

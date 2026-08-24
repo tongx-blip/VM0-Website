@@ -6,6 +6,54 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the comparison cards show the product, and both logos
+
+**The diagrams meant nothing and they are gone.** Lines, dots and rounded
+rects arranged into an abstract "one lane versus three" — a picture *of* an
+argument rather than the thing being argued about. Each card now carries an
+oversized crop of a real product surface, chosen from that card's own claim:
+
+- **vs Codex** — the runs list, four jobs moving at once, three still running
+- **vs ChatGPT** — a published artefact with its URL, its state, and the
+  activity trail underneath it
+- **vs Zapier** — a goal in quotes, then the tools Okou *picked* for it, each
+  with what it did
+- **vs Claude Code** — a team workflow list with the faces it is shared with
+
+**They are cropped, and that is the whole point.** The surface is laid out at
+the product's own size and runs off the right edge and past the bottom of its
+band. A drawing that fits inside its frame reads as a small illustration
+someone made; a fragment that continues outside the crop reads as a real
+screen. Same rule as **P2** — a mock has two sizes.
+
+That took one correction: the rows were pushing their meta to the far right,
+which is exactly where the crop lands, so the first version cropped away the
+progress bars and the timestamps — the two things carrying the meaning. The
+rows are left-packed now, so the crop takes padding.
+
+**Both logos.** A card comparing Okou with an alternative that shows only the
+alternative's mark is describing them, not comparing. Every card leads with
+`[their mark] Name · vs · [our mark] Okou`.
+
+**No shadow, no hover.** `--e-1` put a 30px blur under every card — the largest
+shadow on a page whose own **S3** says a surface is a fill. And the cards are
+not links: a lift on hover promises a click that does not exist, which is a
+worse lie than no feedback. They separate by tone instead — the card is
+`--tile` against the section's white, and the media band is one solid step
+further, **tinted per card** from the existing scene hues so four surfaces read
+as four subjects. Solid, not gradient.
+
+**Type came down.** The card heading was `--t-d3`, up to 30px, which put four
+headings in competition with the section headline above them. `--t-h` now, one
+step down, and the body from `--t-sm` to `--t-meta`.
+
+**And the status inks reversed on dark for the third time.** `--ok-ink` and
+`--wait-ink` are tuned to sit on their own 12% tint over *white*; on the same
+tint over a dark card they are 2.3:1 and 2.1:1. Both are ground-aware now. That
+is the third token in this file to need a dark sibling for the same reason, and
+the pattern is now explicit: **an ink tuned against one ground is not a colour,
+it is a colour plus an assumption.**
+
 ## 2026-08-24 · one label, a real arrow, and a centring I had broken
 
 **The hint stopped being centred, and I broke it in the previous commit.**
