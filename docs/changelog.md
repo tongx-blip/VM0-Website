@@ -6,6 +6,84 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the hover bug, and what it exposed underneath
+
+Tong: *"I said no hover — so why does the background pattern disappear on
+hover?"* Because of this, in `base.css`:
+
+```css
+.quote:hover{ background:var(--paper-2); }
+```
+
+`background` is the **shorthand**. It resets `background-image` to `none`,
+so hovering wiped the card's doodles. The hover had been removed last
+round — from the design layer only. This copy sat at (0,2,0) and won.
+
+**That was the fourth time this session** a rule living in both layers
+caused a defect: `.vs p` handed the product mocks a theme-flipping colour,
+`.proof` kept an explicit 3-column template in front of the rail, and now
+this. So the whole `.quote` block came out of `base.css` rather than being
+patched again — and deleting it exposed two more defects that had been
+shipping unnoticed:
+
+* `.quote figcaption b{ font-size:13.5px; font-weight:700 }` at (0,1,2)
+  beat `.quote__who b` at (0,1,1). **The attribution has been rendering at
+  13.5px/700 since the section was built**, where the design is 16/500 —
+  17.4px/500 at our scale. Nothing looked broken; it just was not the
+  design.
+* `flex:1` on the blockquote pushed the closing quote mark to the bottom
+  of the card instead of leaving it 16 design px under the text.
+
+`tools/tokens.py` gained a lint for the actual mechanism: a state rule
+using the `background` shorthand on a selector whose base rule sets
+`background-image`. Verified against the real bug — re-introduce it and
+the tool prints `base.css:643 .quote:hover`; remove it and the count is 0.
+No visual check could have caught this. The card is correct until a
+pointer touches it.
+
+### The rail shows three and a half cards
+
+The fourth card sat entirely off-screen, and a rail nobody can see the end
+of is a rail nobody scrolls. The card width is solved from the measure —
+`(100% - 3 x gap) / 3.5` — so the fourth is always cut. Measured 3.54 at
+1280 and above; on a phone the floor gives 1.21, which does the same job.
+Everything else scaled with it, because `--qu` is a container unit: the
+quote came down from 32px to 26px and the avatar ratio stayed 0.1514.
+
+### Prev / next, and where they go
+
+**Centred under the rail, not top-right.** Top-right is the convention and
+it is wrong here: this section's heading is centred and a control pinned
+to one corner pulls the composition off axis. Under the row it also covers
+no card — an arrow floated over the first card hides content and implies
+the card is clickable, which these explicitly are not.
+
+Worth noting what the survey found: Resend, Sierra and Clay all ship rails
+with **no arrows at all**, relying on drag, auto-drift or swipe. That is
+fine on a trackpad and poor with a mouse, which is the case being served
+here.
+
+The craft is in the three things beyond drawing two arrows: they step by
+exactly one card plus one gap so the row always lands card-aligned; they
+disable at each end from the real scroll position, so they stay honest
+when the rail is dragged instead of clicked; and they remove themselves
+entirely when the rail does not overflow. At rest they carry no ground and
+gain one on hover — one dimension per state, like the page's other ambient
+controls.
+
+A scope bug on the way in: the block used `win`, which does not exist in
+that IIFE (`window` is not aliased), and shadowed the outer `reduce`,
+which is already a boolean. It threw, so nothing was wired — the buttons
+rendered and did nothing.
+
+### The hub
+
+Faster: 5.4s to 3.2s, wave step .115s to .085s. The centre tile keeps its
+white ground and its outline and loses the drop shadow — it reads as the
+centre by being bigger, whiter and more rounded, and the shadow was a
+fourth signal saying what three already said.
+
+
 ## 2026-08-25 · the testimonials become a rail, and the hub gets a wave
 
 Five changes asked for directly, plus an audit.

@@ -897,4 +897,42 @@
       });
     });
   }
+
+  /* ── 12. the testimonial rail's prev / next ─────────────────────
+     Steps by exactly one card plus one gap, so the row always lands
+     card-aligned instead of at an arbitrary offset. State is read back
+     off the real scroll position rather than counted, which is the only
+     version that stays true when the rail is also dragged or swiped. */
+  var railnav = doc.querySelector('.railnav');
+  var rail = doc.querySelector('.proof');
+  if (railnav && rail) {
+    var btns = [].slice.call(railnav.querySelectorAll('.railnav__b'));
+    function step() {
+      var card = rail.querySelector('.qcell');
+      if (!card) return rail.clientWidth;
+      var gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+      return card.getBoundingClientRect().width + gap;
+    }
+
+    function sync() {
+      var max = rail.scrollWidth - rail.clientWidth;
+      // a control for something that cannot happen is worse than none
+      railnav.hidden = max < 4;
+      btns[0].disabled = rail.scrollLeft <= 1;
+      btns[1].disabled = rail.scrollLeft >= max - 1;
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        rail.scrollBy({
+          left: step() * Number(b.dataset.dir),
+          behavior: reduce ? 'auto' : 'smooth'
+        });
+      });
+    });
+
+    rail.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  }
 })();

@@ -294,8 +294,13 @@
   --q-namegap: calc( 4 * var(--qu));
   /* the rail's own two measures. They cannot come from --qu: that unit is
      the CARD's container width, and these live between and around cards. */
-  --q-card:     clamp(268px, 29vw, 421px);   /* 317 design px x 1.314 */
-  --q-rail-gap: clamp(18px, 2.8vw, 40px);
+  /* THREE AND A HALF CARDS, always. A rail whose fourth card sits entirely
+     off-screen is a rail nobody scrolls — the cut card is the only thing
+     that says there is more. 3.5W + 3G = the visible measure, solved for W.
+     The floor stops it collapsing on a phone, where 1.2 cards visible does
+     the same job. */
+  --q-card:     max(272px, calc((100% - 3 * var(--q-rail-gap)) / 3.5));
+  --q-rail-gap: clamp(18px, 2.2vw, 32px);
 
   --t-hover:  220ms;
   --t-press:  120ms;
@@ -2257,8 +2262,8 @@ h3{ font-family:var(--fd); }
   --hub-tile:#F3F5F8;   /* the product's gray-50 */
   --hub-line:#E3E7EC;   /* one step down — the outline           */
   --hub-lit:#FFFFFF;
-  --hub-cycle:5.4s;
-  --hub-step:.115s;     /* per cell of radius: the wave's speed  */
+  --hub-cycle:3.2s;
+  --hub-step:.085s;     /* per cell of radius: the wave's speed  */
 
   /* CENTRED EXPLICITLY, not by alignment. The grid is deliberately WIDER and
      TALLER than its band, and both `place-items:center` and flex centring
@@ -2301,9 +2306,10 @@ h3{ font-family:var(--fd); }
   margin:-5px;
   border-radius:14px;                     /* the product's card radius */
   background-color:var(--hub-lit);
-  box-shadow:inset 0 0 0 1px var(--hub-line),
-             0 1px 2px rgb(var(--ink-rgb) / .06),
-             0 10px 22px -12px rgb(var(--ink-rgb) / .30);
+  /* no lift. It reads as the centre by being bigger, whiter and more
+     rounded than everything around it; the shadow was a fourth signal
+     saying what three already said. */
+  box-shadow:inset 0 0 0 1px var(--hub-line);
 }
 
 .hub__t--me img{ width:30px; height:30px; }
@@ -2435,6 +2441,40 @@ h3{ font-family:var(--fd); }
    flags a scroll container that cannot be, and it is right to. The ring
    sits outside the cards rather than on them, so it never reads as a
    card being selected. */
+/* ── the rail's controls ─────────────────────────────────────────────
+   CENTRED UNDER THE RAIL, not top-right. Top-right is the conventional
+   slot and it is wrong here: this section's heading is centred, and a
+   control pinned to one corner pulls the whole composition off axis.
+   Under the row it also sits where the eye already is once the cards have
+   been read, and it covers no card — an arrow floated over the first card
+   both hides content and implies the card itself is clickable, which the
+   cards are explicitly not.
+
+   Restraint at rest, per the same rule the other ambient controls follow:
+   the buttons carry no ground until you point at them, and exactly one
+   dimension changes per state. They also tell the truth — disabled at
+   each end from the real scroll position, and removed entirely when the
+   rail does not overflow, because a control for something that cannot
+   happen is worse than no control. */
+.railnav{
+  display:flex; justify-content:center; gap:10px;
+  margin-top:clamp(22px, 2.2vw, 34px);
+}
+.railnav[hidden]{ display:none; }
+.railnav__b{
+  width:44px; height:44px; padding:0;
+  display:grid; place-items:center;
+  border:0; border-radius:var(--r-pill);
+  background:transparent; color:var(--ink-soft); cursor:pointer;
+  transition:background var(--t-hover) var(--e-out),
+             color var(--t-hover) var(--e-out),
+             opacity var(--t-hover) var(--e-out);
+}
+.railnav__b svg{ width:19px; height:19px; }
+.railnav__b:hover{ background:var(--wash-2); color:var(--ink); }
+.railnav__b:disabled{ opacity:.28; cursor:default; }
+.railnav__b:disabled:hover{ background:transparent; color:var(--ink-soft); }
+
 .proof:focus-visible{
   outline:2px solid var(--accent-solid);
   outline-offset:6px; border-radius:var(--r-card);

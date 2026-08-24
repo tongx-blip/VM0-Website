@@ -131,6 +131,38 @@ def audit(path: Path):
     return findings
 
 
+STATE = re.compile(r'(:hover|:focus|:active|:focus-visible|\.is-[\w-]+)')
+
+
+def shorthand_wipes_image(paths):
+    """A state rule that says `background:` clears background-image.
+
+    This is what made the testimonial cards' doodles vanish on hover: the
+    design layer painted them with `background-image`, and a leftover
+    `.quote:hover{ background:var(--paper-2) }` in the other layer reset the
+    shorthand. Nothing in the visual gate can see it — the card looks
+    correct until a pointer touches it.
+    """
+    base_imgs, state_bgs = set(), []
+    for path in paths:
+        css = strip_comments(path.read_text(encoding='utf-8'))
+        for m in re.finditer(r'([^{}]+)\{([^{}]*)\}', css):
+            sel = ' '.join(m.group(1).split())
+            body = m.group(2)
+            line = css[:m.start()].count('\n') + 1
+            if re.search(r'background-image\s*:', body) or re.search(r'background\s*:[^;]*url\(', body):
+                for one in sel.split(','):
+                    base_imgs.add(STATE.sub('', one.strip()))
+            if STATE.search(sel) and re.search(r'(?<![\w-])background\s*:', body):
+                for one in sel.split(','):
+                    state_bgs.append((path.name, line, one.strip()))
+    out = []
+    for name, line, sel in state_bgs:
+        if STATE.sub('', sel) in base_imgs:
+            out.append((name, line, sel))
+    return out
+
+
 def main():
     total = 0
     for name in ('src/css/system.css', 'src/css/base.css'):
@@ -142,6 +174,14 @@ def main():
             print(f'  {line:>5}  {kind:<13} {sel[:34]:<34} {text}')
         if len(found) > 40:
             print(f'  … and {len(found) - 40} more')
+    paths = [ROOT / 'src/css/base.css', ROOT / 'src/css/system.css']
+    wipes = shorthand_wipes_image(paths)
+    print(f'\n=== state rules whose `background:` shorthand clears a '
+          f'background-image: {len(wipes)}')
+    for name, line, sel in wipes:
+        print(f'  {name}:{line}  {sel}')
+    total += len(wipes)
+
     print(f'\nTOTAL: {total}')
     return 0 if total == 0 else 1
 
