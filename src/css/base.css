@@ -613,13 +613,17 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   color:var(--ink-mute); margin-bottom:18px;
 }
 .vs__label img{ width:17px; height:17px; object-fit:contain; }
-.vs h3{
+.vs__txt h3{
   font-family:inherit; font-weight:700;
   font-size:clamp(20px,2.1vw,27px);
   line-height:1.1; letter-spacing:-.032em;
   margin-bottom:14px;
 }
-.vs p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
+/* .vs__txt, not .vs — as `.vs p` this reached every <p> inside the media
+   band's product mocks and handed them the page's prose colour, which
+   flips with the theme. The design layer had the same rule and fixing
+   only that one left this copy still winning. */
+.vs__txt p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
 
 /* ─────────────── proof ─────────────── */
 .proof{

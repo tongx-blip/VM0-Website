@@ -344,14 +344,18 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .vs{ padding:0; border:0; background:var(--paper); }
 
-.vs h3{
+.vs__txt h3{
   font-family:inherit; font-weight:700;
   font-size:clamp(20px,2.1vw,27px);
   line-height:1.1; letter-spacing:-.032em;
   margin-bottom:14px;
 }
 
-.vs p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
+/* .vs__txt, not .vs — as `.vs p` this reached every <p> inside the media
+   band's product mocks and handed them the page's prose colour, which
+   flips with the theme. The design layer had the same rule and fixing
+   only that one left this copy still winning. */
+.vs__txt p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
 
 
 /* ─────────────── proof ─────────────── */
@@ -2952,9 +2956,14 @@ h3{ font-family:var(--fd); }
   position:relative;
   display:grid; place-items:center;      /* short statements stay centred in
                                             the height the longest one needs */
-  max-width:min(100%, 54ch); margin:0 auto;
-  /* both statements are two lines, so two is what the stage reserves — a
-     taller floor pads the block unevenly against its own section padding */
+  /* 54ch broke BOTH statements onto three lines, with an orphan word on the
+     third — measured, not guessed: 54ch gives 3L/3L and 58ch gives 2L/2L.
+     62ch is set so a few words of copy can change without the block silently
+     growing a line again, which is exactly how it regressed. Display type at
+     this size carries a wider measure comfortably; the 65-75ch measure floor
+     is about body copy. */
+  max-width:min(100%, 62ch); margin:0 auto;
+  /* two lines is what the stage reserves, and QA §4y asserts it stays true */
   min-height:2.6em;
   text-align:center;
 }
@@ -3501,11 +3510,39 @@ h3{ font-family:var(--fd); }
 .feat p{ font-size:var(--t-sm); line-height:1.6; color:var(--ink-soft); }
 
 
+/* ── the arrangement ─────────────────────────────────────────────────
+   NOT A 2x2. Four equal rectangles in a quadrant is the arrangement that
+   makes four different arguments look like one template filled in four
+   times, and it was ours. The survey of how this section is built
+   elsewhere (Sierra, Warp, Attio, Cursor, Linear, Raycast — notes in
+   docs/comparison-card-research.md) turned up no equal-quadrant grid at
+   all; the one that keeps a card set and still varies is Raycast's, which
+   changes the FOOTPRINT and the INTERNAL LAYOUT card to card, not just
+   the contents.
+
+   So: a pinwheel on twelve columns. 7+5 then 5+7. Every card has a
+   different width from the one beside it and a different width from the
+   one above it, which is enough to break the quadrant read without any
+   row-spanning. Viz height is constant WITHIN a row and different BETWEEN
+   rows — vary it inside a row and the two text blocks start at different
+   heights, which reads as a mistake rather than as rhythm.
+
+   Deliberately NOT a rail-and-stage (Warp, Attio). It is the strongest
+   pattern for this content, and we already have one: the tab reel above.
+   A second scroll-driven rail would fix this section and make the page
+   repeat itself. */
 .versus{
-  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  display:grid; grid-template-columns:repeat(12,minmax(0,1fr));
   gap:clamp(12px,1.3vw,18px);
   margin-top:clamp(48px,5.5vw,80px);
 }
+
+
+.vs--wide  { grid-column:span 7; }
+
+
+.vs--narrow{ grid-column:span 5; }
+
 
 /* ── the comparison cards ────────────────────────────────────────────
    Each card compares Okou with one alternative, so BOTH marks are on it.
@@ -3528,65 +3565,379 @@ h3{ font-family:var(--fd); }
 }
 
 
+
 /* the media band: an oversized crop of a real product surface */
 .vs__viz{
   position:relative;
   padding:clamp(20px,2vw,26px) 0 0 clamp(20px,2vw,26px);
-  height:clamp(196px, 19vw, 244px);
+  height:clamp(214px, 21vw, 276px);
   overflow:hidden;
   background:var(--vs-tint);
   --vs-tint:color-mix(in srgb, var(--vs-hue) 9%, var(--tile));
   --vs-hue:var(--hue-engineering);
-}
 
-.vs__viz--parallel{ --vs-hue:var(--hue-engineering); }
-
-.vs__viz--artifact{ --vs-hue:var(--hue-product); }
-
-.vs__viz--context { --vs-hue:var(--hue-marketing); }
-
-.vs__viz--shared  { --vs-hue:var(--hue-leadership); }
-
-
-/* ── the surface itself ──────────────────────────────────────────────
-   NOT INVENTED. Read out of the product: turbo/packages/ui Card is
-   `rounded-xl border border-border bg-card` (radius-xl 14px, border
-   gray-200 #DCE1E8), and the list row is the one in
-   views/okou-page/sidebar-dialogs.tsx: a 32px `rounded-lg` avatar, a
-   truncated 14px title, then `ml-auto` with a fixed 14px indicator slot and
-   a 12px gray-700 timestamp. The pulsing dot is the real RunningIndicator
-   (sky-600, 0.86rem, centre + ripple on a 2400ms cycle), keyframes copied
-   from globals.css rather than approximated.
-
-   The first version had text pills reading "Running", "Done", "Read",
-   "Drafted" and little progress bars. None of those exist in the product.
-   That is the exact failure P1 names: inventing a parallel language instead
-   of opening the component.
-
-   The product values are declared as --p-* so it is obvious at a glance
-   that this block does not belong to the page token system. */
-.vsui{
+  /* the product's own values, hoisted here from .vsui now that four
+     different devices draw on them. Declared --p-* so it stays obvious
+     that this block is NOT part of the page token system — it is what
+     turbo/packages/ui actually ships. */
   --p-card:#FFFFFF;
   --p-border:#DCE1E8;   /* gray-200  */
   --p-fg:#1A1E26;       /* gray-950  */
   --p-mute:#788192;     /* gray-700  */
   --p-run:#0284C7;      /* sky-600   */
+  --p-tint:#F3F5F8;     /* gray-50   */
+  --p-line:#E7EBF0;     /* gray-100  */
   --p-r-card:14px;      /* radius-xl */
   --p-r-item:8px;       /* radius    */
 
-  /* Wider than the band, but only just. The real row puts its indicator and
-     timestamp at the far right with `ml-auto`, so a deep right crop removes
-     exactly the part that carries the state — twice now. The BOTTOM does the
-     cropping instead: a list cut mid-row reads as a list that continues,
-     which is the same claim and costs nothing. */
-  width:calc(100% + 20px);
-  padding:10px 12px;
-  border-radius:var(--p-r-card);
-  border:1px solid var(--p-border);
-  background:var(--p-card);
-  font-family:var(--fb);
-  color:var(--p-fg);
+  /* A TERMINAL, not our product and not our page — the one surface in this
+     section that belongs to the alternative being compared. Kept in its
+     own named group so it is never mistaken for a theme token and never
+     reused anywhere else. */
+  --t-shell:#12171C;
+  --t-dim:#79838D;
+  --t-lit:#A8B2BB;
+  --t-caret:#4A545E;
 }
+
+
+.vs__viz--parallel{ --vs-hue:var(--hue-engineering); }
+
+
+.vs__viz--artifact{ --vs-hue:var(--hue-product); }
+
+
+.vs__viz--shared  { --vs-hue:var(--hue-leadership); }
+
+
+/* second row sits shorter than the first — the height difference is
+   between rows, never inside one */
+.versus > :nth-child(n+3) .vs__viz{ height:clamp(178px, 17vw, 216px); }
+
+
+
+/* ── the four devices ────────────────────────────────────────────────
+   One per claim, and each one has to be a DIFFERENT KIND OF PICTURE,
+   because the previous version drew three of the four with the same
+   component — a vertical list of avatar + label + right-aligned time —
+   and only the connector hub stood apart. Worse than repetitive: the
+   Codex card claims PARALLELISM and its picture was a single sequential
+   column, so the image argued against the sentence over it.
+
+   Every one of them bleeds off an edge. That is the one thing all six
+   surveyed pages do and we did not: their panels are cut mid-component
+   so they read as a fragment of a running interface, while ours floated
+   whole inside padding and read as a diagram. */
+
+/* A — Codex: "Several AIs get more done at once."
+   Parallelism has to be visible as WIDTH. Three lanes running at the
+   same moment, a fourth cut off at the right edge to say "and more". */
+/* the lanes run to the bottom of the band and are cut there, so the
+   three columns read as three that keep going rather than three short
+   cards floating in a tinted box */
+.lanes{ display:flex; align-items:stretch; gap:10px; width:calc(100% + 74px); height:100%; }
+
+
+.lane{
+  flex:0 0 29%;
+  display:flex; flex-direction:column;
+  padding:10px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
+  border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
+  font-family:var(--fb); color:var(--p-fg);
+}
+
+
+.lane__h{ display:flex; align-items:center; gap:8px; margin-bottom:9px; }
+
+
+.lane__h img{ width:20px; height:20px; border-radius:6px; object-fit:cover; object-position:top; }
+
+
+.lane__h span{
+  font-family:var(--fm); font-size:10px; letter-spacing:.04em;
+  color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+
+.lane__t{ font-size:13px; line-height:1.35; margin:0 0 10px; }
+
+
+.lane__s{
+  display:flex; align-items:center; gap:8px;
+  font-size:11px; color:var(--p-mute); padding:3px 0;
+}
+
+
+.lane__s .vsui__ind{ width:.7rem; height:.7rem; flex:none; }
+
+
+.lane__s em{ font-style:normal; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+
+.lane__done{
+  width:.7rem; height:.7rem; flex:none; border-radius:50%;
+  background:var(--p-line);
+}
+
+
+
+/* B — ChatGPT: "Does the work, not just the thinking."
+   The claim is that the answer arrives as a shipped artifact, so the
+   artifact is the hero and the activity trail is the receipt tucked
+   under its corner — the composite Attio and Linear both use, a real
+   surface with one panel lifted off it. */
+/* full band height on purpose: the trail is positioned from the BOTTOM,
+   and with an auto-height .arti that bottom is the window's, which put the
+   receipt across the numbers it is vouching for rather than under them. */
+.arti{ position:relative; width:calc(100% + 22px); height:100%; }
+
+
+.arti__win{
+  border-radius:var(--p-r-card); overflow:hidden;
+  border:1px solid var(--p-border); background:var(--p-card);
+  font-family:var(--fb); color:var(--p-fg);
+}
+
+
+.arti__bar{
+  display:flex; align-items:center; gap:7px;
+  padding:7px 10px; border-bottom:1px solid var(--p-border);
+}
+
+
+.arti__bar i{ width:7px; height:7px; border-radius:50%; background:var(--p-line); flex:none; }
+
+
+.arti__url{
+  margin-left:4px; font-family:var(--fm); font-size:10px;
+  color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+
+.arti__body{ padding:10px 12px 12px; }
+
+
+.arti__h{ font-size:13px; font-weight:600; margin:0 0 8px; }
+
+
+.arti__stats{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-bottom:10px; }
+
+
+.arti__s{ padding:7px 8px; border-radius:var(--p-r-item); background:var(--p-tint); }
+
+
+.arti__s b{ display:block; font-size:14px; font-weight:600; line-height:1.2; }
+
+
+.arti__s span{ font-family:var(--fm); font-size:9px; color:var(--p-mute); }
+
+
+.arti__chart{ display:flex; align-items:flex-end; gap:6px; height:34px; margin:0; }
+
+
+.arti__chart i{
+  flex:1; border-radius:3px 3px 0 0; background:var(--p-run); opacity:.72;
+  height:var(--h); transform-origin:50% 100%;
+}
+
+
+/* LEFT, not right. At right:-16px it landed across the stat tiles and
+   the chart and lost its own last row off the card edge — the same deep
+   right crop the .vsui comment already warns about, made twice. On the
+   left it overlaps the window's bottom corner and nothing it covers is
+   load-bearing. Kept to 56% so the chart it sits over still reads as a
+   chart — at 70% only two stray bars showed past it, which looks like a
+   bug rather than a crop.
+
+   -16px hid its own last row once the mock type came down to 11px: the
+   panel is anchored by its BOTTOM, so the overhang is constant and a
+   shorter panel loses proportionally more of itself. -2px keeps all
+   three steps readable; the window behind it does the bleeding. */
+.arti__rows{ margin-top:11px; }
+
+
+.arti__rows p{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin:0; padding:5px 0; font-size:11px; line-height:1.3;
+  border-top:1px solid var(--p-line);
+}
+
+
+.arti__rows span{ color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+
+.arti__rows b{ color:var(--p-fg); font-weight:500; flex:none; }
+
+
+.arti__trail{
+  position:absolute; left:-12px; bottom:-2px; width:56%;
+  padding:8px 10px; border-radius:var(--p-r-card);
+  border:1px solid var(--p-border); background:var(--p-card);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
+             0 12px 24px -14px rgb(var(--ink-rgb) / .34);
+  font-family:var(--fb);
+}
+
+
+.arti__trail p{
+  display:flex; align-items:center; gap:8px; margin:0; padding:2px 0;
+  font-size:11px; line-height:1.3; color:var(--p-mute);
+}
+
+
+.arti__trail p b{ color:var(--p-fg); font-weight:400; }
+
+
+.arti__tick{
+  width:12px; height:12px; flex:none; border-radius:50%;
+  background:var(--p-tint); display:grid; place-items:center;
+}
+
+
+.arti__tick svg{ width:8px; height:8px; stroke:var(--p-run); }
+
+
+
+/* D — Claude Code: "Built for shared work, not one terminal."
+   The only card whose picture carries the alternative's own form. A
+   terminal really is dark, so drawing it dark is accurate rather than a
+   theme break — and the shared surface then overlaps and outranks it,
+   which is the sentence. */
+.tsh{ position:relative; width:100%; height:100%; }
+
+
+/* the terminal is the one that runs off the frame, pushed back past the
+   left edge. The shared surface must NOT bleed: its timestamps and
+   states live at its right margin and a crop deletes exactly them. */
+.tsh__term{
+  width:62%; height:100%;
+  margin-left:calc(-1 * clamp(20px,2vw,26px) - 16px);
+  padding:9px 11px 14px calc(clamp(20px,2vw,26px) + 16px);
+  border-radius:0 var(--p-r-card) 0 0;
+  /* A WINDOW EDGE, and it is load-bearing. The shell is #12171C and the
+     dark band computes to roughly the same value — 1.16:1 — so without a
+     rim the terminal stopped being an object in dark mode and read as a
+     hole punched in the card. The hairline is the same in both themes, so
+     the mock still does not flip with the page (P1). */
+  border:1px solid var(--t-caret); border-left:0;
+  background:var(--t-shell); font-family:var(--fm); font-size:10.5px; line-height:1.75;
+  color:var(--t-dim);
+}
+
+
+.tsh__term i{ display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--t-caret); margin-right:5px; }
+
+
+.tsh__term p{ margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+
+.tsh__term p:first-of-type{ margin-top:7px; }
+
+
+.tsh__term b{ color:var(--t-lit); font-weight:400; }
+
+
+.tsh__cur{ display:inline-block; width:5px; height:11px; background:var(--t-caret); vertical-align:-1px; }
+
+
+.tsh__share{
+  position:absolute; right:10px; top:58px; width:66%;
+  padding:10px 12px; border-radius:var(--p-r-card);
+  border:1px solid var(--p-border); background:var(--p-card);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
+             0 16px 30px -16px rgb(var(--ink-rgb) / .38);
+  font-family:var(--fb); color:var(--p-fg);
+}
+
+
+
+/* ── how the set behaves ─────────────────────────────────────────────
+   The interaction complaint and the sameness complaint are the same
+   complaint: four identical things that all just sit there. Warp
+   auto-advances its rail, Attio drives its index off scroll. We cannot
+   take either without repeating the tab reel, and hover is out — these
+   cards are not links and a hover affordance would promise a click that
+   does not exist.
+
+   So the scroll position IS the interaction. Each card plays its own
+   sequence once as it arrives, and because the pinwheel puts them at
+   four different heights they fire one after another rather than all at
+   once. Each is a single state change, not a loop: an entrance is
+   allowed to be a performance, an idle is not. */
+.arti__chart i{ transform:scaleY(.08); transition:transform .62s var(--e-out); }
+
+
+.vs.is-in .arti__chart i{ transform:scaleY(1); }
+
+
+.arti__chart i:nth-child(1){ transition-delay:.10s }
+
+
+.arti__chart i:nth-child(2){ transition-delay:.16s }
+
+
+.arti__chart i:nth-child(3){ transition-delay:.22s }
+
+
+.arti__chart i:nth-child(4){ transition-delay:.28s }
+
+
+.arti__chart i:nth-child(5){ transition-delay:.34s }
+
+
+.arti__chart i:nth-child(6){ transition-delay:.40s }
+
+
+.arti__chart i:nth-child(7){ transition-delay:.46s }
+
+
+.arti__trail{ opacity:0; translate:0 10px; transition:opacity .5s var(--e-out) .5s, translate .5s var(--e-out) .5s; }
+
+
+.vs.is-in .arti__trail{ opacity:1; translate:0 0; }
+
+
+
+.tsh__share .vsui__faces img{ opacity:0; translate:-7px 0; transition:opacity .42s var(--e-out), translate .42s var(--e-out); }
+
+
+.vs.is-in .tsh__share .vsui__faces img{ opacity:1; translate:0 0; }
+
+
+.tsh__share .vsui__faces img:nth-child(1){ transition-delay:.14s }
+
+
+.tsh__share .vsui__faces img:nth-child(2){ transition-delay:.22s }
+
+
+.tsh__share .vsui__faces img:nth-child(3){ transition-delay:.30s }
+
+
+.tsh__share .vsui__faces img:nth-child(4){ transition-delay:.38s }
+
+
+
+/* the three lanes are meant to read as SIMULTANEOUS, so they stay close
+   together — just far enough apart not to look like one clock */
+.lane:nth-child(2) .vsui__ind-c,
+.lane:nth-child(2) .vsui__ind-r{ animation-delay:-.32s }
+
+
+.lane:nth-child(3) .vsui__ind-c,
+.lane:nth-child(3) .vsui__ind-r{ animation-delay:-.64s }
+
+
+
+@media (prefers-reduced-motion:reduce){
+  .arti__chart i,.arti__trail,
+  .tsh__share .vsui__faces img{ transition:none; transform:none; translate:none; opacity:1; }
+
+
+  .arti__chart i{ transform:scaleY(1); }
+
+
+}
+
 
 .vsui__r{
   display:flex; align-items:center; gap:14px;
@@ -3594,7 +3945,6 @@ h3{ font-family:var(--fd); }
   border-radius:var(--p-r-item);
 }
 
-.vsui__r--dim{ opacity:.4; }
 
 .vsui__av{
   width:32px; height:32px; flex:none;
@@ -3602,7 +3952,6 @@ h3{ font-family:var(--fd); }
   object-fit:cover; object-position:top;
 }
 
-.vsui__av--art{ background:linear-gradient(150deg,#E7EBF0,#F3F5F8); }
 
 .vsui__t{
   flex:1; min-width:0;
@@ -3610,14 +3959,18 @@ h3{ font-family:var(--fd); }
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
+
 .vsui__meta{ margin-left:auto; display:flex; align-items:center; gap:10px; flex:none; }
 
+
 .vsui__meta em{ font-style:normal; font-size:12px; color:var(--p-mute); white-space:nowrap; }
+
 
 /* w-3.5, and the product's own comment says why: it fits the widest
    indicator so the timestamp never shifts between a running row and a
    finished one */
 .vsui__slot{ display:flex; width:14px; flex:none; justify-content:center; }
+
 
 
 .vsui__ind{
@@ -3626,10 +3979,12 @@ h3{ font-family:var(--fd); }
   color:var(--p-run);
 }
 
+
 .vsui__ind-c,.vsui__ind-r{
   position:absolute; top:50%; left:50%;
   border-radius:inherit; transform-origin:center;
 }
+
 
 .vsui__ind-c{
   width:calc(100% - 5px); height:calc(100% - 5px);
@@ -3638,6 +3993,7 @@ h3{ font-family:var(--fd); }
   animation:vsRunCentre 2400ms cubic-bezier(.33,0,.66,1) infinite;
 }
 
+
 .vsui__ind-r{
   width:calc(100% - 3px); height:calc(100% - 3px);
   border:1px solid currentColor;
@@ -3645,10 +4001,12 @@ h3{ font-family:var(--fd); }
   animation:vsRunRipple 2400ms ease-out infinite;
 }
 
+
 @keyframes vsRunCentre{
   0%,100%{ transform:translate(-50%,-50%) scale(.64); opacity:.34 }
   52%    { transform:translate(-50%,-50%) scale(.88); opacity:.52 }
 }
+
 
 @keyframes vsRunRipple{
   0%,45% { transform:translate(-50%,-50%) scale(.8);   opacity:0 }
@@ -3656,29 +4014,28 @@ h3{ font-family:var(--fd); }
   100%   { transform:translate(-50%,-50%) scale(1.56); opacity:0 }
 }
 
+
 @media (prefers-reduced-motion:reduce){
   .vsui__ind-c,.vsui__ind-r{ animation:none; }
 
+
 }
 
-
-.vsui__sub{
-  margin:-4px 0 8px 50px;
-  font-family:var(--fm); font-size:11px;
-  color:var(--p-mute); white-space:nowrap;
-}
 
 .vsui__faces{ display:flex; align-items:center; margin:0 0 6px 50px; }
+
 
 .vsui__faces img{
   width:24px; height:24px; border-radius:50%;
   margin-right:-6px; box-shadow:0 0 0 2px var(--p-card);
 }
 
+
 .vsui__faces em{
   margin-left:16px; font-style:normal;
   font-size:12px; color:var(--p-mute); white-space:nowrap;
 }
+
 
 
 /* ── the connector hub ──────────────────────────────────────────────
@@ -3696,7 +4053,27 @@ h3{ font-family:var(--fd); }
    MULTI-STEP. Three tiles next to the centre light in sequence — read,
    draft, post — and the ring leaves the centre on the same cycle. One
    pass every 4.2s, so it reads as a run rather than as decoration. */
-.vs__viz--context{ position:relative; padding:0; }
+/* NEUTRAL GROUND, no hue. An amber tint over --tile is a warm cream, and
+   C2 is "cool neutrals, never warm" — I introduced the one warm surface on
+   the page. It was also the wrong call independently: this band carries 55
+   brand marks, so the ground's job is to stay out of their way. The other
+   three tints are cool and stay. */
+/* THE MASK LIVES ON THE BAND, not on the grid. On .hub its percentages
+   were relative to the 682px grid, so the fade only finished 171px from
+   centre while the band edge is at 108px — the tiles were still ~60%
+   opaque where the card sliced them, and the rim read as a straight cut
+   rather than a fade. It was invisible while this card was six columns
+   wide and obvious as soon as it became five, worst in dark mode where
+   the tiles are the bright thing.
+
+   Inscribed in the band (50%/50%, transparent at 100%) it reaches zero
+   exactly at the edge at every card width instead of at one. */
+.vs__viz--context{
+  position:relative; padding:0; background:var(--tile);
+  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
+          mask-image:radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
+}
+
 
 .hub{
   /* CENTRED EXPLICITLY, not by alignment. The grid is deliberately WIDER and
@@ -3710,10 +4087,8 @@ h3{ font-family:var(--fd); }
   width:max-content;
   grid-template-columns:repeat(11, 52px);
   gap:11px;
-  /* the rim is what says "there are more of these than fit" */
-  -webkit-mask-image:radial-gradient(ellipse 54% 76% at 50% 50%, #000 26%, transparent 74%);
-          mask-image:radial-gradient(ellipse 54% 76% at 50% 50%, #000 26%, transparent 74%);
 }
+
 
 .hub__t{
   display:grid; place-items:center;
@@ -3726,72 +4101,80 @@ h3{ font-family:var(--fd); }
      exact opposite of what it is for. */
 }
 
+
 .hub__t img{ width:22px; height:22px; object-fit:contain; }
 
 
+
 /* Okou at the centre, and the only tile with the accent on it */
-/* the hub reads as the hub: a size up, lifted, and the only tile the accent
-   touches. Everything else on this grid is a flat gray-50 chip. */
+/* The hub reads as the hub by SIZE and a soft lift, not by glow. A heavy
+   accent halo under one tile was the loudest thing in the card and the
+   craft floor is explicit that a shadow carries an offset and a soft blur
+   while a coloured halo is decoration. */
 .hub__t--me{
   position:relative;
   width:62px; height:62px;
   margin:-5px;
   border-radius:14px;                     /* the product's card radius */
   background:#FFFFFF;
-  box-shadow:0 2px 4px rgb(var(--ink-rgb) / .07),
-             0 14px 34px -10px rgb(var(--accent-rgb) / .58);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
+             0 10px 22px -12px rgb(var(--ink-rgb) / .30);
 }
+
 
 .hub__t--me img{ width:30px; height:30px; }
 
-/* the ring that leaves the centre once per pass */
-.hub__t--me::after{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:inherit;
-  border:1.5px solid var(--accent);
-  opacity:0;
-  animation:hubRing 4.2s var(--e-out) infinite;
-  animation-play-state:paused;
-}
-
-@keyframes hubRing{
-  0%      { transform:scale(1);    opacity:.55 }
-  34%,100%{ transform:scale(2.05); opacity:0 }
-}
 
 
-/* the three steps, in order, each holding briefly before the next */
+/* ── ONE material idea, not three ────────────────────────────────────
+   The first version stacked a white swap, a 1.5px accent ring and a ring
+   expanding out of the centre to 2x. impeccable's animate.md: "Do not
+   stack techniques for spectacle. One strong material idea." It also held
+   each step lit for ~1.1s, where 150-300ms is a routine state change and
+   anything longer reads as latency.
+
+   What is left is the smallest change that still says "this one is being
+   used": the chip lifts off the grid — gray-50 to white with the same soft
+   neutral shadow every other raised surface here uses. No accent, no ring.
+   Slower cycle, and it eases in and leaves faster than it arrives. */
 .hub__t--s1,.hub__t--s2,.hub__t--s3{
-  position:relative;
-  animation:hubStep 4.2s var(--e-out) infinite;
+  animation:hubStep 5.4s var(--e-out) infinite;
   animation-play-state:paused;
 }
 
-.hub__t--s2{ animation-delay:.42s }
 
-.hub__t--s3{ animation-delay:.84s }
+.hub__t--s2{ animation-delay:.5s }
+
+
+.hub__t--s3{ animation-delay:1s }
+
 
 @keyframes hubStep{
-  0%,4%   { background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--accent-rgb) / 0); }
-  10%,26% { background:#FFFFFF; box-shadow:0 0 0 1.5px rgb(var(--accent-rgb) / .55); }
-  40%,100%{ background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--accent-rgb) / 0); }
+  0%,6%    { background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--ink-rgb) / 0); }
+  14%,26%  { background:#FFFFFF; box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
+                                            0 6px 14px -8px rgb(var(--ink-rgb) / .28); }
+  36%,100% { background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--ink-rgb) / 0); }
 }
 
-.vs.is-in .hub__t--me::after,
+
 .vs.is-in .hub__t--s1,
 .vs.is-in .hub__t--s2,
 .vs.is-in .hub__t--s3{ animation-play-state:running; }
 
 
+
+
 @media (prefers-reduced-motion:reduce){
-  .hub__t--me::after,.hub__t--s1,.hub__t--s2,.hub__t--s3{ animation:none; }
+  .hub__t--s1,.hub__t--s2,.hub__t--s3{ animation:none; }
+
 
 }
 
 
+
 /* ── the text half ───────────────────────────────────────────────── */
 .vs__txt{ padding:clamp(20px,2vw,26px); }
+
 
 
 /* both marks, and the word between them */
@@ -3803,11 +4186,15 @@ h3{ font-family:var(--fd); }
   color:var(--ink-mute);
 }
 
+
 .vs__side{ display:inline-flex; align-items:center; gap:7px; }
+
 
 .vs__side img{ width:18px; height:18px; object-fit:contain; }
 
+
 .vs__side--us{ color:var(--ink); }
+
 
 /* --ink-mute is already the lightest ink the page allows, so an opacity on
    top of it is under AA by construction. The word is made quieter by SIZE
@@ -3816,7 +4203,8 @@ h3{ font-family:var(--fd); }
 .vs__vs{ font-size:.86em; }
 
 
-.vs h3{
+
+.vs__txt h3{
   /* base.css sets `font-family:inherit` here, which lands on the body face —
      a section heading in the prose face is the one type role that must not
      drift */
@@ -3829,7 +4217,16 @@ h3{ font-family:var(--fd); }
   margin-bottom:10px; color:var(--ink);
 }
 
-.vs p{ font-size:var(--t-meta); line-height:1.6; color:var(--ink-soft); }
+
+/* SCOPED TO .vs__txt, not to .vs. As `.vs p` this was (0,1,1) and beat
+   every mock class inside the media band, so each <p> in a product mock
+   took the PAGE prose colour and size — including --ink-soft, which flips
+   with the theme. In dark that put light-grey text on the mocks' white
+   cards at 1.92:1. Light mode hid it: --ink-soft is dark there, so it
+   merely looked a little soft instead of broken. Exactly the failure P1
+   exists to prevent, arriving through the cascade rather than through a
+   token. */
+.vs__txt p{ font-size:var(--t-meta); line-height:1.6; color:var(--ink-soft); }
 
 
 .proof{
@@ -4374,6 +4771,21 @@ h3{ font-family:var(--fd); }
   .showcase__sticker--tr{ right:-2%; top:-5%; }
 
   .versus,.proof{ grid-template-columns:1fr; }
+
+  /* the spans have to go with the twelve columns. `span 7` inside a
+     one-column grid does not clamp — it generates six implicit columns
+     and the section runs off the page. */
+  .vs--wide,.vs--narrow{ grid-column:auto; }
+
+  .versus > :nth-child(n+3) .vs__viz{ height:clamp(196px,19vw,244px); }
+
+  .lanes{ width:calc(100% + 40px); }
+
+  .lane{ flex:0 0 44%; }
+
+  .tsh__term{ width:70%; }
+
+  .tsh__share{ width:60%; }
 
   .scene.is-on{ grid-template-columns:1fr; }
 

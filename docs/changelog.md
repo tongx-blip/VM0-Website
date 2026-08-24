@@ -6,6 +6,75 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · four comparison cards that are four different pictures
+
+Tong, twice: *"the other three cards are too uniform in form — go research how
+other companies' landing pages do similar cards, and only then start"*, and
+*"the four-card quadrant arrangement is a monotonous way to interact with them.
+Really go research it."*
+
+Research first: six pages fetched and rendered rather than recalled — Sierra,
+Warp, Attio, Cursor, Linear, Raycast. Written up in
+`docs/comparison-card-research.md`. **None of the six uses a grid of equal
+quadrants.** They all bleed their imagery off an edge, which is what makes it
+read as a fragment of a running interface rather than a diagram. Raycast varies
+the *internal layout* card to card, not just the footprint — that is the actual
+cure for sameness, because the eye reads the arrangement before it reads the
+box.
+
+The rail-and-stage that Warp and Attio use is the strongest pattern for this
+content and was still rejected: this page already has a rail-driven stage in the
+tab reel above, and a second one would fix the section by making the page repeat
+itself.
+
+**What was wrong here.** Three of the four pictures were the same component — a
+vertical list of avatar + label + right-aligned timestamp — with different
+strings in it. Only the connector hub stood apart. And one of them argued
+against its own sentence: the Codex card claims *parallelism* and illustrated it
+with a single sequential column.
+
+Now a pinwheel on twelve columns, 7+5 then 5+7, and one device per claim:
+lanes running side by side for Codex, the shipped artifact with its trail lifted
+over one corner for ChatGPT, the hub kept as-is for Zapier, and a dark terminal
+overlapped by the shared team surface for Claude Code. Band height is constant
+within a row and different between rows.
+
+The interaction is the scroll position. Hover is out (these cards are not
+links), a rail is out (see above), so each card plays its sequence once on
+arrival and the pinwheel's four different heights make them fire in turn.
+
+### Four bugs found by measuring rather than looking
+
+**`.vs p` was styling the product mocks.** At one class plus one type it scores
+(0,1,1) and beat every mock class inside the media band at (0,1,0), so each
+`<p>` in a mock took the page's prose colour and size — including `--ink-soft`,
+which flips with the theme. In dark mode that was light grey text on the mocks'
+white cards at **1.92:1**. Light mode hid it completely. The same rule existed
+in *both* layers and fixing only the design one left the base copy winning.
+
+**The terminal was a hole.** `--t-shell` #12171C against the dark band computes
+to **1.16:1**. It now has a hairline rim, identical in both themes.
+
+**The hub mask never reached the band edge.** Its percentages were relative to
+the 682px grid, so the fade only finished 171px from centre while the band edge
+is at 108px. The mask now lives on the band, inscribed.
+
+**The trail hid the numbers it vouches for.** Twice — first anchored to the
+window rather than the band, then at a constant `bottom:-16px` overhang that ate
+its own last row once the mock type came down to 11px.
+
+`tools/audit.js` exempts `.vs__viz` rather than naming mock classes one at a
+time.
+
+### Recovery note
+
+This round's commit was lost with the sandbox before it was pushed, and the
+clone came back two rounds stale. The published draft was intact, so the CSS was
+restored by splicing the live stylesheet's own rules back into the sources and
+converging until a rebuild matched the shipped bytes exactly — 0 rules missing,
+0 extra, 0 differing. Verification, not recollection.
+
+
 ## 2026-08-24 · the security link is gone, and so is its CSS
 
 *"Read how security works →"* removed from the Control section. It pointed at

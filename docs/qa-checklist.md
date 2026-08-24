@@ -964,6 +964,30 @@ cached stylesheet from before a block was renamed, so that whole region rendered
 with **no CSS at all** while everything else looked fine. Hard-reload proves
 nothing here — check the query string.
 
+### 4y. Card sets and product mocks
+
+Run this on any section built from repeated cards, and after any change to a
+mock's markup.
+
+- **Read each claim, then look at its picture.** Does the shape of the image
+  match the shape of the sentence? A parallelism claim drawn as one column is
+  a defect no automated check can see (K5).
+- **Are any two pictures the same component with different strings?** If so the
+  set is uniform however different the boxes are (K6).
+- **Does each image bleed off an edge**, or does it float whole inside padding?
+  A crop is what makes a mock read as a running interface rather than a diagram.
+- **Measure mock text and surface contrast in BOTH themes.** These elements are
+  `aria-hidden`, so a clean axe run says nothing about them (R10).
+- **Check specificity, not just the rule you wrote.** A section rule like
+  `.vs p` scores (0,1,1) and silently beats every mock class at (0,1,0). Grep
+  for the same selector in *both* `system.css` and `base.css` — fixing one
+  layer leaves the other winning.
+- **A panel anchored by `bottom:` has a constant overhang.** Shrink its type and
+  it loses proportionally more of itself off the cut.
+- **A mask's percentages are relative to the element it is on.** If that element
+  overflows its container, the fade finishes outside the visible box and the
+  crop is a hard cut. Put the mask on the box that does the clipping.
+
 ## 10. Publish
 
 ```bash

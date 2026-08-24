@@ -20,7 +20,11 @@
   // .vsui is the comparison cards' product surface: the platform Card's real
   // 1px gray-200 border and the RunningIndicator's ripple ring are the app's
   // own chrome, not page furniture (RULES S4 wants exceptions named).
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vsui';
+  // .vs__viz rather than .vsui: the comparison band now draws four different
+  // product surfaces (.vsui, .lane, .arti__win, .tsh__share) and naming them
+  // one at a time meant the audit failed every time a new one was added.
+  // Everything inside a media band is a mock by definition.
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vs__viz';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
