@@ -428,7 +428,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   transition:background .2s, color .2s;
 }
 .artifact:hover{ background:var(--ink); color:var(--paper); }
-.artifact:hover .artifact__meta i,.artifact:hover .artifact__go{ color:rgba(255,255,255,.65); }
+.artifact:hover .artifact__meta i,.artifact:hover .artifact__go{ color:rgb(var(--paper-rgb) / .65); }
 .artifact__thumb{
   width:36px; height:36px; border-radius:0; flex:none;
   background:var(--accent);
@@ -626,9 +626,13 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .vs__txt p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
 
 /* ─────────────── proof ─────────────── */
+/* NO COLUMN TEMPLATE. The design layer turns this into a horizontal rail
+   with `grid-auto-flow:column`; an explicit template here does not get
+   replaced by that, it sits in FRONT of it — the first three cards landed
+   in three 0px-wide explicit tracks and only cards four to six got the
+   417px implicit ones. */
 .proof{
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(12px,1.4vw,18px);
+  display:grid;
   margin-top:clamp(48px,5vw,72px);
 }
 .quote{
@@ -688,7 +692,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 .footer__badge{
   width:42px; height:42px; margin:0 0 clamp(32px,4vw,48px);
-  border:1px solid rgba(255,255,255,.3); border-radius:0;
+  border:1px solid rgb(var(--paper-rgb) / .3); border-radius:0;
   display:grid; place-items:center;
 }
 .footer__badge img{ width:19px; filter:brightness(0) invert(1); }
@@ -696,9 +700,9 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .footer__line .mark{ --hl:var(--accent); }
 .footer__disclaimer{
   max-width:62ch; margin:clamp(36px,4vw,54px) 0 0;
-  padding-top:26px; border-top:1px solid rgba(255,255,255,.18);
+  padding-top:26px; border-top:1px solid rgb(var(--paper-rgb) / .18);
   font-size:13px; line-height:1.7;
-  color:rgba(255,255,255,.55);
+  color:rgb(var(--paper-rgb) / .55);
 }
 .footer__links{
   display:flex; justify-content:flex-start; flex-wrap:wrap; gap:10px 28px;
@@ -706,11 +710,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-family:"IBM Plex Mono", ui-monospace, monospace;
   font-size:10.5px; letter-spacing:.09em; text-transform:uppercase;
 }
-.footer__links a{ color:rgba(255,255,255,.72); transition:color .2s; }
+.footer__links a{ color:rgb(var(--paper-rgb) / .72); transition:color .2s; }
 .footer__links a:hover{ color:var(--accent); }
 .footer__copy{
   margin-top:26px; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
-  color:rgba(255,255,255,.35);
+  color:rgb(var(--paper-rgb) / .35);
 }
 
 /* ─────────────── sticky chat bar ─────────────── */
@@ -727,7 +731,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   .control{ grid-template-columns:1fr; }
   .control__stage{ border-right:0; }
   
-  .proof{ grid-template-columns:1fr; }
   .metrics{ grid-template-columns:1fr; }
   .metrics li{ border-right:0; border-bottom:1px solid var(--hairline); }
   .metrics li:last-child{ border-bottom:0; }
@@ -1029,7 +1032,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   border:1px solid var(--hairline);
   border-radius:var(--r-card);
   background:var(--paper);
-  box-shadow:0 2px 6px rgba(0,0,0,.05), 0 22px 52px -24px rgba(0,0,0,.30);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .05), 0 22px 52px -24px rgb(var(--ink-rgb) / .30);
 }
 .scene__side{ display:flex; flex-direction:column; gap:12px; min-width:0; }
 
@@ -1559,7 +1562,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   font-weight:500;
 }
 .scenes__tab:hover{ background:var(--g-700); border-color:transparent; color:var(--ink); }
-.scenes__tab.is-on{ background:var(--g-200); border-color:var(--g-200); color:#fff; }
+.scenes__tab.is-on{ background:var(--g-200); border-color:var(--g-200); color:var(--paper-ink); }
 
 /* the permission chips and state badges were left square — soften them
    to match every other control on the page */
@@ -1634,7 +1637,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   padding:15px 14px 16px;
   border:1px solid var(--hairline);
   border-radius:var(--r-card);
-  background:#fff;
+  background:var(--paper-ink);
 }
 .job__t{
   font-size:14.5px; font-weight:600; line-height:1.25;
@@ -1648,7 +1651,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   width:19px; height:19px; flex:none;
   display:grid; place-items:center;
   border-radius:50%;
-  background:var(--g-300); color:#fff;
+  background:var(--g-300); color:var(--paper-ink);
   font-size:9.5px; font-weight:700;
 }
 .job__av--b{ background:var(--g-500); }
@@ -1906,7 +1909,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   display:flex; flex-direction:column;
   padding:22px;
   border-right:1px solid var(--hairline);
-  background:#fff;
+  background:var(--paper-ink);
 }
 .flowchat__ask{
   align-self:flex-end;
@@ -1936,7 +1939,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   border:1px solid var(--hairline);
   border-radius:14px;
   overflow:hidden;
-  background:#fff;
+  background:var(--paper-ink);
 }
 .flowsave__head{
   display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
@@ -1971,7 +1974,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   font-size:11.5px; font-weight:500; color:var(--ink);
 }
 .flowsave__actions .flowsave__primary{
-  background:var(--g-200); border-color:var(--g-200); color:#fff;
+  background:var(--g-200); border-color:var(--g-200); color:var(--paper-ink);
 }
 .flowchat__composer{
   min-height:52px;
@@ -1985,7 +1988,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   width:34px; height:34px; flex:none;
   display:grid; place-items:center;
   border-radius:11px;
-  background:var(--g-200); color:#fff;
+  background:var(--g-200); color:var(--paper-ink);
   font-size:15px;
 }
 .flowlist{
@@ -2008,7 +2011,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   padding:7px 9px;
   border:1px solid var(--g-600);
   border-radius:9px;
-  background:#fff;
+  background:var(--paper-ink);
   font-style:normal; font-size:11px; font-weight:500; color:var(--ink);
 }
 .flowlist__filters{ display:flex; gap:6px; margin:16px 0 12px; }
@@ -2016,7 +2019,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   padding:5px 9px;
   border:1px solid var(--hairline);
   border-radius:8px;
-  background:#fff;
+  background:var(--paper-ink);
   font-size:11px; color:var(--ink-soft);
 }
 .flowlist__filters span.is-on{ background:var(--g-800); color:var(--ink); }
@@ -2024,7 +2027,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   overflow:hidden;
   border:1px solid var(--hairline);
   border-radius:14px;
-  background:#fff;
+  background:var(--paper-ink);
 }
 .flowlist__items li{
   display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px;

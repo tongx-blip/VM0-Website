@@ -276,10 +276,11 @@
      the thing the proportion is actually about. 100 / 317 = 0.31546cqw
      is one Figma pixel, exactly, at any card width.
 
-     The clamp is not fidelity, it is a type floor and ceiling: below
-     0.86 the 24px quote drops under our 20px floor, and a single card
-     stretched across a tablet would otherwise reach a 53px quote. */
-  --qu: clamp(.86px, .31546cqw, 1.42px);   /* 317 design px = 100cqw */
+     The clamp is not fidelity, it is a type floor and ceiling. The floor
+     is set to the narrowest card the rail allows (268px), so it never
+     actually bites — at .86 it did, and the avatar came out 0.1540 of the
+     card against the design's 0.1514 at every width below 850. */
+  --qu: clamp(.845px, .31546cqw, 1.42px);  /* 317 design px = 100cqw */
   --q-radius:  calc(24 * var(--qu));
   --q-pad:     calc(24 * var(--qu));
   --q-gap:     calc(24 * var(--qu));   /* card's vertical rhythm      */
@@ -291,6 +292,10 @@
   --q-bar:     calc( 4 * var(--qu));   /* the attribution rule        */
   --q-barpad:  calc(12 * var(--qu));
   --q-namegap: calc( 4 * var(--qu));
+  /* the rail's own two measures. They cannot come from --qu: that unit is
+     the CARD's container width, and these live between and around cards. */
+  --q-card:     clamp(268px, 29vw, 421px);   /* 317 design px x 1.314 */
+  --q-rail-gap: clamp(18px, 2.8vw, 40px);
 
   --t-hover:  220ms;
   --t-press:  120ms;
@@ -1747,14 +1752,18 @@ h3{ font-family:var(--fd); }
 .feat,.vs,.quote{
   border:0;
   background:var(--paper);
+}
+.feat{
   box-shadow:var(--e-1);
   transition:transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
-/* .vs is NOT here. Those cards are not links and never were: a lift on
-   hover promises a click that does not exist, which is a worse lie than
-   no feedback at all. */
-.feat:hover,.quote:hover{
+/* .vs and .quote are NOT here. Neither set is clickable, and a lift on
+   hover promises a click that does not exist — a worse lie than no
+   feedback at all. .quote also drops the resting shadow: the supplied
+   design is a fill and nothing else, and a #F6F6F6 card already separates
+   from a white section without one. */
+.feat:hover{
   transform:translateY(-3px);
   box-shadow:var(--e-hover);
 }
@@ -2242,6 +2251,15 @@ h3{ font-family:var(--fd); }
 }
 
 .hub{
+  /* Pinned light in both modes like every product mock (P1), so these are
+     literals on purpose and must NOT follow --ink-rgb: in dark mode that
+     channel inverts and the outline would go pale on a pale tile. */
+  --hub-tile:#F3F5F8;   /* the product's gray-50 */
+  --hub-line:#E3E7EC;   /* one step down — the outline           */
+  --hub-lit:#FFFFFF;
+  --hub-cycle:5.4s;
+  --hub-step:.115s;     /* per cell of radius: the wave's speed  */
+
   /* CENTRED EXPLICITLY, not by alignment. The grid is deliberately WIDER and
      TALLER than its band, and both `place-items:center` and flex centring
      fall back to start-alignment once a child overflows — that is the spec's
@@ -2259,7 +2277,10 @@ h3{ font-family:var(--fd); }
   display:grid; place-items:center;
   width:52px; height:52px;
   border-radius:8px;                      /* the product's item radius */
-  background:#F3F5F8;                     /* the product's gray-50 */
+  background-color:var(--hub-tile);
+  /* the outline is an INSET shadow, not a border: the tiles are on a fixed
+     52px pitch and a border would grow every one of them by 2px */
+  box-shadow:inset 0 0 0 1px var(--hub-line);
   /* Pinned light in BOTH modes, like every other product mock on this
      page (P1). The first dark pass followed --paper and inverted only the
      centre tile, so the hub became the darkest thing on its own grid — the
@@ -2279,49 +2300,48 @@ h3{ font-family:var(--fd); }
   width:62px; height:62px;
   margin:-5px;
   border-radius:14px;                     /* the product's card radius */
-  background:#FFFFFF;
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
+  background-color:var(--hub-lit);
+  box-shadow:inset 0 0 0 1px var(--hub-line),
+             0 1px 2px rgb(var(--ink-rgb) / .06),
              0 10px 22px -12px rgb(var(--ink-rgb) / .30);
 }
 
 .hub__t--me img{ width:30px; height:30px; }
 
 
-/* ── ONE material idea, not three ────────────────────────────────────
-   The first version stacked a white swap, a 1.5px accent ring and a ring
-   expanding out of the centre to 2x. impeccable's animate.md: "Do not
-   stack techniques for spectacle. One strong material idea." It also held
-   each step lit for ~1.1s, where 150-300ms is a routine state change and
-   anything longer reads as latency.
+/* ── the wave ────────────────────────────────────────────────────────
+   Every tile runs the SAME animation and the only thing that differs is
+   when it starts: --d is the tile's distance from the centre in grid
+   cells, written onto each one, so the delay grows with the radius and
+   the whitening reads as a ring travelling outward. Three hand-picked
+   tiles lighting in sequence could never do that — it needs all 55.
 
-   What is left is the smallest change that still says "this one is being
-   used": the chip lifts off the grid — gray-50 to white with the same soft
-   neutral shadow every other raised surface here uses. No accent, no ring.
-   Slower cycle, and it eases in and leaves faster than it arrives. */
-.hub__t--s1,.hub__t--s2,.hub__t--s3{
-  animation:hubStep 5.4s var(--e-out) infinite;
+   Background only. The previous pass lifted each tile with a shadow as it
+   lit; a shadow on a chip inside a flat grid is a second material idea
+   doing the same job the colour already does. */
+.hub__t{
+  animation:hubWave var(--hub-cycle) var(--e-inout) infinite;
+  animation-delay:calc(var(--d, 0) * var(--hub-step));
   animation-play-state:paused;
 }
+/* the centre is the source of the wave, so it never joins it */
+.hub__t--me{ animation:none; }
 
-.hub__t--s2{ animation-delay:.5s }
-
-.hub__t--s3{ animation-delay:1s }
-
-@keyframes hubStep{
-  0%,6%    { background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--ink-rgb) / 0); }
-  14%,26%  { background:#FFFFFF; box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
-                                            0 6px 14px -8px rgb(var(--ink-rgb) / .28); }
-  36%,100% { background:#F3F5F8; box-shadow:0 0 0 0 rgb(var(--ink-rgb) / 0); }
+@keyframes hubWave{
+  0%, 4%    { background-color:var(--hub-tile); }
+  12%, 20%  { background-color:var(--hub-lit); }
+  34%, 100% { background-color:var(--hub-tile); }
 }
 
-.vs.is-in .hub__t--s1,
-.vs.is-in .hub__t--s2,
-.vs.is-in .hub__t--s3{ animation-play-state:running; }
+.vs.is-in .hub__t{ animation-play-state:running; }
+
+@media (prefers-reduced-motion:reduce){
+  .hub__t{ animation:none; }
+}
 
 
 
 @media (prefers-reduced-motion:reduce){
-  .hub__t--s1,.hub__t--s2,.hub__t--s3{ animation:none; }
 
 }
 
@@ -2388,10 +2408,39 @@ h3{ font-family:var(--fd); }
    putting a second prose face on the page. Instrument Sans has no 300,
    so the design's Light lands on 400. */
 .proof{
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(16px, 1.39vw, 27px);   /* 20 design px x 1.314 = 26.3 */
+  display:grid;
+  /* wider than the design's 20px between cards — asked for directly, and
+     a rail needs more air between cards than a grid does or the row reads
+     as one striped band */
+  gap:var(--q-rail-gap);
   margin-top:clamp(44px,4.8vw,68px);
+
+  /* A RAIL. The cards scroll sideways and run off both edges of the
+     section, so the set reads as longer than the frame. The negative
+     margin cancels the panel's own padding and the matching scroll-padding
+     puts the first card back on the measure, which is the only way to get
+     a card to sit flush with the heading above it AND bleed off the edge. */
+  grid-auto-flow:column;
+  grid-auto-columns:var(--q-card);
+  overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x proximity;
+  --q-bleed:max(var(--pad-section), calc(var(--edge) - var(--card-gap)));
+  margin-inline:calc(-1 * var(--q-bleed));
+  padding-inline:var(--q-bleed);
+  scroll-padding-inline:var(--q-bleed);
+  /* the scrollbar is the one piece of chrome the design does not have */
+  scrollbar-width:none;
 }
+/* the rail is focusable so it can be scrolled from the keyboard — axe
+   flags a scroll container that cannot be, and it is right to. The ring
+   sits outside the cards rather than on them, so it never reads as a
+   card being selected. */
+.proof:focus-visible{
+  outline:2px solid var(--accent-solid);
+  outline-offset:6px; border-radius:var(--r-card);
+}
+.proof::-webkit-scrollbar{ display:none; }
+.qcell{ scroll-snap-align:start; }
 .qcell{ container-type:inline-size; display:flex; }
 .quote{
   position:relative; overflow:hidden; isolation:isolate;
@@ -2430,8 +2479,15 @@ h3{ font-family:var(--fd); }
    rather than allowed to open a gap the design does not have */
 .quote__mark{
   margin:0; font-size:var(--q-mark); line-height:.46;   /* 64 x .46 = the
-        design's 29px box, so the glyph overhangs exactly as it does there */
+        design's 29px box */
   font-weight:400; color:var(--ink);
+  /* AN OPTICAL CORRECTION, and it exists because we changed the face.
+     The 29px box is Inter's metric; Instrument Sans sets its quote glyph
+     higher inside the line box, so the same box left 26px of empty space
+     under the ink. Measured ink-bottom to text-top: the design is 20.5
+     design px, ours was 45.7. Matching the box was not the same as
+     matching the picture. */
+  margin-bottom:calc(-25 * var(--qu));
 }
 .quote__mark--close{ text-align:right; }
 .quote blockquote{
@@ -2853,11 +2909,6 @@ h3{ font-family:var(--fd); }
   .showcase__sticker--tl{ left:-2%; top:-4%; }
   .showcase__sticker--tr{ right:-2%; top:-5%; }
   .versus{ grid-template-columns:1fr; }
-  /* the testimonial cards go two-up, not one. Straight to a single column
-     they became 700px wide, and a card that wide is no longer the object
-     the design describes — the scale clamp had to cap, which is the only
-     place the proportions stopped matching the Figma. */
-  .proof{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   /* the spans have to go with the twelve columns. `span 7` inside a
      one-column grid does not clamp — it generates six implicit columns
      and the section runs off the page. */
@@ -2871,14 +2922,6 @@ h3{ font-family:var(--fd); }
   .scene__ui{ grid-column:auto; }
   .scene__side{ flex-direction:row; }
   .scene__side .acard{ flex:1; }
-}
-@media (max-width:680px){
-  .proof{ grid-template-columns:1fr; }
-  /* an explicit width, not max-width. `margin-inline:auto` on a grid item
-     switches it from stretch to shrink-to-fit, and its only child is
-     `flex:1 1 0%` with `min-width:0` — so the cell resolved to 0 and the
-     card rendered as nothing but its own padding. */
-  .qcell{ width:min(100%, 460px); margin-inline:auto; }
 }
 @media (max-width:620px){
   .ostage__conn{ grid-template-columns:1fr; }
@@ -3020,11 +3063,11 @@ h3{ font-family:var(--fd); }
   /* a long, gentle dissolve so the top edge melts into the dark instead
      of cutting — the illustration itself stays fully visible */
   -webkit-mask-image:linear-gradient(180deg,
-      transparent 0%, rgba(0,0,0,.12) 8%, rgba(0,0,0,.45) 18%,
-      rgba(0,0,0,.82) 28%, #000 40%);
+      transparent 0%, rgb(var(--ink-rgb) / .12) 8%, rgb(var(--ink-rgb) / .45) 18%,
+      rgb(var(--ink-rgb) / .82) 28%, rgb(var(--ink-rgb) / 1) 40%);
           mask-image:linear-gradient(180deg,
-      transparent 0%, rgba(0,0,0,.12) 8%, rgba(0,0,0,.45) 18%,
-      rgba(0,0,0,.82) 28%, #000 40%);
+      transparent 0%, rgb(var(--ink-rgb) / .12) 8%, rgb(var(--ink-rgb) / .45) 18%,
+      rgb(var(--ink-rgb) / .82) 28%, rgb(var(--ink-rgb) / 1) 40%);
   pointer-events:none; user-select:none;
 }
 .panel--cta > .chip,.panel--cta > .display,

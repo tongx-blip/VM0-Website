@@ -6,6 +6,75 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the testimonials become a rail, and the hub gets a wave
+
+Five changes asked for directly, plus an audit.
+
+**A horizontal rail.** The six cards were a 3x2 grid; they are one
+scrolling row now, running off both edges of the section. The negative
+margin cancels the panel's padding and the matching `scroll-padding`
+puts the first card back on the measure — the only way to have a card sit
+flush with the heading above it *and* bleed off the edge.
+
+**The image placeholder is gone**, and with it the customer-logo band.
+
+**No hover on the cards, and no resting shadow.** `.quote` came out of the
+`.feat` lift group entirely. The supplied design is a fill and nothing
+else, and a #F6F6F6 card already separates from a white section.
+
+**Wider gap between cards** — 40px against the design's 26.
+
+**The quote mark sits closer to its text.** This one is worth recording
+because the metrics were already right: the mark's box was 29 design px
+and the gap 16, both exactly the Figma. But 29px is *Inter's* metric, and
+we set the card in Instrument Sans, which puts its quote glyph higher in
+the line box — leaving 26px of empty box under the ink. Measured
+ink-bottom to text-top: the design is 20.5 design px and ours was 45.7.
+Matching the box was not the same as matching the picture. Corrected with
+a negative margin and re-measured: 20.5 against 20.5.
+
+**The hub is a wave now.** Every tile carries a light inset outline, and
+every tile runs the same animation — only the start time differs. `--d`
+is the tile's distance from the centre in grid cells, written onto each
+of the 55, so the whitening travels outward as a ring and the grey-back
+follows it outward too. Background only; the shadow the old version lifted
+each tile with was a second material idea doing the colour's job. Three
+hand-picked tiles could never have made a wave — it needs all of them.
+
+### Two things the rail broke
+
+**Three 0px columns in front of the cards.** `base.css` had its own
+`.proof` with `grid-template-columns:repeat(3,...)`. `grid-auto-flow:column`
+in the design layer does not replace an explicit template, it sits behind
+it: the first three cards landed in three 0px explicit tracks and only
+cards four to six got the 417px implicit ones.
+
+**A scroll container no keyboard could reach.** axe caught it. The rail is
+`tabindex="0"` with a region label and a focus ring outside the cards.
+
+### The token audit
+
+`tools/tokens.py` is new: it parses both stylesheets, skips the token
+declarations themselves and the pinned product mocks, and reports every
+literal colour, radius, duration and easing left in a rule.
+
+First run: **196**. Most of that was the tool being wrong — it counted the
+dark layer's 38 token *definitions* as violations, and `\b` does not fire
+after a BEM `__`, so every third-party mock in `base.css` was reported.
+Fixed, the real number was **79**.
+
+Converted 21 lines: every `rgba(255,255,255,x)` and `rgba(0,0,0,x)` outside
+a mock now uses `rgb(var(--paper-rgb) / x)` and `rgb(var(--ink-rgb) / x)`.
+Both channels were checked first and neither flips with the theme, so the
+swap is exact.
+
+**55 remain, and they are not all bugs.** 41 are raw transition durations
+in `base.css` (`.16s`, `.18s`, `.2s`) that predate `--t-hover`; 10 are raw
+radii inside scene mocks. They are listed by `tools/tokens.py` and should
+come down deliberately rather than in a sweep at the end of an unrelated
+round.
+
+
 ## 2026-08-24 · the testimonial section is built to the supplied Figma
 
 Tong supplied a Figma frame ("Testimonial Section Design", file
