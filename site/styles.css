@@ -76,15 +76,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .display--tail{ text-align:right; }
 
 
-.serif-lead{
-  font-family:inherit;
-  font-weight:500;
-  font-size:clamp(17px, 1.7vw, 22px);
-  line-height:1.3;
-  letter-spacing:-.015em;
-}
-
-
 /* ─────────────── accent underline (was: marker) ───────────────
    Same draw-in mechanism, restyled as a heavy rule under the words. */
 .mark{
@@ -248,11 +239,8 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   color:var(--ink);
 }
 
-.chip::before{
-  content:""; width:9px; height:9px; flex:none;
-  background:var(--accent);
-}
-
+/* the eyebrow's square was the same tell as the round one in system.css,
+   one layer down — removed with it (taste-skill 9.F) */
 
 .section-body{
   max-width:58ch;
@@ -1769,6 +1757,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
                               5.1:1 on --wash, 4.7:1 on --wash-2 — AA on
                               every ground this page uses */
   --mat:        #171B1F;   /* the ground a product screen is matted on */
+  /* The closing band's ground. In light mode it is --ink and looked like
+     it could just BE --ink; in dark mode the page ground is already near
+     ink, so the band needs to be its own value or it disappears. One
+     token doing two jobs only looks fine until the second mode. */
+  --band:       var(--ink);
 
   /* ── CHANNELS ─────────────────────────────────────────────────────
      Every shadow, scrim and state layer on this page is one of these
@@ -1822,6 +1815,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
      AA on white and on nothing else. The moment a ground goes grey it fails
      (3.86:1 on --wash-2). This is its sibling for accent text on a grey:
      4.9:1 on --wash-2, 5.3:1 on --tile, 5.7:1 on paper. */
+  /* accent TEXT, on any ground that is not paper — and after dark mode
+     landed, on paper too. --accent-solid is 4.5:1 on white and below it
+     everywhere else, including on a dark card (3.96:1), so every accent
+     PHRASE reads this token and only the two accent FILLS keep the other.
+     It swaps to #FF7A3D in dark, where the correction runs upward. */
   --accent-wash:  #B93A00;
   --accent-2:     #FFF1EA;
 
@@ -1845,7 +1843,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
      spends. They were living inline in the markup as seven literals with
      no token behind them, which is why the ladder below grew a fourth,
      nearly-matching set of its own. */
-  --hue-marketing:   #F8A100;
+  /* pulled off 100% saturation and away from the accent's neighbourhood.
+     At #F8A100 it was MORE saturated than the brand orange and only 19deg
+     from it, so the first tab read as a second accent rather than as one
+     scene's identity. Every other hue here already sits below the accent. */
+  --hue-marketing:   #E8AC33;
   --hue-ads:         #E24E4A;
   --hue-sales:       #C77BA6;
   --hue-engineering: #3758A2;
@@ -1974,6 +1976,83 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 
+/* ─────────────── 1b. the same page, after dark ───────────────
+   ONE swap, no second theme layer. Every rule in this stylesheet already
+   reads a semantic token, so dark mode is a redefinition of eleven grounds
+   and inks — not a copy of the design with different numbers in it.
+
+   The RELATIONSHIPS are what carry over, not the values: the page ground
+   stays the thing everything sits on, a card is one step off it, the header
+   is one step off the card, a tile is one step off the card the other way,
+   and the closing band stays the darkest surface on the page. In light mode
+   a card is LIGHTER than the ground and the header is DARKER than both; in
+   dark mode both invert, because "separates from its surroundings" is the
+   rule and "is lighter" was only ever how light mode expressed it.
+
+   Every pair below was computed, not picked: the worst text-on-ground
+   contrast in this block is 5.5:1 and the lightest ground separation is
+   1.08. Two things do NOT swap, on purpose:
+
+   · the CHANNELS. --ink-rgb is the shadow and scrim channel. A shadow is
+     dark in both modes, so following --ink into near-white would turn every
+     elevation into a glow. It keeps its value and only its name is a
+     little wrong.
+   · the PRODUCT MOCKS. They draw the app, and the app's appearance is not
+     this page's to invert — a real screenshot does not flip with the page
+     around it (RULES P1). They keep their own light chrome, and the
+     surfaces they sit on go dark around them.
+
+   The accent inverts direction here for the third time in this file, which
+   is the whole lesson of --accent-solid: on a dark ground the brand orange
+   has to get BRIGHTER, not darker. #FF7A3D clears 4.5:1 on every dark
+   surface the page has; --accent itself only manages 3.8:1 on the header. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ color-scheme:dark; }
+
+}
+
+:root[data-theme="dark"]{ color-scheme:dark; }
+
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:      #171C21;
+    --wash:       #0E1217;
+    --wash-2:     #242C34;
+    --tile:       #1D232A;
+    --band:       #05070A;
+    --ink:        #EEF1F3;
+    --ink-soft:   #B4BCC3;
+    --ink-mute:   #9AA3AB;
+    --hairline:   #2A323A;
+    --rule:       #3C464F;
+    --grid:       #1B2027;
+    --mat:        #05070A;
+    --accent-wash:#FF7A3D;
+    --nav-fill-dark:#2E3740;
+  }
+
+}
+
+:root[data-theme="dark"]{
+  --paper:      #171C21;
+  --wash:       #0E1217;
+  --wash-2:     #242C34;
+  --tile:       #1D232A;
+  --band:       #05070A;
+  --ink:        #EEF1F3;
+  --ink-soft:   #B4BCC3;
+  --ink-mute:   #9AA3AB;
+  --hairline:   #2A323A;
+  --rule:       #3C464F;
+  --grid:       #1B2027;
+  --mat:        #05070A;
+  --accent-wash:#FF7A3D;
+  --nav-fill-dark:#2E3740;
+}
+
+
+
 /* ─────────────── 2. base ─────────────── */
 html{ scroll-behavior:smooth; scroll-padding-top:120px; }
 
@@ -2046,16 +2125,6 @@ img{ filter:none; }
 h3{ font-family:var(--fd); }
 
 
-.serif-lead{
-  font-family:var(--fb);
-  font-weight:500;
-  font-size:var(--t-lead);
-  line-height:1.35;
-  letter-spacing:-.014em;
-  color:var(--ink);
-}
-
-
 /* utility face: labels, data, captions, controls — the signal that a
    string is metadata and not prose */
 /* .metrics span is NOT here: a stat tile's label is the first line you read
@@ -2113,7 +2182,7 @@ h3{ font-family:var(--fd); }
 
 .linkline a span{ transition:transform var(--t-hover) var(--e-snap); }
 
-.linkline a:hover{ background-size:100% 1px; color:var(--accent-solid); }
+.linkline a:hover{ background-size:100% 1px; color:var(--accent-wash); }
 
 .linkline a:hover span{ transform:translateX(4px); }
 
@@ -2121,20 +2190,39 @@ h3{ font-family:var(--fd); }
 /* emphasis is CARRIED BY COLOUR, not by a drawn rule — there are no
    decorative lines on this page. The phrase warms into the accent as it
    arrives, which keeps the entrance beat without the underline. */
-.mark{
-  color:inherit; padding:0; background:none;
-  transition:color 620ms var(--e-out);
-}
+/* THE MARK IS DRAWN, NOT SWITCHED ON. §1 spends the accent in three places
+   and the first of them is "the drawn marks under the sentences that
+   matter" — and this rule had been quietly cancelling it with
+   `background:none`, leaving a colour swap where a stroke was specified.
+   The mechanism was never missing: base.css already draws the rule from
+   0% to 100% of the phrase's width. This stops overriding it.
 
-.mark.is-lit{ color:var(--accent-solid); }
+   ONE DIMENSION PER STATE. At reading size the phrase keeps its ink and
+   the accent arrives underneath it; it does not also change colour. The
+   stroke IS the emphasis, and it is the same rule-as-progress-bar idea
+   the ladder and the tabs already use, which is now its third use rather
+   than the page's fourth idea. Display marks are the exception below:
+   at 96px a phrase becomes the accent instead of being underlined by it. */
+.mark{
+  color:inherit; padding:0;
+  transition:background-size .55s var(--e-out), color 620ms var(--e-out);
+}
 
 /* never change the weight of an emphasised phrase: the glyph widths
    change with it and the line reflows in the middle of the animation */
+/* at display size the phrase BECOMES the accent; an underline under a 96px
+   line is a second emphasis on something already emphasised */
+.display .mark{ background-image:none; }
+
 .display .mark.is-lit{ color:var(--accent); }
 
 /* the mid-section statement is already the loudest type on the ground;
    giving it colour as well made two accent phrases per section */
+.sentence .mark{ background-image:none; }
+
 .sentence .mark,.sentence .mark.is-lit{ color:var(--ink); }
+
+.panel--cta .mark,.footer .mark{ background-image:none; }
 
 .panel--cta .mark.is-lit,.footer .mark.is-lit{ color:var(--accent); }
 
@@ -2193,6 +2281,11 @@ h3{ font-family:var(--fd); }
   color:var(--nav-ink);
   border:0; border-radius:0;
   box-shadow:none;
+  /* N1 says transform and opacity only, and this transitions five layout
+     properties. It is a WRITTEN exception (RULES N1): a one-shot 420ms state
+     change on one fixed element that fires twice a visit, not a per-frame
+     timeline. A transform-driven inset was the alternative and it cannot
+     hold --r-section, because scaling a box scales its corner with it. */
   transition:top var(--t-state) var(--e-out),
              color var(--t-state) var(--e-out),
              left var(--t-state) var(--e-out),
@@ -2296,6 +2389,48 @@ h3{ font-family:var(--fd); }
 .nav__signin:hover{ color:var(--nav-ink-hi); background:transparent; }
 
 
+/* ── the theme control ──────────────────────────────────────────────
+   38px, the same height as every other control in the bar, and it reads
+   the header's own ink tokens like everything else in here so it crosses
+   into the dark band with the rest of the nav. Two real Lucide glyphs;
+   CSS shows whichever one names the state you would GET by pressing it. */
+/* the burger's reset lives in the narrow media query, so above it the UA's
+   default button border survived on a display:none element. Reset it once,
+   unconditionally, rather than only where the button is visible. */
+.nav__burger{ border:0; }
+
+
+.nav__theme{
+  display:inline-grid; place-items:center;
+  width:38px; height:38px; flex:none;
+  padding:0; border:0; border-radius:var(--r-btn);
+  background:transparent; color:var(--nav-ink);
+  cursor:pointer;
+  transition:color var(--t-hover) var(--e-snap),
+             background var(--t-hover) var(--e-snap);
+}
+
+.nav__theme:hover{ color:var(--nav-ink-hi); background:var(--nav-chip); }
+
+.nav__theme svg{ width:17px; height:17px; grid-area:1/1; }
+
+.nav__theme-moon{ display:none; }
+
+:root[data-theme="dark"] .nav__theme-sun{ display:none; }
+
+:root[data-theme="dark"] .nav__theme-moon{ display:block; }
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .nav__theme-sun{ display:none; }
+
+  :root:not([data-theme="light"]) .nav__theme-moon{ display:block; }
+
+}
+
+@media (max-width:420px){ .nav__theme{ display:none; }
+ }
+
+
 /* ── the veil under the header ──────────────────────────────────────
    A backdrop-filter is a switch: content is either blurred or it is not,
    and the boundary is a hard horizontal line across the page. Masking ONE
@@ -2362,8 +2497,34 @@ h3{ font-family:var(--fd); }
    floating bar in the bar's own colour, so the bar stopped having edges and
    the header read as full-bleed again at every scroll position. The veil
    blurs; the bar colours. One job each. */
+/* THE VEIL ARRIVES. It used to exist at full strength at scrollY 0, where
+   there is nothing behind it to blur — furniture rather than a response.
+   This is a scroll-driven animation, so it needs no listener, no observer
+   and no main-thread work at all: the timeline IS the scrollbar. Where it
+   is unsupported the veil simply exists, which is the resting-state-is-the
+   -finished-state rule (N2) getting the fallback for free. */
+@supports (animation-timeline: scroll()){
+  .navveil{
+    opacity:0;
+    animation:veilArrive linear both;
+    animation-timeline:scroll(root block);
+    animation-range:0 180px;
+  }
+
+}
+
+@keyframes veilArrive{ from{ opacity:0 } to{ opacity:1 } }
+
+
 @media (prefers-reduced-motion:reduce){
   .navveil{ transition:none; }
+
+  @supports (animation-timeline: scroll()){
+    .navveil{ opacity:1; animation:none; }
+
+  }
+
+  .tab.is-on{ animation:none; }
 
 }
 
@@ -2481,13 +2642,10 @@ h3{ font-family:var(--fd); }
   line-height:1.4;
 }
 
-.chip::before{
-  content:"";
-  width:6px; height:6px; flex:none;
-  border-radius:50%;
-  background:var(--accent);
-}
-
+/* No dot before the eyebrow. It carried no state — it was there to make the
+   label feel designed, which is the definition of the tell. The label is the
+   label; if it needs a bullet to read as one, it is the wrong label.
+   (taste-skill 9.F: zero decorative status dots by default.) */
 /* one fill for the tag on every ground; the CTA band inverts it */
 .panel--cta > .chip{
   background:rgb(var(--paper-rgb) / .1);
@@ -2583,14 +2741,7 @@ h3{ font-family:var(--fd); }
   color:var(--ink);
 }
 
-.hero .serif-lead::before{
-  content:"";
-  display:inline-block; vertical-align:.15em;
-  width:6px; height:6px; margin-right:10px;
-  border-radius:50%;
-  background:var(--accent);
-}
-
+/* the hero tag loses its dot for the same reason as .chip */
 .hero .display{
   max-width:16ch;
   font-size:var(--t-d-hero);
@@ -2768,7 +2919,20 @@ h3{ font-family:var(--fd); }
    carry white text at any opacity. Tint + bar is legible on every hue, and
    it is the same rule-as-progress-bar the ladder already uses: one idea,
    used twice, instead of two ways of saying "how far through". */
+/* THE SELECTION IS THE BEAT. The rail slides on --e-elegant and the pill
+   used to only change fill, which made the selection a side effect of the
+   slide rather than the thing the slide was for. N5: the hero of a moment
+   gets the one sprung curve. It plays once on arrival and settles back to
+   1, so this is an ENTRANCE, not a second persistent state on top of the
+   fill — the pill is not permanently bigger than its neighbours. */
+@keyframes tabLand{
+  0%   { transform:scale(1); }
+  38%  { transform:scale(1.055); }
+  100% { transform:scale(1); }
+}
+
 .tab.is-on{
+  animation:tabLand 460ms var(--e-spring) both;
   color:var(--ink);
   background:color-mix(in srgb, var(--tab) 16%, var(--wash-2));
 }
@@ -2897,7 +3061,7 @@ h3{ font-family:var(--fd); }
 
 /* here the phrase is already orange as it rises — no warm-up, no
    weight change, so the words never reflow */
-.reach__line .mark{ color:var(--accent-solid); font-weight:inherit; transition:none; }
+.reach__line .mark{ color:var(--accent-wash); font-weight:inherit; transition:none; }
 
 
 /* the rails */
@@ -2977,7 +3141,7 @@ h3{ font-family:var(--fd); }
   --wf-open-gap:clamp(8px, .75vw, 11px);    /*  8  · open title → its paragraph  */
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
   --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
-  --wf-rule:.5px;  --wf-rule-ink:rgba(0,0,0,.12);
+  --wf-rule:.5px;  --wf-rule-ink:var(--hairline);
   --wf-bar-h-track:3px;                     /* the open row's progress bar */
   /* The reference's own 16px sat outside this page's scale, which is why
      this one column read smaller than everything around it. The roles map
@@ -2986,11 +3150,14 @@ h3{ font-family:var(--fd); }
   --wf-title:var(--t-lead);
   --wf-title-lh:1.25;
   --wf-title-wt:300;
-  --wf-title-ink:rgba(0,0,0,.6);
-  /* the reference sets its open title in pure black, not this page's --ink;
-     it is a supplied design and that is its value — but it is a VALUE, and
-     it was being re-typed as a bare #000 in four rules */
-  --wf-title-ink-on:#000;
+  --wf-title-ink:var(--ink-mute);
+  /* The reference set its open title in pure black. That was the right value
+     for a light-only page and the wrong KIND of value the moment the page
+     gained a second mode: this list sits directly on the section card, not
+     inside a product window, so it is page furniture and has to follow the
+     ground like everything else. Mock fidelity (P1) governs what is inside a
+     window frame; it does not license black text on a dark page. */
+  --wf-title-ink-on:var(--ink);
   /* One size for every title. The open row is told apart by weight and ink
      alone — a row that also grows makes the list jump as you scroll past it,
      and the marker plus the paragraph already say which one is open. */
@@ -3432,7 +3599,7 @@ h3{ font-family:var(--fd); }
 
 .quote__tag{
   font-size:var(--t-mono); letter-spacing:.13em;
-  color:var(--accent-solid); margin-bottom:20px;
+  color:var(--accent-wash); margin-bottom:20px;
 }
 
 .quote blockquote{
@@ -3649,7 +3816,7 @@ h3{ font-family:var(--fd); }
 
 /* ─────────────── 16. the closing dark chapter ─────────────── */
 .panel--cta{
-  background:var(--ink); color:rgb(var(--paper-rgb) / .72);
+  background:var(--band); color:rgb(var(--paper-rgb) / .72);
   border-top:0;
   padding-top:clamp(88px,8vw,132px);
   padding-bottom:clamp(52px,4.6vw,78px);
@@ -3686,7 +3853,7 @@ h3{ font-family:var(--fd); }
   gap:clamp(18px,2vw,26px);
   margin:0; border-radius:0;
   padding:clamp(56px,5.4vw,88px) var(--edge) clamp(34px,3.6vw,52px);
-  background:var(--ink); color:rgb(var(--paper-rgb) / .7);
+  background:var(--band); color:rgb(var(--paper-rgb) / .7);
   overflow:hidden;
 }
 
@@ -3768,8 +3935,15 @@ h3{ font-family:var(--fd); }
 
 [data-reveal="stagger"] > *{
   opacity:0; transform:translateY(20px);
-  transition:opacity 560ms var(--e-out), transform 560ms var(--e-out);
-  transition-delay:calc(var(--ci, 0) * 70ms);
+  /* N5: each beat settles before the next starts. These are separate
+     OBJECTS (tiles, cards), not words in one sentence, so the stagger has
+     to be readable as succession. At 70ms against a 560ms fade the beats
+     overlapped 87% and arrived as one blur. 120ms against 420ms overlaps
+     71% and reads as three arrivals without feeling slow.
+     The word- and line-level staggers above deliberately overlap ~90%,
+     because a sentence rising is ONE gesture, not a queue of beats. */
+  transition:opacity 420ms var(--e-out), transform 420ms var(--e-out);
+  transition-delay:calc(var(--ci, 0) * 120ms);
 }
 
 [data-reveal="stagger"].is-in > *{ opacity:1; transform:none; }

@@ -21,6 +21,10 @@
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
+    // an element that does not render cannot draw a line. Without this the
+    // audit reports the UA's default button border on display:none controls,
+    // which is a real 4-hit false positive at desktop widths.
+    if (!el.getClientRects().length) return;
     const cs = getComputedStyle(el);
     ['Top', 'Right', 'Bottom', 'Left'].forEach(side => {
       const w = parseFloat(cs['border' + side + 'Width']);

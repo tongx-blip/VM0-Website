@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=1aa872ed">
+<link rel="stylesheet" href="styles.css?r=9b57c692">
 </head>
 <body>
 
@@ -27,8 +27,12 @@
     <a href="#proof"><span class="roll"><span class="roll__t">Pricing</span><span class="roll__t" aria-hidden="true">Pricing</span></span></a>
   </nav>
   <div class="nav__auth">
+    <button class="nav__theme" id="themeToggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+      <svg class="nav__theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      <svg class="nav__theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
     <a class="nav__signin" href="#cta"><span class="roll"><span class="roll__t">Sign in</span><span class="roll__t" aria-hidden="true">Sign in</span></span></a>
-    <a class="btn btn--dark btn--sm" href="#cta">Sign up</a>
+    <a class="btn btn--dark btn--sm" href="#cta">Get started</a>
   </div>
   <button class="nav__burger" id="burger" aria-label="Menu"><span></span><span></span></button>
 </header>
@@ -47,8 +51,6 @@
   <img class="hero__sun" src="assets/brand/sun.png?v=7d42f7e0" alt="" aria-hidden="true">
 
   <div class="stack">
-    <p class="serif-lead reveal" data-in>The <mark class="mark mark--pink">AI employee</mark> for the whole team.</p>
-
     <h1 class="display" data-reveal="mask" data-in>
       <span class="line">More done.</span>
       <span class="line">Same team.</span>
@@ -63,8 +65,8 @@
     </h2>
 
     <p class="hero__body reveal" data-in>
-      Okou is an AI employee: give it a job, not a prompt. It connects to the tools you already
-      use and does the work across marketing, sales, engineering, and operations, under your control.
+      Okou connects to the tools you already use and does the work across marketing,
+      sales, engineering, and operations, under your control.
     </p>
 
     <div class="hero__cta reveal" data-in>
@@ -96,7 +98,7 @@
 
   <p class="section-body reveal" id="sceneCopy">
     <span class="lead-in" id="scene-line">Okou builds Maya’s storefront.</span>
-    Hire it into a role, not a task — it proposes the workflows and runs them.
+    Hire it into a role, not a task: it proposes the workflows and runs them.
   </p>
 
   <!-- product mock: workspace + chat -->
@@ -152,7 +154,7 @@
 
               <div class="ochat__row ochat__row--okou" data-beat="reply">
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
-                <p class="ochat__bubble">Something simple, then &mdash; one page, publishing as soon as
+                <p class="ochat__bubble">Something simple: one page, publishing as soon as
                   it reads right.</p>
               </div>
 
@@ -206,7 +208,7 @@
               </div>
               <div class="ochat__row ochat__row--okou" data-beat="reply">
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
-                <p class="ochat__bubble">Moved $183 out of the two weakest ad sets and left the rest alone — it is a draft in Meta, waiting on you.</p>
+                <p class="ochat__bubble">Moved $183 out of the two weakest ad sets and left the rest alone. It is a draft in Meta, waiting on you.</p>
               </div>
               <div class="ochat__row ochat__row--okou" data-beat="result">
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
@@ -226,10 +228,6 @@
                 <img class="tplwin__page" src="assets/artifact/ads-v1.jpg?v=4fea1cb9"
                      alt="Weekly Ad Operator Dashboard" loading="lazy">
               </div>
-              <span class="tplwin__hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                Scroll it
-              </span>
             </figure>
 
           </div>
@@ -279,10 +277,6 @@
                 <img class="tplwin__page" src="assets/artifact/sales-v2.jpg?v=293899ea"
                      alt="Lead Prioritization" loading="lazy">
               </div>
-              <span class="tplwin__hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                Scroll it
-              </span>
             </figure>
 
           </div>
@@ -332,10 +326,6 @@
                 <img class="tplwin__page" src="assets/artifact/engineering-v2.jpg?v=071cb32e"
                      alt="Incident Triage Report" loading="lazy">
               </div>
-              <span class="tplwin__hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                Scroll it
-              </span>
             </figure>
 
           </div>
@@ -357,7 +347,7 @@
             <div class="ochat" role="group" aria-label="The conversation that produced this"
                  style="--ground:url(assets/ground/violet.jpg?v=076f6795); --veil:0.19; --sat:1.15">
               <div class="ochat__row ochat__row--user">
-                <p class="ochat__bubble">Customers keep asking for bulk export. Write the spec — pull what they actually said and link the backlog we already have.</p>
+                <p class="ochat__bubble">Customers keep asking for bulk export. Write the spec: pull what they actually said and link the backlog we already have.</p>
               </div>
               <div class="ochat__row ochat__row--okou ochat__row--typing" aria-hidden="true">
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
@@ -385,10 +375,6 @@
                 <img class="tplwin__page" src="assets/artifact/product-v2.jpg?v=5f64019b"
                      alt="Bulk CSV Export Spec" loading="lazy">
               </div>
-              <span class="tplwin__hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                Scroll it
-              </span>
             </figure>
 
           </div>
@@ -418,7 +404,7 @@
               </div>
               <div class="ochat__row ochat__row--okou" data-beat="reply">
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
-                <p class="ochat__bubble">Digest is written and the schedule is set — Mondays at nine, straight into #team. Nobody has to remember it now.</p>
+                <p class="ochat__bubble">Digest is written and the schedule is set. Mondays at nine, straight into #team, and nobody has to remember it now.</p>
               </div>
               <div class="ochat__row ochat__row--okou" data-beat="result">
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
@@ -438,10 +424,6 @@
                 <img class="tplwin__page" src="assets/artifact/ops-v2.jpg?v=d8f02a1d"
                      alt="Weekly Team Report" loading="lazy">
               </div>
-              <span class="tplwin__hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                Scroll it
-              </span>
             </figure>
 
           </div>
@@ -491,10 +473,6 @@
                 <img class="tplwin__page" src="assets/artifact/deck-v3.jpg?v=1eb72f2a"
                      alt="Q3 board deck" loading="lazy">
               </div>
-              <span class="tplwin__hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                Scroll it
-              </span>
             </figure>
 
           </div>
@@ -523,7 +501,7 @@
         plus our own APIs and model picker.
       </span>
       <span class="reach__line">
-        <mark class="mark">Far more</mark> arrives built in than with Codex or Claude Code —
+        <mark class="mark">Far more</mark> arrives built in than with Codex or Claude Code,
         and Okou reaches it all the same way.
       </span>
     </p>
@@ -601,7 +579,7 @@
         <div class="absui">
         <div class="absui__bar"><i></i><i></i><i></i><span>October newsletter</span></div>
         <div class="absui__body absui__body--chat">
-        <p class="absui__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
+        <p class="absui__ask">we should send a newsletter this month. you know what shipped, so figure out the angle and write it</p>
         <div class="absui__stream">
         <p>I&rsquo;ll start from what actually shipped since the last send, then look at which of the last three newsletters got read.</p>
         <p>Six things shipped. The send that opened with a customer story did far better than the changelog-style ones, so I&rsquo;ll lead with the Notion sync and keep the rest as a short list underneath.</p>
@@ -622,7 +600,7 @@
         </div>
         <div class="flowui__grid">
         <section class="flowchat" aria-label="Chat with Okou">
-        <p class="flowchat__ask">we should send a newsletter this month. you know what shipped &mdash; figure out the angle and write it</p>
+        <p class="flowchat__ask">we should send a newsletter this month. you know what shipped, so figure out the angle and write it</p>
         <div class="flowchat__reply">
         <span class="flowchat__avatar"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span>
         <div class="flowchat__answer">
@@ -675,7 +653,7 @@
         <p class="slackui__reacts"><span class="slackui__react">&#128200; 3</span><span class="slackui__react">&#128077; 2</span></p></div></div>
         <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png?v=22fa90af" alt=""></span><div>
         <p class="slackui__meta"><b>Ming</b><time>4:18 PM</time></p>
-        <p class="slackui__text">cc <span class="slackui__mention">@Ethan</span> <span class="slackui__mention">@Scarlett</span> &mdash; a click really is expensive.</p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #marketing-and-community<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="bugs"><div class="slackui__head"><b># bug-report</b><span>8 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg?v=77e4663f" alt=""></span><div>
+        <p class="slackui__text">cc <span class="slackui__mention">@Ethan</span> <span class="slackui__mention">@Scarlett</span>. a click really is expensive.</p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #marketing-and-community<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="bugs"><div class="slackui__head"><b># bug-report</b><span>8 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg?v=77e4663f" alt=""></span><div>
         <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>9:00 AM</time></p>
         <p class="slackui__ctx"><span>&#128337;</span> Scheduled &middot; every weekday at 09:00</p>
         <div class="slackui__attach slackui__attach--red">
@@ -690,7 +668,7 @@
         <p class="slackui__text">taking the webhook one &#9995;</p>
         <p class="slackui__reacts"><span class="slackui__react">&#128064; 4</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #bug-report<span class="slackui__send">&#10148;</span></div></div><div class="slackui__pane" data-ch="customer"><div class="slackui__head"><b># customer</b><span>24 members</span></div><div class="slackui__msgs"><div class="slackui__msg"><span class="slackui__av slackui__av--s"><img class="avatar" src="assets/brand/avatar-4.png?v=6fa57d60" alt=""></span><div>
         <p class="slackui__meta"><b>Scarlett</b><time>2:41 PM</time></p>
-        <p class="slackui__text"><span class="slackui__mention">@Okou</span> customers keep asking for bulk export &mdash; write the spec and drop it here</p></div></div>
+        <p class="slackui__text"><span class="slackui__mention">@Okou</span> customers keep asking for bulk export. write the spec and drop it here</p></div></div>
         <div class="slackui__msg"><span class="slackui__av slackui__av--app"><img src="assets/okou-icon.svg?v=77e4663f" alt=""></span><div>
         <p class="slackui__meta"><b>Okou</b><span class="slackui__badge">APP</span><time>2:44 PM</time></p>
         <p class="slackui__text">41 asks last month, 23 of them from paying accounts. One page, with the current workaround and the open questions.</p>
@@ -713,7 +691,7 @@
         <p class="slackui__actions"><button class="slackui__btn slackui__btn--primary">Open in Resend</button><button class="slackui__btn">Edit copy</button><button class="slackui__btn">Send now</button></p></div></div>
         <div class="slackui__msg"><span class="slackui__av slackui__av--m"><img class="avatar" src="assets/brand/avatar-2.png?v=22fa90af" alt=""></span><div>
         <p class="slackui__meta"><b>Ming</b><time>9:14 AM</time></p>
-        <p class="slackui__text">subject B reads better. sending after standup &mdash; nobody had to write it this month.</p>
+        <p class="slackui__text">subject B reads better. sending after standup, and nobody had to write it this month.</p>
         <p class="slackui__reacts"><span class="slackui__react">&#128200; 5</span></p></div></div></div><div class="slackui__composer"><span class="slackui__plus">+</span>Message #newsletter<span class="slackui__send">&#10148;</span></div></div></div>
         </div></div>
           </div>
@@ -795,7 +773,6 @@
 
 <!-- ═══════════════ 03 / AT ONCE ═══════════════ -->
 <section class="panel panel--card" id="parallel">
-  <p class="chip reveal">At once</p>
 
   <h2 class="display display--center" data-reveal="mask">
     <span class="line">Okou opens a chat</span>
@@ -948,7 +925,6 @@
 
 <!-- ═══════════════ 04 / POSITIONING ═══════════════ -->
 <section class="panel panel--card" id="positioning">
-  <p class="chip reveal">Positioning</p>
 
   <h2 class="display display--center" data-reveal="mask">
     <span class="line">Different from every</span>
@@ -988,7 +964,6 @@
 
 <!-- ═══════════════ 05 / PROOF ═══════════════ -->
 <section class="panel panel--card" id="proof">
-  <p class="chip reveal">Proof</p>
 
   <h2 class="display display--center" data-reveal="mask">
     <span class="line">Small teams are shipping</span>
@@ -1072,9 +1047,9 @@
     <li><a href="#top">Privacy Policy</a></li>
     <li><a href="#top">Consent Preferences</a></li>
   </ul>
-  <p class="footer__copy">© 2026 Okou.ai — All rights reserved.</p>
+  <p class="footer__copy">© 2026 Okou.ai · All rights reserved.</p>
 </footer>
 
-<script src="app.js?r=7d1cd0d3"></script>
+<script src="app.js?r=8ebfcfd0"></script>
 </body>
 </html>

@@ -504,28 +504,44 @@
     steps[cur].style.setProperty('--p', Math.max(0, Math.min(1, local)).toFixed(4));
   }
 
-  /* ── the header reads the ground it is actually over ───────────
-     Not a scroll offset: the page's dark bands declare themselves with
-     data-ground="dark", and the header asks what is behind its own
-     midline. A section that moves, or a new dark band, needs no number
-     changed here — and the test stays true while the bar is mid-flight
-     between its resting and floating heights. */
+  /* ── the header's two states, both read by observer ────────────
+     A scroll listener runs on every frame the page moves, whether or not
+     anything it computes has changed. Both of these are BOOLEANS that flip
+     at a line, which is exactly what IntersectionObserver is for, so
+     neither of them costs a frame any more.
+
+     STUCK: a 1px sentinel sits at the top of the document. While it is
+     visible the page has not moved; the moment it leaves, the header
+     floats. No scroll position is read at all.
+
+     DARK: the page's dark bands declare themselves with data-ground="dark",
+     and the observer's rootMargin puts the trigger line exactly where the
+     header's midline sits. A band that moves, or a new one, still needs no
+     number changed here — the geometry is expressed once, in the margin. */
   var darkGrounds = [].slice.call(doc.querySelectorAll('[data-ground="dark"]'));
 
-  function readNavGround() {
-    if (!nav || !darkGrounds.length) return;
-    var bar = nav.getBoundingClientRect();
-    var line = bar.top + bar.height / 2;
-    var dark = darkGrounds.some(function (el) {
-      var r = el.getBoundingClientRect();
-      return r.top <= line && r.bottom >= line;
-    });
-    nav.classList.toggle('is-dark', dark);
+  var sentinel = doc.createElement('div');
+  sentinel.setAttribute('aria-hidden', 'true');
+  sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:28px;pointer-events:none;';
+  doc.body.appendChild(sentinel);
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) {
+      if (nav) nav.classList.toggle('is-stuck', !e[0].isIntersecting);
+    }).observe(sentinel);
+
+    /* The header's midline, as a viewport inset: everything above it is
+       "behind the bar". --nav-top + half the stuck height. */
+    var mid = 12 + 54 / 2;
+    var darkObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.__overNav = e.isIntersecting; });
+      if (!nav) return;
+      nav.classList.toggle('is-dark', darkGrounds.some(function (el) { return el.__overNav; }));
+    }, { rootMargin: -mid + 'px 0px ' + (mid - window.innerHeight) + 'px 0px' });
+    darkGrounds.forEach(function (el) { darkObserver.observe(el); });
   }
 
   function readScroll() {
-    if (nav) nav.classList.toggle('is-stuck', window.scrollY > 28);
-    readNavGround();
     // stacked, the frame is stuck over the list and all four paragraphs are
     // open at once: there is no scroll distance left to read a step from, so
     // the frame follows taps instead and nothing is hidden if nobody taps
@@ -535,12 +551,25 @@
     }
   }
 
+  /* The ladder is the ONE thing left that needs a continuous read: it maps
+     scroll distance through a pinned block onto a step index and a progress
+     fraction, which is a position, not a boolean. It is rAF-throttled, and
+     it is only attached while the ladder is actually pinned — below that
+     breakpoint the page carries no scroll listener at all. */
   var ticking = false;
-  window.addEventListener('scroll', function () {
+  function onScroll() {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () { readScroll(); ticking = false; });
-  }, { passive: true });
+  }
+  function syncScrollListener() {
+    window.removeEventListener('scroll', onScroll);
+    if (steps.length && view && pinned.matches) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  }
+  syncScrollListener();
+  if (pinned.addEventListener) pinned.addEventListener('change', syncScrollListener);
   window.addEventListener('resize', function () {
     cur = -1; fitStages(); readScroll();
   }, { passive: true });
@@ -581,6 +610,40 @@
     if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(start).catch(start);
     else window.addEventListener('load', start);
     window.setTimeout(start, 1200);      // never let the fold wait on a font
+  }
+
+  /* ── 7b. the theme control ──────────────────────────────────────
+     The page follows the system by default. A click pins it to one mode
+     and remembers that; nothing is written until someone actually asks,
+     so a visitor who never touches it keeps following their OS. */
+  var themeBtn = doc.getElementById('themeToggle');
+  if (themeBtn) {
+    var root = doc.documentElement;
+    var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function isDark() {
+      var pinned = root.getAttribute('data-theme');
+      return pinned ? pinned === 'dark' : systemDark.matches;
+    }
+    function paintToggle() {
+      var dark = isDark();
+      themeBtn.setAttribute('aria-pressed', String(dark));
+      themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+
+    try {
+      var saved = window.localStorage.getItem('okou-theme');
+      if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+    } catch (e) { /* private mode: fall through to the system preference */ }
+
+    paintToggle();
+    systemDark.addEventListener('change', paintToggle);
+    themeBtn.addEventListener('click', function () {
+      var next = isDark() ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { window.localStorage.setItem('okou-theme', next); } catch (e) {}
+      paintToggle();
+    });
   }
 
   /* ── 8. mobile navigation ───────────────────────────────────── */

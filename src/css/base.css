@@ -267,10 +267,8 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-size:11.5px; letter-spacing:.10em; text-transform:uppercase;
   color:var(--ink);
 }
-.chip::before{
-  content:""; width:9px; height:9px; flex:none;
-  background:var(--accent);
-}
+/* the eyebrow's square was the same tell as the round one in system.css,
+   one layer down — removed with it (taste-skill 9.F) */
 
 .section-body{
   max-width:58ch;

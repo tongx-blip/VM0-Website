@@ -727,6 +727,27 @@ The last run: 1290 elements, **8 differences**, every one of them the intended
 `--accent-solid` → `--accent` on a decorative shape. Anything you cannot name
 in advance is a regression.
 
+## 4s. Both modes, every time
+
+The page is dual-mode. Every check in this file that reads a colour has to be
+run twice, and the cheap way to force it is the pin rather than the OS:
+
+```js
+document.documentElement.setAttribute('data-theme', 'dark');   // or 'light'
+```
+
+- **axe: 0 violations in BOTH.** Dark is not a free repaint. The first dark run
+  failed on the ladder, whose inks came from a supplied Figma as pure black —
+  correct for a light-only page, invisible on a dark one. Mock fidelity (P1)
+  governs what is inside a window frame; it does not license black text on a
+  dark page.
+- **The accent reverses direction, again.** `--accent-solid` is 3.96:1 on a
+  dark card. Every accent *phrase* must read `--accent-wash`; only fills keep
+  `--accent-solid`.
+- **Ground separation survives.** Card vs page, header vs card, tile vs card,
+  band vs page: each pair ≥ 1.05 in both modes. Compute it, do not squint.
+- **The mocks did not invert.** They should still look like the product.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

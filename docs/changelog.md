@@ -6,6 +6,79 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the whole taste-skill list, worked
+
+Nineteen items from `taste-skill-reconciliation.md` Part 2. Sixteen done, one
+withdrawn as my own error, two not done with reasons. Part 3 of that file has
+the per-item status; this records what is worth remembering.
+
+**Dark mode, as one token swap.** Eleven grounds and inks redefined under
+`prefers-color-scheme: dark`, plus a `[data-theme]` pin and a nav toggle that
+only writes to storage once somebody actually chooses. No second stylesheet:
+every rule in the file already read a semantic token, which is the whole
+return on the token work of the last two rounds.
+
+What carries over is the RELATIONSHIPS, not the values. In light a card is
+*lighter* than the page and the header is *darker* than both; in dark both
+inverted, because "separates from its surroundings" was the rule and "is
+lighter" was only how light mode happened to say it. Every pair was computed
+before a line was written — worst text contrast in the dark block is 5.5:1,
+lightest ground separation 1.08.
+
+Three things did not swap, each for its own reason. The **channels**:
+`--ink-rgb` is the shadow and scrim channel, and a shadow is dark in both
+modes, so following `--ink` into near-white would have turned every elevation
+into a glow. The **product mocks**: they draw the app, and a screenshot does
+not flip with the page around it. And `--ink` itself turned out to be doing two
+jobs — text colour *and* the closing band's ground — which is invisible until
+the second mode, so the band got its own token.
+
+**The accent reversed direction for the third time in this file**, and this
+time it broke something: `--accent-solid` is 3.96:1 on a dark card. Every
+accent *phrase* now reads `--accent-wash`, which is ground-aware; only the two
+accent *fills* keep `--accent-solid`.
+
+**The drawn mark was a regression, not a missing feature.** §1 spends the
+accent in three places and names the first "the drawn marks under the sentences
+that matter". `base.css` has drawn that stroke all along; the design layer was
+cancelling it with `background:none` and substituting a colour swap. Restoring
+it cost one deleted declaration, and forced the round's one real design call:
+at reading size the phrase keeps its ink and the accent arrives underneath, one
+dimension per state; at display size the phrase becomes the accent and carries
+no stroke, because underlining the loudest line on the page is a second
+emphasis on something that needs none.
+
+**The banned scroll listener is down to one.** Both nav states are booleans
+that flip at a line, which is what IntersectionObserver is for: `is-stuck` now
+watches a 1px sentinel, `is-dark` watches the dark bands with a rootMargin set
+to the header's midline. The ladder keeps a listener because it maps distance
+onto a position rather than a boolean, and it now detaches below the pin
+breakpoint, so narrow viewports carry none at all. The veil went further and
+needs no JS whatever: `animation-timeline: scroll()` fades it in over the first
+180px, so it arrives instead of existing.
+
+**The stagger audit found one violation out of three candidates**, and the
+useful part is the distinction. Words in a sentence and lines in a headline
+overlap ~90% *on purpose* — a sentence rising is one gesture. Separate objects
+are a queue of beats, and three tiles at 70ms against a 560ms fade arrived as
+one blur. Now 120 against 420. N5 has a ratio now instead of an adjective.
+
+**Corrections owed.** I reported seven hand-rolled SVG icons; all seven were
+byte-for-byte Lucide `chevron-down`, verified against the upstream source.
+Withdrawn. And the border audit was reporting four false hits in dark mode: the
+UA's default button border on a `display:none` control, because the burger's
+reset lived inside a narrow media query. Both the reset and the audit are
+fixed; the audit now skips elements with no client rects.
+
+**Three assets are still missing and were not faked.** The hero's product
+screen, the comparison graphic and the customer logos are declared
+placeholders. The only way to fill them was to generate a fake product
+screenshot or invent customer brands, which the skill bans (4.8, 9.D) and K3/K4
+ban. The skill's own last-resort clause says to leave the slot and say so. Said.
+
+Lighthouse, before and after the round: performance **96 → 99**, FCP 0.9s →
+0.5s, LCP 1.1s → 0.9s, CLS 0 both, and it had never been run before today.
+
 ## 2026-08-24 · the veil ramps from the top edge
 
 The progression was starting in the wrong place. Every layer held **full alpha

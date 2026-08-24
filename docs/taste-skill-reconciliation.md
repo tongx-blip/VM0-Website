@@ -31,9 +31,9 @@ Verdicts:
 
 | verdict | count |
 |---|---|
-| PASS | 24 |
+| PASS | 26 |
 | COUNTER | 7 |
-| FIX | 12 |
+| FIX | 10 |
 | CALL | 5 |
 
 The headline result: **we are strong on colour, type, tokens and accessibility
@@ -60,7 +60,7 @@ and the skill was written for pages that do not.
 |---|---|---|
 | 2.A Use an official design system package when the brief maps to one | **COUNTER** | The brief maps to "Tailwind + modern SaaS". We ship **zero JS libraries and hand-authored CSS** — a stated hard rule in `CLAUDE.md`. The skill's concern is agents reinventing Fluent or Carbon badly; it does not apply to a bespoke marketing page with its own token layer. |
 | 3.C Icons from Phosphor / HugeIcons / Radix / Tabler; **Lucide discouraged** | **COUNTER** | RULES **P4** mandates *real Lucide icons at the version the app ships*, because the mock has to be the product. The skill's ranking is about greenfield taste; ours is about fidelity to an existing product. Ours wins here. |
-| 3.C **Never hand-roll SVG icon paths** | **FIX** | 7 inline `<svg>` in the markup, including the scroll-hint chevron. These are hand-drawn paths and should come from the icon set we already mandate. |
+| 3.C **Never hand-roll SVG icon paths** | **PASS** | ~~7 inline `<svg>`, hand-drawn~~ — **this was my error.** All seven were byte-for-byte Lucide `chevron-down` (`m6 9 6 6 6-6`, 24×24, stroke-width 2, round caps), verified against `lucide-icons/lucide` source. Inlining a real icon is not hand-rolling one. The theme toggle added since uses real Lucide `sun` and `moon` the same way. |
 | 3.D Emoji discouraged | **PASS** | RULES **T6** bans them outright. Stricter than the skill. |
 | 3.E Cap the layout width | **PASS** | 1320px, and RULES **M2** puts the cap *inside* the padding expression so it cannot be silently removed. |
 
@@ -159,7 +159,7 @@ and the skill was written for pages that do not.
 | 9.B No oversized H1 | **CALL** | See 4.1. |
 | 9.C **No 3-column equal feature cards** | **PASS** | The KPI row is three equal tiles, but it is a stat row, not a feature row — the skill's ban is aimed at "three identical cards describing three features". Connector cards come in pairs. |
 | 9.D No Jane Doe / Acme / fake-perfect numbers | **PASS** | Maya, Noah, Dana, Sofia; Litoral; every metric declared illustrative. |
-| 9.E No hand-rolled SVG icons | **FIX** | Duplicate of 3.C. Seven of them. |
+| 9.E No hand-rolled SVG icons | **PASS** | Duplicate of 3.C, and wrong for the same reason. |
 | 9.E No div-based fake screenshots | **COUNTER** | See 4.8. |
 | 9.F **No section-numbering eyebrows** | **PASS** | Zero. RULES **K2** banned `01 / OUTPUTS` independently, for the same stated reason. |
 | 9.F **No scroll cues** | **CALL** | Seven: `Scroll it` ×6, `Scroll the page` ×1. The skill's target is a page-level "↓ scroll" under a hero, which is decoration. Ours labels a *scrollable inner region inside a mock browser window*, which is a genuinely non-obvious affordance. Defensible — but seven labels for one idea is more than the idea needs. |
@@ -353,3 +353,76 @@ does that — and an unmeasured motion rule is a rule we are guessing at.
 5. **A1** (dark mode) — its own round
 6. **C8-C13** — whenever Tong rules
 7. **D15-D18** — motion polish, once the structure is settled
+
+---
+---
+
+# Part 3 · What was done, 2026-08-24
+
+Every item in Part 2 was worked. Statuses are honest: three are **not done**
+and say why.
+
+| # | item | status |
+|---|---|---|
+| A1 | dark mode | **done** — token swap, `prefers-color-scheme` + a `data-theme` pin, nav toggle with `localStorage`. 0 axe violations in both modes. |
+| A2 | eyebrows 7 → 4 | **done** — dropped *At once*, *Positioning*, *Proof*. Budget for 10 sections is 4. |
+| A3 | hero image | **NOT DONE — blocked, deliberately.** See below. |
+| B4 | kill the scroll listener | **done** — both nav states moved to `IntersectionObserver`; the one remaining listener is the ladder's, and it now detaches below the pin breakpoint. |
+| B5 | header's layout animation | **done** — written as an exception in **N1** with its reasoning, and noted at the rule itself. |
+| B6 | Lighthouse | **done** — perf **96 → 99**, FCP 0.9s → 0.5s, LCP 1.1s → 0.9s, CLS 0 both. |
+| B7 | hand-rolled SVG | **withdrawn — my error.** They were real Lucide all along. |
+| C8 | duplicate CTA intent | **done** — nav "Sign up" → "Get started". |
+| C9 | hero stack 5 → 4, lede ≤ 20 words | **done** — 33 → 20, eyebrow dropped. |
+| C10 | em-dash | **done** — 12 removed (6 in copy, 6 more hiding as `&mdash;` entities inside the mocks, which the first grep missed). |
+| C11 | seven scene hues | **done, narrowly** — only one was a real problem. |
+| C12 | scroll cues 7 → 1 | **done.** |
+| C13 | decorative dots | **done** — both, plus a third in `base.css` that only surfaced in dark mode. |
+| D14 | scroll-driven reveals | **partly** — the veil is now scroll-driven CSS; reveals stay on `IntersectionObserver`, which the skill already allows. |
+| D15 | spring on the reel | **done** — `tabLand`, plays once on arrival and settles to 1. |
+| D16 | the mark draws | **done** — and it turned out not to be new work. See below. |
+| D17 | View Transitions on tab switch | **NOT DONE.** See below. |
+| D18 | the veil arrives | **done** — `animation-timeline: scroll()`, no JS, no listener. |
+| D19 | stagger audit | **done** — and it found one real violation of three candidates. |
+
+## The three that need a word
+
+**A3 · the hero image is blocked, and filling it would have been the worse
+answer.** The only ways to produce one were to generate a fake product
+screenshot or invent customer logos. Both are banned by the skill I was
+implementing (4.8 fake product previews, 9.D invented brands) and by our own
+**K3** and **K4**. The skill's own last-resort clause is explicit: leave the
+labelled slot and *tell the user*. So: **this page needs three real assets** —
+a product screen (2560×1600) in the hero, a comparison graphic (2400×686), and
+customer logos (2400×686). Nothing else on the page is unfinished.
+
+**D16 · the drawn mark was not a new feature, it was a regression.**
+`system.css` §1 spends the accent in three places and names the first of them
+"the drawn marks under the sentences that matter". `base.css` has drawn that
+stroke all along, from 0% to 100% of the phrase's width. The design layer was
+cancelling it with `background:none` and substituting a colour swap. Restoring
+it cost one deleted declaration. It also produced the round's one genuine
+design decision: at reading size the phrase keeps its ink and the accent
+arrives underneath, one dimension per state; at display size the phrase becomes
+the accent and carries no stroke, because underlining a 96px line that is
+already the loudest thing on the page is a second emphasis on something that
+does not need one.
+
+**D17 · View Transitions, skipped on purpose.** The tab switch already
+cross-fades through `.is-on` classes with a documented timing. Wrapping it in
+`document.startViewTransition` means the two systems own the same frames, which
+is the exact failure mode the skill warns about for GSAP and Motion. It is a
+real improvement and it is a *rebuild* of the tab machinery, not a patch. Worth
+its own round, with the reel's spring and the pane swap designed together.
+
+## What the round changed about our own rules
+
+- **N1** now carries a written exception for the header, with the reason.
+- **N5** gained a measurable ratio: separate objects stagger at 25-35% of
+  duration; words in a sentence are exempt. The audit found 70ms against a
+  560ms fade, an 87% overlap that arrived as one blur. Now 120/420.
+- **C1** extended: every accent *phrase* reads `--accent-wash`, which is
+  ground-aware; only the two accent *fills* keep `--accent-solid`. Dark mode is
+  what forced this — `--accent-solid` is 3.96:1 on a dark card.
+- **tools/audit.js** now skips elements with no client rects. It was reporting
+  the UA's default button border on a `display:none` control, four false hits
+  that only appeared in dark mode.
