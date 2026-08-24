@@ -6,6 +6,36 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · I shipped a broken layout, and the whole gate passed on it
+
+Tong: *"did you break it? check yourself."* Yes. Two defects, both mine.
+
+**The Zapier card's text escaped its card.** The heading and body were sitting
+on the section background at full page width, across both columns. The cause
+was a regex from the previous commit: `<div class="vsui">.*?</div>` matched
+against a block whose rows are themselves `<div>`s, so the non-greedy match
+stopped at the *first nested* `</div>` and the replacement left one orphan
+behind. That orphan closed `.versus` early and reparented everything after it.
+
+**The whole gate passed on that build.** axe: 0 violations in both modes.
+Border audit: pass. Breakpoints 390/768/2560: no overflow. Token audit: clean.
+Asset stamps: clean. And the screenshot I took to check my work was cropped
+*above* the damage. A broken nesting fails no accessibility rule, draws no
+border and overflows no viewport — it just silently reparents half a section,
+and every instrument I had was pointed somewhere else.
+
+`tools/check-html.py` exists now. Fed the broken build it reports
+`line 978: </div> closes <article> opened on line 974` — the exact line. It
+runs before every publish, and **R9** says never to regex across nested tags of
+the same name in the first place.
+
+**The hub was not centred, for a reason worth knowing.** It is deliberately
+wider and taller than its band, and `place-items:center` — like flex centring —
+falls back to *start* alignment once a child overflows. That is the spec's
+safe-alignment behaviour and it is invisible until something overflows. It is
+an absolute `50%` + `translate(-50%,-50%)` now, which has no such fallback.
+Measured at 0px off centre at 390, 768, 1440 and 2560.
+
 ## 2026-08-24 · the Zapier card becomes the reach itself
 
 The claim on that card is *"reads the goal, picks the tools, and handles the

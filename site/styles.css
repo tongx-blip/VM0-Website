@@ -3728,16 +3728,17 @@ h3{ font-family:var(--fd); }
    MULTI-STEP. Three tiles next to the centre light in sequence — read,
    draft, post — and the ring leaves the centre on the same cycle. One
    pass every 4.2s, so it reads as a run rather than as decoration. */
-.vs__viz--context{
-  display:grid; place-items:center;
-  padding:0;
-}
+.vs__viz--context{ position:relative; padding:0; }
 
 .hub{
+  /* CENTRED EXPLICITLY, not by alignment. The grid is deliberately WIDER and
+     TALLER than its band, and both `place-items:center` and flex centring
+     fall back to start-alignment once a child overflows — that is the spec's
+     safe-alignment behaviour, and it left the hub sitting left of centre.
+     An absolute 50% + translate has no such fallback. */
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%, -50%);
   display:grid;
-  /* max-content, or the centred grid item shrinks to its container and the
-     grid stops reaching the card's edges — which is the one thing the rim
-     mask needs it to do */
   width:max-content;
   grid-template-columns:repeat(11, 52px);
   gap:11px;

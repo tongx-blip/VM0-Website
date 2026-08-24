@@ -800,6 +800,38 @@ Math.round((hr.left + hr.width / 2) - (wr.left + wr.width / 2))   // 0
 Then check it again with the animation off (`prefers-reduced-motion`), which is
 the state that proves the position does not depend on the loop at all.
 
+## 4x. The markup is still balanced, and nothing escaped its container
+
+**Run the structural check after ANY scripted edit to the markup.** This is not
+optional and it is not covered by anything else in this file:
+
+```bash
+python3 tools/check-html.py            # "site/index.html: balanced"
+```
+
+It exists because a regex edit matched `<div class="vsui">.*?</div>` against a
+block whose rows are themselves `<div>`s. The non-greedy match stopped at the
+first nested `</div>`, and the replacement left one orphan behind. That orphan
+closed `.versus` early, so a comparison card's heading and body escaped the
+grid and spanned the page at full width.
+
+**Every check in this file passed on that build.** axe: 0 violations. Border
+audit: pass. Breakpoint sweep: no overflow at any width. Token audit: clean.
+Asset stamps: clean. The screenshot I took was cropped above the damage. A
+broken *nesting* does not fail a11y, does not draw a border, and does not
+overflow the viewport — it just quietly reparents half a section.
+
+So also assert containment, which is the symptom a human notices first:
+
+```js
+[...document.querySelectorAll('.vs')].every(c => c.closest('.versus'))        // true
+[...document.querySelectorAll('.vs')].map(c => Math.round(c.getBoundingClientRect().width))
+// four equal numbers — one card wider than its siblings means it escaped
+```
+
+**And never regex across nested tags of the same name.** Match on a unique
+attribute, or rebuild the block from its opening tag by counting depth.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every
