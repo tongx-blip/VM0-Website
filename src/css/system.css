@@ -3006,6 +3006,13 @@ h3{ font-family:var(--fd); }
   color:rgb(var(--paper-rgb) / .94);
   font-size:var(--t-meta); line-height:1.2; white-space:nowrap;
   pointer-events:none;
+  /* The centring. It used to live inside the keyframes, as the -50% half of
+     `transform:translate(-50%, Npx)` — so when the bob moved onto `translate`
+     the pill silently lost its horizontal offset and sat with its left edge on
+     the midline. A layout property should never be a side effect of an
+     animation: if the animation is removed, replaced, or disabled by reduced
+     motion, the element must still be where it belongs. */
+  transform:translateX(-50%);
   /* ONE oscillation, not three segments. The old loop had stops at 0/45/70/100
      with the easing applied BETWEEN EACH PAIR — so an ease-out ran three times
      per cycle, and each restart is a fresh burst of speed. That is the

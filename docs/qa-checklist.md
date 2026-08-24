@@ -784,6 +784,22 @@ a broken mark looks like to a bounding box. **Any mark whose aspect is stranger
 than about 3:1 gets looked at, not measured** — render it at 64px and compare
 it to the brand's real mark.
 
+## 4v. After touching keyframes, check the element is still where it belongs
+
+Keyframes are a tempting place to park a transform, and a centring offset
+parked there disappears the moment the keyframes are rewritten. After any
+animation change, assert POSITION as well as motion:
+
+```js
+const w = document.querySelector('.scene.is-on .tplwin');
+const h = w.querySelector('.tplwin__hint');
+const wr = w.getBoundingClientRect(), hr = h.getBoundingClientRect();
+Math.round((hr.left + hr.width / 2) - (wr.left + wr.width / 2))   // 0
+```
+
+Then check it again with the animation off (`prefers-reduced-motion`), which is
+the state that proves the position does not depend on the loop at all.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

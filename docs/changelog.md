@@ -6,6 +6,32 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · one label, a real arrow, and a centring I had broken
+
+**The hint stopped being centred, and I broke it in the previous commit.**
+The pill is `position:absolute; left:50%`, and the other half of that — the
+`translateX(-50%)` that pulls it back by its own width — was living *inside the
+keyframes*, as the first argument of `transform:translate(-50%, Npx)`. When the
+bob moved onto the independent `translate` property, those keyframes went, and
+the centring went with them. The pill sat with its left edge on the midline.
+
+The comment I wrote at the time says the bob "composes with the centring
+transform". There was no centring transform. I described an intention and did
+not implement it, and nothing caught it because the change I was verifying was
+the *motion*, which was correct.
+
+The rule worth keeping: **a layout property must never be a side effect of an
+animation.** If the animation is removed, replaced, or switched off by reduced
+motion, the element still has to be where it belongs. `transform:translateX(-50%)`
+is a static declaration now, and the reduced-motion guard added last round would
+have exposed this immediately had anyone opened the page with it on.
+
+**One label and a real arrow.** The seven hints said "Scroll it" six times and
+"Scroll the page" once, with a chevron. All seven now say **"Scroll down"** with
+Lucide `arrow-down` (`M12 5v14` + `m19 12-7 7-7-7`, fetched from source rather
+than recalled). A chevron points; an arrow instructs, and the instruction is the
+point.
+
 ## 2026-08-24 · the scroll hint breathes, and every eyebrow goes
 
 **The hint's stutter had a specific cause, and it was the keyframes.** The loop
