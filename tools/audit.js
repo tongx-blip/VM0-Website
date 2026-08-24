@@ -17,7 +17,10 @@
       0.5px rule, and that was an explicit instruction — see
       docs/design-principles.md §1. ─────────────────────────────────── */
 (() => {
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step';
+  // .vsui is the comparison cards' product surface: the platform Card's real
+  // 1px gray-200 border and the RunningIndicator's ripple ring are the app's
+  // own chrome, not page furniture (RULES S4 wants exceptions named).
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vsui';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;

@@ -6,6 +6,45 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-24 · the card surfaces are read out of the product, not invented
+
+Tong: *"remember to use our components."* He was right, and the previous entry
+below is where I got it wrong: I built those four surfaces from scratch —
+status pills reading "Running", "Done", "Read", "Drafted", "Waiting", and
+little orange progress bars. **None of that exists in the product.** That is
+the exact failure **P1** is written to prevent: designing a parallel language
+instead of opening the component.
+
+So I opened it. `turbo/packages/ui/src/components/ui/card.tsx` is
+`rounded-xl border border-border bg-card` — radius-xl **14px**, border
+gray-200 **#DCE1E8**. The list row is
+`views/okou-page/sidebar-dialogs.tsx`: a **32px `rounded-lg` avatar**, a
+truncated **14px** title, then `ml-auto` with a **fixed 14px indicator slot**
+and a **12px gray-700 #788192** timestamp. The product's own comment explains
+the fixed slot — *"w-3.5 fits the widest indicator so the running dot is not
+squashed and the timestamp never shifts"* — which is a detail no screenshot
+would have told me.
+
+And "Running" is not a word in the product. It is the **RunningIndicator**: a
+0.86rem sky-600 dot with a centre that breathes and a ripple that expands, on a
+2400ms cycle. Both keyframes are copied out of `globals.css`, not approximated.
+Three rows now carry a live one.
+
+The product's values are declared as `--p-*` inside `.vsui`, so it is obvious
+at a glance that the block does not belong to this page's token system.
+
+**The crop got fixed in the other direction.** The real row puts its indicator
+and timestamp at the far right with `ml-auto`, so a deep right-hand crop
+removes precisely the part carrying the state. I did that twice. The overflow
+is 20px now and the **bottom** does the cropping: a list cut mid-row reads as a
+list that continues, which is the same claim and costs nothing.
+
+**The audit caught the borders, correctly.** `.vsui` now carries the platform
+Card's real 1px border and the ripple's ring, and §2 flagged both. They are the
+app's chrome rather than page furniture, so `.vsui` joins `.tplwin` in the
+named exemption list — **S4** requires exceptions to be written down and scoped
+by name, not silently allowed.
+
 ## 2026-08-24 · the comparison cards show the product, and both logos
 
 **The diagrams meant nothing and they are gone.** Lines, dots and rounded

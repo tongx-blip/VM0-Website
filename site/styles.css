@@ -3581,114 +3581,144 @@ h3{ font-family:var(--fd); }
 
 
 /* ── the surface itself ──────────────────────────────────────────────
-   Laid out at the product's own size and CROPPED by the band, the way a
-   real screenshot is: it runs off the right edge and off the bottom,
-   because a fragment reads as a real thing continuing and a fitted
-   diagram reads as an illustration of one (RULES P2). */
+   NOT INVENTED. Read out of the product: turbo/packages/ui Card is
+   `rounded-xl border border-border bg-card` (radius-xl 14px, border
+   gray-200 #DCE1E8), and the list row is the one in
+   views/okou-page/sidebar-dialogs.tsx: a 32px `rounded-lg` avatar, a
+   truncated 14px title, then `ml-auto` with a fixed 14px indicator slot and
+   a 12px gray-700 timestamp. The pulsing dot is the real RunningIndicator
+   (sky-600, 0.86rem, centre + ripple on a 2400ms cycle), keyframes copied
+   from globals.css rather than approximated.
+
+   The first version had text pills reading "Running", "Done", "Read",
+   "Drafted" and little progress bars. None of those exist in the product.
+   That is the exact failure P1 names: inventing a parallel language instead
+   of opening the component.
+
+   The product values are declared as --p-* so it is obvious at a glance
+   that this block does not belong to the page token system. */
 .vsui{
-  /* WIDER THAN THE BAND, ON PURPOSE. A surface that fits inside its frame
-     reads as a small card someone drew; one that runs off the right edge and
-     past the bottom reads as a real screen continuing outside the crop. That
-     is the whole difference between an illustration of a product and a
-     fragment of one. */
-  width:calc(100% + 76px);
-  padding:14px 16px;
-  border-radius:var(--r-card);
-  background:var(--paper);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05);
+  --p-card:#FFFFFF;
+  --p-border:#DCE1E8;   /* gray-200  */
+  --p-fg:#1A1E26;       /* gray-950  */
+  --p-mute:#788192;     /* gray-700  */
+  --p-run:#0284C7;      /* sky-600   */
+  --p-r-card:14px;      /* radius-xl */
+  --p-r-item:8px;       /* radius    */
+
+  /* Wider than the band, but only just. The real row puts its indicator and
+     timestamp at the far right with `ml-auto`, so a deep right crop removes
+     exactly the part that carries the state — twice now. The BOTTOM does the
+     cropping instead: a list cut mid-row reads as a list that continues,
+     which is the same claim and costs nothing. */
+  width:calc(100% + 20px);
+  padding:10px 12px;
+  border-radius:var(--p-r-card);
+  border:1px solid var(--p-border);
+  background:var(--p-card);
   font-family:var(--fb);
-  color:var(--ink);
+  color:var(--p-fg);
 }
 
-.vsui__cap{
-  margin:0 0 9px;
-  font-family:var(--fm);
-  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--ink-mute);
+.vsui__r{
+  display:flex; align-items:center; gap:14px;
+  padding:8px 8px 8px 4px;
+  border-radius:var(--p-r-item);
 }
 
-.vsui__row,.vsui__tool,.vsui__trail{
-  display:flex; align-items:center; gap:10px;
-  padding:7px 0;
-  font-size:12.5px; line-height:1.2;
+.vsui__r--dim{ opacity:.4; }
+
+.vsui__av{
+  width:32px; height:32px; flex:none;
+  border-radius:var(--p-r-item);
+  object-fit:cover; object-position:top;
 }
 
-.vsui__dot{ width:7px; height:7px; border-radius:50%; background:var(--d); flex:none; }
+.vsui__av--mk{ display:grid; place-items:center; background:#F3F5F8; }
 
-.vsui__nm{ min-width:132px; white-space:nowrap; }
+.vsui__av--mk img{ width:18px; height:18px; object-fit:contain; }
 
-.vsui__mk{ width:16px; height:16px; object-fit:contain; flex:none; }
+.vsui__av--art{ background:linear-gradient(150deg,#E7EBF0,#F3F5F8); }
 
-.vsui__tool span:nth-of-type(1){ min-width:118px; }
-
-.vsui__st{
-  flex:none;
-  padding:3px calc(8px - .04em) 3px 8px;
-  border-radius:var(--r-xs);
-  background:var(--wash-2);
-  font-family:var(--fm); font-size:9px; letter-spacing:.04em;
-  color:var(--ink-mute);
+.vsui__t{
+  flex:1; min-width:0;
+  font-size:14px; line-height:1.3;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-.vsui__st--ok{ background:rgb(var(--ok-rgb) / .12); color:var(--ok-ink); }
+.vsui__meta{ margin-left:auto; display:flex; align-items:center; gap:10px; flex:none; }
 
-.vsui__bar{
-  flex:none; width:52px; height:3px; border-radius:99px;
-  background:var(--wash-2); overflow:hidden;
+.vsui__meta em{ font-style:normal; font-size:12px; color:var(--p-mute); white-space:nowrap; }
+
+/* w-3.5, and the product's own comment says why: it fits the widest
+   indicator so the timestamp never shifts between a running row and a
+   finished one */
+.vsui__slot{ display:flex; width:14px; flex:none; justify-content:center; }
+
+
+.vsui__ind{
+  position:relative; display:inline-flex;
+  width:.86rem; height:.86rem; border-radius:9999px;
+  color:var(--p-run);
 }
 
-.vsui__bar i{ display:block; height:100%; width:calc(var(--p) * 100%); background:var(--accent); }
-
-
-.vsui__file{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-
-.vsui__thumb{
-  width:34px; height:34px; flex:none; border-radius:7px;
-  background:linear-gradient(150deg, var(--wash-2), var(--tile));
+.vsui__ind-c,.vsui__ind-r{
+  position:absolute; top:50%; left:50%;
+  border-radius:inherit; transform-origin:center;
 }
 
-.vsui__fmeta{ flex:1; min-width:0; display:block; }
-
-.vsui__fmeta b{ display:block; font-size:12.5px; font-weight:500; white-space:nowrap; }
-
-.vsui__fmeta i{
-  display:block; margin-top:2px;
-  font-style:normal; font-family:var(--fm); font-size:9.5px;
-  color:var(--ink-mute); white-space:nowrap;
+.vsui__ind-c{
+  width:calc(100% - 5px); height:calc(100% - 5px);
+  background:currentColor;
+  transform:translate(-50%,-50%) scale(.64); opacity:.34;
+  animation:vsRunCentre 2400ms cubic-bezier(.33,0,.66,1) infinite;
 }
 
-.vsui__trail span{ min-width:132px; }
-
-.vsui__trail em{ font-style:normal; font-family:var(--fm); font-size:9.5px; color:var(--ink-mute); }
-
-
-.vsui__goal{
-  margin:0 0 14px;
-  font-size:13px; line-height:1.4; color:var(--ink);
+.vsui__ind-r{
+  width:calc(100% - 3px); height:calc(100% - 3px);
+  border:1px solid currentColor;
+  transform:translate(-50%,-50%) scale(.8); opacity:0;
+  animation:vsRunRipple 2400ms ease-out infinite;
 }
 
-.vsui__wf{ padding:9px 0; }
-
-.vsui__wf b{ display:block; font-size:12.5px; font-weight:500; }
-
-.vsui__wf i{
-  display:block; margin-top:2px;
-  font-style:normal; font-size:11px; color:var(--ink-mute);
+@keyframes vsRunCentre{
+  0%,100%{ transform:translate(-50%,-50%) scale(.64); opacity:.34 }
+  52%    { transform:translate(-50%,-50%) scale(.88); opacity:.52 }
 }
 
-.vsui__wf--dim{ opacity:.42; }
+@keyframes vsRunRipple{
+  0%,45% { transform:translate(-50%,-50%) scale(.8);   opacity:0 }
+  52%    { transform:translate(-50%,-50%) scale(.8);   opacity:.34 }
+  100%   { transform:translate(-50%,-50%) scale(1.56); opacity:0 }
+}
 
-.vsui__faces{ display:flex; align-items:center; margin-top:9px; }
+@media (prefers-reduced-motion:reduce){
+  .vsui__ind-c,.vsui__ind-r{ animation:none; }
+
+}
+
+
+.vsui__sub{
+  margin:-4px 0 8px 50px;
+  font-family:var(--fm); font-size:11px;
+  color:var(--p-mute); white-space:nowrap;
+}
+
+.vsui__ask{
+  margin:2px 4px 10px;
+  font-size:14px; line-height:1.35; color:var(--p-fg);
+}
+
+.vsui__faces{ display:flex; align-items:center; margin:0 0 6px 50px; }
 
 .vsui__faces img{
-  width:26px; height:26px; border-radius:50%;
-  margin-right:-7px;
-  box-shadow:0 0 0 2px var(--paper);
+  width:24px; height:24px; border-radius:50%;
+  margin-right:-6px; box-shadow:0 0 0 2px var(--p-card);
 }
 
 .vsui__faces em{
-  margin-left:14px; font-style:normal;
-  font-family:var(--fm); font-size:10px; color:var(--ink-mute);
+  margin-left:16px; font-style:normal;
+  font-size:12px; color:var(--p-mute); white-space:nowrap;
 }
 
 
