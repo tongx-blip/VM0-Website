@@ -948,4 +948,36 @@
     window.addEventListener('resize', sync);
     sync();
   }
+
+  /* ── 13. control: the scroll position IS the run's clock ─────────
+     One IntersectionObserver over the five steps; whichever is nearest
+     the middle of the viewport sets the window's beat. The stage reads
+     one attribute and CSS does the rest, so there is exactly one place
+     that knows which moment we are in. */
+  var ctrlWin = doc.getElementById('ctrlwin');
+  var ctrlSteps = [].slice.call(doc.querySelectorAll('.ctrl__step'));
+  if (ctrlWin && ctrlSteps.length && 'IntersectionObserver' in window) {
+    var seen = new Map();
+
+    function pickBeat() {
+      var best = null, bestRatio = 0;
+      ctrlSteps.forEach(function (el) {
+        var r = seen.get(el) || 0;
+        if (r > bestRatio) { bestRatio = r; best = el; }
+      });
+      ctrlSteps.forEach(function (el) { el.classList.toggle('is-on', el === best); });
+      if (best) ctrlWin.dataset.beat = best.dataset.beat;
+    }
+
+    var ctrlObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen.set(e.target, e.intersectionRatio); });
+      pickBeat();
+    }, {
+      // a band across the middle of the viewport: the step sitting there
+      // is the one being read, which is the one the stage should answer
+      rootMargin: '-38% 0px -38% 0px',
+      threshold: [0, 0.25, 0.5, 0.75, 1]
+    });
+    ctrlSteps.forEach(function (el) { ctrlObserver.observe(el); });
+  }
 })();

@@ -48,7 +48,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 .panel{ border-radius:var(--r-panel); }
-.feat,.vs,.quote,.perms{ border-radius:var(--r-card); }
+.vs,.quote,.perms{ border-radius:var(--r-card); }
 
 .btn,.nav__signin,.nav__burger{ border-radius:var(--r-btn); }
 
@@ -288,41 +288,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 @keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
 
-
-/* ─────────────── control ─────────────── */
-.control{
-  display:grid;
-  grid-template-columns:1fr 1.2fr 1fr;
-  gap:clamp(12px,1.4vw,18px);
-  margin-top:clamp(52px,6vw,84px);
-  align-items:stretch;
-}
-
-.control__col{ display:flex; flex-direction:column; gap:clamp(12px,1.4vw,18px); }
-
-.feat{
-  flex:1;
-  padding:28px 26px;
-  border:1px solid var(--hairline);
-  background:var(--paper);
-  transition:background var(--t-hover);
-}
-
-.feat:hover{ background:var(--paper-2); }
-
-.feat h3{
-  font-size:17px; font-weight:700; letter-spacing:-.02em; margin-bottom:9px;
-}
-
-.feat p{ font-size:14px; color:var(--ink-soft); line-height:1.6; }
-
-
-
-.control__stage{
-  padding:0;
-  background:var(--paper);
-}
-
 .state{
   margin-left:auto; font-style:normal;
   font-size:9.5px; letter-spacing:.10em; text-transform:uppercase;
@@ -417,10 +382,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 /* ─────────────── responsive ─────────────── */
 @media (max-width:1080px){
-  .control{ grid-template-columns:1fr; }
-
-  .control__stage{ border-right:0; }
-
   
   .metrics{ grid-template-columns:1fr; }
 
@@ -486,13 +447,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 /* the sticky column in the workflow ladder now holds a screenshot */
 .ladder__stage .shot{ margin-top:0; }
-
-/* the control grid's middle cell holds the approval gate */
-.control__stage .shot{ margin-top:0; }
-
-.control__stage .shot img{ max-width:420px; margin-inline:auto; }
-
-.control__stage .shot figcaption{ text-align:center; }
 
 
 /* ─────────────── connector permissions ───────────────
@@ -2035,7 +1989,7 @@ img{ filter:none; }
 
 /* radius policy, restated in one place */
 .panel{ border-radius:0; }
-.feat,.vs,.quote,.perms,.slackui,.absui,.a2a__card,.a2a__ask{
+.vs,.quote,.perms,.slackui,.absui,.a2a__card,.a2a__ask{
   border-radius:var(--r-card);
 }
 .btn{ border-radius:var(--r-btn); }
@@ -2092,9 +2046,7 @@ h3{ font-family:var(--fd); }
   letter-spacing:.075em;
   font-feature-settings:"tnum" 1;
 }
-
-.section-body,.note,.hero__body,.step p,.feat p,.vs p,
-.quote blockquote,.perms__note{ font-family:var(--fb); }
+.section-body,.note,.hero__body,.step p,.vs p,.quote blockquote,.perms__note{ font-family:var(--fb); }
 
 
 .section-body{
@@ -2339,37 +2291,6 @@ h3{ font-family:var(--fd); }
 .nav__burger{ border:0; }
 
 
-.nav__theme{
-  display:inline-grid; place-items:center;
-  width:38px; height:38px; flex:none;
-  padding:0; border:0; border-radius:var(--r-btn);
-  background:transparent; color:var(--nav-ink);
-  cursor:pointer;
-  transition:color var(--t-hover) var(--e-snap),
-             background var(--t-hover) var(--e-snap);
-}
-
-.nav__theme:hover{ color:var(--nav-ink-hi); background:var(--nav-chip); }
-
-.nav__theme svg{ width:17px; height:17px; grid-area:1/1; }
-
-.nav__theme-moon{ display:none; }
-
-:root[data-theme="dark"] .nav__theme-sun{ display:none; }
-
-:root[data-theme="dark"] .nav__theme-moon{ display:block; }
-
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .nav__theme-sun{ display:none; }
-
-  :root:not([data-theme="light"]) .nav__theme-moon{ display:block; }
-
-}
-
-@media (max-width:420px){ .nav__theme{ display:none; }
- }
-
-
 /* ── the veil under the header ──────────────────────────────────────
    A backdrop-filter is a switch: content is either blurred or it is not,
    and the boundary is a hard horizontal line across the page. Masking ONE
@@ -2573,8 +2494,7 @@ h3{ font-family:var(--fd); }
 
 
 /* wide figures span the ledger too */
-/* figures, data and card grids reach across all twelve columns */
-.scenes,.reach,.ladder,.metrics,.control,.versus,.proof,.a2a,.showcase{
+/* figures, data and card grids reach across all twelve columns */.scenes,.reach,.ladder,.metrics,.versus,.proof,.a2a,.showcase{
   grid-column:1 / 13;
 }
 
@@ -2597,7 +2517,13 @@ h3{ font-family:var(--fd); }
 
 /* this card holds a pinned section, and `overflow:hidden` would make it a
    scroll container and kill the sticky. `clip` clips without doing that. */
-#workflows.panel--card{ overflow:clip; }
+/* `clip`, not `hidden`. .panel clips to its own corners with
+   overflow:hidden, and hidden makes the section a SCROLL CONTAINER — which
+   silently disables position:sticky inside it, because the sticky element
+   then has nothing to stick against. `clip` clips without becoming one.
+   #workflows found this first; #control needs the same. */
+#workflows.panel--card,
+#control.panel--card{ overflow:clip; }
 
 
 /* ── a section as one object on the grey page ── */
@@ -3453,44 +3379,234 @@ h3{ font-family:var(--fd); }
 
 
 /* ─────────────── 14. control, versus, proof: one card language ─────── */
-.control{
-  display:grid; grid-template-columns:1fr 1.25fr 1fr;
-  gap:clamp(12px,1.3vw,18px);
+/* ── control: one run, told once ─────────────────────────────────────
+   The five claims in this section are not five features — they are five
+   moments in the life of ONE run, in order: what it may do, what it must
+   ask for, where it runs, how its credentials get attached, and what it
+   leaves behind. So the stage does not swap between five screens the way
+   the workflow ladder above does; it is one window that PROGRESSES, with
+   each beat adding a layer to the same surface.
+
+   That distinction is the whole reason this is not a second ladder. The
+   ladder swaps panels; this accumulates on one. */
+.ctrl{
+  display:grid; grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);
+  gap:clamp(28px,3.6vw,72px);
   margin-top:clamp(48px,5.5vw,80px);
-  align-items:stretch;
+  align-items:start;
 }
 
-.control__col{ display:flex; flex-direction:column; gap:clamp(12px,1.3vw,18px); }
+.ctrl__stage{
+  position:sticky; top:calc(var(--nav-h) + clamp(24px,3vw,52px));
+}
 
-.feat,.vs,.quote{
+.ctrl__win{
+  position:relative; isolation:isolate;
+  border-radius:var(--r-lg);
+  transition:transform var(--t-state) var(--e-out);
+}
+
+/* beat 3 pulls the whole window back a touch so the boundary reads as
+   something drawn AROUND it rather than another panel inside it */
+.ctrl__win[data-beat="3"]{ transform:scale(.965); }
+
+
+/* the steps. Each needs its own scroll moment, so they are spaced by
+   viewport height rather than by a fixed gap — a step that shares the
+   screen with the next one never gets a beat of its own. */
+.ctrl__steps{ display:flex; flex-direction:column; }
+
+.ctrl__step{
+  min-height:62vh; display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(10px,1.4vw,20px) 0;
+}
+
+/* NOT opacity. The first version rested these at .34 and axe was right to
+   fail it: all five steps are read on the way past, so none of them may
+   drop under the contrast floor. The step stands down by COLOUR instead,
+   between two values that both pass — --ink-mute is the lightest text this
+   page allows anywhere. */
+.ctrl__step h3{
+  font-size:var(--t-h); font-weight:500; letter-spacing:-.02em;
+  margin-bottom:10px; color:var(--ink-mute);
+  transition:color var(--t-state) var(--e-out);
+}
+
+.ctrl__step p{
+  font-size:var(--t-sm); line-height:1.65; color:var(--ink-mute); max-width:46ch;
+  transition:color var(--t-state) var(--e-out);
+}
+
+.ctrl__step.is-on h3{ color:var(--ink); }
+
+.ctrl__step.is-on p{ color:var(--ink-soft); }
+
+
+/* ── the layers ─────────────────────────────────────────────────────
+   All four sit over the same window and are keyed off one attribute, so
+   the stage has exactly one source of truth for what it is showing. */
+.cbox,.cgate,.cnet,.ctrail{
+  position:absolute; z-index:2;
+  opacity:0; pointer-events:none;
+  transition:opacity var(--t-state) var(--e-out),
+             translate var(--t-state) var(--e-out);
+}
+
+.perms{ transition:opacity var(--t-state) var(--e-out), filter var(--t-state) var(--e-out); }
+
+/* whichever layer is up, the list behind it stands down rather than
+   disappearing — the point of every beat is that it happens TO the list */
+.ctrl__win[data-beat="2"] .perms,
+.ctrl__win[data-beat="4"] .perms{ opacity:.34; }
+
+.ctrl__win[data-beat="5"] .perms{ opacity:0; }
+
+
+/* 3 · the sandbox boundary. Abstract on purpose: a microVM has no screen,
+   and it is the one claim here the product cannot photograph. */
+.cbox{
+  inset:calc(-1 * clamp(14px,1.6vw,26px));
+  border-radius:calc(var(--r-lg) + clamp(14px,1.6vw,26px));
+  box-shadow:inset 0 0 0 1.5px rgb(var(--accent-rgb) / .38);
+  translate:0 0;
+}
+
+.cbox i{
+  position:absolute; top:calc(-1 * clamp(9px,1vw,12px)); left:clamp(16px,2vw,28px);
+  padding:2px calc(9px - .06em) 2px 9px; border-radius:var(--r-pill);
+  background:var(--paper); color:var(--accent-wash);
+  font-family:var(--fm); font-style:normal; font-size:var(--t-mono); letter-spacing:.09em;
+}
+
+.ctrl__win[data-beat="3"] .cbox{ opacity:1; }
+
+
+/* 2 · the approval gate, read out of views/permission-allow */
+.cgate{
+  left:50%; top:50%; translate:-50% -46%;
+  width:min(92%, 380px);
+  padding:clamp(18px,2vw,26px);
+  border-radius:var(--r-card);
+  background:var(--paper); color:var(--ink);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
+}
+
+.ctrl__win[data-beat="2"] .cgate{ opacity:1; translate:-50% -50%; }
+
+.cgate__t{ font-size:var(--t-lead); line-height:1.35; margin:0 0 16px; }
+
+.cgate__t b{ font-weight:600; }
+
+.cgate__pill{
+  display:flex; align-items:center; gap:10px; margin:0 0 12px;
+  padding:8px 12px; border-radius:var(--r-btn);
+  background:var(--tile); font-size:var(--t-meta); color:var(--ink);
+}
+
+.cgate__pill img{ border-radius:50%; }
+
+.cgate__row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin:0 0 18px; font-size:var(--t-meta); color:var(--ink-mute);
+}
+
+.cgate__row em{ font-style:normal; color:var(--ink-soft); }
+
+.cgate__btns{ display:flex; gap:8px; margin:0; }
+
+.cgate__btns span{
+  flex:1; text-align:center; padding:9px 0; border-radius:var(--r-btn);
+  font-size:var(--t-meta);
+}
+
+.cgate__deny{ background:var(--wash-2); color:var(--ink-soft); }
+
+.cgate__allow{ background:var(--accent-solid); color:var(--paper-ink); }
+
+
+/* 4 · the network log, read out of okou-page/components/network-content */
+.cnet{
+  left:clamp(14px,2vw,26px); right:clamp(14px,2vw,26px); bottom:clamp(14px,2vw,26px);
+  translate:0 12px;
+  padding:clamp(14px,1.6vw,20px);
+  border-radius:var(--r-card);
+  background:var(--paper);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
+}
+
+.ctrl__win[data-beat="4"] .cnet{ opacity:1; translate:0 0; }
+
+.cnet__h,.ctrail__h{
+  margin:0 0 12px; font-family:var(--fm); font-size:var(--t-mono);
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute);
+}
+
+.cnet__r{
+  display:flex; align-items:center; gap:10px; margin:0; padding:6px 0;
+  font-size:var(--t-meta);
+}
+
+.cnet__r i{
+  font-style:normal; font-family:var(--fm); font-size:var(--t-mono);
+  color:var(--ink-mute); width:38px; flex:none;
+}
+
+.cnet__r b{ font-weight:400; color:var(--ink); flex:1; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.cnet__f{ margin:12px 0 0; font-size:var(--t-meta); color:var(--ink-mute); }
+
+
+/* 5 · what the run left behind */
+.ctrail{
+  left:clamp(14px,2vw,26px); right:clamp(14px,2vw,26px); top:clamp(14px,2vw,26px);
+  translate:0 12px;
+  padding:clamp(16px,1.8vw,24px);
+  border-radius:var(--r-card);
+  background:var(--paper);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
+}
+
+.ctrl__win[data-beat="5"] .ctrail{ opacity:1; translate:0 0; }
+
+.ctrail__r{
+  display:flex; align-items:center; gap:12px; margin:0; padding:9px 0;
+  font-size:var(--t-meta); color:var(--ink);
+}
+
+.ctrail__r span{
+  width:8px; height:8px; flex:none; border-radius:50%;
+  background:rgb(var(--ok-rgb) / .55);
+}
+
+.ctrail__r--wait span{ background:rgb(var(--wait-rgb) / .6); }
+
+.ctrail__r b{ font-weight:400; flex:1; }
+
+.ctrail__r em{ font-style:normal; font-family:var(--fm); font-size:var(--t-mono); color:var(--ink-mute); }
+
+
+@media (prefers-reduced-motion:reduce){
+  .cbox,.cgate,.cnet,.ctrail,.perms,.ctrl__win{ transition:none; }
+
+}
+
+@media (max-width:1000px){
+  .ctrl{ grid-template-columns:1fr; gap:clamp(20px,3vw,32px); }
+
+  .ctrl__stage{ position:static; }
+
+  .ctrl__step{ min-height:0; }
+
+  .ctrl__step h3{ color:var(--ink); }
+
+  .ctrl__step p{ color:var(--ink-soft); }
+
+}
+.vs,.quote{
   border:0;
   background:var(--paper);
 }
-
-.feat{
-  box-shadow:var(--e-1);
-  transition:transform var(--t-hover) var(--e-snap),
-             box-shadow var(--t-hover) var(--e-snap);
-}
-
-/* .vs and .quote are NOT here. Neither set is clickable, and a lift on
-   hover promises a click that does not exist — a worse lie than no
-   feedback at all. .quote also drops the resting shadow: the supplied
-   design is a fill and nothing else, and a #F6F6F6 card already separates
-   from a white section without one. */
-.feat:hover{
-  transform:translateY(-3px);
-  box-shadow:var(--e-hover);
-}
-
-.feat{
-  flex:1; padding:26px 24px;
-  display:flex; flex-direction:column; justify-content:center;
-}
-
-.feat h3{ font-size:var(--t-h); font-weight:500; letter-spacing:-.02em; margin-bottom:9px; color:var(--ink); }
-
-.feat p{ font-size:var(--t-sm); line-height:1.6; color:var(--ink-soft); }
 
 
 /* ── the arrangement ─────────────────────────────────────────────────
@@ -4579,7 +4695,10 @@ h3{ font-family:var(--fd); }
 
 /* the sentence stays in the accessibility tree while the visible copy is
    being typed one character at a time */
-.a2a__sr{
+/* one visually-hidden utility, shared. It existed only as .a2a__sr and the
+   language control needed the same thing, so it is a utility now rather
+   than a second copy under a different name. */
+.a2a__sr,.u-sr{
   position:absolute; width:1px; height:1px;
   margin:-1px; padding:0; border:0;
   clip-path:inset(50%); overflow:hidden; white-space:nowrap;
@@ -4612,7 +4731,12 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-section);
   padding:clamp(44px,4.6vw,72px) max(var(--pad-section), calc(var(--edge) - var(--card-gap)))
           clamp(26px,2.6vw,38px);
-  background:var(--wash);
+  /* --paper, not --wash. The ground under it became --wash too, so a
+     --wash panel had no edge at all and simply dissolved into the page.
+     A card one step off the ground is the relationship this page already
+     runs on: every other section is a --paper card on --wash, and the
+     footer is the last of them. */
+  background:var(--paper);
   color:var(--ink-soft);
   text-align:left;
 }
@@ -4670,7 +4794,7 @@ h3{ font-family:var(--fd); }
 
 
 .footer__disclaimer{
-  max-width:80ch; margin:clamp(34px,3.6vw,56px) 0 0;
+  max-width:34ch; margin:clamp(16px,1.8vw,24px) 0 0;
   font-size:var(--t-meta); line-height:1.7; text-align:left;
   /* .42 was under AA on the panel. This is the quietest the disclaimer is
      allowed to be and still be readable, which is the point of a
@@ -4683,11 +4807,52 @@ h3{ font-family:var(--fd); }
    version copied it — straight into "no structural lines", which the
    border audit caught. The separation is the gap instead, which is what
    that rule has always asked for. */
+/* TWO GROUPS, not four loose regions. The footer read as a scatter of
+   separate blocks — wordmark, tagline, columns, a full-width disclaimer
+   band, a copyright, a link row. The tagline and the disclaimer are one
+   thought about what Okou is and what to watch for, so they sit together
+   under the wordmark; and the bottom row is now legal on the left,
+   preferences on the right. Four regions became two. */
 .footer__base{
   display:flex; flex-wrap:wrap; align-items:center;
-  justify-content:space-between; gap:12px 26px;
+  justify-content:space-between; gap:16px 32px;
   margin-top:clamp(40px,4.4vw,66px);
 }
+
+.footer__legal{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 26px; }
+
+.footer__prefs{ display:flex; align-items:center; gap:6px; }
+
+
+/* the two preferences. Quiet at rest, ground on hover — the same restraint
+   the rail's arrows follow, because neither is content. */
+.pref__btn,.pref__lang{
+  display:inline-flex; align-items:center; gap:7px;
+  height:34px; padding:0 10px;
+  border:0; border-radius:var(--r-btn);
+  background:transparent; color:var(--ink-mute);
+  font:inherit; font-size:var(--t-mono); letter-spacing:.06em;
+  cursor:pointer;
+  transition:background var(--t-hover) var(--e-out), color var(--t-hover) var(--e-out);
+}
+
+.pref__btn:hover,.pref__lang:hover{ background:var(--wash-2); color:var(--ink); }
+
+.pref__btn svg,.pref__globe svg{ width:16px; height:16px; }
+
+.pref__moon{ display:none; }
+
+:root[data-theme="dark"] .pref__sun{ display:none; }
+
+:root[data-theme="dark"] .pref__moon{ display:block; }
+
+.pref__lang select{
+  border:0; background:transparent; color:inherit;
+  font:inherit; font-size:var(--t-mono); letter-spacing:.06em;
+  cursor:pointer; padding:0 2px;
+}
+
+.pref__lang select:focus-visible{ outline:2px solid var(--accent-solid); outline-offset:3px; }
 
 .footer__links{
   display:flex; flex-wrap:wrap; gap:10px 26px;
@@ -4831,8 +4996,6 @@ h3{ font-family:var(--fd); }
 
 /* ─────────────── 19. responsive ─────────────── */
 @media (max-width:1080px){
-  .control{ grid-template-columns:1fr; }
-
   /* nothing is pinned at this width, so the mechanic unwinds: every
      paragraph is open and the titles stop changing size — a size change
      with no room to absorb it just makes the page jump as you scroll.
@@ -5255,7 +5418,7 @@ h3{ font-family:var(--fd); }
    lands 297-492px above the footer panel's top edge; at the old padding
    the buttons sat at 400 — inside it, with a scribble crossing "Add to
    Slack". This lifts them to about 530. */
-.panel--cta{ padding-bottom:clamp(340px, 35vw, 560px); }
+.panel--cta{ padding-bottom:clamp(300px, 22vw, 360px); }
 
 .metrics{ text-align:center; }
 

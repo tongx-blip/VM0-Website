@@ -6,6 +6,71 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · control becomes one run, and the footer stops scattering
+
+### The control section
+
+Tong's idea: prototype on the left, text scrolling on the right, the
+prototype answering each block. Two things had to be checked first.
+
+**Can real product screens carry it?** Mostly. Cloned `vm0-ai/vm0` and
+matched each claim to a view: granular permissions →
+`connector-permission-row` / `permissions-dialog`; approval gates →
+`views/permission-allow` (a centred card with a target pill, the
+permission, a grant-duration select, Deny / Allow); credentials →
+`okou-page/components/network-content`, a real per-request log with host,
+verdict and a block action; traceability → `activity-inspect-page`. Four of
+five are real UI. **Isolated execution has none** — a microVM has no
+screen — so that beat is the one abstraction here, and it is the only one.
+
+**Does the page already do this?** Yes: `#workflows` is a `position:sticky`
+stage with 16 scrolling steps. Building a second one would repeat the page
+the way a second rail-and-stage would have repeated the tab reel.
+
+So the mechanism differs. The ladder **swaps panels**; this one
+**accumulates on one**. The five claims are five moments in the life of a
+single run — what it may do, what it must ask for, where it runs, how its
+credentials are attached, what it leaves behind — so the window never
+changes: the list dims and the approval card rises over it, a boundary
+draws around the whole window, the network log slides up, and the trail
+finally replaces the list with rows that name what happened in the earlier
+beats. One `data-beat` attribute on the stage is the only state.
+
+Three bugs on the way in:
+
+* **`position:sticky` did nothing.** `.panel` clips with `overflow:hidden`,
+  which makes the section a *scroll container* and silently disables sticky
+  inside it. `#workflows` had already hit this and fixed it with
+  `overflow:clip`, which clips without becoming one. Now both share it.
+* The beat observer shipped referencing an undefined variable inside a
+  `.observe ? … : null` construction that `node --check` happily accepted.
+  It would have thrown on first paint.
+* The inactive steps rested at `opacity:.34` and axe failed them. It was
+  right: all five get read on the way past, so none may drop under the
+  contrast floor. They stand down by **colour** now, between two values
+  that both pass.
+
+### The footer
+
+Four changes, all Tong's: the panel is `--paper` (it had become the same
+grey as the ground and dissolved — I flagged that myself last round and
+shipped it anyway); the theme toggle moved out of the header and into the
+footer's bottom row; a language control joined it, with the ten locales
+the product actually ships (`i18n/locales` — no zh-CN); and the tagline and
+the disclaimer merged into one block under the wordmark.
+
+That last one was the real fix. The footer had six loose regions —
+wordmark, tagline, five columns, a full-width disclaimer band, a
+copyright, a link row. The tagline and disclaimer are one thought, so they
+sit together; the bottom row is now legal on the left and preferences on
+the right. **Four regions became two.**
+
+The CTA's bottom padding came down from `35vw` to `22vw`. It had been
+sized to clear a hard-masked drawing on a black ground; on the grey the
+clouds are already soft, and at 35vw it left a screenful of empty grey
+between the buttons and the mountains.
+
+
 ## 2026-08-25 · the closing band stops being dark at all
 
 Tong, pointing at the CTA: *"don't use black here either — use the

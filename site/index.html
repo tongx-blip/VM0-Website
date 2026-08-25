@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=87816ac2">
+<link rel="stylesheet" href="styles.css?r=176dba83">
 </head>
 <body>
 
@@ -27,10 +27,6 @@
     <a href="#proof"><span class="roll"><span class="roll__t">Pricing</span><span class="roll__t" aria-hidden="true">Pricing</span></span></a>
   </nav>
   <div class="nav__auth">
-    <button class="nav__theme" id="themeToggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
-      <svg class="nav__theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-      <svg class="nav__theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-    </button>
     <a class="nav__signin" href="#cta"><span class="roll"><span class="roll__t">Sign in</span><span class="roll__t" aria-hidden="true">Sign in</span></span></a>
     <a class="btn btn--dark btn--sm" href="#cta">Get started</a>
   </div>
@@ -864,21 +860,13 @@
     the person, not the automation.
   </p>
 
-  <div class="control" data-reveal="stagger">
-    <div class="control__col">
-      <article class="feat">
-        <h3>Granular permissions</h3>
-        <p>Grant access one connector and one action at a time, per Agent. Nothing is reachable
-           because something else already had it.</p>
-      </article>
-      <article class="feat">
-        <h3>Approval gates</h3>
-        <p>Sensitive writes wait for an explicit approval instead of running on their own.</p>
-      </article>
-    </div>
+  <div class="ctrl">
+    <div class="ctrl__stage">
+      <div class="ctrl__win" id="ctrlwin" data-beat="1">
 
-    <div class="control__stage">
-      <div class="perms reveal">
+        <span class="cbox" aria-hidden="true"><i>run · microVM</i></span>
+
+<div class="perms reveal">
         <p class="perms__crumb">Agents <i>/</i> Okou</p>
         <div class="perms__head">
           <span class="perms__ava"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span>
@@ -920,18 +908,51 @@
         <p class="perms__note">Every action a run takes is checked against this agent’s list before it leaves the
           sandbox. Okou can draft the mail, but it cannot send it.</p>
       </div>
+
+        <div class="cgate" aria-hidden="true">
+          <p class="cgate__t">Okou is asking to <b>send mail</b> as you</p>
+          <p class="cgate__pill"><img src="assets/brand/avatar-2.png?v=22fa90af" alt="" width="30" height="30">Maya Chen</p>
+          <p class="cgate__row"><span>Gmail · Send mail</span><em>For this run</em></p>
+          <p class="cgate__btns"><span class="cgate__deny">Deny</span><span class="cgate__allow">Allow</span></p>
+        </div>
+
+        <div class="cnet" aria-hidden="true">
+          <p class="cnet__h">Network · this run</p>
+          <p class="cnet__r"><i>GET</i><b>drive.googleapis.com</b><em class="state state--ok">token attached</em></p>
+          <p class="cnet__r"><i>POST</i><b>gmail.googleapis.com</b><em class="state state--ok">token attached</em></p>
+          <p class="cnet__r"><i>POST</i><b>api.unknown-host.dev</b><em class="state state--off">blocked</em></p>
+          <p class="cnet__f">The run never sees a token. It is attached here, on the way out.</p>
+        </div>
+
+        <div class="ctrail" aria-hidden="true">
+          <p class="ctrail__h">Activity · replay</p>
+          <p class="ctrail__r"><span></span><b>Read files in a shared folder</b><em>2m</em></p>
+          <p class="ctrail__r"><span></span><b>Drafted the reply</b><em>40s</em></p>
+          <p class="ctrail__r ctrail__r--wait"><span></span><b>Send mail — approved by Maya</b><em>12s</em></p>
+          <p class="ctrail__r"><span></span><b>Sandbox destroyed</b><em>0s</em></p>
+        </div>
+
+      </div>
     </div>
 
-    <div class="control__col">
-      <article class="feat">
+    <div class="ctrl__steps">
+      <article class="ctrl__step" data-beat="1">
+        <h3>Granular permissions</h3>
+        <p>Grant access one connector and one action at a time, per Agent. Nothing is reachable because something else already had it.</p>
+      </article>
+      <article class="ctrl__step" data-beat="2">
+        <h3>Approval gates</h3>
+        <p>Sensitive writes wait for an explicit approval instead of running on their own.</p>
+      </article>
+      <article class="ctrl__step" data-beat="3">
         <h3>Isolated execution</h3>
         <p>Each run gets its own microVM, and it is destroyed when the run finishes.</p>
       </article>
-      <article class="feat">
+      <article class="ctrl__step" data-beat="4">
         <h3>Credentials stay out of the run</h3>
         <p>Tokens are injected at the network layer, so the Agent never reads them.</p>
       </article>
-      <article class="feat">
+      <article class="ctrl__step" data-beat="5">
         <h3>Traceable by default</h3>
         <p>Every run keeps an activity trail you can replay after the fact.</p>
       </article>
@@ -1117,6 +1138,11 @@
           <img src="assets/okou-icon.svg?v=77e4663f" alt=""><span>OKOU</span>
         </a>
         <p>Okou, your trustworthy AI teammate.</p>
+        <p class="footer__disclaimer">
+          Okou runs on large language models, so verify important outputs. The AI agent inside
+          the Slack app requires a paid Slack plan. @mentions and direct messages work on all
+          Slack plans.
+        </p>
       </div>
       <nav class="footer__cols" aria-label="Footer">
       <div class="footer__col">
@@ -1169,24 +1195,32 @@
       </nav>
     </div>
 
-    <p class="footer__disclaimer">
-      Okou runs on large language models, so verify important outputs. The AI agent inside the Slack
-      app requires a paid Slack plan. @mentions and direct messages work on all Slack plans.
-    </p>
-
     <div class="footer__base">
-      <p class="footer__copy">© 2026 Okou.ai · All rights reserved.</p>
-      <ul class="footer__links">
+      <div class="footer__legal">
+        <p class="footer__copy">© 2026 Okou.ai · All rights reserved.</p>
+        <ul class="footer__links">
         <li><a href="#top">Status</a></li>
         <li><a href="#top">Support</a></li>
         <li><a href="#top">Terms of Use</a></li>
         <li><a href="#top">Privacy Policy</a></li>
         <li><a href="#top">Consent Preferences</a></li>
-      </ul>
+        </ul>
+      </div>
+      <div class="footer__prefs">
+        <button class="pref__btn pref__btn--theme" id="themeToggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+      <svg class="pref__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      <svg class="pref__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
+        <label class="pref__lang">
+          <span class="pref__globe" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z"/></svg></span>
+          <span class="u-sr">Language</span>
+          <select><option>English</option><option>Deutsch</option><option>Español</option><option>Français</option><option>हिन्दी</option><option>Bahasa Indonesia</option><option>Italiano</option><option>日本語</option><option>한국어</option><option>Português</option></select>
+        </label>
+      </div>
     </div>
   </footer>
 </div>
 
-<script src="app.js?r=dcfcd0b3"></script>
+<script src="app.js?r=8ab56283"></script>
 </body>
 </html>
