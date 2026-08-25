@@ -3,6 +3,10 @@ shots/
 tmp-live/
 *.log
 
+# tooling byproducts
+__pycache__/
+*.pyc
+
 # OS / editor
 .DS_Store
 Thumbs.db

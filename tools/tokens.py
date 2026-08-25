@@ -32,7 +32,8 @@ PINNED_PREFIXES = (
 # `\b` does not fire after a BEM `__`, so .slackui__rail never matched and
 # every third-party mock in base.css was reported as a token violation.
 MOCK_SELECTORS = re.compile(
-    r'\.(vsui|lane|arti|tsh|hub|absui|slackui|flowui|perms|okoui|appui|tplwin|tpl|step|mock|shot|acard|a2a)'
+    r'\.(vsui|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
+    r'|perms|okoui|ochat|oresult|appui|tplwin|tpl|step|mock|shot|acard|a2a)'
     r'(?:__|--|\b)'
 )
 
@@ -113,15 +114,22 @@ def audit(path: Path):
                 findings.append((n + 1, label, selector, stripped[:88]))
                 break
 
-        if EASE.search(line):
+        # A product mock's timing is copied out of the real product for the
+        # same reason its colours are — .vsui's 2400ms / cubic-bezier(.33,0,.66,1)
+        # IS the RunningIndicator. The mock exemption applied only to colour
+        # and radius, so every mock's motion was reported as a violation.
+        if EASE.search(line) and not in_mock:
             findings.append((n + 1, 'raw easing', selector, stripped[:88]))
 
-        for m in TIME.finditer(line):
-            if 'var(--' in line:
-                continue
-            if any(k in line for k in ('transition', 'animation')):
-                findings.append((n + 1, 'raw duration', selector, stripped[:88]))
-                break
+        # `.01ms !important` is the reduced-motion kill switch, not a
+        # duration — it means "effectively zero" and a token would obscure it
+        if '.01ms' not in line and not in_mock:
+            for m in TIME.finditer(line):
+                if 'var(--' in line:
+                    continue
+                if any(k in line for k in ('transition', 'animation')):
+                    findings.append((n + 1, 'raw duration', selector, stripped[:88]))
+                    break
 
         m = RADIUS.search(line)
         if m and 'var(--' not in m.group(1) and not in_mock:
@@ -163,6 +171,90 @@ def shorthand_wipes_image(paths):
     return out
 
 
+def undefined_refs(paths):
+    """A var(--x) with no --x declared anywhere.
+
+    The dangerous half of this problem. A literal that should be a token is
+    merely untidy; a token that does not exist makes the whole declaration
+    invalid and the browser silently drops it. `animation:bob var(--t-drift)`
+    with no --t-drift stopped the drift entirely, and nothing in the visual
+    gate noticed because the element simply sat still.
+    """
+    declared, used = set(), {}
+    for path in paths:
+        css = strip_comments(path.read_text(encoding='utf-8'))
+        for m in re.finditer(r'(--[\w-]+)\s*:', css):
+            declared.add(m.group(1))
+        # a var() WITH a fallback cannot break, so only bare ones matter
+        for m in re.finditer(r'var\(\s*(--[\w-]+)\s*\)', css):
+            used.setdefault(m.group(1), (path.name, css[:m.start()].count('\n') + 1))
+
+    # per-element properties are set at runtime, not declared in the sheet:
+    # app.js via setProperty, or an inline style attribute in the markup
+    for extra in (ROOT / 'site' / 'app.js', ROOT / 'site' / 'index.html'):
+        if not extra.exists():
+            continue
+        txt = extra.read_text(encoding='utf-8')
+        for m in re.finditer(r"setProperty\(\s*['\"](--[\w-]+)", txt):
+            declared.add(m.group(1))
+        for m in re.finditer(r'style="[^"]*?(--[\w-]+)\s*:', txt):
+            declared.add(m.group(1))
+
+    return sorted((name, where) for name, where in used.items() if name not in declared)
+
+
+def dead_declarations(paths):
+    """A declaration a later, identical selector always overrides.
+
+    `.state`'s border-radius was set four times — pill, then 0, then --r-xs,
+    then --r-btn. Only the last applied. Three dead declarations look like
+    intent, and get read as intent by the next person to open the file.
+
+    Compared only within ONE FILE, one media context, identical selector.
+    Two exclusions matter, and the first version of this check got both
+    wrong — it reported 472:
+
+    * base.css -> system.css is the ARCHITECTURE. system.css is concatenated
+      last precisely so it wins. Reporting those was reporting the design
+      layer for doing its job.
+    * `from`, `to`, `40%` are keyframe selectors. Different @keyframes reuse
+      them by definition and never override one another.
+    """
+    seen = {}
+    KEYFRAME_SEL = re.compile(r'(from|to|[\d.]+%)(\s*,\s*(from|to|[\d.]+%))*$')
+    for path in paths:
+        css = strip_comments(path.read_text(encoding='utf-8'))
+        media, media_depth, depth, in_kf, kf_depth = '', None, 0, False, None
+        for m in re.finditer(r'@[\w-]+[^{]*\{|([^{}]+)\{([^{}]*)\}|\}', css):
+            tok = m.group(0)
+            if tok.startswith('@'):
+                if tok.startswith('@keyframes'):
+                    in_kf, kf_depth = True, depth
+                elif tok.startswith('@media'):
+                    media, media_depth = ' '.join(tok[:-1].split()), depth
+                depth += 1
+                continue
+            if tok == '}':
+                depth -= 1
+                if kf_depth is not None and depth == kf_depth:
+                    in_kf, kf_depth = False, None
+                if media_depth is not None and depth == media_depth:
+                    media, media_depth = '', None
+                continue
+            sel = ' '.join((m.group(1) or '').split())
+            if not sel or sel.startswith('@') or in_kf or KEYFRAME_SEL.match(sel):
+                continue
+            line = css[:m.start()].count('\n') + 1
+            for d in (m.group(2) or '').split(';'):
+                if ':' not in d:
+                    continue
+                prop = d.split(':')[0].strip()
+                if not prop or prop.startswith('--'):
+                    continue
+                seen.setdefault((path.name, media, sel, prop), []).append(line)
+    return {k: v for k, v in seen.items() if len(v) > 1}
+
+
 def main():
     total = 0
     for name in ('src/css/system.css', 'src/css/base.css'):
@@ -181,6 +273,20 @@ def main():
     for name, line, sel in wipes:
         print(f'  {name}:{line}  {sel}')
     total += len(wipes)
+
+    missing = undefined_refs([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
+    print(f'\n=== var() references with no declaration: {len(missing)}')
+    for name, (f, line) in missing:
+        print(f'  {f}:{line}  var({name})')
+    total += len(missing)
+
+    dead = dead_declarations([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
+    n_dead = sum(len(v) - 1 for v in dead.values())
+    print(f'\n=== declarations overridden by an identical later selector: {n_dead}')
+    for (f0, media, sel, prop), lines in sorted(dead.items(), key=lambda x: -len(x[1]))[:14]:
+        m = f' @{media[:20]}' if media else ''
+        print(f'  {f0}{m}  {sel[:34]:<34} {prop:<15} lines {lines}')
+    total += n_dead
 
     print(f'\nTOTAL: {total}')
     return 0 if total == 0 else 1

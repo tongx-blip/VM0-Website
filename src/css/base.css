@@ -46,7 +46,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    bare eyebrow are not surfaces, so a radius would only blur them */
 .nav__logo,.nav__links,.nav__auth,.chip,
 .metrics li,.perms__list li{ border-radius:0; }
-.tag,.state,.pill-mini,.ws__badge{ border-radius:var(--r-pill); }
+.tag,.pill-mini,.ws__badge{ border-radius:var(--r-pill); }   /* .state's radius belongs to the design layer */
 .character img,.msg__av,.quote__av{ border-radius:50%; }
 
 /* ─────────────── display type ─────────────── */
@@ -99,8 +99,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   display:flex; align-items:center; justify-content:center; gap:16px;
   background:var(--ink); color:var(--paper);
   padding:10px var(--pad);
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
 }
 .announce a{ color:var(--accent); white-space:nowrap; }
 .announce a:hover{ text-decoration:underline; text-underline-offset:3px; }
@@ -143,7 +141,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-family:"IBM Plex Mono", ui-monospace, monospace;
   font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
   color:var(--ink-soft);
-  transition:color .16s, background .16s;
+  transition:color var(--t-hover), background var(--t-hover);
 }
 .nav__links a:hover{ color:var(--ink); background:var(--paper-2); }
 
@@ -168,7 +166,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-size:11.5px; font-weight:500;
   letter-spacing:.08em; text-transform:uppercase;
   cursor:pointer;
-  transition:background .18s, color .18s, transform .18s var(--ease);
+  transition:background var(--t-hover), color var(--t-hover), transform var(--t-hover) var(--ease);
 }
 .btn--sm{ padding:9px 16px; }
 .btn--lg{ padding:15px 26px; }
@@ -177,7 +175,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .btn--ghost{ background:transparent; color:var(--ink); }
 .btn--ghost:hover{ background:var(--ink); color:var(--paper); }
 .btn--ghost:hover img{ filter:brightness(0) invert(1); }
-.btn--ghost img{ width:15px; height:15px; transition:filter .18s; }
+.btn--ghost img{ transition:filter var(--t-hover); }
 
 /* ─────────────── panels: full-bleed, rule-separated ─────────────── */
 .panel{
@@ -238,7 +236,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   border:1px solid var(--hairline);
   background:var(--paper-2);
   padding:8px;
-  animation:bob 6s ease-in-out infinite;
+  animation:bob var(--t-drift) ease-in-out infinite;
 }
 .character figcaption{
   font-size:10px; letter-spacing:.20em;
@@ -364,7 +362,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   padding:6px 0;
   font-size:13px; color:var(--ink-soft);
   border-bottom:1px solid transparent;
-  transition:color .16s, border-color .16s;
+  transition:color var(--t-hover), border-color var(--t-hover);
 }
 .side__list li:hover{ color:var(--ink); border-bottom-color:var(--hairline); }
 .side__list li.is-active{
@@ -425,7 +423,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   margin-top:18px; padding:12px 14px;
   border:1px solid var(--rule);
   background:var(--paper); max-width:400px;
-  transition:background .2s, color .2s;
+  transition:background var(--t-hover), color var(--t-hover);
 }
 .artifact:hover{ background:var(--ink); color:var(--paper); }
 .artifact:hover .artifact__meta i,.artifact:hover .artifact__go{ color:rgb(var(--paper-rgb) / .65); }
@@ -503,10 +501,10 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;
   color:var(--ink-soft);
   white-space:nowrap;
-  transition:border-color .18s, color .18s;
+  transition:border-color var(--t-hover), color var(--t-hover);
 }
 .tag:hover{ border-color:var(--ink); color:var(--ink); }
-.tag img{ width:15px; height:15px; object-fit:contain; }
+.tag img{ object-fit:contain; }
 .tag__ic{ width:14px; height:14px; fill:none; stroke:var(--ink-soft); stroke-width:1.8; stroke-linecap:round; }
 
 /* the ladder — its layout, states and type live in the design layer */
@@ -552,7 +550,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   padding:28px 26px;
   border:1px solid var(--hairline);
   background:var(--paper);
-  transition:background .22s;
+  transition:background var(--t-hover);
 }
 .feat:hover{ background:var(--paper-2); }
 .feat h3{
@@ -583,7 +581,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   padding:16px;
   border:0; border-bottom:1px solid var(--hairline);
   background:var(--paper);
-  transition:background .2s;
+  transition:background var(--t-hover);
 }
 .access li:last-child{ border-bottom:0; }
 .access li:hover{ background:var(--paper-2); }
@@ -594,7 +592,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .state{
   margin-left:auto; font-style:normal;
   font-size:9.5px; letter-spacing:.10em; text-transform:uppercase;
-  padding:4px 9px; border-radius:0; border:1px solid currentColor;
+  padding:4px 9px; border:1px solid currentColor;
   white-space:nowrap;
 }
 .state--ok{   background:transparent; color:var(--ok);   }
@@ -612,7 +610,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-size:10.5px; letter-spacing:.10em; text-transform:uppercase;
   color:var(--ink-mute); margin-bottom:18px;
 }
-.vs__label img{ width:17px; height:17px; object-fit:contain; }
+.vs__label img{ object-fit:contain; }
 .vs__txt h3{
   font-family:inherit; font-weight:700;
   font-size:clamp(20px,2.1vw,27px);
@@ -810,15 +808,14 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .perms__title span{ color:var(--ink-mute); letter-spacing:.06em; }
 .perms__list li{
   display:grid;
-  grid-template-columns:26px minmax(0,1fr) auto auto;
   align-items:center; gap:14px;
   padding:15px 20px;
   border-bottom:1px solid var(--hairline);   /* a rule, so no radius */
-  transition:background .18s;
+  transition:background var(--t-hover);
 }
 .perms__list li:last-child{ border-bottom:0; }
 .perms__list li:hover{ background:#FAFAF8; }
-.perms__list img{ width:22px; height:22px; object-fit:contain; }
+.perms__list img{ object-fit:contain; }
 .perms__what{ display:flex; flex-direction:column; line-height:1.35; min-width:0; }
 .perms__what b{ font-size:14px; font-weight:600; letter-spacing:-.01em; }
 .perms__what i{ font-style:normal; font-size:12.5px; color:var(--ink-mute); }
@@ -832,7 +829,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 .state--off{ color:var(--ink-mute); border-color:var(--hairline); }
 @media (max-width:520px){
-  .perms__list li{ grid-template-columns:22px minmax(0,1fr) auto; }
+  .perms__list li{ }
   .perms__list code{ display:none; }
 }
 
@@ -843,7 +840,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    app carries an APP badge, as in the product. */
 .slackui{
   display:grid;
-  grid-template-columns:68px 208px minmax(0,1fr);
   border:1px solid var(--hairline);
   border-radius:var(--r-card);
   overflow:hidden;
@@ -979,23 +975,16 @@ ul,ol{ margin:0; padding:0; list-style:none; }
    two artifact cards on each side. */
 .scenes{ margin:clamp(44px,5vw,68px) 0 0; }
 .scenes__tabs{
-  display:flex; flex-wrap:wrap; gap:8px;
-  padding-bottom:18px;
-  border-bottom:1px solid var(--hairline);   /* a rule: stays square */
+  display:flex; flex-wrap:wrap;   /* a rule: stays square */
 }
 .scenes__tab{
-  border:1px solid var(--hairline);
-  border-radius:var(--r-btn);
-  background:var(--paper);
-  padding:9px 18px;
   font-family:"IBM Plex Mono", ui-monospace, monospace;
   font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
-  color:var(--ink-soft);
   cursor:pointer;
-  transition:background .18s, color .18s, border-color .18s;
+  transition:background var(--t-hover), color var(--t-hover), border-color var(--t-hover);
 }
-.scenes__tab:hover{ border-color:var(--ink-mute); color:var(--ink); }
-.scenes__tab.is-on{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+.scenes__tab:hover{ }
+.scenes__tab.is-on{ }
 
 .scenes__stage{ position:relative; margin-top:clamp(26px,3vw,40px); }
 .scene{ display:none; }
@@ -1045,14 +1034,14 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   color:var(--ink-soft);
 }
 /* published artifacts show the deliverable itself */
-.acard--thumb{ flex-direction:column; align-items:stretch; gap:10px; padding:10px 10px 12px; }
+.acard--thumb{ flex-direction:column; align-items:stretch; }
 .acard__img{
   width:100%; height:auto; display:block;
   border:1px solid var(--hairline);
   border-radius:10px;
   background:#fff;
 }
-.acard--thumb .acard__txt{ padding:0 4px; }
+.acard--thumb .acard__txt{ }
 .acard__txt{ display:flex; flex-direction:column; line-height:1.35; min-width:0; }
 .acard__txt b{ font-size:13.5px; font-weight:600; letter-spacing:-.01em; }
 .acard__txt i{
@@ -1352,7 +1341,7 @@ a.acard .acard__txt i{ color:var(--ink); }
   border-top:1px solid var(--hairline);
   font-size:13px; color:var(--ink-soft);
 }
-.wfstage .slackui{ min-height:400px; }
+.wfstage .slackui{ }
 
 /* ── panels redrawn from the real product screens ── */
 .absui__body--chat{ gap:18px; }
@@ -1545,7 +1534,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 
 /* the permission chips and state badges were left square — soften them
    to match every other control on the page */
-.state{ border-radius:8px; }
 .perms__list code{ border-radius:8px; }
 
 /* the model and connector marquees carry no rules */
@@ -1564,15 +1552,15 @@ a.acard .acard__txt i{ color:var(--ink); }
 .btn--ghost img{ width:20px; height:20px; }
 
 /* ── hero: the tail headline cycles through a few short statements ── */
-#rotator{ position:relative; }
-.rot{ display:none; }
-.rot.is-on{ display:block; animation:rotIn .5s var(--ease) both; }
+#rotator{ }
+.rot{ }
+.rot.is-on{ }
 @keyframes rotIn{
   from{ opacity:0; transform:translateY(9px); }
   to{ opacity:1; transform:none; }
 }
 @media (prefers-reduced-motion:reduce){
-  .rot.is-on{ animation:none; }
+  .rot.is-on{ }
 }
 
 
@@ -1711,7 +1699,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 
 /* the four threads, hung off one horizontal bus */
 .a2a__row{
-  position:relative;
   display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
   gap:14px;
   width:100%;
@@ -1759,9 +1746,7 @@ a.acard .acard__txt i{ color:var(--ink); }
 
 /* the line back up to the person who asked */
 .a2a__return{
-  display:block; width:1px; height:26px;
-  margin-top:22px;
-  background:var(--g-600);
+  display:block;
 }
 .a2a__back{
   margin-top:10px;
@@ -1769,7 +1754,7 @@ a.acard .acard__txt i{ color:var(--ink); }
 }
 
 @media (max-width:900px){
-  .a2a__row{ grid-template-columns:repeat(2, minmax(0,1fr)); row-gap:30px; }
+  .a2a__row{ grid-template-columns:repeat(2, minmax(0,1fr)); }
   .a2a__row::before{ left:25%; right:25%; }
   .a2a__card:nth-child(n+3)::before{ display:none; }
 }
@@ -1808,14 +1793,11 @@ a.acard .acard__txt i{ color:var(--ink); }
 /* the connector runs unbroken: the stem from Okou meets the bus with
    no caption in the middle, and the row label hangs off to one side */
 .a2a__stem--long{ height:56px; }
-.a2a__row{ position:relative; }
-.a2a__label{
-  position:absolute; top:-24px; left:0;
-  font-size:12.5px; color:var(--ink-mute);
-  text-align:left; list-style:none;
+.a2a__row{ }
+.a2a__label{ list-style:none;
 }
 @media (max-width:560px){
-  .a2a__label{ position:static; margin-bottom:14px; }
+  .a2a__label{ }
   .a2a__stem--long{ height:30px; }
 }
 /* the bus must stop exactly on the first and last drop, which sit at the

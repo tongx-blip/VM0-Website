@@ -302,7 +302,13 @@
   --q-card:     max(272px, calc((100% - 3 * var(--q-rail-gap)) / 3.5));
   --q-rail-gap: clamp(18px, 2.2vw, 32px);
 
-  --t-hover:  220ms;
+  --t-hover:  220ms;   /* every hover and state change on the page. It was
+                          .16s, .18s, .2s and .22s across nine components —
+                          four durations doing one job, which is exactly the
+                          spread a token exists to close. */
+  --t-exit:   300ms;   /* leaving is quicker than arriving */
+  --t-word:   9ms;     /* per word, when a phrase staggers out */
+  --t-drift:  6s;      /* an ambient loop that never resolves */
   --t-press:  120ms;
   --t-state:  420ms;
   --t-reveal: 640ms;
@@ -402,7 +408,6 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 :focus-visible{
   outline:2px solid var(--accent);
   outline-offset:3px;
-  border-radius:2px;
 }
 
 /* radius policy, restated in one place */
@@ -824,8 +829,8 @@ h3{ font-family:var(--fd); }
              transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
-.btn--sm{ padding:10px calc(16px - .085em) 10px 16px; }
-.btn--lg{ padding:15px calc(24px - .085em) 15px 24px; }
+.btn--sm{ }
+.btn--lg{ }
 .btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink); }
 .btn--dark:hover{
   /* the fill does not change on hover: any brighter orange drops white
@@ -856,7 +861,6 @@ h3{ font-family:var(--fd); }
   padding:clamp(78px, 7.6vw, 124px) var(--edge);
   background:var(--paper);
   border:0;
-  border-top:1px solid var(--hairline);
   overflow:visible;
 }
 /* ── THE COMPOSITION RULE ────────────────────────────────────────
@@ -1253,17 +1257,13 @@ h3{ font-family:var(--fd); }
   background:transparent;
 }
 .metrics li{ padding:0; border:0; background:transparent; }
-.metrics b{
-  display:block;
-  font-family:var(--fd); font-weight:500;
+.metrics b{ font-weight:500;
   font-size:var(--t-d2); line-height:1;
-  letter-spacing:-.045em; color:var(--ink) !important;
+  letter-spacing:-.045em;
   font-variant-numeric:tabular-nums;
 }
 .metrics span{
   display:block; margin-top:12px;
-  font-size:var(--t-mono); letter-spacing:.1em;
-  color:var(--ink-mute);
 }
 
 /* ─────────────── 12. what Okou reaches ───────────────
@@ -1320,8 +1320,8 @@ h3{ font-family:var(--fd); }
 .reach__line.is-on .w{ opacity:1; transform:none; }
 .reach__line.is-out .w{
   opacity:0; transform:translateY(-.34em);
-  transition-duration:300ms;
-  transition-delay:calc(var(--wi, 0) * 9ms);
+  transition-duration:var(--t-exit);
+  transition-delay:calc(var(--wi, 0) * var(--t-word));
 }
 /* here the phrase is already orange as it rises — no warm-up, no
    weight change, so the words never reflow */
@@ -2705,7 +2705,6 @@ h3{ font-family:var(--fd); }
   background:var(--band); color:rgb(var(--paper-rgb) / .72);
   border-top:0;
   padding-top:clamp(88px,8vw,132px);
-  padding-bottom:clamp(52px,4.6vw,78px);
 }
 .panel--cta .chip{ color:rgb(var(--paper-rgb) / .6); }
 .panel--cta .display{ color:var(--paper-ink); }
@@ -3638,7 +3637,7 @@ h3{ font-family:var(--fd); }
   flex:none; padding:8px 8px 8px 12px;
   background:var(--paper);
 }
-.tplwin__bar i{ width:8px; height:8px; }
+.tplwin__bar i{ }
 .tplwin__bar i{ width:8px; height:8px; border-radius:50%; background:var(--wash-2); }
 .tplwin__bar i:first-child{ background:var(--accent); }
 .tplwin__url{
@@ -3796,7 +3795,7 @@ h3{ font-family:var(--fd); }
     grid-template-rows:none; grid-template-columns:1fr 1fr;
   }
   .ochat{ order:1; min-height:clamp(360px, 62vw, 470px); }
-  .tplwin{ order:3; height:clamp(340px, 58vw, 460px); }
+  .tplwin{ order:3; }
   .ocard{ min-height:0; }
 
   /* one column: the product, then the same right-hand block underneath it,

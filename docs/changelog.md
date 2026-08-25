@@ -6,6 +6,77 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the 54 token findings, 42 of which were my own tool
+
+Asked to clear the list `tools/tokens.py` was reporting. The first useful
+result was that **most of it was not real**:
+
+* **Product mocks' motion was being reported.** The mock exemption applied
+  to colour and radius but not to duration or easing, so `.vsui`'s
+  `2400ms cubic-bezier(.33,0,.66,1)` — which *is* the product's
+  RunningIndicator, copied out of `globals.css` — counted as a violation.
+  The mock list was also missing `ochat`, `oresult` and the three `flow*`
+  families.
+* **The reduced-motion kill switch was being reported.** `.01ms !important`
+  is not a duration, it means "effectively zero", and a token would hide
+  that.
+
+Corrected: **54 → 12**.
+
+### The twelve
+
+**Nine of them were one problem.** Hover and state feedback was running at
+`.16s`, `.18s`, `.2s` and `.22s` across nine components — four durations
+doing one job, which is the exact spread a token exists to close. All now
+`--t-hover` (220ms). Three new tokens for values that had none: `--t-exit`
+(300ms, leaving is quicker than arriving), `--t-word` (9ms, per-word
+stagger) and `--t-drift` (6s, an ambient loop).
+
+The focus ring on images carried `border-radius:2px`. An `outline` already
+follows the element's own radius; the 2px was overriding that, not
+providing it. Deleted.
+
+### A token that did not exist
+
+Adding `var(--t-drift)` to `base.css` before declaring it in `system.css`
+left the drift animation with an invalid duration, so the browser dropped
+the whole declaration and the character simply stopped moving. Nothing in
+the visual gate can see that — the element is still there, still correct,
+just still. `tools/tokens.py` now reports any bare `var(--x)` with no
+declaration, skipping ones with a fallback and ones set at runtime from
+`app.js` or an inline style. Verified by removing `--t-drift` again: it
+prints `base.css:241 var(--t-drift)`.
+
+### Thirty-three dead declarations
+
+`.state`'s border-radius was set **four times** — `--r-pill`, then `0`,
+then `--r-xs`, then `--r-btn`. Only the last ever applied. Three dead
+declarations that read as intent.
+
+A new check reports any declaration an identical later selector always
+overrides. Its first version said **472**, and was wrong twice: `from`,
+`to` and `40%` are keyframe selectors that different `@keyframes` reuse by
+definition, and `base.css → system.css` is the *architecture* — system is
+concatenated last precisely so it wins. Narrowed to one file, one media
+context, identical selector: **65**, then 13 more in `system.css`. All 33
+removed.
+
+**Proved, not assumed.** Computed styles for 1682 elements across 30
+properties, before and after. The first comparison showed 11 elements
+differing — every one of them an animating element sampled at a different
+moment. With `getAnimations()` paused at `currentTime = 0`: **0
+differing**. The built stylesheet is 205,030 bytes against 208,193.
+
+### Also
+
+A compiled `tools/__pycache__/*.pyc` was tracked in git. Untracked, and
+`__pycache__/` and `*.pyc` added to `.gitignore`.
+
+All five checks now report 0: literals, the `background` shorthand,
+undefined `var()`, dead declarations, and duplicate `var` names in the one
+IIFE.
+
+
 ## 2026-08-25 · the tab reel stopped moving, and I broke it
 
 Tong: *"the content below switches on its own, but the tab doesn't move
