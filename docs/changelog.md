@@ -6,6 +6,54 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · control, designed this time
+
+Tong: *"you implemented the logic I described, but the design is terrible.
+We have talked about so many skills — did you use any of them?"*
+
+No. I built the mechanism and shipped it without a design pass. Named
+against `microsoft/frontend-design-review`'s format:
+
+* **Blocking** — the stage was a white window on a white panel, so it had
+  no edge at all and read as loose content rather than a screen. Every
+  other mock on this page sits on a tinted band (`.vs__viz` and its
+  `--vs-tint`); this one got nothing.
+* **Blocking** — no progress feedback. Five beats and nothing said which
+  one you were in or that there were five.
+* **Major** — the step heading was `--t-h`, the same size as a card title,
+  adrift in a half-empty column.
+* **Major** — no composition. The stage top-aligned at the section top
+  while the first step centred in its own 62vh box, leaving a screen of
+  void under the lede.
+* **Minor** — `anthropics/skills` frontend-design says spend your boldness
+  in one place. I spread it evenly over five equal fades, which is the
+  same as spending it nowhere.
+
+### What changed
+
+**A ground under the product surface.** The window now sits on a frame
+tinted with `--hue-engineering` at 7%, the same device `.vs__viz` uses, so
+it belongs to the page rather than to this section.
+
+**Five marks, and they earn their place.** They encode which of five
+moments this is and that there are five, which is the only justification a
+structural device gets. Marks, not a rule — this page does not draw lines.
+
+**The heading became a statement** — `--fd` at `--t-d3`, and the size never
+changes between states, only the colour, because a size change on scroll
+reflows text under the reader's eye.
+
+**The boldness is spent on beat 3.** Four of the five claims have a real
+product screen behind them; isolated execution has none, because a microVM
+has no UI. So that beat gets the section's one big gesture — the window
+pulls back and an accent boundary closes around it with its tag — and
+everything else stays quiet, which is what makes it land.
+
+Motion was already inside `bertbertson/premium-microinteractions`' bands:
+`--e-out` is `cubic-bezier(.16,1,.3,1)`, its "premium" curve, and every
+beat animates opacity/translate/scale only.
+
+
 ## 2026-08-25 · control becomes one run, and the footer stops scattering
 
 ### The control section

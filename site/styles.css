@@ -3380,60 +3380,106 @@ h3{ font-family:var(--fd); }
 
 /* ─────────────── 14. control, versus, proof: one card language ─────── */
 /* ── control: one run, told once ─────────────────────────────────────
-   The five claims in this section are not five features — they are five
-   moments in the life of ONE run, in order: what it may do, what it must
-   ask for, where it runs, how its credentials get attached, and what it
-   leaves behind. So the stage does not swap between five screens the way
-   the workflow ladder above does; it is one window that PROGRESSES, with
-   each beat adding a layer to the same surface.
+   The five claims are five moments in the life of ONE run, in order: what
+   it may do, what it must ask for, where it runs, how its credentials are
+   attached, what it leaves behind. So the stage does not swap between five
+   screens the way the workflow ladder above does — it is one window that
+   PROGRESSES, and each beat adds a layer to the same surface. That is the
+   whole reason this is not a second ladder: the ladder swaps panels, this
+   accumulates on one.
 
-   That distinction is the whole reason this is not a second ladder. The
-   ladder swaps panels; this accumulates on one. */
+   THE BOLDNESS IS SPENT IN ONE PLACE — beat 3. Four of the five claims
+   have a real product screen behind them; isolated execution has none,
+   because a microVM has no UI. So that is the beat that gets the section's
+   one big gesture: the window pulls back and an accent boundary closes
+   around it. Everything else stays quiet, which is what makes it land. */
 .ctrl{
-  display:grid; grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);
-  gap:clamp(28px,3.6vw,72px);
-  margin-top:clamp(48px,5.5vw,80px);
+  display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+  gap:clamp(28px,3.4vw,64px);
+  margin-top:clamp(40px,4.4vw,64px);
   align-items:start;
 }
 
-.ctrl__stage{
-  position:sticky; top:calc(var(--nav-h) + clamp(24px,3vw,52px));
+.ctrl__stage{ position:sticky; top:calc(var(--nav-h) + clamp(20px,2.6vw,40px)); }
+
+
+/* A GROUND UNDER THE PRODUCT SURFACE. Without it the window was white on
+   the panel's white and had no edge at all — it read as loose content
+   rather than a screen. Same device every other mock on this page uses
+   (.vs__viz and its --vs-tint), so it belongs to the page rather than to
+   this section. */
+.ctrl__frame{
+  position:relative; isolation:isolate;
+  padding:clamp(20px,2.4vw,36px);
+  border-radius:var(--r-lg);
+  background:color-mix(in srgb, var(--hue-engineering) 7%, var(--tile));
 }
 
 .ctrl__win{
-  position:relative; isolation:isolate;
-  border-radius:var(--r-lg);
-  transition:transform var(--t-state) var(--e-out);
+  position:relative;
+  transition:transform var(--t-state) var(--e-out),
+             filter var(--t-state) var(--e-out);
 }
 
-/* beat 3 pulls the whole window back a touch so the boundary reads as
-   something drawn AROUND it rather than another panel inside it */
-.ctrl__win[data-beat="3"]{ transform:scale(.965); }
+.ctrl__frame[data-beat="3"] .ctrl__win{ transform:scale(.94); }
 
 
-/* the steps. Each needs its own scroll moment, so they are spaced by
-   viewport height rather than by a fixed gap — a step that shares the
-   screen with the next one never gets a beat of its own. */
+/* the five marks. They encode something true — which of five moments this
+   is, and that there are five — which is the only reason a structural
+   device earns its place. Marks, not a rule: this page does not draw
+   lines. */
+.ctrl__index{
+  display:flex; gap:6px; margin:clamp(16px,1.8vw,24px) 0 0; padding:0;
+  list-style:none;
+}
+
+.ctrl__index li{
+  height:3px; flex:1; border-radius:var(--r-pill);
+  background:rgb(var(--ink-rgb) / .10);
+  transition:background var(--t-state) var(--e-out);
+}
+
+.ctrl__frame[data-beat="1"] .ctrl__index li:nth-child(-n+1),
+.ctrl__frame[data-beat="2"] .ctrl__index li:nth-child(-n+2),
+.ctrl__frame[data-beat="3"] .ctrl__index li:nth-child(-n+3),
+.ctrl__frame[data-beat="4"] .ctrl__index li:nth-child(-n+4),
+.ctrl__frame[data-beat="5"] .ctrl__index li:nth-child(-n+5){
+  background:var(--accent-solid);
+}
+
+
+/* ── the steps ──────────────────────────────────────────────────────
+   The first one is pushed down so its statement sits on the stage's
+   optical centre rather than at the top of the section, which is what
+   left a screen of void under the lede. */
 .ctrl__steps{ display:flex; flex-direction:column; }
 
 .ctrl__step{
-  min-height:62vh; display:flex; flex-direction:column; justify-content:center;
+  min-height:54vh; display:flex; flex-direction:column; justify-content:center;
   padding:clamp(10px,1.4vw,20px) 0;
 }
 
-/* NOT opacity. The first version rested these at .34 and axe was right to
-   fail it: all five steps are read on the way past, so none of them may
-   drop under the contrast floor. The step stands down by COLOUR instead,
-   between two values that both pass — --ink-mute is the lightest text this
-   page allows anywhere. */
+.ctrl__step:first-child{ padding-top:clamp(30px,12vh,150px); }
+
+.ctrl__step:last-child{ padding-bottom:clamp(30px,10vh,120px); }
+
+/* A STATEMENT, not a card title. At --t-h these read as body copy adrift
+   in a half-empty column. The size never changes between states — only
+   the colour — because a size change on scroll reflows the text under the
+   reader's eye. */
 .ctrl__step h3{
-  font-size:var(--t-h); font-weight:500; letter-spacing:-.02em;
-  margin-bottom:10px; color:var(--ink-mute);
+  font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
+  letter-spacing:-.028em; line-height:1.14;
+  margin-bottom:14px; color:var(--ink-mute);
   transition:color var(--t-state) var(--e-out);
 }
 
+/* NOT opacity. The first version rested these at .34 and axe was right to
+   fail it: all five are read on the way past, so none may drop under the
+   contrast floor. They stand down by colour, between two values that both
+   pass — --ink-mute is the lightest text this page allows anywhere. */
 .ctrl__step p{
-  font-size:var(--t-sm); line-height:1.65; color:var(--ink-mute); max-width:46ch;
+  font-size:var(--t-body); line-height:1.62; color:var(--ink-mute); max-width:42ch;
   transition:color var(--t-state) var(--e-out);
 }
 
@@ -3443,57 +3489,57 @@ h3{ font-family:var(--fd); }
 
 
 /* ── the layers ─────────────────────────────────────────────────────
-   All four sit over the same window and are keyed off one attribute, so
-   the stage has exactly one source of truth for what it is showing. */
+   All four sit over the same window, keyed off one attribute, so the
+   stage has exactly one source of truth for what it is showing. */
 .cbox,.cgate,.cnet,.ctrail{
   position:absolute; z-index:2;
   opacity:0; pointer-events:none;
   transition:opacity var(--t-state) var(--e-out),
-             translate var(--t-state) var(--e-out);
+             translate var(--t-state) var(--e-out),
+             scale var(--t-state) var(--e-out);
 }
 
-.perms{ transition:opacity var(--t-state) var(--e-out), filter var(--t-state) var(--e-out); }
+.perms{ transition:opacity var(--t-state) var(--e-out); }
 
 /* whichever layer is up, the list behind it stands down rather than
-   disappearing — the point of every beat is that it happens TO the list */
-.ctrl__win[data-beat="2"] .perms,
-.ctrl__win[data-beat="4"] .perms{ opacity:.34; }
+   disappearing — every beat happens TO the list */
+.ctrl__frame[data-beat="2"] .perms,
+.ctrl__frame[data-beat="4"] .perms{ opacity:.3; }
 
-.ctrl__win[data-beat="5"] .perms{ opacity:0; }
+.ctrl__frame[data-beat="5"] .perms{ opacity:0; }
 
 
-/* 3 · the sandbox boundary. Abstract on purpose: a microVM has no screen,
-   and it is the one claim here the product cannot photograph. */
+/* 3 · the boundary. The section's one big gesture. */
 .cbox{
-  inset:calc(-1 * clamp(14px,1.6vw,26px));
-  border-radius:calc(var(--r-lg) + clamp(14px,1.6vw,26px));
-  box-shadow:inset 0 0 0 1.5px rgb(var(--accent-rgb) / .38);
-  translate:0 0;
+  inset:calc(-1 * clamp(11px,1.3vw,20px));
+  border-radius:calc(var(--r-lg) + clamp(11px,1.3vw,20px));
+  box-shadow:inset 0 0 0 2px rgb(var(--accent-rgb) / .5);
+  scale:1.03;
 }
 
 .cbox i{
   position:absolute; top:calc(-1 * clamp(9px,1vw,12px)); left:clamp(16px,2vw,28px);
-  padding:2px calc(9px - .06em) 2px 9px; border-radius:var(--r-pill);
-  background:var(--paper); color:var(--accent-wash);
+  padding:3px calc(10px - .06em) 3px 10px; border-radius:var(--r-pill);
+  background:var(--accent-solid); color:var(--paper-ink);
   font-family:var(--fm); font-style:normal; font-size:var(--t-mono); letter-spacing:.09em;
 }
 
-.ctrl__win[data-beat="3"] .cbox{ opacity:1; }
+.ctrl__frame[data-beat="3"] .cbox{ opacity:1; scale:1; }
 
 
 /* 2 · the approval gate, read out of views/permission-allow */
 .cgate{
-  left:50%; top:50%; translate:-50% -46%;
-  width:min(92%, 380px);
+  left:50%; top:50%; translate:-50% -44%;
+  width:min(92%, 372px);
   padding:clamp(18px,2vw,26px);
   border-radius:var(--r-card);
   background:var(--paper); color:var(--ink);
   box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
 }
 
-.ctrl__win[data-beat="2"] .cgate{ opacity:1; translate:-50% -50%; }
+.ctrl__frame[data-beat="2"] .cgate{ opacity:1; translate:-50% -50%; }
 
-.cgate__t{ font-size:var(--t-lead); line-height:1.35; margin:0 0 16px; }
+.cgate__t{ font-size:var(--t-lead); line-height:1.32; margin:0 0 16px; }
 
 .cgate__t b{ font-weight:600; }
 
@@ -3526,15 +3572,15 @@ h3{ font-family:var(--fd); }
 
 /* 4 · the network log, read out of okou-page/components/network-content */
 .cnet{
-  left:clamp(14px,2vw,26px); right:clamp(14px,2vw,26px); bottom:clamp(14px,2vw,26px);
-  translate:0 12px;
+  left:clamp(12px,1.6vw,22px); right:clamp(12px,1.6vw,22px); bottom:clamp(12px,1.6vw,22px);
+  translate:0 14px;
   padding:clamp(14px,1.6vw,20px);
   border-radius:var(--r-card);
   background:var(--paper);
   box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
 }
 
-.ctrl__win[data-beat="4"] .cnet{ opacity:1; translate:0 0; }
+.ctrl__frame[data-beat="4"] .cnet{ opacity:1; translate:0 0; }
 
 .cnet__h,.ctrail__h{
   margin:0 0 12px; font-family:var(--fm); font-size:var(--t-mono);
@@ -3559,15 +3605,15 @@ h3{ font-family:var(--fd); }
 
 /* 5 · what the run left behind */
 .ctrail{
-  left:clamp(14px,2vw,26px); right:clamp(14px,2vw,26px); top:clamp(14px,2vw,26px);
-  translate:0 12px;
+  left:clamp(12px,1.6vw,22px); right:clamp(12px,1.6vw,22px); top:clamp(12px,1.6vw,22px);
+  translate:0 14px;
   padding:clamp(16px,1.8vw,24px);
   border-radius:var(--r-card);
   background:var(--paper);
   box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
 }
 
-.ctrl__win[data-beat="5"] .ctrail{ opacity:1; translate:0 0; }
+.ctrl__frame[data-beat="5"] .ctrail{ opacity:1; translate:0 0; }
 
 .ctrail__r{
   display:flex; align-items:center; gap:12px; margin:0; padding:9px 0;
@@ -3587,7 +3633,7 @@ h3{ font-family:var(--fd); }
 
 
 @media (prefers-reduced-motion:reduce){
-  .cbox,.cgate,.cnet,.ctrail,.perms,.ctrl__win{ transition:none; }
+  .cbox,.cgate,.cnet,.ctrail,.perms,.ctrl__win,.ctrl__step h3,.ctrl__step p{ transition:none; }
 
 }
 
@@ -3598,16 +3644,39 @@ h3{ font-family:var(--fd); }
 
   .ctrl__step{ min-height:0; }
 
+  .ctrl__step:first-child{ padding-top:clamp(20px,3vw,32px); }
+
   .ctrl__step h3{ color:var(--ink); }
 
   .ctrl__step p{ color:var(--ink-soft); }
 
 }
-.vs,.quote{
+
+}
+.feat,.vs,.quote{
   border:0;
   background:var(--paper);
 }
-
+.feat{
+  box-shadow:var(--e-1);
+  transition:transform var(--t-hover) var(--e-snap),
+             box-shadow var(--t-hover) var(--e-snap);
+}
+/* .vs and .quote are NOT here. Neither set is clickable, and a lift on
+   hover promises a click that does not exist — a worse lie than no
+   feedback at all. .quote also drops the resting shadow: the supplied
+   design is a fill and nothing else, and a #F6F6F6 card already separates
+   from a white section without one. */
+.feat:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--e-hover);
+}
+.feat{
+  flex:1; padding:26px 24px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.feat h3{ font-size:var(--t-h); font-weight:500; letter-spacing:-.02em; margin-bottom:9px; color:var(--ink); }
+.feat p{ font-size:var(--t-sm); line-height:1.6; color:var(--ink-soft); }
 
 /* ── the arrangement ─────────────────────────────────────────────────
    NOT A 2x2. Four equal rectangles in a quadrant is the arrangement that
@@ -3636,12 +3705,9 @@ h3{ font-family:var(--fd); }
   margin-top:clamp(48px,5.5vw,80px);
 }
 
-
 .vs--wide  { grid-column:span 7; }
 
-
 .vs--narrow{ grid-column:span 5; }
-
 
 /* ── the comparison cards ────────────────────────────────────────────
    Each card compares Okou with one alternative, so BOTH marks are on it.
@@ -3662,7 +3728,6 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-lg);
   box-shadow:none;
 }
-
 
 
 /* the media band: an oversized crop of a real product surface */
@@ -3699,20 +3764,15 @@ h3{ font-family:var(--fd); }
   --t-caret:#4A545E;
 }
 
-
 .vs__viz--parallel{ --vs-hue:var(--hue-engineering); }
-
 
 .vs__viz--artifact{ --vs-hue:var(--hue-product); }
 
-
 .vs__viz--shared  { --vs-hue:var(--hue-leadership); }
-
 
 /* second row sits shorter than the first — the height difference is
    between rows, never inside one */
 .versus > :nth-child(n+3) .vs__viz{ height:clamp(178px, 17vw, 216px); }
-
 
 
 /* ── the four devices ────────────────────────────────────────────────
@@ -3736,7 +3796,6 @@ h3{ font-family:var(--fd); }
    cards floating in a tinted box */
 .lanes{ display:flex; align-items:stretch; gap:10px; width:calc(100% + 74px); height:100%; }
 
-
 .lane{
   flex:0 0 29%;
   display:flex; flex-direction:column;
@@ -3745,39 +3804,30 @@ h3{ font-family:var(--fd); }
   font-family:var(--fb); color:var(--p-fg);
 }
 
-
 .lane__h{ display:flex; align-items:center; gap:8px; margin-bottom:9px; }
 
-
 .lane__h img{ width:20px; height:20px; border-radius:6px; object-fit:cover; object-position:top; }
-
 
 .lane__h span{
   font-family:var(--fm); font-size:10px; letter-spacing:.04em;
   color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-
 .lane__t{ font-size:13px; line-height:1.35; margin:0 0 10px; }
-
 
 .lane__s{
   display:flex; align-items:center; gap:8px;
   font-size:11px; color:var(--p-mute); padding:3px 0;
 }
 
-
 .lane__s .vsui__ind{ width:.7rem; height:.7rem; flex:none; }
 
-
 .lane__s em{ font-style:normal; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-
 
 .lane__done{
   width:.7rem; height:.7rem; flex:none; border-radius:50%;
   background:var(--p-line);
 }
-
 
 
 /* B — ChatGPT: "Does the work, not just the thinking."
@@ -3790,55 +3840,42 @@ h3{ font-family:var(--fd); }
    receipt across the numbers it is vouching for rather than under them. */
 .arti{ position:relative; width:calc(100% + 22px); height:100%; }
 
-
 .arti__win{
   border-radius:var(--p-r-card); overflow:hidden;
   border:1px solid var(--p-border); background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
 }
 
-
 .arti__bar{
   display:flex; align-items:center; gap:7px;
   padding:7px 10px; border-bottom:1px solid var(--p-border);
 }
 
-
 .arti__bar i{ width:7px; height:7px; border-radius:50%; background:var(--p-line); flex:none; }
-
 
 .arti__url{
   margin-left:4px; font-family:var(--fm); font-size:10px;
   color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-
 .arti__body{ padding:10px 12px 12px; }
-
 
 .arti__h{ font-size:13px; font-weight:600; margin:0 0 8px; }
 
-
 .arti__stats{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-bottom:10px; }
-
 
 .arti__s{ padding:7px 8px; border-radius:var(--p-r-item); background:var(--p-tint); }
 
-
 .arti__s b{ display:block; font-size:14px; font-weight:600; line-height:1.2; }
-
 
 .arti__s span{ font-family:var(--fm); font-size:9px; color:var(--p-mute); }
 
-
 .arti__chart{ display:flex; align-items:flex-end; gap:6px; height:34px; margin:0; }
-
 
 .arti__chart i{
   flex:1; border-radius:3px 3px 0 0; background:var(--p-run); opacity:.72;
   height:var(--h); transform-origin:50% 100%;
 }
-
 
 /* LEFT, not right. At right:-16px it landed across the stat tiles and
    the chart and lost its own last row off the card edge — the same deep
@@ -3854,19 +3891,15 @@ h3{ font-family:var(--fd); }
    three steps readable; the window behind it does the bleeding. */
 .arti__rows{ margin-top:11px; }
 
-
 .arti__rows p{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
   margin:0; padding:5px 0; font-size:11px; line-height:1.3;
   border-top:1px solid var(--p-line);
 }
 
-
 .arti__rows span{ color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-
 .arti__rows b{ color:var(--p-fg); font-weight:500; flex:none; }
-
 
 .arti__trail{
   position:absolute; left:-12px; bottom:-2px; width:56%;
@@ -3877,24 +3910,19 @@ h3{ font-family:var(--fd); }
   font-family:var(--fb);
 }
 
-
 .arti__trail p{
   display:flex; align-items:center; gap:8px; margin:0; padding:2px 0;
   font-size:11px; line-height:1.3; color:var(--p-mute);
 }
 
-
 .arti__trail p b{ color:var(--p-fg); font-weight:400; }
-
 
 .arti__tick{
   width:12px; height:12px; flex:none; border-radius:50%;
   background:var(--p-tint); display:grid; place-items:center;
 }
 
-
 .arti__tick svg{ width:8px; height:8px; stroke:var(--p-run); }
-
 
 
 /* D — Claude Code: "Built for shared work, not one terminal."
@@ -3903,7 +3931,6 @@ h3{ font-family:var(--fd); }
    theme break — and the shared surface then overlaps and outranks it,
    which is the sentence. */
 .tsh{ position:relative; width:100%; height:100%; }
-
 
 /* the terminal is the one that runs off the frame, pushed back past the
    left edge. The shared surface must NOT bleed: its timestamps and
@@ -3923,21 +3950,15 @@ h3{ font-family:var(--fd); }
   color:var(--t-dim);
 }
 
-
 .tsh__term i{ display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--t-caret); margin-right:5px; }
-
 
 .tsh__term p{ margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-
 .tsh__term p:first-of-type{ margin-top:7px; }
-
 
 .tsh__term b{ color:var(--t-lit); font-weight:400; }
 
-
 .tsh__cur{ display:inline-block; width:5px; height:11px; background:var(--t-caret); vertical-align:-1px; }
-
 
 .tsh__share{
   position:absolute; right:10px; top:58px; width:66%;
@@ -3947,7 +3968,6 @@ h3{ font-family:var(--fd); }
              0 16px 30px -16px rgb(var(--ink-rgb) / .38);
   font-family:var(--fb); color:var(--p-fg);
 }
-
 
 
 /* ── how the set behaves ─────────────────────────────────────────────
@@ -3965,55 +3985,38 @@ h3{ font-family:var(--fd); }
    allowed to be a performance, an idle is not. */
 .arti__chart i{ transform:scaleY(.08); transition:transform .62s var(--e-out); }
 
-
 .vs.is-in .arti__chart i{ transform:scaleY(1); }
-
 
 .arti__chart i:nth-child(1){ transition-delay:.10s }
 
-
 .arti__chart i:nth-child(2){ transition-delay:.16s }
-
 
 .arti__chart i:nth-child(3){ transition-delay:.22s }
 
-
 .arti__chart i:nth-child(4){ transition-delay:.28s }
-
 
 .arti__chart i:nth-child(5){ transition-delay:.34s }
 
-
 .arti__chart i:nth-child(6){ transition-delay:.40s }
-
 
 .arti__chart i:nth-child(7){ transition-delay:.46s }
 
-
 .arti__trail{ opacity:0; translate:0 10px; transition:opacity .5s var(--e-out) .5s, translate .5s var(--e-out) .5s; }
-
 
 .vs.is-in .arti__trail{ opacity:1; translate:0 0; }
 
 
-
 .tsh__share .vsui__faces img{ opacity:0; translate:-7px 0; transition:opacity .42s var(--e-out), translate .42s var(--e-out); }
-
 
 .vs.is-in .tsh__share .vsui__faces img{ opacity:1; translate:0 0; }
 
-
 .tsh__share .vsui__faces img:nth-child(1){ transition-delay:.14s }
-
 
 .tsh__share .vsui__faces img:nth-child(2){ transition-delay:.22s }
 
-
 .tsh__share .vsui__faces img:nth-child(3){ transition-delay:.30s }
 
-
 .tsh__share .vsui__faces img:nth-child(4){ transition-delay:.38s }
-
 
 
 /* the three lanes are meant to read as SIMULTANEOUS, so they stay close
@@ -4021,10 +4024,8 @@ h3{ font-family:var(--fd); }
 .lane:nth-child(2) .vsui__ind-c,
 .lane:nth-child(2) .vsui__ind-r{ animation-delay:-.32s }
 
-
 .lane:nth-child(3) .vsui__ind-c,
 .lane:nth-child(3) .vsui__ind-r{ animation-delay:-.64s }
-
 
 
 @media (prefers-reduced-motion:reduce){
@@ -4037,13 +4038,11 @@ h3{ font-family:var(--fd); }
 
 }
 
-
 .vsui__r{
   display:flex; align-items:center; gap:14px;
   padding:8px 8px 8px 4px;
   border-radius:var(--p-r-item);
 }
-
 
 .vsui__av{
   width:32px; height:32px; flex:none;
@@ -4051,25 +4050,20 @@ h3{ font-family:var(--fd); }
   object-fit:cover; object-position:top;
 }
 
-
 .vsui__t{
   flex:1; min-width:0;
   font-size:14px; line-height:1.3;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-
 .vsui__meta{ margin-left:auto; display:flex; align-items:center; gap:10px; flex:none; }
 
-
 .vsui__meta em{ font-style:normal; font-size:12px; color:var(--p-mute); white-space:nowrap; }
-
 
 /* w-3.5, and the product's own comment says why: it fits the widest
    indicator so the timestamp never shifts between a running row and a
    finished one */
 .vsui__slot{ display:flex; width:14px; flex:none; justify-content:center; }
-
 
 
 .vsui__ind{
@@ -4078,12 +4072,10 @@ h3{ font-family:var(--fd); }
   color:var(--p-run);
 }
 
-
 .vsui__ind-c,.vsui__ind-r{
   position:absolute; top:50%; left:50%;
   border-radius:inherit; transform-origin:center;
 }
-
 
 .vsui__ind-c{
   width:calc(100% - 5px); height:calc(100% - 5px);
@@ -4092,7 +4084,6 @@ h3{ font-family:var(--fd); }
   animation:vsRunCentre 2400ms cubic-bezier(.33,0,.66,1) infinite;
 }
 
-
 .vsui__ind-r{
   width:calc(100% - 3px); height:calc(100% - 3px);
   border:1px solid currentColor;
@@ -4100,19 +4091,21 @@ h3{ font-family:var(--fd); }
   animation:vsRunRipple 2400ms ease-out infinite;
 }
 
-
 @keyframes vsRunCentre{
   0%,100%{ transform:translate(-50%,-50%) scale(.64); opacity:.34 }
-  52%    { transform:translate(-50%,-50%) scale(.88); opacity:.52 }
-}
 
+  52%    { transform:translate(-50%,-50%) scale(.88); opacity:.52 }
+
+}
 
 @keyframes vsRunRipple{
   0%,45% { transform:translate(-50%,-50%) scale(.8);   opacity:0 }
-  52%    { transform:translate(-50%,-50%) scale(.8);   opacity:.34 }
-  100%   { transform:translate(-50%,-50%) scale(1.56); opacity:0 }
-}
 
+  52%    { transform:translate(-50%,-50%) scale(.8);   opacity:.34 }
+
+  100%   { transform:translate(-50%,-50%) scale(1.56); opacity:0 }
+
+}
 
 @media (prefers-reduced-motion:reduce){
   .vsui__ind-c,.vsui__ind-r{ animation:none; }
@@ -4120,21 +4113,17 @@ h3{ font-family:var(--fd); }
 
 }
 
-
 .vsui__faces{ display:flex; align-items:center; margin:0 0 6px 50px; }
-
 
 .vsui__faces img{
   width:24px; height:24px; border-radius:50%;
   margin-right:-6px; box-shadow:0 0 0 2px var(--p-card);
 }
 
-
 .vsui__faces em{
   margin-left:16px; font-style:normal;
   font-size:12px; color:var(--p-mute); white-space:nowrap;
 }
-
 
 
 /* ── the connector hub ──────────────────────────────────────────────
@@ -4173,7 +4162,6 @@ h3{ font-family:var(--fd); }
           mask-image:radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
 }
 
-
 .hub{
   /* Pinned light in both modes like every product mock (P1), so these are
      literals on purpose and must NOT follow --ink-rgb: in dark mode that
@@ -4197,7 +4185,6 @@ h3{ font-family:var(--fd); }
   gap:11px;
 }
 
-
 .hub__t{
   display:grid; place-items:center;
   width:52px; height:52px;
@@ -4212,9 +4199,7 @@ h3{ font-family:var(--fd); }
      exact opposite of what it is for. */
 }
 
-
 .hub__t img{ width:22px; height:22px; object-fit:contain; }
-
 
 
 /* Okou at the centre, and the only tile with the accent on it */
@@ -4234,9 +4219,7 @@ h3{ font-family:var(--fd); }
   box-shadow:inset 0 0 0 1px var(--hub-line);
 }
 
-
 .hub__t--me img{ width:30px; height:30px; }
-
 
 
 /* ── the wave ────────────────────────────────────────────────────────
@@ -4254,20 +4237,19 @@ h3{ font-family:var(--fd); }
   animation-delay:calc(var(--d, 0) * var(--hub-step));
   animation-play-state:paused;
 }
-
 /* the centre is the source of the wave, so it never joins it */
 .hub__t--me{ animation:none; }
 
-
 @keyframes hubWave{
   0%, 4%    { background-color:var(--hub-tile); }
+
   12%, 20%  { background-color:var(--hub-lit); }
+
   34%, 100% { background-color:var(--hub-tile); }
+
 }
 
-
 .vs.is-in .hub__t{ animation-play-state:running; }
-
 
 @media (prefers-reduced-motion:reduce){
   .hub__t{ animation:none; }
@@ -4276,9 +4258,13 @@ h3{ font-family:var(--fd); }
 
 
 
+@media (prefers-reduced-motion:reduce){
+
+}
+
+
 /* ── the text half ───────────────────────────────────────────────── */
 .vs__txt{ padding:clamp(20px,2vw,26px); }
-
 
 
 /* both marks, and the word between them */
@@ -4290,22 +4276,17 @@ h3{ font-family:var(--fd); }
   color:var(--ink-mute);
 }
 
-
 .vs__side{ display:inline-flex; align-items:center; gap:7px; }
-
 
 .vs__side img{ width:18px; height:18px; object-fit:contain; }
 
-
 .vs__side--us{ color:var(--ink); }
-
 
 /* --ink-mute is already the lightest ink the page allows, so an opacity on
    top of it is under AA by construction. The word is made quieter by SIZE
    instead — one dimension, and it still reads as the connector between the
    two names rather than a third name. */
 .vs__vs{ font-size:.86em; }
-
 
 
 .vs__txt h3{
@@ -4321,7 +4302,6 @@ h3{ font-family:var(--fd); }
   margin-bottom:10px; color:var(--ink);
 }
 
-
 /* SCOPED TO .vs__txt, not to .vs. As `.vs p` this was (0,1,1) and beat
    every mock class inside the media band, so each <p> in a product mock
    took the PAGE prose colour and size — including --ink-soft, which flips
@@ -4331,7 +4311,6 @@ h3{ font-family:var(--fd); }
    exists to prevent, arriving through the cascade rather than through a
    token. */
 .vs__txt p{ font-size:var(--t-meta); line-height:1.6; color:var(--ink-soft); }
-
 
 /* ── the testimonial cards ───────────────────────────────────────────
    Built to the supplied Figma (node 700:269), scaled by --qs and nothing
@@ -4369,7 +4348,6 @@ h3{ font-family:var(--fd); }
   /* the scrollbar is the one piece of chrome the design does not have */
   scrollbar-width:none;
 }
-
 /* the rail is focusable so it can be scrolled from the keyboard — axe
    flags a scroll container that cannot be, and it is right to. The ring
    sits outside the cards rather than on them, so it never reads as a
@@ -4393,9 +4371,7 @@ h3{ font-family:var(--fd); }
   display:flex; justify-content:center; gap:10px;
   margin-top:clamp(22px, 2.2vw, 34px);
 }
-
 .railnav[hidden]{ display:none; }
-
 .railnav__b{
   width:44px; height:44px; padding:0;
   display:grid; place-items:center;
@@ -4405,27 +4381,18 @@ h3{ font-family:var(--fd); }
              color var(--t-hover) var(--e-out),
              opacity var(--t-hover) var(--e-out);
 }
-
 .railnav__b svg{ width:19px; height:19px; }
-
 .railnav__b:hover{ background:var(--wash-2); color:var(--ink); }
-
 .railnav__b:disabled{ opacity:.28; cursor:default; }
-
 .railnav__b:disabled:hover{ background:transparent; color:var(--ink-soft); }
-
 
 .proof:focus-visible{
   outline:2px solid var(--accent-solid);
   outline-offset:6px; border-radius:var(--r-card);
 }
-
 .proof::-webkit-scrollbar{ display:none; }
-
 .qcell{ scroll-snap-align:start; }
-
 .qcell{ container-type:inline-size; display:flex; }
-
 .quote{
   position:relative; overflow:hidden; isolation:isolate;
   flex:1; min-width:0;
@@ -4450,19 +4417,14 @@ h3{ font-family:var(--fd); }
   background-image:var(--q-art), var(--q-art);
   --q-art:url(assets/doodles/doodle-1.png);
 }
-
 .proof > :nth-child(3n+2) .quote{ --q-art:url(assets/doodles/doodle-2.png); }
-
 .proof > :nth-child(3n+3) .quote{ --q-art:url(assets/doodles/doodle-3.png); }
-
 
 .quote__av{
   width:var(--q-avatar); height:var(--q-avatar);
   border-radius:50%; object-fit:cover; flex:none;
 }
-
 .quote__body{ display:flex; flex-direction:column; gap:var(--q-stack); flex:1; }
-
 /* the ornamental marks are 64px glyphs sitting in a 29px box in the
    design — they overhang deliberately, so the line box is collapsed
    rather than allowed to open a gap the design does not have */
@@ -4478,39 +4440,31 @@ h3{ font-family:var(--fd); }
      matching the picture. */
   margin-bottom:calc(-25 * var(--qu));
 }
-
 .quote__mark--close{ text-align:right; }
-
 .quote blockquote{
   margin:0;
   font-weight:400; font-size:var(--q-quote);
   line-height:1.21; letter-spacing:0;
   color:var(--ink);
 }
-
 .quote figcaption{
   display:flex; align-items:stretch; gap:var(--q-barpad);
 }
-
 /* #D9D9D9 in the design. As a channel alpha instead of a literal it
    holds the same weight against the card on both grounds. */
 .quote__bar{
   width:var(--q-bar); flex:none; border-radius:var(--r-pill);
   background:rgb(var(--ink-rgb) / .15);
 }
-
 .quote__who{ display:flex; flex-direction:column; gap:var(--q-namegap); }
-
 .quote__who b{
   font-family:inherit; font-weight:500;
   font-size:var(--q-name); line-height:1.21; color:var(--ink);
 }
-
 .quote__who span{
   font-weight:400; font-size:var(--q-name);
   line-height:1.21; color:var(--ink);
 }
-
 
 /* ─────────────── 15. the parallel-work figure ─────────────── */
 .a2a{
@@ -4519,79 +4473,57 @@ h3{ font-family:var(--fd); }
   display:flex; flex-direction:column; align-items:center;
   gap:clamp(10px,1.2vw,16px); text-align:left;
 }
-
 .a2a__step,.a2a__label,.a2a__back{
   font-size:var(--t-mono); letter-spacing:.1em; color:var(--ink-mute);
 }
-
 .a2a__ask{
   align-self:center;
   background:var(--wash-2); box-shadow:none;
   font-family:var(--fb); font-size:var(--t-lead);
   color:var(--ink);
 }
-
 .a2a__step{ align-self:center; }
-
 .a2a__back{ align-self:center; }
-
 .a2a__hub{
   align-self:center;
   border:0; border-radius:var(--r-btn);
   background:var(--ink); color:var(--paper-ink);
   font-family:var(--fb); font-size:15.5px; font-weight:600;
 }
-
 .a2a__hub em{ color:rgb(var(--paper-rgb) / .6); }
-
 .a2a__hub .a2a__av{ background:rgb(var(--paper-rgb) / .16); }
-
 .a2a__hub em{ font-family:var(--fm); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; }
-
 .a2a__av{ background:var(--ink); }
-
 .a2a__av--sub{ background:var(--g-400); }
-
 /* no connectors: the figure's own captions say what the lines used to */
 .a2a__stem,.a2a__return{ display:none; }
-
 .a2a__row::before,.a2a__card::before,.a2a__card::after,
 .a2a__return::before,.a2a__return::after{ display:none; }
-
 .a2a__stage{
   width:100%; margin-top:12px;
   padding:clamp(20px,2.4vw,34px);
   border-radius:var(--r-card);
   background:var(--wash-2);
 }
-
 .a2a__label{
   position:static; margin:0 0 18px;
   text-align:center; display:block;
 }
-
 .a2a__row{ padding-top:0; margin-bottom:0; }
-
 .a2a__back{ margin-top:14px; }
-
 .a2a__card{
   border:0; background:var(--paper);
   box-shadow:0 1px 2px rgb(var(--ink-rgb) / .03), 0 12px 26px -22px rgb(var(--ink-rgb) / .2);
   transition:transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
-
 .a2a__card:hover{
   transform:translateY(-2px);
   box-shadow:0 2px 6px rgb(var(--ink-rgb) / .05), 0 20px 38px -24px rgb(var(--ink-rgb) / .28);
 }
-
 .a2a__t{ font-family:var(--fb); font-size:14.5px; font-weight:600; color:var(--ink); }
-
 .a2a__dot.is-run{ background:var(--accent); box-shadow:0 0 0 3px rgb(var(--accent-rgb) / .16); }
-
 .a2a__dot.is-done{ background:var(--paper); box-shadow:inset 0 0 0 2px var(--ok); }
-
 
 /* ── the run, played out ──────────────────────────────────────────
    The figure used to be a diagram OF a run. It is now the run: the ask
@@ -4611,7 +4543,6 @@ h3{ font-family:var(--fd); }
   opacity:0;
   transition:opacity 360ms var(--e-out), transform 560ms var(--e-out);
 }
-
 /* Same reasoning as the status line, and it loops: a card that fades holds
    its title below contrast every time round. The cards unroll instead —
    which is also what opening four chats should look like. */
@@ -4619,9 +4550,7 @@ h3{ font-family:var(--fd); }
   clip-path:inset(0 0 100% 0);
   transition:clip-path 520ms var(--e-out), transform 560ms var(--e-out);
 }
-
 .a2a.is-live .a2a__card.is-on{ clip-path:inset(0 0 0 0); }
-
 /* The status line wipes in rather than fading. Fading small text means it
    spends ~360ms below its contrast ratio — invisible to the eye, but real,
    and an accessibility audit sampled mid-transition catches it. A clip is
@@ -4631,27 +4560,17 @@ h3{ font-family:var(--fd); }
   clip-path:inset(0 100% 0 0);
   transition:clip-path 440ms var(--e-out);
 }
-
 .a2a.is-live .a2a__st.is-on{ clip-path:inset(0 0 0 0); }
-
 .a2a.is-live .a2a__step{ transform:translateY(6px); }
-
 .a2a.is-live .a2a__ask{ transform:translateY(10px) scale(.98); }
-
 .a2a.is-live .a2a__hub{ transform:translateY(12px) scale(.9); }
-
 .a2a.is-live .a2a__stage{ transform:translateY(14px); }
-
 .a2a.is-live .a2a__card{ transform:translateY(10px); }
-
 .a2a.is-live .a2a__back{ transform:translateY(6px); }
-
 .a2a.is-live .is-on{ opacity:1; transform:none; }
-
 /* the pill lands with a little weight behind it — it is the moment the
    request stops being a sentence and becomes work */
 .a2a.is-live .a2a__hub.is-on{ transition-timing-function:var(--e-spring); }
-
 
 /* the composer caret, blinking at the end of what has been typed */
 .a2a__caret{
@@ -4661,18 +4580,15 @@ h3{ font-family:var(--fd); }
   background:var(--accent);
   animation:a2aCaret 1.06s steps(1) infinite;
 }
-
-@keyframes a2aCaret{ 0%,49%{ opacity:1 } 50%,100%{ opacity:0 } }
-
+@keyframes a2aCaret{ 0%,49%{ opacity:1 }
+ 50%,100%{ opacity:0 }
+ }
 .a2a__ask.is-typed .a2a__caret{ animation:none; opacity:0; }
-
 /* the bubble grows with the sentence, so it has to hold a shape while empty */
 .a2a.is-live .a2a__ask{ min-width:4ch; min-height:1.9em; }
 
-
 /* a running task breathes; a finished one lands once and stops */
 .a2a__dot{ position:relative; }
-
 .a2a.is-live .a2a__st.is-on .a2a__dot.is-run::after{
   content:"";
   position:absolute; inset:-3px;
@@ -4680,18 +4596,18 @@ h3{ font-family:var(--fd); }
   background:rgb(var(--accent-rgb) / .2);
   animation:a2aPulse 1.9s var(--e-elegant) infinite;
 }
-
 @keyframes a2aPulse{
   0%,100%{ transform:scale(1); opacity:.85 }
-  50%    { transform:scale(1.8); opacity:0 }
-}
 
+  50%    { transform:scale(1.8); opacity:0 }
+
+}
 .a2a.is-live .a2a__st.is-on .a2a__dot.is-done{
   animation:a2aLand 520ms var(--e-spring) both;
 }
-
-@keyframes a2aLand{ from{ transform:scale(.4) } to{ transform:scale(1) } }
-
+@keyframes a2aLand{ from{ transform:scale(.4) }
+ to{ transform:scale(1) }
+ }
 
 /* the sentence stays in the accessibility tree while the visible copy is
    being typed one character at a time */
@@ -4704,7 +4620,6 @@ h3{ font-family:var(--fd); }
   clip-path:inset(50%); overflow:hidden; white-space:nowrap;
 }
 
-
 /* ─────────────── 16. the closing dark chapter ─────────────── */
 /* EVERY DARK OVERRIDE IS GONE. They existed to rescue this section's type
    and buttons off a black ground; with the ground now the page's grey, the
@@ -4715,9 +4630,7 @@ h3{ font-family:var(--fd); }
   border-top:0;
   padding-top:clamp(88px,8vw,132px);
 }
-
 .cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
-
 
 /* ── the footer panel ────────────────────────────────────────────────
    A panel resting on the close's artwork, not a band under it: inset by
@@ -4741,57 +4654,45 @@ h3{ font-family:var(--fd); }
   text-align:left;
 }
 
-
 .footer__grid{
   display:grid; gap:clamp(30px,3.4vw,56px);
   grid-template-columns:minmax(210px, 1fr) minmax(0, 3.1fr);
   align-items:start;
 }
-
 .footer__brand p{
   margin:14px 0 0; max-width:26ch;
   font-size:var(--t-meta); line-height:1.6;
   color:var(--ink-mute);
 }
-
 .footer__mark{
   display:inline-flex; align-items:center; gap:10px;
   color:var(--ink); text-decoration:none;
 }
-
 .footer__mark img{ width:24px; height:24px; }
-
 .footer__mark span{
   font-family:var(--fm); font-size:var(--t-wordmark);
   letter-spacing:.22em; font-weight:500;
 }
 
-
 .footer__cols{
   display:grid; gap:clamp(20px,2.4vw,34px);
   grid-template-columns:repeat(5, minmax(0,1fr));
 }
-
 .footer__col h3{
   margin:0 0 14px;
   font-family:var(--fm); font-size:var(--t-mono);
   letter-spacing:.11em; text-transform:uppercase;
   color:var(--ink-mute);
 }
-
 .footer__col ul{ list-style:none; margin:0; padding:0; }
-
 .footer__col li + li{ margin-top:9px; }
-
 .footer__col a{
   font-size:var(--t-meta); line-height:1.45;
   color:var(--ink-soft);
   text-decoration:none;
   transition:color var(--t-hover) var(--e-out);
 }
-
 .footer__col a:hover{ color:var(--ink); }
-
 
 .footer__disclaimer{
   max-width:34ch; margin:clamp(16px,1.8vw,24px) 0 0;
@@ -4801,7 +4702,6 @@ h3{ font-family:var(--fd); }
      disclaimer. */
   color:var(--ink-mute);
 }
-
 
 /* NO RULE. Clay draws a hairline above its bottom bar and the first
    version copied it — straight into "no structural lines", which the
@@ -4818,11 +4718,8 @@ h3{ font-family:var(--fd); }
   justify-content:space-between; gap:16px 32px;
   margin-top:clamp(40px,4.4vw,66px);
 }
-
 .footer__legal{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 26px; }
-
 .footer__prefs{ display:flex; align-items:center; gap:6px; }
-
 
 /* the two preferences. Quiet at rest, ground on hover — the same restraint
    the rail's arrows follow, because neither is content. */
@@ -4835,45 +4732,33 @@ h3{ font-family:var(--fd); }
   cursor:pointer;
   transition:background var(--t-hover) var(--e-out), color var(--t-hover) var(--e-out);
 }
-
 .pref__btn:hover,.pref__lang:hover{ background:var(--wash-2); color:var(--ink); }
-
 .pref__btn svg,.pref__globe svg{ width:16px; height:16px; }
-
 .pref__moon{ display:none; }
-
 :root[data-theme="dark"] .pref__sun{ display:none; }
-
 :root[data-theme="dark"] .pref__moon{ display:block; }
-
 .pref__lang select{
   border:0; background:transparent; color:inherit;
   font:inherit; font-size:var(--t-mono); letter-spacing:.06em;
   cursor:pointer; padding:0 2px;
 }
-
 .pref__lang select:focus-visible{ outline:2px solid var(--accent-solid); outline-offset:3px; }
-
 .footer__links{
   display:flex; flex-wrap:wrap; gap:10px 26px;
   margin:0; padding:0; list-style:none;
   font-size:var(--t-mono); letter-spacing:.09em;
 }
-
 .footer__links a{
   color:var(--ink-mute);
   background:linear-gradient(var(--ink),var(--ink)) no-repeat 0 100% / 0% 1px;
   transition:background-size var(--t-state) var(--e-out), color var(--t-hover) var(--e-snap);
 }
-
 .footer__links a:hover{ color:var(--ink); background-size:100% 1px; }
-
 .footer__copy{
   margin:0;
   font-size:var(--t-mono); letter-spacing:.09em;
   color:var(--ink-mute);
 }
-
 
 @media (max-width:960px){
   .footer__grid{ grid-template-columns:1fr; }
@@ -4909,14 +4794,12 @@ h3{ font-family:var(--fd); }
   }
 
 }
-
 @media (max-width:560px){
   .footer__cols{ grid-template-columns:1fr; }
 
   .footer__base{ justify-content:flex-start; }
 
 }
-
 
 /* ─────────────── 17. sticky composer ─────────────── */
 
@@ -4930,9 +4813,7 @@ h3{ font-family:var(--fd); }
              transform var(--t-reveal) var(--e-out);
   transition-delay:var(--rd, 0ms);
 }
-
 .reveal.is-in{ opacity:1; transform:none; }
-
 
 /* headings rise out of their own line box */
 [data-reveal="mask"] .line{
@@ -4942,18 +4823,14 @@ h3{ font-family:var(--fd); }
   transition:clip-path 820ms var(--e-out), transform 820ms var(--e-out);
   transition-delay:calc(var(--li, 0) * 90ms);
 }
-
 [data-reveal="mask"].is-in .line{
   clip-path:inset(-25% -20% -25% -20%);
   transform:none;
 }
-
 [data-reveal="mask"]{ opacity:1; transform:none; }
-
 
 /* groups arrive one after another */
 [data-reveal="stagger"]{ opacity:1; transform:none; }
-
 [data-reveal="stagger"] > *{
   opacity:0; transform:translateY(20px);
   /* N5: each beat settles before the next starts. These are separate
@@ -4966,36 +4843,36 @@ h3{ font-family:var(--fd); }
   transition:opacity 420ms var(--e-out), transform 420ms var(--e-out);
   transition-delay:calc(var(--ci, 0) * 120ms);
 }
-
 [data-reveal="stagger"].is-in > *{ opacity:1; transform:none; }
-
 
 /* figures settle rather than slide */
 [data-reveal="scale"]{
   opacity:0; transform:scale(.985) translateY(14px);
   transition:opacity 720ms var(--e-elegant), transform 720ms var(--e-elegant);
 }
-
 [data-reveal="scale"].is-in{ opacity:1; transform:none; }
-
 
 /* the scene cards re-play on every tab switch, from their own side */
 .scene.is-on .acard{ animation:acardIn 520ms var(--e-out) both; animation-delay:calc(var(--i) * .08s); }
-
+.scene__side--l .acard{ --from:-14px; }
+.scene__side--r .acard{ --from:14px; }
 @keyframes acardIn{
   from{ opacity:0; transform:translate(var(--from,0), 8px); }
+
   to{ opacity:1; transform:none; }
+
 }
-
 .wfstage.is-on{ animation:wfIn 440ms var(--e-out) both; }
-
 /* `translate` rather than `transform`: the stage already carries a
    fit-to-frame scale in `transform`, and these compose instead of clashing */
-@keyframes wfIn{ from{ opacity:0; translate:0 12px } to{ opacity:1; translate:0 0 } }
-
+@keyframes wfIn{ from{ opacity:0; translate:0 12px }
+ to{ opacity:1; translate:0 0 }
+ }
 
 /* ─────────────── 19. responsive ─────────────── */
 @media (max-width:1080px){
+  .control{ grid-template-columns:1fr; }
+
   /* nothing is pinned at this width, so the mechanic unwinds: every
      paragraph is open and the titles stop changing size — a size change
      with no room to absorb it just makes the page jump as you scroll.
@@ -5063,7 +4940,6 @@ h3{ font-family:var(--fd); }
   .scene.is-on{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); }
 
 }
-
 /* the component layer drops the Slack channel column at this width, but a
    later unconditional rule puts the 230px column back — at 390px that left
    the thread about a hundred pixels wide. The design layer has the last word. */
@@ -5072,7 +4948,6 @@ h3{ font-family:var(--fd); }
 .slackui__side{ display:none; }
 
 }
-
 
 @media (max-width:960px){
   /* the two section paddings keep their relationship at every width — only
@@ -5169,14 +5044,12 @@ h3{ font-family:var(--fd); }
   .scene.is-on{ grid-template-columns:1fr; }
 
 }
-
 @media (max-width:620px){
   .ostage__conn{ grid-template-columns:1fr; }
 
   .step{ grid-template-columns:18px minmax(0,1fr); column-gap:10px; }
 
 }
-
 
 /* ─────────────── 20. reduced motion ─────────────── */
 @media (prefers-reduced-motion:reduce){
@@ -5209,61 +5082,42 @@ h3{ font-family:var(--fd); }
 
 }
 
-
 /* ─────────────── 21. no outlines on our own surfaces ───────────────
    The component layer above still boxes its panels in a hairline. On
    this page a surface is defined by its ground and its shadow, so the
    outlines come off here in one place. Borders INSIDE a product window
-   stay: there they are the product's own UI, not our page furniture. */.perms,.slackui,.absui,.flowui{ border:0; }
-
+   stay: there they are the product's own UI, not our page furniture. */
+.perms,.slackui,.absui,.flowui,.mock,.card,.stage-card{ border:0; }
 .slackui{ box-shadow:var(--e-3); }
-
 .absui{ box-shadow:0 2px 8px rgb(var(--ink-rgb) / .05), 0 30px 58px -32px rgb(var(--ink-rgb) / .28); }
-
 .perms{ box-shadow:0 1px 3px rgb(var(--ink-rgb) / .04), 0 20px 40px -26px rgb(var(--ink-rgb) / .24); }
-
 .perms__list{ border-top:0; }
-
 .perms__list li{ border-bottom-color:rgb(var(--ink-rgb) / .06); }
-
 .perms__list li:hover{ background:var(--wash); }
-
 .perms__note{ border-top:0; background:var(--wash); color:var(--ink-soft); }
-
 .perms__ava{ border:0; background:var(--wash-2); }
-
 .perms__tabs{ background:var(--wash-2); }
-
 .perms__tabs span.is-on{ border-color:transparent; box-shadow:0 1px 2px rgb(var(--ink-rgb) / .08); }
-
 
 /* status is carried by a tinted fill, not an outline */
 .state{ border:0; padding:5px calc(11px - .08em) 5px 11px; font-size:10.5px; letter-spacing:.08em; }
-
 .state--ok{   background:rgb(var(--ok-rgb) / .12);  color:var(--ok-ink) !important; }
-
 .state--wait{ background:rgb(var(--wait-rgb) / .14);   color:var(--wait-ink) !important; }
-
 .state--off{  background:var(--wash-2);        color:var(--ink-mute) !important; }
-
 
 /* the workflow windows keep their internal structure, minus the frame */
 .flowui__top{ border-bottom-color:rgb(var(--ink-rgb) / .07); }
-
 .flowchat{ border-right-color:rgb(var(--ink-rgb) / .07); }
-
 .flowchat__composer,.absui__composer{ border-color:rgb(var(--ink-rgb) / .1); }
-.flowsave,.flowlist__items{ border-color:rgb(var(--ink-rgb) / .08); }
-
+.flowsave,.flowlist__items,.absui__wfcard{ border-color:rgb(var(--ink-rgb) / .08); }
 .flowlist__items li{ border-bottom-color:rgb(var(--ink-rgb) / .06); }
-
 .flowlist__filters span,.flowlist__head > em,.absui__filters span,
 .flowsave__actions span{ border-color:rgb(var(--ink-rgb) / .1); }
-.absui__wfs li{
+.absui__steps li,.absui__runs li,.absui__wfs li,.absui__kv li{
   border-bottom-color:rgb(var(--ink-rgb) / .06);
 }
-.absui__note{ border-top-color:rgb(var(--ink-rgb) / .07); }
-
+.absui__panen,.absui__note{ border-top-color:rgb(var(--ink-rgb) / .07); }
+.absui__field{ border-color:transparent; background:var(--wash); }
 
 /* ================================================================
    22. BRAND LAYER + PLACEHOLDERS
@@ -5275,13 +5129,10 @@ h3{ font-family:var(--fd); }
 
 /* ── controls become pills, as in the brand comps ── */
 .btn{ border-radius:var(--r-btn); }
-
 .btn--lg{ padding:16px calc(28px - .085em) 16px 28px; }
-
 .btn--sm{ height:38px; padding:0 calc(18px - .085em) 0 18px; }
-
+.scenes__tab{ border-radius:var(--r-pill); }
 .nav__links a,.nav__signin{ border-radius:var(--r-btn); }
-
 
 /* ── image placeholders: obviously unfinished, still tidy ──
       <figure class="ph ph--wide" data-ph="Product screen · 2560×1600">
@@ -5300,23 +5151,20 @@ h3{ font-family:var(--fd); }
   box-shadow:var(--e-3);
   overflow:hidden;
 }
-
 .ph--wide{ aspect-ratio:16 / 9; }
-
+.ph--square{ aspect-ratio:1 / 1; }
+.ph--band{ aspect-ratio:21 / 6; }
 .panel > .ph{ margin-top:clamp(36px, 4vw, 60px); }
-
 .ph__label{
   font-family:var(--fm); font-weight:500;
   font-size:var(--t-mono); letter-spacing:.18em; text-transform:uppercase;
   color:var(--ink-mute);
 }
-
 .ph::after{
   content:attr(data-ph);
   font-family:var(--fm); font-size:10px; letter-spacing:.08em;
   color:var(--ink-mute); opacity:.7;
 }
-
 
 /* ── agent avatars ── */
 .avatar{
@@ -5326,22 +5174,18 @@ h3{ font-family:var(--fd); }
   object-fit:cover;
   background:var(--wash-2);
 }
-
+.avatar--sm{ width:26px; height:26px; }
+.avatar--lg{ width:52px; height:52px; }
 
 .quote figcaption .avatar{ width:44px; height:44px; }
-
 .a2a__av{ overflow:hidden; padding:0; }
-
 .a2a__av img{ width:100%; height:100%; object-fit:cover; display:block; }
-
 .slackui__av img.avatar{ width:100%; height:100%; border-radius:var(--r-xs); }
-
 
 /* the CTA's content sits ON the close's artwork. `overflow:hidden` went
    with the artwork when it moved out to .close — clipping nothing was the
    only thing it did here. */
 .panel--cta{ position:relative; z-index:1; }
-
 /* ── the close: one ground under the CTA and the footer ──────────────
    Clay and Lovable share a shape worth taking: the artwork behind the
    final CTA does not stop at the section edge — it runs on, and the
@@ -5363,7 +5207,6 @@ h3{ font-family:var(--fd); }
   background:var(--wash);
   overflow:hidden;
 }
-
 .close__art{
   position:absolute; left:50%; bottom:0; z-index:0;
   /* NATURAL PROPORTIONS, no crop. The drawing is 1400x875 and its orange
@@ -5410,24 +5253,23 @@ h3{ font-family:var(--fd); }
       rgb(var(--ink-rgb) / .82) 13%, rgb(var(--ink-rgb) / 1) 18%);
   pointer-events:none; user-select:none;
 }
-
 .panel--cta > .chip,.panel--cta > .display,
 .panel--cta > .section-body,.panel--cta > .cta__btns{ position:relative; z-index:1; }
-
 /* The buttons need to clear the drawing, not sit in it. The cloud band
    lands 297-492px above the footer panel's top edge; at the old padding
    the buttons sat at 400 — inside it, with a scribble crossing "Add to
    Slack". This lifts them to about 530. */
-.panel--cta{ padding-bottom:clamp(300px, 22vw, 360px); }
+.panel--cta{ padding-bottom:clamp(300px, 22vw, 360px); }  /* Sized for the
+   drawing, not for a black ground: at 35vw this left a screen of empty grey
+   between the buttons and the mountains. The floor is the phone case, where
+   the drawing sits above the footer and is 312px tall. */
 
+/* ── section furniture that the centred rule needs ── */
+.scenes__tabs{ justify-content:center; }
 .metrics{ text-align:center; }
-
 .metrics li{ display:flex; flex-direction:column; align-items:center; }
-
 .a2a__label,.a2a__step,.a2a__back{ text-align:center; }
-
 .ladder__steps{ text-align:left; }
-
 
 @media (max-width:960px){
   .ph{ aspect-ratio:4 / 3; }
@@ -5437,7 +5279,6 @@ h3{ font-family:var(--fd); }
   .panel--cta{ padding-bottom:clamp(348px, 62vw, 420px); }
 
 }
-
 
 /* ================================================================
    23. the outputs section: one title, a tab-driven lead, and the
@@ -5455,11 +5296,8 @@ h3{ font-family:var(--fd); }
   font-weight:500;
   transition:opacity 240ms var(--e-out), transform 240ms var(--e-out);
 }
-
 .lead-in .inline-ic{ font-size:.85em; }
-
 .lead-in.is-swapping{ opacity:0; transform:translateY(-.22em); }
-
 
 /* a paragraph that explains the figure above it, not more preamble */
 .figcap{
@@ -5471,13 +5309,11 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-sm); line-height:1.6;
   color:var(--ink-mute);
 }
-
 /* Every tab's version of this lands in exactly two lines, and the block
    reserves two — so switching tab never moves the strip underneath it.
    The longest phrase ("Okou rebuilds Dana's board deck.") is what the
    measure was set against. */
 #sceneCopy{ min-height:calc(2 * 1.55em); }
-
 
 /* the three figures and their note read as one object on the page */
 .figures{
@@ -5488,7 +5324,6 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-lg);
   box-shadow:var(--e-2);
 }
-
 /* ── the KPI row: three tiles, label over figure ───────────────────
    Each figure sits on the same surface as the panels above it — same grey,
    same corner, same inner padding — so the row reads as part of the section
@@ -5510,7 +5345,6 @@ h3{ font-family:var(--fd); }
   max-width:1000px;
   gap:var(--tile-gap);
 }
-
 .figures .metrics li{
   display:flex; flex-direction:column;
   align-items:stretch; text-align:left;
@@ -5524,7 +5358,6 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-section);
 }
 
-
 /* numeral and unit are two sizes, so the figure reads as a quantity
    rather than a slab of type */
 .metrics b{
@@ -5532,7 +5365,6 @@ h3{ font-family:var(--fd); }
   font-family:var(--fd);
   color:var(--ink);
 }
-
 /* PROPORTIONAL figures at display size. `tabular-nums` gives every digit the
    width of a zero, which is right in a column of numbers that must align and
    wrong on a standalone figure — at 56px a "14" set tabular reads loose and
@@ -5543,7 +5375,6 @@ h3{ font-family:var(--fd); }
   line-height:1; letter-spacing:-.045em;
   font-variant-numeric:proportional-nums;
 }
-
 /* the unit is the quantity's second half, not a note about it — it sits in
    the reading ink, one step down from the numeral, on its baseline */
 .metrics b em{
@@ -5552,7 +5383,6 @@ h3{ font-family:var(--fd); }
   line-height:1.1; letter-spacing:-.02em;
   color:var(--ink-soft);
 }
-
 /* the label: prose, sentence case, caption size. Tight leading because it is
    a single line introducing the figure, not a paragraph */
 .metrics span{
@@ -5563,7 +5393,6 @@ h3{ font-family:var(--fd); }
   color:var(--ink-mute);
 }
 
-
 /* The row stacked at 960 because three BARE figures needed the width to stay
    apart. Once each one is a tile, the tile keeps them apart and three columns
    hold much further down — 640 is where the longest label ("Brief to first
@@ -5572,7 +5401,6 @@ h3{ font-family:var(--fd); }
   .figures .metrics{ grid-template-columns:1fr; }
 
 }
-
 
 /* The note belongs to the figures, so it sits with them — but as PROSE. Set
    at label size and letter-spaced it read as a fourth stat in the row, which
@@ -5584,14 +5412,12 @@ h3{ font-family:var(--fd); }
   text-align:center;
 }
 
-
 @media (max-width:720px){
   .figures .metrics{ gap:clamp(18px, 5vw, 28px); }
 
   #sceneCopy{ min-height:0; }
 
 }
-
 
 /* ── the nav label rolls: the visible copy leaves upward while its
       duplicate arrives from below, in the accent. The duplicate is
@@ -5602,14 +5428,12 @@ h3{ font-family:var(--fd); }
   height:1.25em;
   overflow:clip;
 }
-
 .roll__t{
   display:block;
   line-height:1.25em;
   transition:transform 460ms var(--e-out), color 460ms var(--e-out);
   will-change:transform;
 }
-
 /* The copy that rolls in lives on the header's ground, so it takes whichever
    accent that ground makes safe — and the two grounds want OPPOSITE
    corrections (RULES §C1).
@@ -5634,10 +5458,8 @@ h3{ font-family:var(--fd); }
   transition:transform 460ms var(--e-out), color 460ms var(--e-out),
              visibility 0s linear 460ms;
 }
-
 .nav__links a:hover .roll__t,
 .nav__signin:hover .roll__t{ transform:translateY(-100%); }
-
 .nav__links a:hover .roll__t + .roll__t,
 .nav__signin:hover .roll__t + .roll__t{
   transform:translateY(0);
@@ -5646,16 +5468,11 @@ h3{ font-family:var(--fd); }
              visibility 0s linear 0s;
 }
 
-
 /* the primary button answers with a press, not a colour change */
 .nav .btn--dark{ transition:transform 220ms var(--e-snap), box-shadow 220ms var(--e-snap); }
-
 .nav .btn--dark:hover{ transform:translateY(-1px) scale(1.015); }
-
 .nav .btn--dark:active{ transform:translateY(0) scale(.985); }
-
 .nav__logo:hover span{ color:var(--nav-accent); transition:color 220ms var(--e-snap); }
-
 
 @media (prefers-reduced-motion:reduce){
   .roll__t{ transition:none; }
@@ -5667,15 +5484,14 @@ h3{ font-family:var(--fd); }
 
 }
 
-
 /* ── brand marks never stretch ─────────────────────────────────────
    Several connector SVGs are not square (Gmail is 4:3). Anywhere we
-   put one in a fixed box it has to letterbox, not squash. */.perms__list img,.logo img,.btn img{
+   put one in a fixed box it has to letterbox, not squash. */
+.acard__ic img,.perms__list img,.vs__label img,.logo img,.cat__logo img,
+.tag img,.btn img{
   object-fit:contain;
 }
-
 .perms__list img{ align-self:center; }
-
 
 /* ================================================================
    24. THE STOREFRONT-LAUNCH STAGE — drawn in code, not a screenshot
@@ -5685,7 +5501,6 @@ h3{ font-family:var(--fd); }
    captured screenshots.
    ================================================================ */
 .scene--built.is-on{ display:block; }
-
 
 /* ── the Outputs content ───────────────────────────────────────────
    Figma node 676:2222, one to one on structure: three columns on one
@@ -5710,14 +5525,12 @@ h3{ font-family:var(--fd); }
   align-items:stretch;
 }
 
-
 /* ── what the run reached into ── 200 wide, two panels, 16 apart ── */
 .ostage__conn{
   display:grid; grid-template-rows:1fr 1fr;
   gap:var(--o-gap);
   min-width:0;
 }
-
 .ocard{
   display:flex; flex-direction:column; justify-content:space-between;
   gap:10px;
@@ -5726,29 +5539,23 @@ h3{ font-family:var(--fd); }
   background:var(--o-fill);
   min-width:0;
 }
-
 .ocard__ic{
   display:block; width:var(--o-ava); height:var(--o-ava);
   flex:none;
 }
-
 .ocard__ic img{ width:100%; height:100%; object-fit:contain; display:block; }
-
 .ocard__txt{ display:block; min-width:0; }
-
 .ocard__txt b{
   display:block;
   font-size:var(--t-body); font-weight:500; line-height:1.25;
   color:var(--ink);
 }
-
 .ocard__txt i{
   display:block; margin-top:8px;
   font-style:normal;
   font-size:var(--t-sm); line-height:1.4;
   color:var(--ink-soft);
 }
-
 
 /* ── the conversation, on the painted ground ──
    The reference fills this panel with one of the brand paintings and
@@ -5769,7 +5576,6 @@ h3{ font-family:var(--fd); }
   min-width:0;
   background:var(--o-fill);
 }
-
 /* the ground is per-tab: each scene sets --ground, and --veil computed from
    that painting's own mean luminance so every one lands the bubbles on the
    same value (docs/design-system.md §15) */
@@ -5780,7 +5586,6 @@ h3{ font-family:var(--fd); }
   background-size:cover; background-position:center;
   filter:saturate(var(--sat, 1));
 }
-
 .ochat::after{
   content:"";
   position:absolute; inset:0;
@@ -5790,7 +5595,6 @@ h3{ font-family:var(--fd); }
     linear-gradient(rgb(var(--ink-rgb) / var(--veil, .14)),
                     rgb(var(--ink-rgb) / var(--veil, .14)));
 }
-
 .ochat__row{
   position:relative; z-index:1;
   /* the reference aligns an avatar to the TOP of the message it belongs to,
@@ -5798,26 +5602,21 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:flex-start; gap:10px;
   max-width:100%;
 }
-
 .ochat__row--user{
   justify-content:flex-end;
   margin-bottom:clamp(14px, 1.8vw, 26px);
 }
-
 /* The result is sized by WIDTH and lets its height follow the page it is
    showing. Capping the height instead cropped the image, and the crop landed
    through the headline — a preview sliced across its own type reads as a
    rendering fault, not as a preview. */
 .ochat__row[data-beat="result"]{ align-items:flex-start; }
-
 .ochat__ava{
   width:var(--o-ava); height:var(--o-ava); flex:none;
   border-radius:50%; overflow:hidden;
   background:var(--paper);
 }
-
 .ochat__ava img{ width:100%; height:100%; object-fit:cover; display:block; }
-
 .ochat__bubble{
   margin:0; min-width:0;
   padding:11px 14px;
@@ -5826,11 +5625,8 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-sm); line-height:1.45;
   color:var(--ink);
 }
-
 .ochat__row--user .ochat__bubble{ max-width:82%; }
-
 .ochat__row--okou .ochat__bubble{ max-width:78%; }
-
 
 /* the result, as the reference draws it: a titled card holding the page */
 /* The result is the point of the panel, so it is the largest thing in it —
@@ -5842,19 +5638,15 @@ h3{ font-family:var(--fd); }
   background:var(--paper);
   overflow:hidden;
 }
-
 .oresult figcaption{ flex:none; }
-
 .oresult figcaption{
   padding:9px 12px;
   font-size:var(--t-meta); line-height:1.25;
   color:var(--ink);
 }
-
 .oresult img{
   display:block; width:100%; height:auto;
 }
-
 
 /* ── the exchange plays, so it reads as a conversation ──
    One rAF timeline in app.js sets --beat 0…3. Every beat is present in
@@ -5863,7 +5655,6 @@ h3{ font-family:var(--fd); }
 .ochat__row{
   transition:opacity 320ms var(--e-out), transform 460ms var(--e-out);
 }
-
 /* ONE spatial origin — every message rises from below. Mixed directions read
    as chaos, and the user's sideways drift was the only thing on this panel
    moving on a different axis from everything else. The result is the panel's
@@ -5872,40 +5663,31 @@ h3{ font-family:var(--fd); }
    (LottieFiles motion-design: lead with the hero, keep the origin consistent,
    vary start time and not the curve.) */
 .ochat.is-live .ochat__row{ opacity:0; transform:translateY(12px); }
-
 .ochat.is-live .ochat__row[data-beat="result"]{
   transform:translateY(22px) scale(.985);
   transition:opacity 380ms var(--e-out), transform 620ms var(--e-spring);
 }
-
 .ochat.is-live .ochat__row.is-on{ opacity:1; transform:none; }
-
 .ochat__row--typing{ display:none; }
-
 .ochat.is-live .ochat__row--typing{ display:flex; }
-
 .ochat.is-live .ochat__row--typing:not(.is-on){ display:none; }
-
 .ochat__bubble--typing{
   display:flex; align-items:center; gap:5px;
   padding:16px;
 }
-
 .ochat__bubble--typing i{
   width:6px; height:6px; border-radius:50%;
   background:var(--ink-mute);
   animation:oType 1.25s var(--e-elegant) infinite;
 }
-
 .ochat__bubble--typing i:nth-child(2){ animation-delay:.16s; }
-
 .ochat__bubble--typing i:nth-child(3){ animation-delay:.32s; }
-
 @keyframes oType{
   0%,60%,100%{ transform:translateY(0); opacity:.45 }
-  30%        { transform:translateY(-4px); opacity:1 }
-}
 
+  30%        { transform:translateY(-4px); opacity:1 }
+
+}
 
 /* ── the three columns are ONE run ────────────────────────────────
    They used to be three unrelated pictures sitting in a row: two dead
@@ -5924,19 +5706,14 @@ h3{ font-family:var(--fd); }
   transform:translateY(6px);
   transition:opacity 420ms var(--e-out), transform 520ms var(--e-out);
 }
-
 .ostage.is-live .ocard__ic{
   filter:grayscale(1);
   transition:filter 520ms var(--e-out);
 }
-
 .ostage.is-live .ocard.is-on{ opacity:1; transform:none; }
-
 .ostage.is-live .ocard.is-on .ocard__ic{ filter:none; }
-
 /* the thread of light that says "this one is being read right now" */
 .ocard{ position:relative; overflow:hidden; }
-
 .ostage.is-live .ocard::after{
   content:"";
   position:absolute; left:0; right:0; bottom:0;
@@ -5944,17 +5721,17 @@ h3{ font-family:var(--fd); }
   background:var(--accent);
   transform:scaleX(0); transform-origin:left;
 }
-
 .ostage.is-live .ocard.is-on::after{
   animation:ocardRead 900ms var(--e-elegant) forwards;
 }
-
 @keyframes ocardRead{
   0%  { transform:scaleX(0);   opacity:1 }
-  70% { transform:scaleX(1);   opacity:1 }
-  100%{ transform:scaleX(1);   opacity:0 }
-}
 
+  70% { transform:scaleX(1);   opacity:1 }
+
+  100%{ transform:scaleX(1);   opacity:0 }
+
+}
 
 /* THE FRAME NEVER LEAVES. Making the whole window arrive with the result put a
    three-second hole in the right-hand third on every tab change — and an empty
@@ -5970,13 +5747,10 @@ h3{ font-family:var(--fd); }
   transform-origin:top center;
   transition:opacity 380ms var(--e-out), transform 620ms var(--e-out);
 }
-
 .ostage.is-live .tplwin.is-on .tplwin__page{ opacity:1; transform:none; }
-
 /* while it is coming, the frame reads as a window waiting for a page rather
    than as a blank rectangle */
 .ostage.is-live .tplwin:not(.is-on) .tplwin__scroll{ background:var(--o-fill); }
-
 
 /* ── the page it shipped ── the third column of the reference ──
    The chrome bar is white in the reference, which on a white section makes
@@ -6003,7 +5777,6 @@ h3{ font-family:var(--fd); }
     0 18px 44px -22px rgb(var(--ink-rgb) / .28);
   overflow:hidden;
 }
-
 /* The window edge is an INSIDE stroke: it sits on the last half-pixel of the
    window itself, not on the half-pixel outside it. Drawn as a spread shadow it
    was an outside stroke — it grew the window by .5px all round and sat between
@@ -6018,12 +5791,10 @@ h3{ font-family:var(--fd); }
   pointer-events:none;
   box-shadow:inset 0 0 0 .5px rgb(var(--ink-rgb) / .14);
 }
-
 /* the published page, as a single tall image the visitor scrolls */
 .tplwin__page{
   display:block; width:100%; height:auto;
 }
-
 /* the reference's own chrome: three 8px lights, then a pill holding the URL
    centred in it — 12px at #0009 on #EEE */
 .tplwin__bar{
@@ -6031,13 +5802,9 @@ h3{ font-family:var(--fd); }
   flex:none; padding:8px 8px 8px 12px;
   background:var(--paper);
 }
-
 .tplwin__bar i{ }
-
 .tplwin__bar i{ width:8px; height:8px; border-radius:50%; background:var(--wash-2); }
-
 .tplwin__bar i:first-child{ background:var(--accent); }
-
 .tplwin__url{
   flex:1; min-width:0; margin-left:8px;
   padding:4px 12px;
@@ -6049,7 +5816,6 @@ h3{ font-family:var(--fd); }
   text-align:center;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-
 /* ── the hint ──────────────────────────────────────────────────────
    The right column scrolls, and nothing about a still frame says so.
    A chevron on a loop, resting at the foot of the window: it recedes
@@ -6093,20 +5859,17 @@ h3{ font-family:var(--fd); }
   animation:tplHint 1.7s var(--e-inout) infinite alternate;
   transition:opacity 260ms var(--e-out), translate 260ms var(--e-out);
 }
-
 .tplwin__hint svg{ width:14px; height:14px; }
-
 /* the `hidden` attribute sets display:none in the UA sheet, and ANY author
    display rule beats it — so a hint told to hide kept drawing itself */
 .tplwin__hint[hidden]{ display:none; }
-
 .tplwin.is-scrolled .tplwin__hint{ opacity:0; translate:0 9px; animation:none; }
-
 @keyframes tplHint{
   from{ translate:0 -3px }
-  to  { translate:0  3px }
-}
 
+  to  { translate:0  3px }
+
+}
 /* An infinite loop is exactly what reduced motion is asking about, and this
    one has never had a guard. The hint still says what it says; it just says
    it still. */
@@ -6115,17 +5878,75 @@ h3{ font-family:var(--fd); }
 
 }
 
-
 .tplwin__scroll{
   flex:1; min-height:0;
   overflow-y:auto; overscroll-behavior:contain;
   scrollbar-width:thin;
 }
-
 .tplwin__scroll::-webkit-scrollbar{ width:5px; }
-
 .tplwin__scroll::-webkit-scrollbar-thumb{ background:rgb(var(--ink-rgb) / .18); border-radius:99px; }
 
+/* the page itself — its own little design system, nothing shared */
+.tpl{
+  --sand:#F6F1E8; --shell:#FBF8F3; --deep:#2F3A36;
+  --sea:#5E8C7D;        /* the accent at display sizes            */
+  --sea-ink:#456B5E;    /* …and its legible sibling for small text */
+  --deep-rgb:47 58 54;  /* --deep as channels, for its own scrims   */
+  background:var(--shell);
+  color:var(--deep);
+  font-family:"Instrument Sans", system-ui, sans-serif;
+}
+.tpl__nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px;
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--deep);
+  background:var(--shell);
+}
+.tpl__mark{ font-weight:600; letter-spacing:.26em; }
+.tpl__hero{ width:100%; height:210px; object-fit:cover; display:block; }
+.tpl__wide{ width:100%; height:150px; object-fit:cover; display:block; }
+.tpl__pad{ padding:20px 18px 24px; }
+.tpl__eyebrow{
+  margin:0 0 10px;
+  font-size:9px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--sea-ink);
+}
+.tpl__h1{
+  margin:0 0 12px;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-size:30px; line-height:1.08; font-weight:500; letter-spacing:-.01em;
+  color:var(--deep);
+}
+.tpl__lede{ margin:0; font-size:12px; line-height:1.65; color:rgb(var(--deep-rgb) / .78); }
+.tpl__rooms{ list-style:none; margin:0; padding:0; }
+.tpl__rooms li{
+  display:grid; grid-template-columns:minmax(0,1fr) auto;
+  gap:2px 10px;
+  padding:12px 0;
+  border-bottom:1px solid rgb(var(--deep-rgb) / .12);
+}
+.tpl__rooms li:last-child{ border-bottom:0; }
+.tpl__rooms b{ grid-column:1; grid-row:1; font-size:13px; font-weight:600; }
+.tpl__rooms i{
+  grid-column:1; grid-row:2;
+  font-style:normal; font-size:11px;
+  color:rgb(var(--deep-rgb) / .7);
+}
+.tpl__rooms em{
+  grid-column:2; grid-row:1 / span 2; align-self:center; text-align:right;
+  font-style:normal; font-size:11px; color:var(--sea-ink);
+}
+.tpl__quote{
+  margin:0 0 16px;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-size:17px; line-height:1.35; color:var(--deep);
+}
+.tpl__foot{
+  margin:0;
+  font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+  color:rgb(var(--deep-rgb) / .55);
+}
 
 @media (max-width:1080px){
   /* Three columns of a 999px reference do not survive being squeezed into a
@@ -6152,4 +5973,3 @@ h3{ font-family:var(--fd); }
   .tplwin{ height:clamp(340px, 58vw, 460px); flex:none; }
 
 }
-

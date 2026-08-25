@@ -954,7 +954,7 @@
      the middle of the viewport sets the window's beat. The stage reads
      one attribute and CSS does the rest, so there is exactly one place
      that knows which moment we are in. */
-  var ctrlWin = doc.getElementById('ctrlwin');
+  var ctrlWin = doc.getElementById('ctrlframe');
   var ctrlSteps = [].slice.call(doc.querySelectorAll('.ctrl__step'));
   if (ctrlWin && ctrlSteps.length && 'IntersectionObserver' in window) {
     var seen = new Map();
