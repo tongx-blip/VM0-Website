@@ -1650,12 +1650,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
                               5.1:1 on --wash, 4.7:1 on --wash-2 — AA on
                               every ground this page uses */
   --mat:        #171B1F;   /* the ground a product screen is matted on */
-  /* The closing band's ground. In light mode it is --ink and looked like
-     it could just BE --ink; in dark mode the page ground is already near
-     ink, so the band needs to be its own value or it disappears. One
-     token doing two jobs only looks fine until the second mode. */
-  --band:       var(--ink);
-  --band-2:     #14181D;   /* the footer panel resting on the band */
 
   /* ── CHANNELS ─────────────────────────────────────────────────────
      Every shadow, scrim and state layer on this page is one of these
@@ -1686,7 +1680,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
      and --ink-mute is already measured against it (4.7:1).
      Its dark sibling keeps the same relationship, inverted: one step OFF
      the ground it sits on rather than a fixed colour, so the header reads
-     as the same object over the closing band as it does over a white card. */
+     as the same object over every ground the page has. */
   --nav-fill:      var(--wash-2);
   --nav-fill-dark: var(--g-100);
   /* how far the blur under the header takes to disappear */
@@ -1940,8 +1934,9 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
    The RELATIONSHIPS are what carry over, not the values: the page ground
    stays the thing everything sits on, a card is one step off it, the header
-   is one step off the card, a tile is one step off the card the other way,
-   and the closing band stays the darkest surface on the page. In light mode
+   is one step off the card, and a tile is one step off the card the other
+   way. (The page had a dark closing band and no longer does — the CTA and
+   the footer sit on the page ground like everything else.) In light mode
    a card is LIGHTER than the ground and the header is DARKER than both; in
    dark mode both invert, because "separates from its surroundings" is the
    rule and "is lighter" was only ever how light mode expressed it.
@@ -1977,8 +1972,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
     --wash:       #0E1217;
     --wash-2:     #242C34;
     --tile:       #1D232A;
-    --band:       #05070A;
-  --band-2:     #0D1116;
     --ink:        #EEF1F3;
     --ink-soft:   #B4BCC3;
     --ink-mute:   #9AA3AB;
@@ -2002,8 +1995,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --wash:       #0E1217;
   --wash-2:     #242C34;
   --tile:       #1D232A;
-  --band:       #05070A;
-  --band-2:     #0D1116;
   --ink:        #EEF1F3;
   --ink-soft:   #B4BCC3;
   --ink-mute:   #9AA3AB;
@@ -4596,36 +4587,17 @@ h3{ font-family:var(--fd); }
 
 
 /* ─────────────── 16. the closing dark chapter ─────────────── */
+/* EVERY DARK OVERRIDE IS GONE. They existed to rescue this section's type
+   and buttons off a black ground; with the ground now the page's grey, the
+   page's own light defaults are already right and restating them here
+   would only be a second place to keep them in step. */
 .panel--cta{
-  /* transparent: .close owns the ground now, and painting it again here
-     would cover the artwork the CTA is supposed to sit on */
-  background:transparent; color:rgb(var(--paper-rgb) / .72);
+  background:transparent;
   border-top:0;
   padding-top:clamp(88px,8vw,132px);
 }
 
-.panel--cta .chip{ color:rgb(var(--paper-rgb) / .6); }
-
-.panel--cta .display{ color:var(--paper-ink); }
-
-.panel--cta .mark{ --hl:var(--accent); }
-
-.panel--cta .section-body{ color:rgb(var(--paper-rgb) / .72); }
-
 .cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
-
-.panel--cta .btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink); }
-
-.panel--cta .btn--dark:hover{
-  transform:translateY(-1px);
-  box-shadow:0 14px 30px -12px rgb(var(--accent-solid-rgb) / .8);
-}
-
-.panel--cta .btn--ghost{ background:rgb(var(--paper-rgb) / .1); color:var(--paper-ink); }
-
-.panel--cta .btn--ghost:hover{ background:rgb(var(--paper-rgb) / .18); color:var(--paper-ink); }
-
-.panel--cta .btn--ghost img{ filter:brightness(0) invert(1); }
 
 
 /* ── the footer panel ────────────────────────────────────────────────
@@ -4759,7 +4731,7 @@ h3{ font-family:var(--fd); }
     /* an explicit height, not aspect-ratio: on an absolutely positioned box
        with `bottom` set and no `top`, the height resolved from content —
        zero — and the drawing rendered as a hairline. 1015/1400 = .725 */
-    width:max(100vw, 430px); height:calc(max(100vw, 430px) * .725);
+    width:max(100vw, 430px); height:calc(max(100vw, 430px) * .775);
     transform:translateX(-50%);
     background:url(assets/brand/scene-close.png) 50% 100% / 100% auto no-repeat;
     -webkit-mask-image:linear-gradient(180deg,
@@ -5219,23 +5191,13 @@ h3{ font-family:var(--fd); }
    sliced across a seam. */
 .close{
   position:relative; isolation:isolate;
-  /* THE PAGE GROUND COMES BACK. The dark is the CTA's sky, not the end of
-     the document — below the drawing the page returns to the grey every
-     other section sits on, so the footer is not a light card stranded in
-     a black frame.
-
-     ONE LONG RAMP, and that is the whole trick. The first version handed
-     over in 150px, hoping to hide the seam behind the hill; measuring the
-     drawing showed the hill's lowest horizon is only 222px above the page
-     bottom, so there is nowhere to hide it — the compressed handover read
-     as a grey haze smeared across the sky. Stretched over 820px it stops
-     being a seam and becomes the sky lightening toward the horizon, which
-     is what a sky does.
-
-     Measured from the BOTTOM, not in percent: .close's height changes
-     with the footer's, and a percentage stop would drift with it. */
-  background:linear-gradient(to top,
-      var(--wash) 0, var(--band) 820px, var(--band) 100%);
+  /* THE PAGE'S OWN GREY, all the way through. This band used to be the
+     one dark moment on the page and it is not any more: the CTA and the
+     footer both sit on --wash, the same ground every other section sits
+     on, so there is no band edge to reconcile and no handover to hide.
+     The drawing's white sky now blends into the ground instead of being
+     masked out of a black one, which is what it was drawn for. */
+  background:var(--wash);
   overflow:hidden;
 }
 
@@ -5263,12 +5225,16 @@ h3{ font-family:var(--fd); }
      scene-close.png is the same drawing with 140px of hill stretched on
      underneath so it can ride higher and still reach the page bottom.
 
-     140 is solved, not chosen. The peak tops sit 675px above the drawing's
-     own bottom; at 1440 wide everything scales by 1.0286, and the footer
-     panel's top is 521px up, so an extension E puts the peaks
-     (675 + E) x 1.0286 - 521 above it. E = 140 gives 317px — comfortably
-     below the buttons, which sit about 400px up. The first attempt used
-     420 and pushed the mountains straight through the CTA's copy. */
+     210 is solved, not chosen. Everything scales by 1.0286 at 1440 and the
+     footer panel's top edge is 521px above the page bottom, so an
+     extension E lands the hill's highest horizon at (351 + E) x 1.0286.
+     At E = 140 that was 505 — just UNDER the panel, so the mountains
+     appeared to stand on the panel's edge with no ground beneath them,
+     and since the panel is now the same grey as the sky its edge was
+     invisible and the drawing simply looked clipped. E = 210 puts the
+     horizon at 577, a strip of hill above the edge, so the mountains
+     stand on ground and the hill runs on behind the panel. The peaks
+     land at 911, still clear of the buttons. */
   width:max(100vw, 900px); max-width:none; height:auto;
   transform:translateX(-50%);
   /* a long, gentle dissolve so the top edge melts into the dark instead

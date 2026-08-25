@@ -6,6 +6,41 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the closing band stops being dark at all
+
+Tong, pointing at the CTA: *"don't use black here either — use the
+background grey."*
+
+So the page no longer has a dark band. `.close` is `--wash`, the same
+ground every other section sits on, and the CTA's whole set of dark
+overrides is **deleted** rather than inverted: they existed to rescue that
+section's type and buttons off a black ground, and the page's own light
+defaults are already right. `data-ground="dark"` came off the wrapper —
+there is now nothing on the page for the header's dark variant to react
+to, though the mechanism stays.
+
+The drawing is better for it. Its sky is white, and it was being masked
+out of a black ground; on the page grey it simply blends, which is what
+it was drawn for.
+
+`--band` and `--band-2` are gone — six declarations across the light and
+dark layers, dead the moment the band was. Two comments that described
+the closing band as "the darkest surface on the page" were corrected
+rather than left to mislead.
+
+### One thing the flat ground broke
+
+With the panel now the same grey as the sky behind it, its top edge is
+invisible — and it was silently clipping the mountains, which appeared to
+stand on nothing. Measured: the hill's highest horizon sat at 505px above
+the page bottom and the panel's top edge is at 521, so the ground the
+mountains stand on was *just* behind the panel. The drawing's extension
+went from 140px to 210, putting the horizon at 577 — a strip of hill above
+the edge, so the mountains stand on ground and the hill runs on behind the
+panel and out into the gutters. The peaks land at 910, still clear of the
+buttons.
+
+
 ## 2026-08-25 · the footer stops being black
 
 Tong: *"the footer doesn't have to be black — just use the whole landing's
