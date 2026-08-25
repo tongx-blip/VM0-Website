@@ -980,4 +980,71 @@
     });
     ctrlSteps.forEach(function (el) { ctrlObserver.observe(el); });
   }
+
+  /* ── 14. the language control ────────────────────────────────────
+     A listbox, because a native <select> paints with the operating
+     system's chrome and cannot be made to match anything. Everything the
+     native one gave for free has to be given back by hand: open/close,
+     Escape, click-away, arrow keys, Home/End, and focus returning to the
+     button when the menu closes. */
+  var lang = doc.getElementById('lang');
+  if (lang) {
+    var langBtn = lang.querySelector('.lang__btn');
+    var langMenu = lang.querySelector('.lang__menu');
+    var langCur = lang.querySelector('.lang__cur');
+    var langOpts = [].slice.call(lang.querySelectorAll('.lang__opt'));
+
+    function langOpen(open) {
+      langMenu.hidden = !open;
+      langBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var sel = lang.querySelector('.lang__opt.is-on') || langOpts[0];
+        sel.focus();
+      }
+    }
+
+    function langPick(el) {
+      langOpts.forEach(function (o) {
+        var on = o === el;
+        o.classList.toggle('is-on', on);
+        o.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      langCur.textContent = el.textContent;
+      langOpen(false);
+      langBtn.focus();
+    }
+
+    langBtn.addEventListener('click', function () {
+      langOpen(langMenu.hidden);
+    });
+
+    langOpts.forEach(function (o) {
+      o.addEventListener('click', function () { langPick(o); });
+    });
+
+    langMenu.addEventListener('keydown', function (e) {
+      var i = langOpts.indexOf(doc.activeElement);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        var n = (i + (e.key === 'ArrowDown' ? 1 : -1) + langOpts.length) % langOpts.length;
+        langOpts[n].focus();
+      } else if (e.key === 'Home') { e.preventDefault(); langOpts[0].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); langOpts[langOpts.length - 1].focus(); }
+      else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (i > -1) langPick(langOpts[i]);
+      } else if (e.key === 'Escape') { langOpen(false); langBtn.focus(); }
+    });
+
+    langBtn.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); langOpen(true); }
+    });
+
+    doc.addEventListener('click', function (e) {
+      if (!lang.contains(e.target)) langOpen(false);
+    });
+    doc.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !langMenu.hidden) { langOpen(false); langBtn.focus(); }
+    });
+  }
 })();

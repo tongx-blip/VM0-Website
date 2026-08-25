@@ -970,7 +970,12 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 .perms__tabs span.is-on{
-  background:#fff; border-color:var(--hairline);
+  /* --paper, not #fff. In dark mode --ink is near-white, so a hard white
+     pill put white text on a white chip and the active tab disappeared.
+     The token audit could not see it: this lives inside .perms, which is
+     mock-exempt, and the exemption assumes a mock is PINNED to one theme.
+     This one follows the theme, so the literal was a real bug. */
+  background:var(--paper); border-color:var(--hairline);
   color:var(--ink); font-weight:500;
 }
 
@@ -3491,7 +3496,7 @@ h3{ font-family:var(--fd); }
 /* ── the layers ─────────────────────────────────────────────────────
    All four sit over the same window, keyed off one attribute, so the
    stage has exactly one source of truth for what it is showing. */
-.cbox,.cgate,.cnet,.ctrail{
+.cbox,.cgate,.cnet{
   position:absolute; z-index:2;
   opacity:0; pointer-events:none;
   transition:opacity var(--t-state) var(--e-out),
@@ -3506,7 +3511,6 @@ h3{ font-family:var(--fd); }
 .ctrl__frame[data-beat="2"] .perms,
 .ctrl__frame[data-beat="4"] .perms{ opacity:.3; }
 
-.ctrl__frame[data-beat="5"] .perms{ opacity:0; }
 
 
 /* 3 · the boundary. The section's one big gesture. */
@@ -3581,8 +3585,7 @@ h3{ font-family:var(--fd); }
 }
 
 .ctrl__frame[data-beat="4"] .cnet{ opacity:1; translate:0 0; }
-
-.cnet__h,.ctrail__h{
+.cnet__h{
   margin:0 0 12px; font-family:var(--fm); font-size:var(--t-mono);
   letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute);
 }
@@ -3603,20 +3606,39 @@ h3{ font-family:var(--fd); }
 .cnet__f{ margin:12px 0 0; font-size:var(--t-meta); color:var(--ink-mute); }
 
 
-/* 5 · what the run left behind */
-.ctrail{
-  left:clamp(12px,1.6vw,22px); right:clamp(12px,1.6vw,22px); top:clamp(12px,1.6vw,22px);
-  translate:0 14px;
-  padding:clamp(16px,1.8vw,24px);
-  border-radius:var(--r-card);
-  background:var(--paper);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
+/* 5 · what the run left behind.
+   NOT a card floating over an empty frame — that is what it was, and it
+   read as a small panel adrift with no relationship to the beat before
+   it. The trail is the SAME WINDOW on a different tab: the breadcrumb,
+   the agent header and the tab strip all stay, "Authorization" hands over
+   to "Activity", and only the body swaps. That is both how the product
+   works and the connective tissue beat 4 was missing. */
+.ctrail{ display:none; }
+
+.ctrl__frame[data-beat="5"] .ctrail{ display:block; }
+
+.ctrl__frame[data-beat="5"] .perms__list,
+.ctrl__frame[data-beat="5"] .perms__note{ display:none; }
+
+
+/* the tab strip follows the body */
+.perms__tab--act{ transition:none; }
+
+.ctrl__frame[data-beat="5"] .perms__tab--auth{
+  background:transparent; border-color:transparent;
+  color:var(--ink-mute); font-weight:400; box-shadow:none;
 }
 
-.ctrl__frame[data-beat="5"] .ctrail{ opacity:1; translate:0 0; }
+.ctrl__frame[data-beat="5"] .perms__tab--act{
+  background:var(--paper); border-color:var(--hairline);
+  color:var(--ink); font-weight:500;
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .08);
+}
+
 
 .ctrail__r{
-  display:flex; align-items:center; gap:12px; margin:0; padding:9px 0;
+  display:flex; align-items:center; gap:12px;
+  margin:0 20px; padding:11px 0;
   font-size:var(--t-meta); color:var(--ink);
 }
 
@@ -3633,7 +3655,7 @@ h3{ font-family:var(--fd); }
 
 
 @media (prefers-reduced-motion:reduce){
-  .cbox,.cgate,.cnet,.ctrail,.perms,.ctrl__win,.ctrl__step h3,.ctrl__step p{ transition:none; }
+  .cbox,.cgate,.cnet,.perms,.ctrl__win,.ctrl__step h3,.ctrl__step p{ transition:none; }
 
 }
 
@@ -4737,12 +4759,53 @@ h3{ font-family:var(--fd); }
 .pref__moon{ display:none; }
 :root[data-theme="dark"] .pref__sun{ display:none; }
 :root[data-theme="dark"] .pref__moon{ display:block; }
-.pref__lang select{
-  border:0; background:transparent; color:inherit;
-  font:inherit; font-size:var(--t-mono); letter-spacing:.06em;
-  cursor:pointer; padding:0 2px;
+/* ── the language control ────────────────────────────────────────────
+   NOT a <select>. The native one paints with the operating system's own
+   chrome — its own font, its own blue highlight, its own checkmark — and
+   its internal box does not line up with anything around it, which is why
+   the globe, the label and the chevron all sat at different distances and
+   the focus ring landed off to one side. This is a button and a listbox,
+   built from the same tokens as everything else, so the three parts sit on
+   one baseline with gaps we chose. */
+.lang{ position:relative; }
+.lang__btn{ gap:8px; }
+.lang__cur{ color:inherit; }
+.lang__chev{
+  width:14px; height:14px; opacity:.7;
+  transition:transform var(--t-hover) var(--e-out);
 }
-.pref__lang select:focus-visible{ outline:2px solid var(--accent-solid); outline-offset:3px; }
+.lang__btn[aria-expanded="true"] .lang__chev{ transform:rotate(180deg); }
+.lang__btn[aria-expanded="true"]{ background:var(--wash-2); color:var(--ink); }
+
+/* it opens UPWARD: this control lives in the last row of the document */
+.lang__menu{
+  position:absolute; right:0; bottom:calc(100% + 8px); z-index:20;
+  min-width:190px; max-height:min(58vh, 420px); overflow-y:auto;
+  margin:0; padding:6px; list-style:none;
+  border-radius:var(--r-card);
+  background:var(--paper);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08),
+             0 24px 48px -20px rgb(var(--ink-rgb) / .38);
+}
+.lang__menu[hidden]{ display:none; }
+.lang__opt{
+  display:flex; align-items:center; gap:8px;
+  padding:8px 10px; border-radius:var(--r-btn);
+  font-size:var(--t-meta); color:var(--ink-soft);
+  cursor:pointer;
+  transition:background var(--t-hover) var(--e-out), color var(--t-hover) var(--e-out);
+}
+.lang__opt:hover,.lang__opt:focus-visible{
+  background:var(--wash-2); color:var(--ink); outline:none;
+}
+/* the selected one is marked by a dot in the accent, not by a filled row —
+   a highlighted row is the operating system's idiom, not ours */
+.lang__opt::before{
+  content:''; width:5px; height:5px; flex:none; border-radius:50%;
+  background:transparent;
+}
+.lang__opt.is-on{ color:var(--ink); }
+.lang__opt.is-on::before{ background:var(--accent-solid); }
 .footer__links{
   display:flex; flex-wrap:wrap; gap:10px 26px;
   margin:0; padding:0; list-style:none;
@@ -5050,6 +5113,46 @@ h3{ font-family:var(--fd); }
   .step{ grid-template-columns:18px minmax(0,1fr); column-gap:10px; }
 
 }
+
+/* ── monochrome brand marks on a dark ground ─────────────────────────
+   Eleven of the thirty-six connector marks are drawn in black with no
+   colour of their own — OpenAI, Vercel, Notion, GitHub and the rest — so
+   on a dark surface they were black on black. The set was not guessed:
+   every mark was drawn to a canvas and measured, and these are the ones
+   with saturation <= 22 and luminance <= 110. Inverting is the right
+   treatment rather than a hack, because a black-and-white mark's dark
+   variant IS its inverse — Notion's white-on-black box becomes
+   black-on-white, which is the logo they publish for dark grounds.
+   Coloured marks are untouched. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) :is(
+  img[src*="connectors/sentry.svg"],
+  img[src*="connectors/github_marketing.svg"],
+  img[src*="connectors/notion.svg"],
+  img[src*="connectors/openai.svg"],
+  img[src*="connectors/elevenlabs.svg"],
+  img[src*="connectors/perplexity.svg"],
+  img[src*="connectors/manus.svg"],
+  img[src*="connectors/intercom.svg"],
+  img[src*="connectors/vercel.svg"],
+  img[src*="connectors/axiom.svg"],
+  img[src*="connectors/notion_marketing.svg"]
+  ){ filter:invert(1); }
+
+}
+:root[data-theme="dark"] :is(
+  img[src*="connectors/sentry.svg"],
+  img[src*="connectors/github_marketing.svg"],
+  img[src*="connectors/notion.svg"],
+  img[src*="connectors/openai.svg"],
+  img[src*="connectors/elevenlabs.svg"],
+  img[src*="connectors/perplexity.svg"],
+  img[src*="connectors/manus.svg"],
+  img[src*="connectors/intercom.svg"],
+  img[src*="connectors/vercel.svg"],
+  img[src*="connectors/axiom.svg"],
+  img[src*="connectors/notion_marketing.svg"]
+){ filter:invert(1); }
 
 /* ─────────────── 20. reduced motion ─────────────── */
 @media (prefers-reduced-motion:reduce){

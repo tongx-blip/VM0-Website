@@ -1484,7 +1484,12 @@ a.acard .acard__txt i{ color:var(--ink); }
   font-size:13px; color:var(--ink-mute);
 }
 .perms__tabs span.is-on{
-  background:#fff; border-color:var(--hairline);
+  /* --paper, not #fff. In dark mode --ink is near-white, so a hard white
+     pill put white text on a white chip and the active tab disappeared.
+     The token audit could not see it: this lives inside .perms, which is
+     mock-exempt, and the exemption assumes a mock is PINNED to one theme.
+     This one follows the theme, so the literal was a real bug. */
+  background:var(--paper); border-color:var(--hairline);
   color:var(--ink); font-weight:500;
 }
 .perms__list{ border-top:1px solid var(--hairline); }

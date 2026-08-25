@@ -6,6 +6,43 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · no system components, and three dark-mode bugs
+
+**The language control was a native `<select>`.** It painted with the
+operating system's chrome — its own font, its blue highlight row, its own
+checkmark — and its internal box lined up with nothing, which is why the
+globe, the label and the chevron sat at three different distances and the
+focus ring landed off to one side. Replaced with a button and a listbox
+built from our own tokens: one baseline, gaps we chose, opens upward
+because it lives in the last row of the document, and the selection is
+marked with an accent dot rather than a filled row, because a highlighted
+row is the OS's idiom and not ours. Everything the native element gave for
+free had to be given back by hand — open/close, Escape, click-away, arrow
+keys, Home/End, and focus returning to the button.
+
+**The active segment was white on white in dark mode.** `.perms__tabs
+span.is-on` had a hard-coded `background:#fff` while its text is `--ink`,
+which is near-white in dark. Worth recording *why the audit missed it*:
+that rule lives inside `.perms`, which is mock-exempt, and the exemption
+assumes a mock is PINNED to one theme. This mock follows the theme, so the
+literal was a real bug rather than a deliberate pin.
+
+**Eleven brand marks were black on black.** The set was measured, not
+guessed: every connector mark was drawn to a canvas and sampled, and the
+eleven with saturation ≤ 22 and luminance ≤ 110 are inverted on a dark
+ground. Inverting is the correct treatment rather than a hack — a
+black-and-white mark's dark variant *is* its inverse, which is why
+Notion's white-on-black box becomes black-on-white, the logo they publish
+for dark grounds. The twenty-five coloured marks are untouched.
+
+**Beat 5 was a card adrift.** The activity trail floated over an otherwise
+empty frame with no relationship to the beat before it. It is the same
+window on a different tab now: breadcrumb, agent header and tab strip all
+stay, "Authorization" hands over to "Activity", and only the body swaps.
+That is how the product works, and it is the connective tissue beat 4 was
+missing.
+
+
 ## 2026-08-25 · control, designed this time
 
 Tong: *"you implemented the logic I described, but the design is terrible.
