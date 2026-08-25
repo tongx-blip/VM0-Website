@@ -6,6 +6,38 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the footer stops being black
+
+Tong: *"the footer doesn't have to be black — just use the whole landing's
+grey. Then make the background merge more comfortably with the section
+above. And leave space at the bottom, don't sit on the edge."*
+
+The panel is `--wash` now — the same grey every other section of the page
+sits on — with the text on the ink scale. Both are page tokens, so dark
+mode follows for free: there the page grey is `#0E1217`, which is still
+one step off the band, and the card keeps reading as a card.
+
+It is inset on all four sides now, `--card-gap` all round, so the drawing
+runs under it as well as beside it. Measured 26px of hill between the card
+and the bottom of the document.
+
+### The merge took two goes, and measuring settled it
+
+The dark had to hand over to the grey somewhere. The first attempt put
+that handover in 150px and tried to hide it behind the hill — and it read
+as a **grey haze smeared across the sky**, because the hill does not cover
+that band. Measuring the drawing said why: scanning every eighth column
+for the topmost green pixel, the hill's horizon runs from 524 to 799 of
+1015, so its **lowest** point is only 222px above the page bottom. There
+is nowhere up there to hide a seam.
+
+So it stopped hiding. One ramp over 820px, `--band` to `--wash`, is not a
+seam at all — it is the sky lightening toward the horizon, which is what a
+sky does. The stops are measured from the bottom rather than in percent,
+because `.close`'s height moves with the footer's and a percentage would
+drift with it.
+
+
 ## 2026-08-25 · the CTA and the footer become one composition
 
 Tong pointed at clay.com/about and lovable.dev and asked for our own

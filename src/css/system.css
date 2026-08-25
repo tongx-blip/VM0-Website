@@ -2733,12 +2733,12 @@ h3{ font-family:var(--fd); }
    shape — it is what makes the two sections read as one composition. */
 .footer{
   position:relative; z-index:1;
-  margin:0 var(--card-gap);
-  border-radius:var(--r-section) var(--r-section) 0 0;
+  margin:0 var(--card-gap) var(--card-gap);
+  border-radius:var(--r-section);
   padding:clamp(44px,4.6vw,72px) max(var(--pad-section), calc(var(--edge) - var(--card-gap)))
           clamp(26px,2.6vw,38px);
-  background:var(--band-2);
-  color:rgb(var(--paper-rgb) / .7);
+  background:var(--wash);
+  color:var(--ink-soft);
   text-align:left;
 }
 
@@ -2750,11 +2750,11 @@ h3{ font-family:var(--fd); }
 .footer__brand p{
   margin:14px 0 0; max-width:26ch;
   font-size:var(--t-meta); line-height:1.6;
-  color:rgb(var(--paper-rgb) / .56);
+  color:var(--ink-mute);
 }
 .footer__mark{
   display:inline-flex; align-items:center; gap:10px;
-  color:var(--paper-ink); text-decoration:none;
+  color:var(--ink); text-decoration:none;
 }
 .footer__mark img{ width:24px; height:24px; }
 .footer__mark span{
@@ -2770,17 +2770,17 @@ h3{ font-family:var(--fd); }
   margin:0 0 14px;
   font-family:var(--fm); font-size:var(--t-mono);
   letter-spacing:.11em; text-transform:uppercase;
-  color:rgb(var(--paper-rgb) / .48);
+  color:var(--ink-mute);
 }
 .footer__col ul{ list-style:none; margin:0; padding:0; }
 .footer__col li + li{ margin-top:9px; }
 .footer__col a{
   font-size:var(--t-meta); line-height:1.45;
-  color:rgb(var(--paper-rgb) / .76);
+  color:var(--ink-soft);
   text-decoration:none;
   transition:color var(--t-hover) var(--e-out);
 }
-.footer__col a:hover{ color:var(--paper-ink); }
+.footer__col a:hover{ color:var(--ink); }
 
 .footer__disclaimer{
   max-width:80ch; margin:clamp(34px,3.6vw,56px) 0 0;
@@ -2788,7 +2788,7 @@ h3{ font-family:var(--fd); }
   /* .42 was under AA on the panel. This is the quietest the disclaimer is
      allowed to be and still be readable, which is the point of a
      disclaimer. */
-  color:rgb(var(--paper-rgb) / .62);
+  color:var(--ink-mute);
 }
 
 /* NO RULE. Clay draws a hairline above its bottom bar and the first
@@ -2806,15 +2806,15 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-mono); letter-spacing:.09em;
 }
 .footer__links a{
-  color:rgb(var(--paper-rgb) / .6);
-  background:linear-gradient(var(--paper),var(--paper)) no-repeat 0 100% / 0% 1px;
+  color:var(--ink-mute);
+  background:linear-gradient(var(--ink),var(--ink)) no-repeat 0 100% / 0% 1px;
   transition:background-size var(--t-state) var(--e-out), color var(--t-hover) var(--e-snap);
 }
-.footer__links a:hover{ color:var(--paper-ink); background-size:100% 1px; }
+.footer__links a:hover{ color:var(--ink); background-size:100% 1px; }
 .footer__copy{
   margin:0;
   font-size:var(--t-mono); letter-spacing:.09em;
-  color:rgb(var(--paper-rgb) / .5);
+  color:var(--ink-mute);
 }
 
 @media (max-width:960px){
@@ -3197,7 +3197,23 @@ h3{ font-family:var(--fd); }
    sliced across a seam. */
 .close{
   position:relative; isolation:isolate;
-  background:var(--band);
+  /* THE PAGE GROUND COMES BACK. The dark is the CTA's sky, not the end of
+     the document — below the drawing the page returns to the grey every
+     other section sits on, so the footer is not a light card stranded in
+     a black frame.
+
+     ONE LONG RAMP, and that is the whole trick. The first version handed
+     over in 150px, hoping to hide the seam behind the hill; measuring the
+     drawing showed the hill's lowest horizon is only 222px above the page
+     bottom, so there is nowhere to hide it — the compressed handover read
+     as a grey haze smeared across the sky. Stretched over 820px it stops
+     being a seam and becomes the sky lightening toward the horizon, which
+     is what a sky does.
+
+     Measured from the BOTTOM, not in percent: .close's height changes
+     with the footer's, and a percentage stop would drift with it. */
+  background:linear-gradient(to top,
+      var(--wash) 0, var(--band) 820px, var(--band) 100%);
   overflow:hidden;
 }
 .close__art{
