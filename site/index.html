@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=22c2fe59">
+<link rel="stylesheet" href="styles.css?r=09cd8382">
 </head>
 <body>
 
@@ -1088,45 +1088,104 @@
 
 </section>
 
-<!-- ═══════════════ CTA ═══════════════ -->
-<section class="panel panel--cta" id="cta" data-ground="dark">
-  <img class="cta__scene" src="assets/brand/scene-hills.png?v=760a9569" alt="" aria-hidden="true">
-  <h2 class="display display--center" data-reveal="mask">
-    <span class="line">Make your team’s</span>
-    <span class="line">expertise <mark class="mark mark--tan">self-running.</mark></span>
-  </h2>
-  <p class="section-body reveal">
-    Turn the way your best people work into capacity the whole team can call on, with control
-    over every action.
-  </p>
-  <p class="cta__btns reveal">
-    <a class="btn btn--dark btn--lg" href="#top">Get started for free</a>
-    <a class="btn btn--ghost btn--lg" href="#top"><img src="assets/mockup/slack.svg?v=55532dd8" alt="">Add to Slack</a>
-  </p>
-</section>
-
 </main>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
-<footer class="footer" data-ground="dark">
-  <div class="footer__badge"><img src="assets/okou-icon.svg?v=77e4663f" alt="Okou"></div>
-  <h2 class="display display--center footer__line" data-reveal="mask">
-    <span class="line">Delegate more</span>
-    <span class="line">to Okou.</span>
-  </h2>
-  <p class="footer__disclaimer">
-    Okou runs on large language models, so verify important outputs. The AI agent inside the Slack
-    app requires a paid Slack plan. @mentions and direct messages work on all Slack plans.
-  </p>
-  <ul class="footer__links">
-    <li><a href="#top">Status</a></li>
-    <li><a href="#top">Support</a></li>
-    <li><a href="#top">Terms of Use</a></li>
-    <li><a href="#top">Privacy Policy</a></li>
-    <li><a href="#top">Consent Preferences</a></li>
-  </ul>
-  <p class="footer__copy">© 2026 Okou.ai · All rights reserved.</p>
-</footer>
+<!-- ═══════════════ THE CLOSE: cta + footer share one ground ═══════════════ -->
+
+<div class="close" data-ground="dark">
+  <img class="close__art" src="assets/brand/scene-close.png?v=8258cc15" alt="" aria-hidden="true">
+
+  <section class="panel panel--cta" id="cta" aria-labelledby="cta-title">
+    <h2 class="display display--center" id="cta-title" data-reveal="mask">
+      <span class="line">Make your team’s</span>
+      <span class="line">expertise <mark class="mark mark--tan">self-running.</mark></span>
+    </h2>
+    <p class="section-body reveal">
+      Turn the way your best people work into capacity the whole team can call on, with control
+      over every action.
+    </p>
+    <p class="cta__btns reveal">
+      <a class="btn btn--dark btn--lg" href="#top">Get started for free</a>
+      <a class="btn btn--ghost btn--lg" href="#top"><img src="assets/mockup/slack.svg?v=55532dd8" alt="">Add to Slack</a>
+    </p>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="footer__mark" href="#top">
+          <img src="assets/okou-icon.svg?v=77e4663f" alt=""><span>OKOU</span>
+        </a>
+        <p>Okou, your trustworthy AI teammate.</p>
+      </div>
+      <nav class="footer__cols" aria-label="Footer">
+      <div class="footer__col">
+        <h3>Features</h3>
+        <ul>
+          <li><a href="#top">Workflows &amp; automation</a></li>
+          <li><a href="#top">Generative services</a></li>
+          <li><a href="#top">Web services</a></li>
+          <li><a href="#top">Team collaboration</a></li>
+          <li><a href="#top">Slack</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="#top">Freelancers</a></li>
+          <li><a href="#top">Small business</a></li>
+          <li><a href="#top">Agencies</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Templates</h3>
+        <ul>
+          <li><a href="#top">Workflows</a></li>
+          <li><a href="#top">Reports</a></li>
+          <li><a href="#top">Presentations</a></li>
+          <li><a href="#top">Video</a></li>
+          <li><a href="#top">Illustrations</a></li>
+          <li><a href="#top">Website Designs</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Trust &amp; Tech</h3>
+        <ul>
+          <li><a href="#top">Select any model</a></li>
+          <li><a href="#top">Model Rankings</a></li>
+          <li><a href="#top">Security</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#top">Docs</a></li>
+          <li><a href="#top">Blog</a></li>
+          <li><a href="#top">Free AI tools</a></li>
+          <li><a href="#top">Compare</a></li>
+          <li><a href="#top">Pricing</a></li>
+        </ul>
+      </div>
+      </nav>
+    </div>
+
+    <p class="footer__disclaimer">
+      Okou runs on large language models, so verify important outputs. The AI agent inside the Slack
+      app requires a paid Slack plan. @mentions and direct messages work on all Slack plans.
+    </p>
+
+    <div class="footer__base">
+      <p class="footer__copy">© 2026 Okou.ai · All rights reserved.</p>
+      <ul class="footer__links">
+        <li><a href="#top">Status</a></li>
+        <li><a href="#top">Support</a></li>
+        <li><a href="#top">Terms of Use</a></li>
+        <li><a href="#top">Privacy Policy</a></li>
+        <li><a href="#top">Consent Preferences</a></li>
+      </ul>
+    </div>
+  </footer>
+</div>
 
 <script src="app.js?r=dcfcd0b3"></script>
 </body>

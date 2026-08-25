@@ -6,6 +6,78 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the CTA and the footer become one composition
+
+Tong pointed at clay.com/about and lovable.dev and asked for our own
+footer content in that shape, merging into the closing CTA.
+
+Lovable is behind Cloudflare and would not render, so the pattern was read
+off Clay, which is unambiguous: **the illustration behind the final CTA
+does not stop at the section edge.** It runs on, and the footer sits on
+top of it as a rounded panel inset from the viewport, so the artwork stays
+visible in the gutters either side. The two never read as two bands.
+
+Ours was exactly the stacked version — `.cta__scene` ended at the CTA's
+bottom edge and the footer began again underneath, slicing the drawing
+across a seam. Now a `.close` wrapper owns one dark ground and one
+artwork, the CTA is transparent on top of it, and the footer is a panel
+inset by the same `--card-gap` every other panel uses, rounded at the top
+and flush to the bottom of the document.
+
+Content is vm0.ai's footer, read off the live site: the five link columns,
+the tagline, the disclaimer, the copyright and the five legal links. VM0
+reads as Okou throughout, since that is this page's name.
+
+### Sizing the artwork, which took three wrong tries
+
+* **`object-fit:cover` was lying.** Past 900px tall the cover switches from
+  cropping the top to cropping the *sides*, so making the box taller
+  scaled the whole landscape up and slid the composition off to the right.
+  A height that follows the width leaves the artist's framing alone.
+* **Anchoring to the page bottom dropped the peaks.** The drawing's bottom
+  edge is the bottom of the hill, so putting artwork in the footer's
+  gutters put the mountains 173px above the panel — sparse and small.
+  `scene-close.png` is the same drawing with 140px of hill stretched on
+  underneath so it can ride higher and still reach the page bottom.
+  **140 is solved, not chosen**: peaks sit 675px above the drawing's own
+  bottom, everything scales by 1.0286 at 1440, and the panel's top is
+  521px up, so E = 140 puts them 317px above it — below the buttons, which
+  sit at about 400. The first attempt used 420 and drove the mountains
+  through the CTA's copy.
+* **Then a cloud crossed "Add to Slack".** The cloud band lands 297-492px
+  above the panel; the buttons were at 400. More padding under them.
+
+### The phone is a different composition
+
+Stacked to one column the footer is 1389px tall against a 653px drawing,
+so anchoring to the page bottom hid the artwork completely and left the
+CTA on plain black. Below 960 the drawing moves *above* the panel instead
+(`bottom:100%` on a `::before`), which is the composition the CTA had to
+begin with. The gutters are 12px there and worth nothing, so the trade is
+free.
+
+Two bugs on the way in: `aspect-ratio` does not resolve on an absolutely
+positioned box with `bottom` set and no `top` — it rendered as a hairline
+until given an explicit height — and a `.panel--cta` padding override at
+960 quietly won over the one I had just written.
+
+### The fifth two-layer defect
+
+`base.css` still had a `.footer` block, and its `overflow:hidden` — which
+the design layer had no reason to restate — clipped the phone drawing to
+nothing. It also styled `.footer__badge` and `.footer__line`, whose markup
+no longer exists. Deleted rather than patched, as `.quote` was.
+
+### Two things the gate caught
+
+* The CTA now sits outside `<main>`, so its heading and body were in no
+  landmark. The section is named from its own heading and is a `region`.
+* The disclaimer at 42% white failed AA on the panel. 62%.
+* Clay draws a hairline above its bottom bar and the first version copied
+  it, straight into "no structural lines". The border audit caught it; the
+  separation is the gap now.
+
+
 ## 2026-08-25 · the 54 token findings, 42 of which were my own tool
 
 Asked to clear the list `tools/tokens.py` was reporting. The first useful

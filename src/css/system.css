@@ -38,6 +38,7 @@
      ink, so the band needs to be its own value or it disappears. One
      token doing two jobs only looks fine until the second mode. */
   --band:       var(--ink);
+  --band-2:     #14181D;   /* the footer panel resting on the band */
 
   /* ── CHANNELS ─────────────────────────────────────────────────────
      Every shadow, scrim and state layer on this page is one of these
@@ -356,6 +357,7 @@
     --wash-2:     #242C34;
     --tile:       #1D232A;
     --band:       #05070A;
+  --band-2:     #0D1116;
     --ink:        #EEF1F3;
     --ink-soft:   #B4BCC3;
     --ink-mute:   #9AA3AB;
@@ -378,6 +380,7 @@
   --wash-2:     #242C34;
   --tile:       #1D232A;
   --band:       #05070A;
+  --band-2:     #0D1116;
   --ink:        #EEF1F3;
   --ink-soft:   #B4BCC3;
   --ink-mute:   #9AA3AB;
@@ -2702,7 +2705,9 @@ h3{ font-family:var(--fd); }
 
 /* ─────────────── 16. the closing dark chapter ─────────────── */
 .panel--cta{
-  background:var(--band); color:rgb(var(--paper-rgb) / .72);
+  /* transparent: .close owns the ground now, and painting it again here
+     would cover the artwork the CTA is supposed to sit on */
+  background:transparent; color:rgb(var(--paper-rgb) / .72);
   border-top:0;
   padding-top:clamp(88px,8vw,132px);
 }
@@ -2720,46 +2725,131 @@ h3{ font-family:var(--fd); }
 .panel--cta .btn--ghost:hover{ background:rgb(var(--paper-rgb) / .18); color:var(--paper-ink); }
 .panel--cta .btn--ghost img{ filter:brightness(0) invert(1); }
 
+/* ── the footer panel ────────────────────────────────────────────────
+   A panel resting on the close's artwork, not a band under it: inset by
+   the same --card-gap every other panel on this page uses, rounded at the
+   top only, and flush to the bottom of the document. The illustration
+   shows in the gutters either side, which is the whole point of the
+   shape — it is what makes the two sections read as one composition. */
 .footer{
-  position:relative;
-  display:flex; flex-direction:column; align-items:center;
-  text-align:center;
-  gap:clamp(18px,2vw,26px);
-  margin:0; border-radius:0;
-  padding:clamp(56px,5.4vw,88px) var(--edge) clamp(34px,3.6vw,52px);
-  background:var(--band); color:rgb(var(--paper-rgb) / .7);
-  overflow:hidden;
+  position:relative; z-index:1;
+  margin:0 var(--card-gap);
+  border-radius:var(--r-section) var(--r-section) 0 0;
+  padding:clamp(44px,4.6vw,72px) max(var(--pad-section), calc(var(--edge) - var(--card-gap)))
+          clamp(26px,2.6vw,38px);
+  background:var(--band-2);
+  color:rgb(var(--paper-rgb) / .7);
+  text-align:left;
 }
-.footer__badge{
-  width:44px; height:44px; margin:0;
-  display:grid; place-items:center;
-  border:0; border-radius:var(--r-btn);
-  background:rgb(var(--paper-rgb) / .1);
+
+.footer__grid{
+  display:grid; gap:clamp(30px,3.4vw,56px);
+  grid-template-columns:minmax(210px, 1fr) minmax(0, 3.1fr);
+  align-items:start;
 }
-.footer__badge img{ width:19px; filter:brightness(0) invert(1); }
-.footer__line{
-  color:var(--paper-ink); font-size:var(--t-d2); text-align:center;
-}
-.footer__disclaimer{
-  max-width:62ch; margin:clamp(10px,1.4vw,20px) 0 0;
-  font-size:var(--t-meta); line-height:1.7; text-align:center;
+.footer__brand p{
+  margin:14px 0 0; max-width:26ch;
+  font-size:var(--t-meta); line-height:1.6;
   color:rgb(var(--paper-rgb) / .56);
 }
+.footer__mark{
+  display:inline-flex; align-items:center; gap:10px;
+  color:var(--paper-ink); text-decoration:none;
+}
+.footer__mark img{ width:24px; height:24px; }
+.footer__mark span{
+  font-family:var(--fm); font-size:var(--t-wordmark);
+  letter-spacing:.22em; font-weight:500;
+}
+
+.footer__cols{
+  display:grid; gap:clamp(20px,2.4vw,34px);
+  grid-template-columns:repeat(5, minmax(0,1fr));
+}
+.footer__col h3{
+  margin:0 0 14px;
+  font-family:var(--fm); font-size:var(--t-mono);
+  letter-spacing:.11em; text-transform:uppercase;
+  color:rgb(var(--paper-rgb) / .48);
+}
+.footer__col ul{ list-style:none; margin:0; padding:0; }
+.footer__col li + li{ margin-top:9px; }
+.footer__col a{
+  font-size:var(--t-meta); line-height:1.45;
+  color:rgb(var(--paper-rgb) / .76);
+  text-decoration:none;
+  transition:color var(--t-hover) var(--e-out);
+}
+.footer__col a:hover{ color:var(--paper-ink); }
+
+.footer__disclaimer{
+  max-width:80ch; margin:clamp(34px,3.6vw,56px) 0 0;
+  font-size:var(--t-meta); line-height:1.7; text-align:left;
+  /* .42 was under AA on the panel. This is the quietest the disclaimer is
+     allowed to be and still be readable, which is the point of a
+     disclaimer. */
+  color:rgb(var(--paper-rgb) / .62);
+}
+
+/* NO RULE. Clay draws a hairline above its bottom bar and the first
+   version copied it — straight into "no structural lines", which the
+   border audit caught. The separation is the gap instead, which is what
+   that rule has always asked for. */
+.footer__base{
+  display:flex; flex-wrap:wrap; align-items:center;
+  justify-content:space-between; gap:12px 26px;
+  margin-top:clamp(40px,4.4vw,66px);
+}
 .footer__links{
-  display:flex; flex-wrap:wrap; justify-content:center; gap:10px 26px;
-  margin-top:clamp(20px,2.4vw,34px);
+  display:flex; flex-wrap:wrap; gap:10px 26px;
+  margin:0; padding:0; list-style:none;
   font-size:var(--t-mono); letter-spacing:.09em;
 }
 .footer__links a{
-  color:rgb(var(--paper-rgb) / .72);
+  color:rgb(var(--paper-rgb) / .6);
   background:linear-gradient(var(--paper),var(--paper)) no-repeat 0 100% / 0% 1px;
   transition:background-size var(--t-state) var(--e-out), color var(--t-hover) var(--e-snap);
 }
 .footer__links a:hover{ color:var(--paper-ink); background-size:100% 1px; }
 .footer__copy{
-  margin-top:6px;
+  margin:0;
   font-size:var(--t-mono); letter-spacing:.09em;
-  color:rgb(var(--paper-rgb) / .6);
+  color:rgb(var(--paper-rgb) / .5);
+}
+
+@media (max-width:960px){
+  .footer__grid{ grid-template-columns:1fr; }
+  .footer__cols{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+
+  /* ON A PHONE THE DRAWING MOVES ABOVE THE FOOTER, not behind it. Stacked
+     into one or two columns the panel is 1389px tall against a 653px
+     drawing, so anchoring to the page bottom hid the artwork completely
+     and left the CTA on plain black. The gutters are 12px here and worth
+     nothing, so the trade is free: `bottom:100%` on the panel itself puts
+     the drawing directly above it, which is the composition the CTA had
+     to begin with. */
+  .close__art{ display:none; }
+  .footer::before{
+    content:''; position:absolute; z-index:0;
+    left:50%; bottom:100%;
+    /* an explicit height, not aspect-ratio: on an absolutely positioned box
+       with `bottom` set and no `top`, the height resolved from content —
+       zero — and the drawing rendered as a hairline. 1015/1400 = .725 */
+    width:max(100vw, 430px); height:calc(max(100vw, 430px) * .725);
+    transform:translateX(-50%);
+    background:url(assets/brand/scene-close.png) 50% 100% / 100% auto no-repeat;
+    -webkit-mask-image:linear-gradient(180deg,
+        transparent 0%, rgb(var(--ink-rgb) / .12) 4%, rgb(var(--ink-rgb) / .45) 9%,
+        rgb(var(--ink-rgb) / .82) 13%, rgb(var(--ink-rgb) / 1) 18%);
+            mask-image:linear-gradient(180deg,
+        transparent 0%, rgb(var(--ink-rgb) / .12) 4%, rgb(var(--ink-rgb) / .45) 9%,
+        rgb(var(--ink-rgb) / .82) 13%, rgb(var(--ink-rgb) / 1) 18%);
+    pointer-events:none;
+  }
+}
+@media (max-width:560px){
+  .footer__cols{ grid-template-columns:1fr; }
+  .footer__base{ justify-content:flex-start; }
 }
 
 /* ─────────────── 17. sticky composer ─────────────── */
@@ -3091,27 +3181,76 @@ h3{ font-family:var(--fd); }
 .a2a__av img{ width:100%; height:100%; object-fit:cover; display:block; }
 .slackui__av img.avatar{ width:100%; height:100%; border-radius:var(--r-xs); }
 
-/* ── the closing landscape, sitting on the bottom edge of the CTA ── */
-.panel--cta{ position:relative; overflow:hidden; }
-.cta__scene{
-  position:absolute; left:50%; bottom:-1px; z-index:0;
-  width:100vw; max-width:none;
-  height:clamp(230px, 34vw, 560px);
+/* the CTA's content sits ON the close's artwork. `overflow:hidden` went
+   with the artwork when it moved out to .close — clipping nothing was the
+   only thing it did here. */
+.panel--cta{ position:relative; z-index:1; }
+/* ── the close: one ground under the CTA and the footer ──────────────
+   Clay and Lovable share a shape worth taking: the artwork behind the
+   final CTA does not stop at the section edge — it runs on, and the
+   footer sits on top of it as a rounded panel inset from the viewport,
+   so the illustration stays visible in the gutters either side and the
+   two never read as two bands stacked.
+
+   Ours was exactly the stacked version: .cta__scene ended at the CTA's
+   bottom edge and the footer began again underneath, so the drawing was
+   sliced across a seam. */
+.close{
+  position:relative; isolation:isolate;
+  background:var(--band);
+  overflow:hidden;
+}
+.close__art{
+  position:absolute; left:50%; bottom:0; z-index:0;
+  /* NATURAL PROPORTIONS, no crop. The drawing is 1400x875 and its orange
+     peaks sit 468-694px above its own bottom edge when it renders at
+     1440 wide; the footer panel's top is 521px above the page bottom, so
+     the peaks clear it by about 170px on their own.
+
+     `object-fit:cover` with a fixed height was doing the opposite of what
+     it looked like: past 900px tall the cover switches from cropping the
+     top to cropping the SIDES, which scaled the whole landscape up and
+     slid the composition off to the right. A height that follows the
+     width leaves the artist's framing alone.
+
+     The 900px floor is for phones, where 100vw would shrink the drawing
+     to a few hundred pixels; it crops horizontally instead, which the
+     symmetrical hill line tolerates.
+
+     THE ASSET IS EXTENDED, not repositioned. scene-hills is 1400x875 and
+     its bottom edge is the bottom of the hill, so anchoring it to the page
+     bottom — which is what puts artwork in the footer's gutters — dropped
+     the peaks to 173px above the footer panel, sparse and small.
+     scene-close.png is the same drawing with 140px of hill stretched on
+     underneath so it can ride higher and still reach the page bottom.
+
+     140 is solved, not chosen. The peak tops sit 675px above the drawing's
+     own bottom; at 1440 wide everything scales by 1.0286, and the footer
+     panel's top is 521px up, so an extension E puts the peaks
+     (675 + E) x 1.0286 - 521 above it. E = 140 gives 317px — comfortably
+     below the buttons, which sit about 400px up. The first attempt used
+     420 and pushed the mountains straight through the CTA's copy. */
+  width:max(100vw, 900px); max-width:none; height:auto;
   transform:translateX(-50%);
-  object-fit:cover; object-position:50% 100%;
   /* a long, gentle dissolve so the top edge melts into the dark instead
      of cutting — the illustration itself stays fully visible */
   -webkit-mask-image:linear-gradient(180deg,
-      transparent 0%, rgb(var(--ink-rgb) / .12) 8%, rgb(var(--ink-rgb) / .45) 18%,
-      rgb(var(--ink-rgb) / .82) 28%, rgb(var(--ink-rgb) / 1) 40%);
+      transparent 0%, rgb(var(--ink-rgb) / .12) 4%, rgb(var(--ink-rgb) / .45) 9%,
+      rgb(var(--ink-rgb) / .82) 13%, rgb(var(--ink-rgb) / 1) 18%);
           mask-image:linear-gradient(180deg,
-      transparent 0%, rgb(var(--ink-rgb) / .12) 8%, rgb(var(--ink-rgb) / .45) 18%,
-      rgb(var(--ink-rgb) / .82) 28%, rgb(var(--ink-rgb) / 1) 40%);
+      transparent 0%, rgb(var(--ink-rgb) / .12) 4%, rgb(var(--ink-rgb) / .45) 9%,
+      rgb(var(--ink-rgb) / .82) 13%, rgb(var(--ink-rgb) / 1) 18%);
   pointer-events:none; user-select:none;
 }
 .panel--cta > .chip,.panel--cta > .display,
 .panel--cta > .section-body,.panel--cta > .cta__btns{ position:relative; z-index:1; }
-.panel--cta{ padding-bottom:clamp(196px, 26vw, 430px); }  /* the actions sit over the fade */
+/* The buttons need to clear the drawing, not sit in it. The cloud band
+   lands 297-492px above the footer panel's top edge; at the old padding
+   the buttons sat at 400 — inside it, with a scribble crossing "Add to
+   Slack". This lifts them to about 530. */
+.panel--cta{ padding-bottom:clamp(340px, 35vw, 560px); }  /* the floor is
+   the phone case: the drawing sits above the footer there and is 312px
+   tall, so the buttons need at least that much room under them */
 
 /* ── section furniture that the centred rule needs ── */
 .scenes__tabs{ justify-content:center; }
@@ -3123,7 +3262,9 @@ h3{ font-family:var(--fd); }
 @media (max-width:960px){
   .ph{ aspect-ratio:4 / 3; }
   .cta__scene{ width:190%; height:clamp(150px, 44vw, 260px); }
-  .panel--cta{ padding-bottom:clamp(170px, 48vw, 300px); }
+  /* the drawing moves above the footer at this width and is 312px tall
+     (430 x .725), so the buttons need at least that much clearance */
+  .panel--cta{ padding-bottom:clamp(348px, 62vw, 420px); }
 }
 
 /* ================================================================
