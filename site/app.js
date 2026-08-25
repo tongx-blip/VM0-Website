@@ -739,7 +739,13 @@
       return rail ? [].slice.call(rail.children) : real;
     }
 
-    var cur = 0;          // index into the REAL set
+    /* reelCur / reelT0, not cur / t0. Both names were already taken at the
+       top level of this IIFE — `cur` by the step ladder's current step and
+       `t0` by the parallel-work figure's clock — and `var` is function
+       scoped, so these were literally the same variables. Scrolling the
+       ladder rewrote the reel's tab index; the two animation clocks reset
+       each other whenever both sections were on screen at once. */
+    var reelCur = 0;          // index into the REAL set
     var slot = clonesBefore.length ? N : 0;   // which rail item is centred
 
     function markSlot(i) {
@@ -768,7 +774,7 @@
     var show = function (key, fromUser, viaSlot) {
       var i = 0;
       real.forEach(function (t, n) { if (t.dataset.scene === key) i = n; });
-      cur = i;
+      reelCur = i;
       if (line) {
         line.classList.add('is-swapping');
         window.setTimeout(function () {
@@ -809,7 +815,7 @@
         slot = home;
         centreSlot(slot, true);
       }
-      t0 = null;                       // a new tab gets a full turn
+      reelT0 = null;                       // a new tab gets a full turn
       if (fromUser) held = true;       // and a click parks the carousel
     };
 
@@ -822,7 +828,7 @@
         var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if (!d) return;
         e.preventDefault();
-        var n = (cur + d + N) % N;
+        var n = (reelCur + d + N) % N;
         show(real[n].dataset.scene, true, clonesBefore.length ? slot + d : undefined);
         real[n].focus();
       });
@@ -849,15 +855,15 @@
     // three seconds at rest before the reel moved on. Nine gives the finished
     // state time to be looked at, which is the point of showing it.
     var DWELL = 9000;                 // ms per tab
-    var t0 = null, tRaf = 0, onScreen = false, held = false, kbd = false;
+    var reelT0 = null, tRaf = 0, onScreen = false, held = false, kbd = false;
 
     function tick(now) {
       tRaf = 0;
-      if (!onScreen || held || kbd || document.hidden || reduce) { t0 = null; return; }
-      if (t0 === null) t0 = now;
-      var p = (now - t0) / DWELL;
+      if (!onScreen || held || kbd || document.hidden || reduce) { reelT0 = null; return; }
+      if (reelT0 === null) reelT0 = now;
+      var p = (now - reelT0) / DWELL;
       if (p >= 1) {
-        var next = (cur + 1) % N;
+        var next = (reelCur + 1) % N;
         show(real[next].dataset.scene, false, clonesBefore.length ? slot + 1 : undefined);
         p = 0;
       }
@@ -871,11 +877,11 @@
       new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
           onScreen = e.isIntersecting;
-          if (onScreen) pump(); else t0 = null;
+          if (onScreen) pump(); else reelT0 = null;
         });
       }, { threshold: 0.2 }).observe(wrap);
     }
-    wrap.addEventListener('focusin', function () { kbd = true; t0 = null; });
+    wrap.addEventListener('focusin', function () { kbd = true; reelT0 = null; });
     wrap.addEventListener('focusout', function () { kbd = false; pump(); });
     doc.addEventListener('visibilitychange', function () {
       if (!document.hidden) pump();
@@ -903,35 +909,42 @@
      card-aligned instead of at an arbitrary offset. State is read back
      off the real scroll position rather than counted, which is the only
      version that stays true when the rail is also dragged or swiped. */
+  /* `qrail`, NOT `rail`. This file is one IIFE and `var` is function-scoped,
+     so a second `var rail` here reassigned the SAME variable the tab reel
+     above holds its strip in. Init had already run, so the reel looked
+     right and then silently stopped: every later markSlot/centreSlot
+     operated on the testimonial rail instead, whose six children have no
+     index 10. The panes and aria kept advancing, the highlight and the
+     strip never moved again. */
   var railnav = doc.querySelector('.railnav');
-  var rail = doc.querySelector('.proof');
-  if (railnav && rail) {
+  var qrail = doc.querySelector('.proof');
+  if (railnav && qrail) {
     var btns = [].slice.call(railnav.querySelectorAll('.railnav__b'));
     function step() {
-      var card = rail.querySelector('.qcell');
-      if (!card) return rail.clientWidth;
-      var gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+      var card = qrail.querySelector('.qcell');
+      if (!card) return qrail.clientWidth;
+      var gap = parseFloat(getComputedStyle(qrail).columnGap) || 0;
       return card.getBoundingClientRect().width + gap;
     }
 
     function sync() {
-      var max = rail.scrollWidth - rail.clientWidth;
+      var max = qrail.scrollWidth - qrail.clientWidth;
       // a control for something that cannot happen is worse than none
       railnav.hidden = max < 4;
-      btns[0].disabled = rail.scrollLeft <= 1;
-      btns[1].disabled = rail.scrollLeft >= max - 1;
+      btns[0].disabled = qrail.scrollLeft <= 1;
+      btns[1].disabled = qrail.scrollLeft >= max - 1;
     }
 
     btns.forEach(function (b) {
       b.addEventListener('click', function () {
-        rail.scrollBy({
+        qrail.scrollBy({
           left: step() * Number(b.dataset.dir),
           behavior: reduce ? 'auto' : 'smooth'
         });
       });
     });
 
-    rail.addEventListener('scroll', sync, { passive: true });
+    qrail.addEventListener('scroll', sync, { passive: true });
     window.addEventListener('resize', sync);
     sync();
   }

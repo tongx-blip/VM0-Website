@@ -6,6 +6,59 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-25 · the tab reel stopped moving, and I broke it
+
+Tong: *"the content below switches on its own, but the tab doesn't move
+with it."* Correct, and it was mine.
+
+Last round's testimonial rail controller opened with:
+
+```js
+var rail = doc.querySelector('.proof');
+```
+
+`site/app.js` is **one IIFE**, and `var` is function-scoped, not
+block-scoped. The tab reel four hundred lines above holds its strip in a
+`var rail` inside `if (wrap) { ... }` — a block, which does not scope
+`var`. They are the same variable. My line reassigned it.
+
+The reel's init had already run, so the first tab was lit and the strip
+positioned; from then on every `markSlot` and `centreSlot` addressed the
+six testimonial cards instead of the twenty-one tabs. `railItems()[10]`
+was `undefined`, so `centreSlot` returned early and `--x` froze at its
+initial `-661px`, and `markSlot` toggled a class on cards that have no
+`is-on` styling. **The panes and `aria-selected` kept advancing** because
+neither touches `rail` — which is exactly why it looked like a desync
+rather than a crash.
+
+Diagnosis went through four wrong theories (an exception in the
+`okou:scene` listener, a second controller, a broken brace, an early
+`return`) before instrumenting the function directly. The probe that
+settled it printed `markSlot(10) items=6 railIsSameNode=false` — six, not
+twenty-one, and not the same node. Reasoning about it was slower than
+measuring it, again.
+
+### Two more of the same, already shipping
+
+`tools/scopes.py` is new: it walks `app.js` tracking real function scopes
+and reports any name declared twice in one of them. It catches the bug
+above the moment it is reintroduced, and it found two that predate it:
+
+* **`t0`** — the parallel-work figure's clock at line 214 and the reel's
+  dwell timer at 852. One variable. Whenever both sections were on screen
+  at once the two animations reset each other's clock.
+* **`cur`** — the step ladder's current step at 420 and the reel's tab
+  index at 742. One variable. **Scrolling the ladder rewrote which tab the
+  reel thought it was on**, so the next auto-advance jumped from wherever
+  the ladder had left it.
+
+The reel's two are renamed `reelT0` and `reelCur`; the lint now reports 0.
+
+No visual check, no axe run and no screenshot could have found any of
+these three. The section animates, the content is correct, and the
+accessibility tree is correct — only the highlight is wrong.
+
+
 ## 2026-08-25 · the hover bug, and what it exposed underneath
 
 Tong: *"I said no hover — so why does the background pattern disappear on

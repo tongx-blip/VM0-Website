@@ -1014,6 +1014,29 @@ const q = document.querySelector('.quote'), r = q.getBoundingClientRect();
 - **`margin-inline:auto` on a grid item** turns stretch into shrink-to-fit.
   With a `flex:1 1 0%` child that resolves to zero width.
 
+### 4aa. Behaviour, before publishing
+
+`site/app.js` is one IIFE. `var` is function-scoped and a block is not a
+scope, so two `var`s of one name anywhere in it are one variable.
+
+```bash
+python3 tools/scopes.py     # must print 0
+python3 tools/tokens.py     # the `background:` shorthand lint must print 0
+```
+
+- **For any section that changes on its own, log the parts against each
+  other over a full cycle** — the pane, the control's active class, the
+  ARIA state and any derived text. They can disagree while each looks
+  right alone, and a screenshot only ever shows one frame:
+
+```js
+setInterval(() => log(pane.dataset.x, tabs.findIndex(isOn), line.textContent), 2000)
+```
+
+- **When behaviour is wrong, instrument the function.** Four wrong
+  theories came before one probe on the reel. `markSlot(10) items=6` ended
+  it in one run.
+
 ## 10. Publish
 
 ```bash
