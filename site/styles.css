@@ -3964,7 +3964,10 @@ h3{ font-family:var(--fd); }
 .arti__chart{ flex:1; min-height:0; display:flex; flex-direction:column; padding-top:12px; }
 
 .arti__plot{
-  position:relative; flex:1; min-height:0;
+  /* no min-height here: the floor is set further down, next to the reason
+     it exists. Declaring 0 as well left a dead declaration that reads as
+     intent to the next person to open the file. */
+  position:relative; flex:1;
   border-bottom:1px solid var(--p-line);
 }
 

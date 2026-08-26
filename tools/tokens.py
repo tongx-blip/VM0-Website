@@ -197,8 +197,13 @@ def undefined_refs(paths):
         txt = extra.read_text(encoding='utf-8')
         for m in re.finditer(r"setProperty\(\s*['\"](--[\w-]+)", txt):
             declared.add(m.group(1))
-        for m in re.finditer(r'style="[^"]*?(--[\w-]+)\s*:', txt):
-            declared.add(m.group(1))
+        # EVERY custom property in the attribute, not the first one. The old
+        # pattern was non-greedy from `style="`, so `style="--x:1%;--y:2%"`
+        # declared --x and missed --y — and --y was then reported as an
+        # undefined reference, which is a lint failing a correct page.
+        for m in re.finditer(r'style="([^"]*)"', txt):
+            for d in re.finditer(r'(--[\w-]+)\s*:', m.group(1)):
+                declared.add(d.group(1))
 
     return sorted((name, where) for name, where in used.items() if name not in declared)
 
