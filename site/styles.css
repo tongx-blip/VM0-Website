@@ -1865,12 +1865,21 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --q-namegap: calc( 4 * var(--qu));
   /* the rail's own two measures. They cannot come from --qu: that unit is
      the CARD's container width, and these live between and around cards. */
-  /* THREE AND A HALF CARDS, always. A rail whose fourth card sits entirely
-     off-screen is a rail nobody scrolls — the cut card is the only thing
-     that says there is more. 3.5W + 3G = the visible measure, solved for W.
-     The floor stops it collapsing on a phone, where 1.2 cards visible does
-     the same job. */
-  --q-card:     max(272px, calc((100% - 3 * var(--q-rail-gap)) / 3.5));
+  /* NOT `(100% - 3 gaps) / 3.5` any more — that was the width that put
+     three and a half cards on the measure, back when the rail read from
+     the left edge. The rail now pads itself by `50% - card/2` so a card
+     can reach the CENTRE, and a card width expressed as a percentage of
+     the rail's content box would then be defined in terms of a padding
+     that is defined in terms of it. Stated against the viewport instead,
+     the circularity goes away and the card still lands where the
+     fractional version put it — 346px at 1440.
+
+     The `min(272px, 68vw)` floor is what makes the arrangement legible on
+     a phone. A flat 272px floor is wider than the peek room a 390px rail
+     has, so the neighbours showed as ten-pixel slivers that read as a
+     clipping bug rather than as "there is more"; at 68vw they show about
+     fifty pixels each, which is a card. */
+  --q-card:     clamp(min(272px, 68vw), 24vw, 348px);
   --q-rail-gap: clamp(18px, 2.2vw, 32px);
 
   --t-hover:  220ms;   /* every hover and state change on the page. It was
@@ -3398,9 +3407,14 @@ h3{ font-family:var(--fd); }
    because a microVM has no UI. So that is the beat that gets the section's
    one big gesture: the window pulls back and an accent boundary closes
    around it. Everything else stays quiet, which is what makes it land. */
+/* The gap is deliberately large. At 64px the two columns read as one
+   crowded block — the window's right edge and the statement's first
+   character were close enough that the eye grouped them, and a sticky
+   stage needs to be legible as a separate object the text is talking
+   ABOUT. 104px at 1440 gives it that separation without a divider. */
 .ctrl{
   display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
-  gap:clamp(28px,3.4vw,64px);
+  gap:clamp(32px,7.2vw,112px);
   margin-top:clamp(40px,4.4vw,64px);
   align-items:start;
 }
@@ -3415,6 +3429,12 @@ h3{ font-family:var(--fd); }
    this section. */
 .ctrl__frame{
   position:relative; isolation:isolate;
+  /* the stage is a fixed object, not one that resizes under the reader.
+     Beat 5 swaps the permission list for the activity trail and the
+     window comes out 106px shorter; without this floor the whole sticky
+     stage shrank at the last beat. --ctrl-h is the TALLEST state the
+     frame has been measured in — see app.js §13. */
+  min-height:var(--ctrl-h, auto);
   padding:clamp(20px,2.4vw,36px);
   border-radius:var(--r-lg);
   background:color-mix(in srgb, var(--hue-engineering) 7%, var(--tile));
@@ -3454,43 +3474,154 @@ h3{ font-family:var(--fd); }
 
 
 /* ── the steps ──────────────────────────────────────────────────────
-   The first one is pushed down so its statement sits on the stage's
-   optical centre rather than at the top of the section, which is what
-   left a screen of void under the lede. */
+   ONE BEAT, ONE HEIGHT — and that height is SHORTER THAN A SCREEN. It
+   was 54vh, which put two beats on a screen and changed the stage twice
+   per scroll; then a full 100vh, which fixed that and cost the thing the
+   fade exists for: with a screen between them you never see the next
+   statement arrive, only the one you are on and then, later, another
+   one. At 68vh two steps share the screen at the handoff, so the fade
+   is a thing you watch rather than a state you find.
+
+   THE FLOOR IS THE FRAME. The first step centres on the stage rather
+   than on its own box, which it can only do if it is at least as tall as
+   the frame — so the beat is `max(68vh, --ctrl-h)` and every step takes
+   that same value. At 1440×900 the frame measures 718px, so the beat is
+   718 and the first step needs no correction at all; on a taller
+   viewport 68vh wins and the first step's content box is cut back to the
+   frame's height so it still centres on it. One expression, and the two
+   requirements stop fighting.
+
+   --ctrl-h is measured, not guessed: the frame's height is whatever the
+   product mock inside it comes out at, and app.js §13 writes it. Two
+   wrong versions of this alignment came before: a 12vh indent, which hit
+   the stage's centre by luck and left the window's top edge floating
+   against nothing, and a top alignment, which started both columns on
+   one line but hung the statement off the top of a 700px screen. */
+.ctrl{ --ctrl-beat:max(68vh, var(--ctrl-h, 68vh)); }
+
+
 .ctrl__steps{ display:flex; flex-direction:column; }
 
 .ctrl__step{
-  min-height:54vh; display:flex; flex-direction:column; justify-content:center;
+  min-height:var(--ctrl-beat); display:flex; flex-direction:column; justify-content:center;
   padding:clamp(10px,1.4vw,20px) 0;
 }
 
-.ctrl__step:first-child{ padding-top:clamp(30px,12vh,150px); }
+/* padding-block, not padding-top: with the shared 20px bottom padding
+   left on it the content centres in a box 20px short and lands 10px
+   high — exactly the near-miss that reads as "not quite aligned" and
+   cannot be seen in the CSS. */
+.ctrl__step:first-child{
+  padding-block:0 max(0px, calc(var(--ctrl-beat) - var(--ctrl-h, var(--ctrl-beat))));
+}
 
-.ctrl__step:last-child{ padding-bottom:clamp(30px,10vh,120px); }
+
+/* ── one dimension for the whole beat ────────────────────────────────
+   The step that is not the current one stands down as a BLOCK — spot,
+   statement, paragraph and button together, on opacity, at the moment
+   the next step reaches the middle of the viewport. Before this the
+   drawing faded on its own curve and the type changed colour on
+   another, which is two mechanics narrating one state.
+
+   This is a deliberate reversal. The earlier note here read "NOT
+   opacity — axe was right to fail it", and the reasoning was that all
+   five statements are read on the way past so none may drop under the
+   contrast floor. Asked for directly, and the fade IS the thing that
+   makes the column read as one run rather than as five paragraphs.
+
+   0.6, AND THE TYPE DARKENED TO PAY FOR IT. The first attempt rested at
+   0.34 with the old colours and axe returned a real **violation**, 15
+   nodes — not the `incomplete` the testimonial cards get. The rail's
+   cards carry a `transform` so axe declines to composite them; these do
+   not, so it composites and it is right. The floor is arithmetic: the
+   resting text has to clear 4.5:1 on paper AFTER the fade, and
+   --ink-soft at any usable opacity cannot. Moving the paragraph to
+   --ink buys the headroom — #0C0F12 at 0.6 over white composites to
+   #6D6D6D, which passes — and 0.6 is a fade you can plainly see. A
+   paragraph in full ink is a small deviation from the page's prose
+   colour, and it is the price of the fade rather than a preference. */
+.ctrl__step{
+  opacity:.6;
+  transition:opacity var(--t-state) var(--e-out);
+}
+
+
+.ctrl__step.is-on{ opacity:1; }
+
+
+
+/* ── the spot illustration ──────────────────────────────────────────
+   One hand-drawn spot per beat, from the brand's own illustration set —
+   the same register as the avatars, the stickers and the landscape,
+   not a sixth visual language. Each one shows a pair of hands doing the
+   thing the beat claims, which is the point: this section is about who
+   is holding the controls.
+
+   THEY ARE BACKGROUNDS, NOT <img>. The five drawings have five aspect
+   ratios; a fixed box with `contain` lands all of them on one baseline
+   and one left edge without five aspect-ratio rules, they are decorative
+   so they want no alt text, and the browser fetches only the theme whose
+   declaration actually applies.
+
+   THE DARK ASSET IS A SECOND FILE, NOT A FILTER. `invert(1)` — the fix
+   that was right for the monochrome connector marks — would flip the
+   skin tones of the people drawn in these. Each spot was re-inked
+   instead: the white paper keyed to transparent, the achromatic ink
+   inverted so the drawing reads as white pen on a dark ground, and every
+   chromatic pixel left exactly as it was painted.
+
+   The spot carries NO opacity of its own. The step fades as one block
+   now, and a drawing on its own curve inside a block on another curve
+   is two mechanics narrating one state. */
+.ctrl__spot{
+  display:block;
+  height:clamp(64px,6.4vw,88px);
+  margin-bottom:clamp(12px,1.3vw,18px);
+  background-repeat:no-repeat;
+  background-position:left bottom;
+  background-size:contain;
+}
+
+
+.ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1.png); }
+
+
+.ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2.png); }
+
+
+.ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3.png); }
+
+
+.ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4.png); }
+
+
+.ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5.png); }
+
+
+
+/* the way out of each beat. A soft fill, not an outline (§1), at the
+   page's small secondary size — five of these run down the column and
+   any louder treatment would out-shout the statement above them. */
+.ctrl__go{ margin:clamp(18px,2vw,26px) 0 0; }
 
 /* A STATEMENT, not a card title. At --t-h these read as body copy adrift
-   in a half-empty column. The size never changes between states — only
-   the colour — because a size change on scroll reflows the text under the
-   reader's eye. */
+   in a half-empty column. Nothing about the type changes between states:
+   the block's opacity carries that, and a size change on scroll would
+   reflow the text under the reader's eye. */
 .ctrl__step h3{
   font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
   letter-spacing:-.028em; line-height:1.14;
-  margin-bottom:14px; color:var(--ink-mute);
-  transition:color var(--t-state) var(--e-out);
+  margin-bottom:14px; color:var(--ink);
 }
 
-/* NOT opacity. The first version rested these at .34 and axe was right to
-   fail it: all five are read on the way past, so none may drop under the
-   contrast floor. They stand down by colour, between two values that both
-   pass — --ink-mute is the lightest text this page allows anywhere. */
+/* --t-sm, NOT --t-body. This is secondary prose — it supports a
+   statement and sits beside a product screen whose own body text is
+   13.5px — and at the page's full 17px prose size it out-weighed both,
+   which is what made the column read heavy. --t-sm is the token that
+   already means this, so the page's eleven sizes stay eleven. */
 .ctrl__step p{
-  font-size:var(--t-body); line-height:1.62; color:var(--ink-mute); max-width:42ch;
-  transition:color var(--t-state) var(--e-out);
+  font-size:var(--t-sm); line-height:1.66; color:var(--ink); max-width:44ch;
 }
-
-.ctrl__step.is-on h3{ color:var(--ink); }
-
-.ctrl__step.is-on p{ color:var(--ink-soft); }
 
 
 /* ── the layers ─────────────────────────────────────────────────────
@@ -3655,22 +3786,50 @@ h3{ font-family:var(--fd); }
 
 
 @media (prefers-reduced-motion:reduce){
-  .cbox,.cgate,.cnet,.perms,.ctrl__win,.ctrl__step h3,.ctrl__step p{ transition:none; }
+  .cbox,.cgate,.cnet,.perms,.ctrl__win,.ctrl__step{ transition:none; }
 
 }
 
+
+/* The stated-preference route, exactly as on the testimonial rail: the
+   fade comes out and the column goes back to standing down by COLOUR,
+   between two values that both clear AA on this ground. Nothing is lost
+   but the softness. */
+@media (prefers-reduced-transparency:reduce), (prefers-contrast:more){
+  .ctrl__step{ opacity:1; }
+
+
+  .ctrl__step:not(.is-on) h3,
+  .ctrl__step:not(.is-on) p{ color:var(--ink-mute); }
+
+}
+
+
+/* One column: the stage no longer sits beside the step it belongs to, so
+   the whole beat choreography is switched off rather than left running
+   against nothing. */
 @media (max-width:1000px){
   .ctrl{ grid-template-columns:1fr; gap:clamp(20px,3vw,32px); }
 
   .ctrl__stage{ position:static; }
 
-  .ctrl__step{ min-height:0; }
+  /* min-height carried the spacing between beats on the wide layout; with
+     it gone the button of one step landed almost on the spot of the next,
+     so the padding takes the job over. */
+  .ctrl__step{ min-height:0; padding:clamp(20px,4.4vw,30px) 0; opacity:1; }
 
-  .ctrl__step:first-child{ padding-top:clamp(20px,3vw,32px); }
+  /* padding-block, not padding-top: the wide layout's bottom value is
+     `100vh - --ctrl-h`, and setting only the top left that in place — the
+     first step came out 100px taller than its four siblings in a stack
+     where they are all supposed to be the same. */
+  .ctrl__step:first-child{
+    min-height:0;
+    padding-block:clamp(20px,3vw,32px) clamp(20px,4.4vw,30px);
+  }
 
-  .ctrl__step h3{ color:var(--ink); }
-
-  .ctrl__step p{ color:var(--ink-soft); }
+  /* the wide layout sizes the spot against a half-width column; in one
+     column the same 6.4vw is a third of the measure it sits above */
+  .ctrl__spot{ height:clamp(72px,10vw,96px); }
 
 }
 
@@ -3769,7 +3928,14 @@ h3{ font-family:var(--fd); }
   --p-card:#FFFFFF;
   --p-border:#DCE1E8;   /* gray-200  */
   --p-fg:#1A1E26;       /* gray-950  */
-  --p-mute:#788192;     /* gray-700  */
+  /* gray-800, NOT the gray-700 (#788192) the product uses. P1 pins a mock
+     to the product's own values, and that is still the rule — but the
+     product spends this grey on 14px+ rows and this page draws the same
+     mocks at 9–12px, where #788192 measures 3.9:1 on white and axe fails
+     it in 28 nodes. A pinned value does not outrank the contrast floor,
+     so it steps one stop down its own ramp: 5.1:1 on --p-card, 4.6:1 on
+     --p-tint, same hue line. */
+  --p-mute:#666F7E;     /* gray-800  */
   --p-run:#0284C7;      /* sky-600   */
   --p-tint:#F3F5F8;     /* gray-50   */
   --p-line:#E7EBF0;     /* gray-100  */
@@ -4362,11 +4528,21 @@ h3{ font-family:var(--fd); }
   grid-auto-flow:column;
   grid-auto-columns:var(--q-card);
   overflow-x:auto; overflow-y:hidden;
-  scroll-snap-type:x proximity;
+
+  /* MANDATORY, and centred. The set now has a middle: whichever card is
+     on the rail's centre line is the one being read, and it is the only
+     one at full size and full strength. `proximity` would let the row
+     rest between two cards with neither of them the subject, which is
+     the one state this arrangement cannot express.
+
+     The end padding is what lets the FIRST and LAST card reach the
+     centre — without it the set can only ever centre the middle four.
+     `50%` resolves against the panel's content width; the rail is wider
+     than that by one bleed on each side, hence the + --q-bleed. */
+  scroll-snap-type:x mandatory;
   --q-bleed:max(var(--pad-section), calc(var(--edge) - var(--card-gap)));
   margin-inline:calc(-1 * var(--q-bleed));
-  padding-inline:var(--q-bleed);
-  scroll-padding-inline:var(--q-bleed);
+  padding-inline:calc(50% + var(--q-bleed) - var(--q-card) / 2);
   /* the scrollbar is the one piece of chrome the design does not have */
   scrollbar-width:none;
 }
@@ -4413,7 +4589,65 @@ h3{ font-family:var(--fd); }
   outline-offset:6px; border-radius:var(--r-card);
 }
 .proof::-webkit-scrollbar{ display:none; }
-.qcell{ scroll-snap-align:start; }
+
+/* ── depth by distance from the centre ───────────────────────────────
+   `--d` is set by app.js §12 and is the card's distance from the rail's
+   centre line, measured in CARDS: 0 for the one on the line, 1 for its
+   neighbours, 2 for the pair beyond. Both curves are read off that one
+   number, so there is a single source of truth for "how far out is
+   this", and the whole ramp is continuous — a card halfway between two
+   slots is halfway between two sizes, which is what makes a drag feel
+   attached to the finger rather than snapping in steps.
+
+   SCALE KEEPS GOING, OPACITY STOPS. The far cards need to read as
+   smaller, not as absent: at 0.3 the text is already a texture rather
+   than something anyone is being asked to read, and taking it lower
+   would only make the row look broken at the edges. Past d=2 the size
+   carries the depth on its own.
+
+   With no JS `--d` is 0 everywhere, so every card renders at full size
+   and full strength — the fallback is the plain rail, not a blank one.
+
+   `--x` IS WHAT MAKES THE ROW READ AS A FAN. Cards that shrink inside a
+   track of unchanged width leave the leftover width sitting between
+   them, so the visible gap GREW with distance — 31px beside the centre
+   card, 78px two out. A fan compresses towards its edges; growing gaps
+   read as spacing done by accident. app.js §12 rebuilds each card's
+   position from the widths actually on screen and hands back the pull as
+   a translate, so the gap shrinks with distance and the grid track — and
+   with it every snap position — never moves.
+
+   ON .quote, NOT ON .qcell. The cell is the reveal system's element, and
+   `.reveal.is-in{ opacity:1; transform:none }` is (0,2,0) and later in
+   the file — it silently won, and every card rendered at full size with
+   the right `--d` sitting unused on it. Painting the card inside the
+   cell also keeps the grid track exactly where it was: the snap
+   positions do not move while the cards shrink inside them, which
+   matters because the track is what the centre line is measured
+   against.
+
+   ORDER MATTERS. `translateX` before `scale` means the pull is in the
+   PARENT's pixels; written the other way round the browser scales the
+   translation too and every card lands short by its own scale factor. */
+.qcell{ scroll-snap-align:center; }
+.qcell > .quote{
+  transform:translateX(var(--x, 0px)) scale(max(.76, calc(1 - var(--d, 0) * .09)));
+  transform-origin:center;
+  opacity:max(.3, calc(1 - var(--d, 0) * .35));
+}
+/* Anyone who has asked the system for solid surfaces or for more
+   contrast gets the depth from SIZE ALONE. The fade is the part of this
+   that puts text under the contrast floor — axe reports the off-centre
+   cards as `incomplete` rather than as a violation because it cannot
+   composite an inherited opacity, and "the tool could not tell" is not
+   the same as "it is fine". The cards are previews, any one of them
+   reaches full strength on the centre line, and a screen reader never
+   sees the fade at all — but a stated preference outranks all of that. */
+@media (prefers-reduced-transparency:reduce), (prefers-contrast:more){
+  .qcell > .quote{ opacity:1; }
+
+
+}
 .qcell{ container-type:inline-size; display:flex; }
 .quote{
   position:relative; overflow:hidden; isolation:isolate;
@@ -4690,10 +4924,20 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center; gap:10px;
   color:var(--ink); text-decoration:none;
 }
-.footer__mark img{ width:24px; height:24px; }
+/* THE SAME LOCKUP AS THE HEADER'S, to the pixel. This one was authored
+   during the footer rebuild and picked up --fm because everything else
+   in a footer column is mono — so the page shipped its own name in two
+   different typefaces at two different weights (Archivo 600 in the
+   header, IBM Plex Mono 500 here) at the same size and the same
+   tracking, which reads as a mistake rather than as a variant. A logo
+   does not have variants. Size stays at --t-wordmark rather than growing
+   with the footer: at 16px or more a 600 weight trips the heading-weight
+   gate (4i), where the wordmark is the one exemption *because* it sits
+   under that threshold. */
+.footer__mark img{ width:20px; height:20px; }
 .footer__mark span{
-  font-family:var(--fm); font-size:var(--t-wordmark);
-  letter-spacing:.22em; font-weight:500;
+  font-family:var(--fd); font-size:var(--t-wordmark);
+  letter-spacing:.22em; font-weight:600;
 }
 
 .footer__cols{
@@ -5153,6 +5397,33 @@ h3{ font-family:var(--fd); }
   img[src*="connectors/axiom.svg"],
   img[src*="connectors/notion_marketing.svg"]
 ){ filter:invert(1); }
+
+/* ── the control spots, re-inked for a dark ground ───────────────────
+   A second asset rather than the invert() above, for the reason written
+   at .ctrl__spot: these drawings contain people, and inverting them
+   changes their skin. Only the ink flips. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1-dark.png); }
+
+
+  :root:not([data-theme="light"]) .ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2-dark.png); }
+
+
+  :root:not([data-theme="light"]) .ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3-dark.png); }
+
+
+  :root:not([data-theme="light"]) .ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4-dark.png); }
+
+
+  :root:not([data-theme="light"]) .ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5-dark.png); }
+
+
+}
+:root[data-theme="dark"] .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1-dark.png); }
+:root[data-theme="dark"] .ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2-dark.png); }
+:root[data-theme="dark"] .ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3-dark.png); }
+:root[data-theme="dark"] .ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4-dark.png); }
+:root[data-theme="dark"] .ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5-dark.png); }
 
 /* ─────────────── 20. reduced motion ─────────────── */
 @media (prefers-reduced-motion:reduce){

@@ -918,21 +918,140 @@
      strip never moved again. */
   var railnav = doc.querySelector('.railnav');
   var qrail = doc.querySelector('.proof');
-  if (railnav && qrail) {
-    var btns = [].slice.call(railnav.querySelectorAll('.railnav__b'));
+  if (qrail) {
+    var qreal = [].slice.call(qrail.querySelectorAll('.qcell'));
+
+    /* THE SET REPEATS THREE TIMES, and the reader is always in the middle
+       copy. Centring a card is what this rail does now, and with a finite
+       row that means the first card can only be centred with the entire
+       left half of the section empty, and the last one with the right
+       half empty — 37% of the rail, at the two positions a visitor is
+       most likely to reach by pressing an arrow until it stops. Looping
+       removes both voids and both dead arrows at once: there is no first
+       card and no last one, so the fan is never half a fan.
+
+       The clones are `aria-hidden` and `inert`, so the quotes are
+       announced once and the six real cards are the only ones in the
+       accessibility tree. They are also marked `is-in` because the reveal
+       observer only ever watched the originals. */
+    var qcells = qreal;
+    if (qreal.length > 2) {
+      var mkCopy = function (where) {
+        qreal.forEach(function (c) {
+          var copy = c.cloneNode(true);
+          copy.classList.add('is-in');
+          copy.setAttribute('aria-hidden', 'true');
+          copy.inert = true;
+          if (where === 'before') qrail.insertBefore(copy, qreal[0]);
+          else qrail.appendChild(copy);
+        });
+      };
+      mkCopy('before');
+      mkCopy('after');
+      qcells = [].slice.call(qrail.querySelectorAll('.qcell'));
+    }
+    var qloop = qcells.length > qreal.length;
+    var btns = railnav ? [].slice.call(railnav.querySelectorAll('.railnav__b')) : [];
+
+    /* offsetWidth, NOT getBoundingClientRect().width. The cards carry a
+       scale() now, and a bounding rect reports the SCALED box — so the
+       pitch would shrink with the cards, the buttons would step short of
+       a full slot, and every distance below would be measured in a unit
+       that changes as you scroll. offsetWidth is the layout width and
+       does not move. */
     function step() {
-      var card = qrail.querySelector('.qcell');
-      if (!card) return qrail.clientWidth;
+      if (!qcells.length) return qrail.clientWidth;
       var gap = parseFloat(getComputedStyle(qrail).columnGap) || 0;
-      return card.getBoundingClientRect().width + gap;
+      return qcells[0].offsetWidth + gap;
+    }
+
+    /* THE SCALE CURVE, in one place. CSS reads `--d` and applies the same
+       curve for the size; this is the JS copy of it, needed to work out
+       how far each card has to be pulled back in. Keep the two in step. */
+    function qscale(t) { return Math.max(0.76, 1 - 0.09 * t); }
+
+    /* WHERE CARD n SHOULD SIT, measured from the centre card.
+       Left alone, the cards keep their full pitch while shrinking inside
+       it, so the visible gap GROWS with distance — 31px beside the centre
+       card and 78px two out. Physically that is backwards: a fan
+       compresses towards its edges, and the row read as though the far
+       cards had been spaced by accident.
+
+       So the gap is rebuilt from what is actually on screen. Between card
+       n-1 and card n the distance is the scaled half of each of them plus
+       a gap that scales too, which makes the space shrink with distance
+       instead of growing. Everything is expressed as a translate, so the
+       grid track — and therefore every snap position — never moves. */
+    function qoffset(n) {
+      var w = qcells.length ? qcells[0].offsetWidth : 0;
+      var g = parseFloat(getComputedStyle(qrail).columnGap) || 0;
+      var x = 0;
+      for (var k = 1; k <= n; k++) {
+        x += g * qscale(k) + w * (qscale(k - 1) + qscale(k)) / 2;
+      }
+      return x;
+    }
+
+    /* How far each card is from the rail's centre line, in cards. CSS
+       reads `--d` for the size and the strength and `--x` for the pull —
+       see .qcell in system.css. A rect's CENTRE is unaffected by a centred
+       scale, so measuring centres here is safe even though the widths
+       are not. The offset is interpolated between whole cards so a card
+       halfway between two slots is halfway between two positions; without
+       that the row would jump a few pixels at every slot boundary. */
+    function depth() {
+      var r = qrail.getBoundingClientRect();
+      var mid = r.left + r.width / 2;
+      var pitch = step() || 1;
+      qcells.forEach(function (c) {
+        var b = c.getBoundingClientRect();
+        var signed = (b.left + b.width / 2 - mid) / pitch;
+        var d = Math.abs(signed);
+        var lo = Math.floor(d);
+        var want = qoffset(lo) + (qoffset(lo + 1) - qoffset(lo)) * (d - lo);
+        var x = (want - d * pitch) * (signed < 0 ? -1 : 1);
+        c.style.setProperty('--d', String(Math.round(d * 1000) / 1000));
+        c.style.setProperty('--x', Math.round(x * 100) / 100 + 'px');
+      });
     }
 
     function sync() {
-      var max = qrail.scrollWidth - qrail.clientWidth;
-      // a control for something that cannot happen is worse than none
-      railnav.hidden = max < 4;
-      btns[0].disabled = qrail.scrollLeft <= 1;
-      btns[1].disabled = qrail.scrollLeft >= max - 1;
+      if (railnav) {
+        var max = qrail.scrollWidth - qrail.clientWidth;
+        // a control for something that cannot happen is worse than none
+        railnav.hidden = max < 4;
+        // a looping rail has no ends, so neither arrow is ever dead
+        btns[0].disabled = qloop ? false : qrail.scrollLeft <= 1;
+        btns[1].disabled = qloop ? false : qrail.scrollLeft >= max - 1;
+      }
+      depth();
+    }
+
+    /* Put the reader back in the middle copy. The jump is exactly one set
+       wide, onto identical content at an identical snap position, so
+       nothing moves on screen — the rail simply never runs out.
+
+       It happens on SCROLLEND, not during the scroll. Setting scrollLeft
+       under a finger, or in the middle of a smooth scroll the arrows
+       started, cancels the gesture; there is a whole set-width of slack on
+       each side, so there is no hurry. `scrollend` where it exists, a
+       short debounce where it does not. */
+    function setWidth() { return qreal.length * step(); }
+    function normalise() {
+      if (!qloop) return;
+      var w = setWidth();
+      if (qrail.scrollLeft < w * 0.5) qrail.scrollLeft += w;
+      else if (qrail.scrollLeft > w * 1.5) qrail.scrollLeft -= w;
+    }
+
+    /* one frame per scroll burst. A scroll event can fire many times per
+       frame, and depth() reads layout on every card — unthrottled it is
+       six forced reflows per event. */
+    var qTick = false;
+    function onScroll() {
+      if (qTick) return;
+      qTick = true;
+      requestAnimationFrame(function () { qTick = false; sync(); });
     }
 
     btns.forEach(function (b) {
@@ -944,9 +1063,37 @@
       });
     });
 
-    qrail.addEventListener('scroll', sync, { passive: true });
+    /* Open on the first REAL card — the head of the middle copy — so the
+       section starts on quote one with the set already fanning out on
+       both sides. Guarded so a resize never yanks the rail back from
+       wherever the reader has put it. */
+    var qParked = false;
+    function park() {
+      if (qParked || !qcells.length) return;
+      var i = qloop ? qreal.length : Math.floor((qcells.length - 1) / 2);
+      var target = qcells[i].offsetLeft + qcells[i].offsetWidth / 2 - qrail.clientWidth / 2;
+      if (target > 1) qrail.scrollLeft = target;
+      qParked = true;
+      sync();
+    }
+
+    var qEnd;
+    qrail.addEventListener('scroll', onScroll, { passive: true });
+    if ('onscrollend' in window) {
+      qrail.addEventListener('scrollend', normalise);
+    } else {
+      qrail.addEventListener('scroll', function () {
+        clearTimeout(qEnd);
+        qEnd = setTimeout(normalise, 160);
+      }, { passive: true });
+    }
     window.addEventListener('resize', sync);
+    // the avatars and the card art decide the final height and therefore
+    // the final geometry; a first pass before they land measures a rail
+    // that is about to move
+    window.addEventListener('load', function () { park(); sync(); });
     sync();
+    park();
   }
 
   /* ── 13. control: the scroll position IS the run's clock ─────────
@@ -969,16 +1116,63 @@
       if (best) ctrlWin.dataset.beat = best.dataset.beat;
     }
 
+    /* HOW MUCH OF THE BAND a step covers, in pixels — not
+       intersectionRatio. The ratio is measured against the ELEMENT, so
+       it depends on how tall a step happens to be: at one viewport per
+       step the most a step can ever score is band/step ≈ 0.24, and the
+       0.25 threshold below would never fire. Comparing the intersected
+       height directly asks the question the beat actually turns on —
+       which step is sitting in the middle of the screen — and keeps
+       asking it correctly whatever the steps are resized to. */
     var ctrlObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { seen.set(e.target, e.intersectionRatio); });
+      entries.forEach(function (e) {
+        seen.set(e.target, e.isIntersecting ? e.intersectionRect.height : 0);
+      });
       pickBeat();
     }, {
       // a band across the middle of the viewport: the step sitting there
       // is the one being read, which is the one the stage should answer
       rootMargin: '-38% 0px -38% 0px',
-      threshold: [0, 0.25, 0.5, 0.75, 1]
+      threshold: [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 1]
     });
     ctrlSteps.forEach(function (el) { ctrlObserver.observe(el); });
+
+    /* The first step is centred on the FRAME and every step's height has
+       the frame as its floor — see --ctrl-beat in system.css. That needs
+       the frame's height, and the frame's height is whatever the product
+       mock inside it comes out at, so it is measured rather than guessed.
+       Written on .ctrl so one custom property serves the whole section.
+
+       THE MAXIMUM, NOT THE CURRENT VALUE. Beat 5 swaps the permission
+       list for the activity trail and the window comes out 106px
+       shorter; the naive version wrote that straight back, so
+       --ctrl-beat shrank, all five steps shrank with it, the document
+       lost 530px of height mid-scroll and the last beat never reached
+       the middle of the screen at all — it had already been carried past
+       it by the reflow it caused. Tracking the tallest state instead
+       makes the stage a fixed object: it is also what `min-height` on
+       .ctrl__frame reads, so the window stops resizing between beats.
+       Converges either way round — measure the short beat first and the
+       tall one raises it on its own ResizeObserver callback.
+
+       A real viewport resize has to reset it, or the section would keep
+       a stale maximum forever. Width is the tell: a beat change never
+       alters it, a resize always does. */
+    var ctrlGrid = doc.querySelector('.ctrl');
+    var ctrlMax = 0, ctrlW = 0;
+    function ctrlHeight() {
+      if (!ctrlGrid) return;
+      if (ctrlWin.offsetWidth !== ctrlW) { ctrlW = ctrlWin.offsetWidth; ctrlMax = 0; }
+      ctrlMax = Math.max(ctrlMax, ctrlWin.offsetHeight);
+      ctrlGrid.style.setProperty('--ctrl-h', ctrlMax + 'px');
+    }
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(ctrlHeight).observe(ctrlWin);
+    } else {
+      window.addEventListener('resize', ctrlHeight);
+      window.addEventListener('load', ctrlHeight);
+    }
+    ctrlHeight();
   }
 
   /* ── 14. the language control ────────────────────────────────────

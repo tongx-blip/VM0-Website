@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=9039755e">
+<link rel="stylesheet" href="styles.css?r=b4348b17">
 </head>
 <body>
 
@@ -420,7 +420,7 @@
                 <span class="ochat__ava"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="48" height="48"></span>
                 <figure class="oresult">
                   <figcaption>Weekly Team Report</figcaption>
-                  <img src="assets/artifact/ops-v2-card.jpg?v=7bf53bfd" alt="Weekly Team Report" loading="lazy">
+                  <img src="assets/artifact/ops-v2-card.jpg?v=38f33ce7" alt="Weekly Team Report" loading="lazy">
                 </figure>
               </div>
             </div>
@@ -431,7 +431,7 @@
                 <span class="tplwin__url">okou-artifact-weekly-report.sites.vm0.io</span>
               </figcaption>
               <div class="tplwin__scroll" tabindex="0" role="region" aria-label="Preview of what Okou produced">
-                <img class="tplwin__page" src="assets/artifact/ops-v2.jpg?v=d8f02a1d"
+                <img class="tplwin__page" src="assets/artifact/ops-v2.jpg?v=46c67d07"
                      alt="Weekly Team Report" loading="lazy">
               </div>
                           <span class="tplwin__hint" aria-hidden="true">
@@ -907,7 +907,12 @@
           </li>
         </ul>
         <div class="ctrail" aria-hidden="true">
-          <p class="ctrail__r"><span></span><b>Read files in a shared folder</b><em>2m</em></p>
+          <p class="ctrail__r"><span></span><b>Run started — weekly summary</b><em>3m</em></p>
+          <p class="ctrail__r"><span></span><b>Sandbox created · microVM</b><em>3m</em></p>
+          <p class="ctrail__r"><span></span><b>Opened the shared Drive folder</b><em>2m</em></p>
+          <p class="ctrail__r"><span></span><b>Read 14 files</b><em>2m</em></p>
+          <p class="ctrail__r"><span></span><b>Summarised the week</b><em>1m</em></p>
+          <p class="ctrail__r"><span></span><b>Checked the permission list</b><em>50s</em></p>
           <p class="ctrail__r"><span></span><b>Drafted the reply</b><em>40s</em></p>
           <p class="ctrail__r ctrail__r--wait"><span></span><b>Send mail — approved by Maya</b><em>12s</em></p>
           <p class="ctrail__r"><span></span><b>Posted the summary to #ops</b><em>8s</em></p>
@@ -944,24 +949,48 @@
 
     <div class="ctrl__steps">
       <article class="ctrl__step" data-beat="1">
+        <span class="ctrl__spot" aria-hidden="true"></span>
         <h3>Granular permissions</h3>
-        <p>Grant access one connector and one action at a time, per Agent. Nothing is reachable because something else already had it.</p>
+        <p>Grant access one connector and one action at a time, per Agent. Reading a shared
+          Drive folder and saving a Gmail draft are two separate grants, so the Agent that
+          writes your weekly summary never quietly gains the ability to send it. Nothing is
+          reachable because something else already had it.</p>
+        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Set up an Agent</a></p>
       </article>
       <article class="ctrl__step" data-beat="2">
+        <span class="ctrl__spot" aria-hidden="true"></span>
         <h3>Approval gates</h3>
-        <p>Sensitive writes wait for an explicit approval instead of running on their own.</p>
+        <p>Sensitive writes wait for an explicit approval instead of running on their own. The
+          request names the connector, the action and how long the grant lasts, and it is a
+          person who answers it — not a rule buried in a settings page six months ago. Deny
+          once and the run carries on without that step.</p>
+        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Try an approval gate</a></p>
       </article>
       <article class="ctrl__step" data-beat="3">
+        <span class="ctrl__spot" aria-hidden="true"></span>
         <h3>Isolated execution</h3>
-        <p>Each run gets its own microVM, and it is destroyed when the run finishes.</p>
+        <p>Each run gets its own microVM: a fresh machine with nothing left over from the last
+          task and no route to another run’s files. When the work finishes the machine is
+          destroyed, so there is no long-lived box sitting somewhere accumulating your data
+          between jobs.</p>
+        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Run your first task</a></p>
       </article>
       <article class="ctrl__step" data-beat="4">
+        <span class="ctrl__spot" aria-hidden="true"></span>
         <h3>Credentials stay out of the run</h3>
-        <p>Tokens are injected at the network layer, so the Agent never reads them.</p>
+        <p>Tokens are attached at the network layer on the way out, so the Agent never reads
+          them and cannot copy one into a file, a log or a message. Calls to hosts you have not
+          connected do not get a token — they do not leave the sandbox at all.</p>
+        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Connect a tool</a></p>
       </article>
       <article class="ctrl__step" data-beat="5">
+        <span class="ctrl__spot" aria-hidden="true"></span>
         <h3>Traceable by default</h3>
-        <p>Every run keeps an activity trail you can replay after the fact.</p>
+        <p>Every run keeps an activity trail: what was read, what was written, who approved it
+          and when. You can replay any run after the fact instead of taking its word for it —
+          and the engine underneath is open source, so the behaviour can be checked rather than
+          believed.</p>
+        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">See a run trail</a></p>
       </article>
     </div>
   </div>
@@ -1243,6 +1272,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=4bc8f21e"></script>
+<script src="app.js?r=4c82d074"></script>
 </body>
 </html>
