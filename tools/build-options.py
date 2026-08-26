@@ -58,14 +58,19 @@ def rows(steps, n, durations=True):
     return ''.join(out)
 
 
-def board(n_lanes, n_steps, durations=True):
+def board(n_lanes, n_steps, durations=True, copies=1):
+    """copies=2 lays the four agents down twice, which is what makes the
+    endless track seamless: the wrap puts the board back by exactly one
+    copy's width, onto a frame identical to the one it left. The whole
+    figure is aria-hidden, so the duplicate says nothing twice."""
     out = ['<div class="lanes">']
-    for av, name, title, steps in LANES[:n_lanes]:
-        out.append('<div class="lane">'
-                   '<p class="lane__h"><img src="assets/brand/%s" alt="" width="32" height="32">'
-                   '<b>%s</b><span>now</span></p>'
-                   '<p class="lane__t">%s</p>%s</div>'
-                   % (av, name, title, rows(steps, n_steps, durations)))
+    for _ in range(copies):
+        for av, name, title, steps in LANES[:n_lanes]:
+            out.append('<div class="lane">'
+                       '<p class="lane__h"><img src="assets/brand/%s" alt="" width="32" height="32">'
+                       '<b>%s</b><span>now</span></p>'
+                       '<p class="lane__t">%s</p>%s</div>'
+                       % (av, name, title, rows(steps, n_steps, durations)))
     out.append('</div>')
     return ''.join(out)
 
@@ -91,7 +96,7 @@ VARIANTS = [
    'six seconds, then slides to the next. What is magnified is whoever you are '
    'looking at, and the neighbours stay cut into both edges so the width still '
    'says “at once”.',
-   board(4, 8)),
+   board(4, 8, copies=2)),
   ('lens', 'The board, and one step magnified',
    'The four lanes go small — they are there to be counted, not read — and a '
    'single step is lifted out at product size in a panel that travels to whichever '

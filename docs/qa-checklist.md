@@ -556,6 +556,47 @@ the screen — which reads as broken, not as a design:
 Watch a full cycle at 1920, where the rail is widest and one copy is least likely
 to cover it.
 
+## 4l2. A marquee inside a padded container needs a LEAD
+
+Arithmetic is not enough. A track that travels from 0 to one copy's width and
+resets is seamless *where the track has content* — but a media band insets its
+content, and that inset strip has the previous item behind it for the whole cycle
+and **nothing** behind it at the instant of the reset. A sliver of the ground
+popping in the corner is the only thing in the frame moving discontinuously,
+which is exactly what the eye catches.
+
+Start the travel one item in, so the whole visible window — inset included — is
+inside the track's interior at every moment of the cycle:
+
+```js
+// the window must never leave the track, at either end, at every width
+const f = document.querySelector('.vs__viz--parallel');
+const b = f.querySelector('.lanes'), L = [...b.querySelectorAll('.lane')];
+const set = L[4].offsetLeft - L[0].offsetLeft, lead = set / 4;
+const inset = parseFloat(getComputedStyle(f).paddingLeft);
+[lead - inset >= 0,                                        // left
+ lead + set - inset + f.getBoundingClientRect().width <= b.scrollWidth]  // right
+// both true at 390 / 768 / 1024 / 1280 / 1440 / 1920
+```
+
+**Then prove the wrap by diffing two frames, not by watching it.** A wrap once a
+minute is not something you can reliably catch by eye. Freeze the loop's own
+state with an `!important` override, screenshot at `-(lead + set)` and at
+`-lead`, and diff:
+
+```js
+// twin lanes must land on the same rect, to the decimal
+const at = (p, i) => { st.textContent = `.lanes{transform:translate3d(${p}px,0,0)!important}`;
+                       return L[i].getBoundingClientRect(); };
+at(-(lead + set), 4).left === at(-lead, 0).left    // true, and .top too
+```
+
+Expect the fully-visible items to diff to **zero**. Text antialiasing on the one
+item the container's edge *cuts* may still differ — Chrome re-rasters the layer
+at the new offset and a clipped glyph can land the other side of a tile boundary.
+That one is a rasteriser artifact on a partial word for a single frame, not a
+seam; do not spend the crop chasing it.
+
 ## 4n. Brand marks fill their own box
 
 Connector SVGs arrive from brand kits with wildly different internal clearspace.

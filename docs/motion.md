@@ -73,6 +73,13 @@ a webfont), then adds `.is-in` with a 110ms cascade: headline → thesis + actio
   arriving step is a `0fr → 1fr` shutter, never a fade (§N3), and the two
   newest steps stand down a beat apart at the end of a lane's loop so the wrap
   reads as the list settling rather than as a cut.
+- **The lane track** — the same board is laid down twice and travels left at a
+  constant **22px/s**, forever. Not the rails' 26: those carry logos and nothing
+  on them has to be read, and every row on this one is a sentence. The reset
+  moves it back by exactly one copy's width, and the copies are painted from the
+  same clock, so the frame before the wrap and the frame after are the same
+  picture. It starts **one lane in** — see §N14 and QA §4l2 for why an inset
+  container makes that mandatory rather than tidy.
 - **Metric counters** — count up over 900ms with a cubic ease-out and finish on
   the **exact string in the markup** (`data-count`), so the copy is never
   changed by the animation. Skipped entirely under reduced motion.

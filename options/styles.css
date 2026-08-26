@@ -3977,17 +3977,37 @@ h3{ font-family:var(--fd); }
    whole inside padding and read as a diagram. */
 
 /* A — Codex: "Several AIs get more done at once."
-   Parallelism has to be visible as WIDTH. Three lanes running at the
-   same moment, a fourth cut off at the right edge to say "and more". */
-/* the lanes run to the bottom of the band and are cut there, so the
-   three columns read as three that keep going rather than three short
-   cards floating in a tinted box */
-.lanes{ display:flex; align-items:stretch; gap:10px; width:calc(100% + 74px); height:100%; }
+   Parallelism has to be visible as WIDTH — and at the PRODUCT'S OWN
+   SIZE. The card spent two rounds drawing four agents shrunk to 29% of
+   the band with 11px rows, which is not a crop of the app, it is a
+   diagram of it: forty-eight lines of 11px type in a 276px band, all of
+   it too small to read and too much to skim. Tong, on that version:
+   "内容太多了 … 我说加更多细节，不是加更多的 text".
+ 
+   So the board is drawn at the app's size and the band crops it. Two
+   agents and a bit fit, five of their steps are above the cut, and every
+   value below comes from the component `.vsui__r` was pinned to. A third
+   of the words for twice the craft.
+ 
+   ── the track ───────────────────────────────────────────────────────
+   The board is laid down TWICE and travels left forever (`app.js` §3b2).
+   Two copies are what make the wrap invisible: the reset moves the track
+   back by exactly one copy's width, onto a frame identical to the one it
+   left. */
+.lanes{
+  display:flex; align-items:stretch; gap:14px;
+  width:max-content; height:100%;
+  transform:translate3d(var(--pan,0px),0,0);
+}
 
 .lane{
-  flex:0 0 29%;
+  /* 320 is the product's column. It also sets the composition: two lanes
+     and 14 of gap leave a 72px peek of the third — an avatar, a name and
+     the first word of a task, which is unmistakably a third agent. At the
+     336 a first pass used, the peek was 40px and read as a clipping bug. */
+  flex:0 0 320px;
   display:flex; flex-direction:column;
-  padding:10px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
+  padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
   border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
 }
@@ -4000,9 +4020,9 @@ h3{ font-family:var(--fd); }
    fits, and the card reads as four short lists that happen to have ended. */
 .lane > *{ flex:none; }
 
-.lane__h{ display:flex; align-items:center; gap:8px; margin-bottom:9px; }
+.lane__h{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
 
-.lane__h img{ width:20px; height:20px; border-radius:6px; object-fit:cover; object-position:top; }
+.lane__h img{ width:32px; height:32px; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
 
 /* THE AGENT IS NAMED. Four lanes headed by an avatar and the word "now"
    are four instances of one anonymous thing; the sentence over them says
@@ -4010,19 +4030,19 @@ h3{ font-family:var(--fd); }
    The name is the cheapest way to say that, and it is the name a person
    would @-mention, so it also says these are addressable. */
 .lane__h b{
-  font-weight:500; font-size:12px; color:var(--p-fg);
+  font-weight:500; font-size:14px; color:var(--p-fg);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
 /* the timestamp moves to the right edge, which is where the product puts
    a row's meta — and it gives the name the whole left side */
 .lane__h span{
-  margin-left:auto; padding-left:6px;
-  font-family:var(--fm); font-size:10px; letter-spacing:.04em;
+  margin-left:auto; padding-left:8px;
+  font-family:var(--fm); font-size:12px; letter-spacing:.02em;
   color:var(--p-mute); white-space:nowrap;
 }
 
-.lane__t{ font-size:13px; line-height:1.35; margin:0 0 10px; }
+.lane__t{ font-size:17px; line-height:1.3; margin:0 0 12px; }
 
 /* ── a step row ──────────────────────────────────────────────────────
    A SHUTTER, not a fader. The row is a 1-track grid that the loop opens
@@ -4036,21 +4056,35 @@ h3{ font-family:var(--fd); }
    its label overlapped its neighbour's for the whole transition. This is
    the trap `docs/qa-checklist.md` §4k names, met from the item's side
    rather than the track's. Line-height is height a `0fr` track does
-   collapse. */
+   collapse.
+
+   THE INSET AND THE CORNER LIVE ON THIS ELEMENT, not on the row inside
+   it. They were on `.lane__r`, as a negative inline margin — which put
+   the live row's tinted panel 8px WIDER than the element that clips it,
+   so `overflow:hidden` sliced both rounded corners off and the highlight
+   shipped as a full-bleed rectangle. `getComputedStyle` reported the 8px
+   radius the whole time; it was never painted. Anything that has to be
+   visible outside the text column has to be on the clipper. */
 .lane__s{
   display:grid; grid-template-rows:1fr; overflow:hidden;
-  margin:0; font-size:11px; color:var(--p-mute);
+  margin:0 calc(-1 * var(--lane-inset)); padding-inline:var(--lane-inset);
+  border-radius:var(--p-r-item);
+  font-size:14px; color:var(--p-mute);
+  transition:background-color var(--t-state) var(--e-out);
+  /* the inset is a variable because the figure is drawn at two sizes and
+     the highlight has to keep the same relationship to the ink at both.
+     12px is measured against the row's OPTICAL height, not its box: a
+     14px label in a 34px row has about twelve pixels of clear space above
+     and below its ink. At the 8px this started on, the highlight was
+     tighter horizontally than vertically and read as a band clamped onto
+     the text rather than as a selected row. */
+  --lane-inset:12px;
 }
 
-.lane__r{
-  display:flex; align-items:center; gap:8px; min-height:0; line-height:20px;
-  /* the live row's tint is drawn here rather than on .lane__s, so it
-     collapses with the track. Inline padding is free — a grid row track
-     is a height, and it does not see it. */
-  margin-inline:-6px; padding-inline:6px;
-  border-radius:var(--p-r-item);
-  transition:background-color var(--t-state) var(--e-out);
-}
+/* 34px is the product's row: a 14px label on a 1.3 line box inside 8px of
+   padding, stated as leading because a `0fr` track is floored at the
+   padding box of the item inside it (RULES N13). */
+.lane__r{ display:flex; align-items:center; gap:14px; min-height:0; line-height:34px; }
 
 /* one slot, two glyphs, stacked — so the swap from running to finished is
    a scale exchange in place and the label never shifts sideways. 12px, not
@@ -4058,7 +4092,7 @@ h3{ font-family:var(--fd); }
    to 1.56× and a wider one would be cut by the row's own clip. */
 .lane__k{
   display:grid; place-items:center;
-  width:12px; height:12px; flex:none;
+  width:16px; height:16px; flex:none;
 }
 
 .lane__k > *{ grid-area:1/1; }
@@ -4073,7 +4107,7 @@ h3{ font-family:var(--fd); }
    live would stop being the thing the eye finds. Colour marks the
    running row and nothing else. */
 .lane__tick{
-  width:10px; height:10px; stroke:var(--p-mute);
+  width:13px; height:13px; stroke:var(--p-mute);
   transition:transform var(--t-state) var(--e-spring);
 }
 
@@ -4083,8 +4117,8 @@ h3{ font-family:var(--fd); }
    read as a log. Wiped in with clip-path when the step finishes, because
    it is text (see the shutter note above). */
 .lane__s i{
-  margin-left:auto; padding-left:6px;
-  font-family:var(--fm); font-style:normal; font-size:10px;
+  margin-left:auto; padding-left:12px;
+  font-family:var(--fm); font-style:normal; font-size:12px;
   color:var(--p-mute); white-space:nowrap;
   transition:clip-path var(--t-state) var(--e-out);
 }
@@ -4099,8 +4133,8 @@ h3{ font-family:var(--fd); }
 
 /* the step being worked on is a selected row, which is what the product
    draws and what gives each lane one place for the eye to land */
-.lanes:not(.is-live) .lane__s--now .lane__r,
-.lanes.is-live .lane__s.is-run .lane__r{ background:var(--p-tint); }
+.lanes:not(.is-live) .lane__s--now,
+.lanes.is-live .lane__s.is-run{ background:var(--p-tint); }
 
 .lanes:not(.is-live) .lane__s--now .vsui__ind,
 .lanes.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
@@ -5457,9 +5491,12 @@ h3{ font-family:var(--fd); }
 
   .versus > :nth-child(n+3) .vs__viz{ height:clamp(196px,19vw,244px); }
 
-  .lanes{ width:calc(100% + 40px); }
-
-  .lane{ flex:0 0 44%; }
+  /* 76vw, not the 320px the wide layout uses: at 390 the band is 342
+     wide, so a 320px lane leaves an eight-pixel sliver of the next one —
+     the same non-peek the desktop width was fixed for. 76vw keeps a 68px
+     peek at every phone size, and the track's arithmetic is measured
+     rather than assumed, so it follows the narrower lane on its own. */
+  .lane{ flex:0 0 min(320px,76vw); }
 
   .tsh__term{ width:70%; }
 

@@ -281,6 +281,14 @@
      One even stagger across all four would read as a single progress bar
      drawn four times, which is the opposite of the sentence.
 
+     THE BOARD ALSO TRAVELS, leftward, at a constant 22px a second, and
+     it never stops and never comes back. At the product's own size only
+     two agents fit in the band, and a card whose sentence is "several"
+     should not have to be taken on trust — the track shows all four
+     without shrinking any of them. 22 rather than the connector rails'
+     26 (§7): those rails carry logos and nothing on them has to be read,
+     while every row on this one is a sentence.
+
      The resting frame is the finished run. `.is-live` is added here and
      nowhere else, so no-JS, reduced motion and the moments before the
      observer fires all get the complete figure. */
@@ -294,19 +302,60 @@
     // loop, so the wrap reads as the list settling back rather than as a cut
     var LANE_FOLD = [700, 300];
 
-    var laneRows = [].slice.call(lanesEl.querySelectorAll('.lane'))
-      .map(function (lane) { return [].slice.call(lane.querySelectorAll('.lane__s')); });
+    var LANE_PX_PER_SEC = 22;
+    var LANE_SETS = 4;                        // agents in one copy of the track
 
-    var lRaf = 0, lT0 = null, lVis = false;
+    var laneEls = [].slice.call(lanesEl.querySelectorAll('.lane'));
+    var laneRows = laneEls.map(function (lane) {
+      return [].slice.call(lane.querySelectorAll('.lane__s'));
+    });
+
+    // elapsed time SURVIVES a pause. Without this, scrolling the card away
+    // and back restarts the clock at zero, which snaps the track to its
+    // start and rewinds every lane — the observer fires at 25% visible, so
+    // you would watch it happen.
+    var lRaf = 0, lT0 = null, lAcc = 0, lVis = false;
+
+    /* SET is the distance from a lane to its own twin, gaps included, and
+       LEAD is why the wrap is invisible rather than merely arithmetically
+       correct. The band insets its content by --pad, and the track starts
+       at that inset: with the travel running from zero, the strip to the
+       LEFT of it has the previous agent's card behind it for the whole
+       cycle and nothing behind it at the instant the travel resets. A
+       26px sliver of white popping in the corner is not much, and it is
+       the only thing in frame moving discontinuously, which is exactly
+       what the eye is built to catch. Starting one lane in puts the whole
+       visible window, inset included, inside the track's interior.
+
+       Measured, not assumed: a lane and its twin land on the same
+       `getBoundingClientRect()` to four decimals, and a pixel diff of the
+       frame before and after a wrap is empty across every fully-visible
+       lane. See docs/qa-checklist.md §4l2. */
+    var laneSet = 0, laneLead = 0;
+
+    function laneMeasure() {
+      laneSet = laneEls.length > LANE_SETS
+        ? laneEls[LANE_SETS].offsetLeft - laneEls[0].offsetLeft : 0;
+      laneLead = laneSet / LANE_SETS;
+    }
 
     function lanePaint(now) {
       lRaf = 0;
-      if (!lVis || document.hidden) { lT0 = null; return; }
-      if (lT0 === null) lT0 = now;
-      var t = now - lT0;
+      if (!lVis || document.hidden) { lanePark(now); return; }
+      if (lT0 === null) lT0 = now - lAcc;
+      var t = lAcc = now - lT0;
+
+      if (!laneSet) laneMeasure();
+      if (laneSet) {
+        lanesEl.style.setProperty('--pan',
+          -(laneLead + (t / 1000 * LANE_PX_PER_SEC) % laneSet).toFixed(2) + 'px');
+      }
 
       laneRows.forEach(function (rows, i) {
-        var c = LANE_CLOCK[i], lt = t % c[2], live = null;
+        // `% LANE_CLOCK.length`: the second copy of the board runs on the
+        // first copy's clock, so lane 4 is lane 0's twin down to which step
+        // is live. That is what leaves the wrap nothing to show.
+        var c = LANE_CLOCK[i % LANE_CLOCK.length], lt = t % c[2], live = null;
         rows.forEach(function (row, r) {
           // everything below the top two is already on the board; the two
           // newest arrive on this lane's clock, newest last
@@ -320,10 +369,15 @@
       lRaf = requestAnimationFrame(lanePaint);
     }
 
+    function lanePark(now) {
+      if (now && lT0 !== null) lAcc = now - lT0;
+      lT0 = null;
+    }
+
     function laneRun(on) {
       lVis = on;
       if (!on) {
-        lT0 = null;
+        lanePark();
         if (lRaf) { cancelAnimationFrame(lRaf); lRaf = 0; }
         return;
       }
@@ -352,6 +406,7 @@
     doc.addEventListener('visibilitychange', function () {
       if (!document.hidden && lVis && !lRaf) lRaf = requestAnimationFrame(lanePaint);
     });
+    window.addEventListener('resize', laneMeasure);
   }
 
   /* ── 3c. the product window, scaled as one object ─────────────

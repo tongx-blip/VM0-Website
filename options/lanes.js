@@ -29,7 +29,13 @@
   // loop, so the wrap reads as the list settling rather than as a cut
   var FOLD = [700, 300];
 
-  var PAN_HOLD = 6000;                    // Option 2: seconds per agent
+  /* Option 2's travel. 22, against the connector rails' 26 in
+     site/app.js: those rails carry logos and nothing on them has to be
+     read, while every row on this track is a sentence. Four pixels is
+     the difference between a board you can read as it passes and one you
+     have to catch. */
+  var TRACK_PX_PER_SEC = 22;
+  var SETS = 4;                           // agents per copy of the track
   var LENS_HOLD = 4200;                   // Option 3: seconds per agent
 
   [].slice.call(doc.querySelectorAll('.lz')).forEach(function (fig) {
@@ -41,10 +47,14 @@
       return [].slice.call(l.querySelectorAll('.lane__s'));
     });
 
-    var isPan = fig.classList.contains('lz--pan');
+    var isTrack = fig.classList.contains('lz--pan');
     var lens = fig.querySelector('.lens');
 
-    var raf = 0, t0 = null, visible = false;
+    // elapsed time SURVIVES a pause. Without this, scrolling the card
+    // away and back restarts the clock at zero, which snaps the track
+    // back to its start and rewinds every lane — the observer fires at
+    // 25% visible, so you would watch it happen.
+    var raf = 0, t0 = null, tAcc = 0, visible = false;
     var shownLane = -1, shownTime = '';
 
     /* ── the board ─────────────────────────────────────────────── */
@@ -62,19 +72,50 @@
       });
     }
 
-    /* ── Option 2: the camera ──────────────────────────────────── */
-    function paintPan(t) {
-      var i = Math.floor(t / PAN_HOLD) % lanes.length;
-      if (i === shownLane) return;
-      shownLane = i;
-      // centre lane i in the band. The board is laid out at product size
-      // and is wider than the figure, so this is a crop moving over it,
-      // never a resize of anything inside it.
-      var band = fig.getBoundingClientRect().width;
-      var lane = lanes[i];
-      var x = lane.offsetLeft + lane.offsetWidth / 2 - band / 2;
-      board.style.setProperty('--pan', -Math.max(0, x) + 'px');
-      lanes.forEach(function (l, n) { l.classList.toggle('is-focus', n === i); });
+    /* ── Option 2: the endless track ───────────────────────────────
+       One copy's width of travel, then back by exactly that width. The
+       track holds TWO copies of the four agents and the copies are
+       painted from the same clock — lane 4 is lane 0's twin down to which
+       step is live — so the frame before the reset and the frame after it
+       are the same picture and the wrap has nothing to see.
+
+       SET is measured, not derived: it is the distance from the first
+       lane to its own twin, which already contains the gaps. Measuring it
+       every frame would be a forced reflow sixty times a second, so it is
+       cached and re-read on resize.
+
+       LEAD IS WHY THE WRAP IS ACTUALLY INVISIBLE, and it took a pixel
+       diff to find. The band insets its content by 26px, and the track
+       starts at that inset — so with the travel running from 0, the strip
+       to the LEFT of it has the previous agent's card behind it for the
+       whole cycle and nothing behind it at the instant the travel resets.
+       A 26px sliver of white popping in the corner is not much, and it is
+       the only thing in the frame that moves discontinuously, which is
+       exactly what the eye is built to catch. Starting one lane in puts
+       the whole visible window, inset included, inside the track's
+       interior, so wrapping by one copy's width leaves every pixel where
+       it was.
+
+       Measured, not assumed: a lane and its twin land at the same
+       `getBoundingClientRect()` to the fourth decimal, and a pixel diff of
+       the two frames is empty across every fully-visible lane. What is
+       left is text antialiasing on the one lane the band's edge cuts —
+       Chrome re-rasters the layer at the new offset and a clipped glyph
+       can land on the other side of a tile boundary. One frame, once a
+       minute, on a partial word. That one is a rasteriser artifact, not a
+       seam, and chasing it would cost the crop. */
+    var SET = 0, LEAD = 0;
+
+    function measure() {
+      SET = lanes.length > SETS ? lanes[SETS].offsetLeft - lanes[0].offsetLeft : 0;
+      LEAD = SET / SETS;                  // one lane pitch
+    }
+
+    function paintTrack(t) {
+      if (!SET) measure();
+      if (!SET) return;
+      var x = LEAD + (t / 1000 * TRACK_PX_PER_SEC) % SET;
+      board.style.setProperty('--pan', -x.toFixed(2) + 'px');
     }
 
     /* ── Option 3: the lens ────────────────────────────────────── */
@@ -134,15 +175,20 @@
       return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
     }
 
+    function park(now) {
+      if (now && t0 !== null) tAcc = now - t0;
+      t0 = null;
+    }
+
     /* ── the frame ─────────────────────────────────────────────── */
     function paint(now) {
       raf = 0;
-      if (!visible || doc.hidden) { t0 = null; return; }
-      if (t0 === null) t0 = now;
-      var t = now - t0;
+      if (!visible || doc.hidden) { park(now); return; }
+      if (t0 === null) t0 = now - tAcc;
+      var t = tAcc = now - t0;
 
       paintBoard(t);
-      if (isPan) paintPan(t);
+      if (isTrack) paintTrack(t);
       if (lens) paintLens(t);
 
       raf = requestAnimationFrame(paint);
@@ -151,7 +197,7 @@
     function run(on) {
       visible = on;
       if (!on) {
-        t0 = null;
+        park();
         if (raf) { cancelAnimationFrame(raf); raf = 0; }
         return;
       }
@@ -168,6 +214,8 @@
       }
       if (!raf) raf = requestAnimationFrame(paint);
     }
+
+    if (isTrack) window.addEventListener('resize', measure);
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) {

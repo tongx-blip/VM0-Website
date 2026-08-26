@@ -108,10 +108,14 @@
 /* 34px is the product's row: a 14px title on a 1.3 line box inside 8px of
    padding. It is stated as leading because a `0fr` track is floored at the
    padding box of the item inside it — see RULES N13. */
-.lz--crop .lane__r{
-  gap:14px; line-height:34px;
-  margin-inline:-8px; padding-inline:8px;
-}
+.lz--crop .lane__r{ gap:14px; line-height:34px; }
+
+/* 12px, measured against the row's OPTICAL height rather than its box.
+   A 14px label in a 34px row has about 12px of clear space above and
+   below its ink; at the 8px this started on, the highlight was tighter
+   horizontally than vertically and read as a band clamped onto the text.
+   Even on all four sides is what makes it a selected row. */
+.lz--crop .lane__s{ --lane-inset:12px; }
 
 .lz--crop .lane__k{ width:16px; height:16px; }
 
@@ -121,28 +125,23 @@
 
 
 /* ====================================================================
-   OPTION 2 — PRODUCT SCALE, AND THE CAMERA MOVES
-   Everything Option 1 does, plus one rule: the view holds on one agent
-   for six seconds and then slides to the next. That is the whole rule,
-   and it is stated in a sentence on purpose — a pan whose timing cannot
-   be described in one line reads as drift rather than as a camera.
+   OPTION 2 — PRODUCT SCALE, ON AN ENDLESS TRACK
+   Everything Option 1 does, plus one rule: the board travels leftward at
+   a constant 22px a second and never stops, never speeds up and never
+   comes back. That is the whole rule, and it fits in a sentence on
+   purpose — a movement whose timing cannot be described in one line
+   reads as drift rather than as a decision.
 
-   Why it earns the movement: at product size only two agents fit, and a
-   card whose sentence is "several" should not have to be taken on trust.
-   The pan visits all four without ever shrinking one.
+   Why it earns the movement: at product size only two agents fit in the
+   band, and a card whose sentence is "several" should not have to be
+   taken on trust. The track shows all four without shrinking any of them.
    ==================================================================== */
 .lz--pan .lanes{ gap:14px; width:max-content; }
 
 .lz--pan .lane{
   flex:0 0 320px;
   padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
-  /* the shadow is the focus, and it is the only thing the pan changes.
-     Dimming the neighbours would be dimming text inside a loop. */
-  box-shadow:none;
-  transition:box-shadow var(--t-state) var(--e-out);
 }
-
-.lz--pan .lane.is-focus{ box-shadow:0 10px 30px -14px rgb(12 15 18 / .28); }
 
 .lz--pan .lane__h{ gap:12px; margin-bottom:16px; }
 
@@ -154,12 +153,9 @@
 
 .lz--pan .lane__t{ font-size:17px; line-height:1.3; margin-bottom:12px; }
 
-.lz--pan .lane__s{ font-size:14px; }
+.lz--pan .lane__s{ font-size:14px; --lane-inset:12px; }
 
-.lz--pan .lane__r{
-  gap:14px; line-height:34px;
-  margin-inline:-8px; padding-inline:8px;
-}
+.lz--pan .lane__r{ gap:14px; line-height:34px; }
 
 .lz--pan .lane__k{ width:16px; height:16px; }
 
@@ -167,16 +163,20 @@
 
 .lz--pan .lane__s i{ font-size:12px; padding-left:12px; }
 
-/* transform, never `left` — the board is 1400px of live figure and a
-   layout property would reflow all of it on every frame of the slide */
-.lz--pan .lanes{
-  transform:translate3d(var(--pan,0px),0,0);
-  transition:transform 900ms var(--e-elegant);
-}
+/* THE BOARD NEVER COMES BACK. The first pass held on an agent, slid to
+   the next, and at the fourth one jumped the whole board to the right to
+   start over — which is the one thing a loop must never let you see. This
+   is a marquee instead: the track carries TWO copies of the four agents
+   and travels left at a constant rate, and when it has moved exactly one
+   copy's width it is put back by that width with no transition. The frame
+   before and the frame after are the same picture, so the wrap cannot be
+   seen and the motion has no direction but left.
 
-@media (prefers-reduced-motion:reduce){
-  .lz--pan .lanes{ transition:none; }
-}
+   No `transition` here on purpose — the position is written every frame
+   by the rAF loop, so a transition would fight it. `translate3d`, never
+   `left`: the track is 2700px of live figure and a layout property would
+   reflow all of it sixty times a second. */
+.lz--pan .lanes{ transform:translate3d(var(--pan,0px),0,0); }
 
 
 /* ====================================================================
@@ -209,7 +209,9 @@
 
 .lz--lens .lane__s{ font-size:10px; }
 
-.lz--lens .lane__r{ gap:7px; line-height:19px; margin-inline:-5px; padding-inline:5px; }
+.lz--lens .lane__r{ gap:7px; line-height:19px; }
+
+.lz--lens .lane__s{ --lane-inset:7px; }
 
 .lz--lens .lane__k{ width:11px; height:11px; }
 

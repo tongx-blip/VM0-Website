@@ -6,6 +6,62 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-26 · the Codex card, at the product's own size, on an endless track
+
+Tong, on the version below: *"内容太多了。我说你加更多细节，不是加更多的 text,
+可能是让它更精致，然后把控它所有的组件细节。"* And, pointing at how other
+product pages do it: *"很多产品，它会用这种局部放大的方式去展示他们的产品。"*
+
+Fair, and the diagnosis was the useful part: I had read "detail" as "more
+rows". Three directions went up at `okou-lane-options` — the board at
+product scale and cropped, the same board on a moving track, and a small
+board with one step magnified in a travelling panel. Tong took the second.
+
+**The mock stopped being shrunk.** Four agents at 29% of the band with
+11px rows is not a crop of the app, it is a diagram of it: forty-eight
+lines of type too small to read and too many to skim. The board is drawn
+at the app's size now — 320px column, 32px avatar, 14px row, 34px line,
+8px item radius, 12px meta — and the band crops it. Two agents and a bit
+fit; five of their steps sit above the cut. **A third of the words.**
+
+**The track never comes back.** The first pass held on one agent for six
+seconds, slid to the next, and at the fourth jumped the whole board right
+to start over — the one thing a loop must never let you see. It is a
+marquee now: two copies of the four agents, travelling left at a constant
+22px/s, put back by exactly one copy's width when they have moved that
+far. The copies are painted from the same clock, so lane 4 is lane 0's
+twin down to which step is live, and the wrap has nothing to show.
+
+22px/s, not the connector rails' 26: those rails carry logos and nothing
+on them has to be read. Every row on this one is a sentence.
+
+**The wrap needed a LEAD, and a pixel diff is what found it.** The band
+insets its content by 26px and the track started at that inset, so the
+strip to the left of it had the previous agent's card behind it for the
+whole cycle and *nothing* behind it at the instant of the reset. A 26px
+sliver of white popping in the corner is not much, and it was the only
+thing in the frame moving discontinuously — which is exactly what the eye
+is built to catch. Starting the travel one lane in puts the whole visible
+window, inset included, inside the track's interior. Twin lanes now land
+on the same `getBoundingClientRect()` to four decimals and the frames
+either side of a wrap diff to nothing across every fully-visible lane.
+
+**The live row's highlight had no corners, and `getComputedStyle` said it
+did.** The tint sat on `.lane__r` as a negative inline margin — 8px wider
+than `.lane__s`, the element whose `overflow:hidden` makes the shutter
+work. So the clip took both rounded corners off and the highlight shipped
+as a full-bleed rectangle for two rounds. The radius was computed the
+whole time; it was never painted. Inset, corner and tint all moved onto
+the clipper, and the inset went 8px → 12px: a 14px label in a 34px row
+has about twelve pixels of clear space above and below its ink, and at 8px
+the highlight was tighter horizontally than vertically, which reads as a
+band clamped onto the text rather than as a selected row.
+
+**Elapsed time survives a pause.** Scrolling the card away and back reset
+the clock to zero, which snapped the track to its start and rewound every
+lane. The observer fires at 25% visible, so you would have watched it.
+
+
 ## 2026-08-26 · the Codex card runs
 
 Tong: *"this card doesn't look refined enough — add some detail, the
