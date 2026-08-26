@@ -227,10 +227,19 @@
 
 .lzc.is-live .chart__svg:not(.is-on){ clip-path:inset(0 100% 0 0); }
 
-.chart__dot,.chart__val{ transition:opacity .4s var(--e-out); }
+/* THE DOT MAY FADE; THE LABEL MAY NOT. `4.2×` is text, and text at part
+   opacity is text under its contrast ratio — axe caught this one at about
+   two runs in twenty, which is what a 400ms fade inside a nine-second
+   loop looks like from the outside. The rule is already written down
+   (RULES N3) and I broke it on the one element in this figure it applies
+   to. The dot is a graphic and keeps its fade. */
+.chart__dot{ transition:opacity .4s var(--e-out); }
 
-.lzc.is-live .chart__svg:not(.is-on) ~ .chart__dot,
-.lzc.is-live .chart__svg:not(.is-on) ~ .chart__val{ opacity:0; }
+.chart__val{ transition:clip-path .4s var(--e-out); }
+
+.lzc.is-live .chart__svg:not(.is-on) ~ .chart__dot{ opacity:0; }
+
+.lzc.is-live .chart__svg:not(.is-on) ~ .chart__val{ clip-path:inset(0 100% 0 0); }
 
 .chart__area{ fill:var(--p-run); opacity:.17; }
 

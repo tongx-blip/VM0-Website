@@ -6,6 +6,72 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-26 · the other two figures, chosen from six
+
+Tong: *"这两个卡…下边的 cards 的 terminal 你画得也太草率了吧…每个给我三种不同的设计吧"*.
+Six directions went up at `okou-lane-options`; card B took **the artifact
+and its receipt**, card D took **what one person knew, the team now runs**.
+
+**The terminal was drawn as a dark box, not as a terminal.** Flat grey
+monospace, three dots, no window title, no prompt colour, and — the tell —
+no difference between what a person typed and what the machine said back.
+Nothing in it was a terminal except the background. It has a title bar
+with the session's name now, a coloured working directory, a dimmed `$`,
+the command in near-white, output a tone below it, file paths in a third
+tone, and a green tick on the line that finished. Those tones are fenced
+in `.tsh__term`'s own group, behind the same wall `--t-shell` already sat
+behind: a terminal really is coloured, and drawing it monochrome to
+protect the page's palette is drawing something that is not a terminal.
+
+**Card D's foreground is now what the sentence is about.** The terminal
+recedes to a ground, still running; in front sits a workflow with an
+author, a schedule, ten people using it, and a strip of its past runs —
+each bar that run's own length, because seven identical bars is a progress
+meter and a progress meter is the one thing a history is not.
+
+**Card B's window is a browser, and its receipt is docked.** A browser's
+toolbar is a *field*; the old mock drew three dots and let the URL float
+beside them as bare text, which is most of why the picture read as a
+diagram. The activity trail stopped being a white sticker parked across
+the numbers it was vouching for and became the window's own last row.
+
+**Seven flat bars became an area chart, and the layout stopped being
+arithmetic.** Bars need height to say anything and this band has about
+forty pixels spare, at which point the tallest day was 32px and the
+shortest 12 — a texture, not a reading. Two rounds then went on
+hand-solving the height, and both times the plot's baseline and day labels
+finished up *behind* the dock. A comment full of arithmetic is a value
+that stops being true the moment a font loads. The window is a flex column
+now and the plot takes whatever is left.
+
+**The KPI row cost the chart its height, twice.** Tiles cost thirty pixels
+on a fill; stacking label under value cost fifty-three, which produced a
+30px plot at 1440 and a 75px plot at 1260 — a cliff either side of a
+breakpoint that only existed because the two were fighting. Inline, the
+row is twenty pixels at every width and nothing has to be rationed.
+
+**Three things the gate caught that looking would not have:**
+
+* `.arti__val` — the peak's `4.2×` — was revealed with **opacity**. It is
+  text, and text at part opacity is text under its contrast ratio; axe
+  failed it about twice in twenty runs, which is what a 400ms fade inside
+  a nine-second loop looks like from outside. RULES N3 has said so since
+  the parallel figure was built, and I broke it on the one element in this
+  figure it applies to. Clipped now; the dot beside it is a graphic and
+  keeps its fade.
+* `.tsh__runs span` is (0,1,1) and `.tsh__run--now` was (0,1,0), so the
+  newest run silently kept the history's own 0.26 and the strip had no
+  "now" in it at all.
+* At 390 the workflow panel had 97px for its title, so *Weekly team
+  digest* broke over three lines and pushed its own team off the card. The
+  two surfaces stack below 1000 instead of narrowing.
+
+**Still open, and not from this work:** `.reach__line .w` and
+`.rot .line` fail contrast intermittently mid-reveal — about 3 runs in 25
+at 390, and they reproduce identically on the published build from before
+this change. Same defect as `.arti__val` had, in two older loops.
+
+
 ## 2026-08-26 · the Codex card, at the product's own size, on an endless track
 
 Tong, on the version below: *"内容太多了。我说你加更多细节，不是加更多的 text,

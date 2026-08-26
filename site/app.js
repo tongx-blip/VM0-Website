@@ -409,6 +409,80 @@
     window.addEventListener('resize', laneMeasure);
   }
 
+  /* ── 3b3. the other two comparison figures, on a cue list ─────
+     Cards B and D used to play a one-shot entrance and then sit there.
+     Both loop now, and both loop on the same tiny engine so the page has
+     one mechanism for this rather than three: a cycle length on the
+     figure, a time on anything inside it, and one rAF reading the list
+     every frame.
+
+         data-loop="9600"   on the figure — the cycle, in ms
+         data-cue="1200"    on a child — gets `.is-on` from then on
+         data-until="2400"  optional — and loses it again at that point
+
+     Card B's receipt takes one step at a time from that list; its chart
+     wipes in once per cycle. Card D's run history fills bar by bar and
+     the newest run fires last.
+
+     THE RESTING FRAME IS THE FINISHED FIGURE. `.is-live` is added here
+     and nowhere else, and every "not yet" rule in system.css is scoped
+     under it, so no-JS, reduced motion and the moments before the
+     observer fires all show the complete thing. */
+  [].slice.call(doc.querySelectorAll('.arti[data-loop], .tsh[data-loop]'))
+    .forEach(function (fig) {
+      if (reduce) return;
+
+      var span = parseInt(fig.dataset.loop, 10) || 9000;
+      var cues = [].slice.call(fig.querySelectorAll('[data-cue]')).map(function (el) {
+        var until = el.dataset.until;
+        return [parseInt(el.dataset.cue, 10),
+                until ? parseInt(until, 10) : Infinity, el];
+      });
+      if (!cues.length) return;
+
+      var cRaf = 0, cT0 = null, cAcc = 0, cVis = false;
+
+      function cuePaint(now) {
+        cRaf = 0;
+        if (!cVis || document.hidden) { cuePark(now); return; }
+        if (cT0 === null) cT0 = now - cAcc;
+        var t = cAcc = (now - cT0) % span;
+        for (var i = 0; i < cues.length; i++) {
+          cues[i][2].classList.toggle('is-on', t >= cues[i][0] && t < cues[i][1]);
+        }
+        cRaf = requestAnimationFrame(cuePaint);
+      }
+
+      // elapsed time survives a pause: resuming from zero replays the
+      // whole cycle in front of a reader who is already looking at it
+      function cuePark(now) {
+        if (now && cT0 !== null) cAcc = (now - cT0) % span;
+        cT0 = null;
+      }
+
+      function cueRun(on) {
+        cVis = on;
+        if (!on) {
+          cuePark();
+          if (cRaf) { cancelAnimationFrame(cRaf); cRaf = 0; }
+          return;
+        }
+        fig.classList.add('is-live');
+        if (!cRaf) cRaf = requestAnimationFrame(cuePaint);
+      }
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) {
+          es.forEach(function (e) { cueRun(e.isIntersecting); });
+        }, { threshold: 0.25 }).observe(fig);
+      } else {
+        cueRun(true);
+      }
+      doc.addEventListener('visibilitychange', function () {
+        if (!document.hidden && cVis && !cRaf) cRaf = requestAnimationFrame(cuePaint);
+      });
+    });
+
   /* ── 3c. the product window, scaled as one object ─────────────
      The window is laid out at its real desktop size (--app-dw) and scaled
      into the marketing column by one factor. offsetHeight reads the

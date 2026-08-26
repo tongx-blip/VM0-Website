@@ -2740,143 +2740,375 @@ h3{ font-family:var(--fd); }
 
 
 /* B — ChatGPT: "Does the work, not just the thinking."
-   The claim is that the answer arrives as a shipped artifact, so the
-   artifact is the hero and the activity trail is the receipt tucked
-   under its corner — the composite Attio and Linear both use, a real
-   surface with one panel lifted off it. */
-/* full band height on purpose: the trail is positioned from the BOTTOM,
-   and with an auto-height .arti that bottom is the window's, which put the
-   receipt across the numbers it is vouching for rather than under them. */
-.arti{ position:relative; width:calc(100% + 22px); height:100%; }
+   THE ARTIFACT IS A PUBLISHED SITE, so the frame around it is a browser
+   and a browser's toolbar is a FIELD. The old mock drew three dots and
+   let the URL float beside them as bare text, which is most of why the
+   picture read as a diagram rather than as something on the internet.
+
+   And the receipt is DOCKED. It used to be a rounded white sticker
+   parked across the chart — over the numbers it was vouching for,
+   reading as a notification rather than as part of the page. As the
+   window's own last row it is what it actually is: the strip that says
+   what produced this, advancing one step at a time.
+
+   THE CHART TAKES WHATEVER IS LEFT, and the layout works it out rather
+   than a comment does. Two rounds went on hand-solving this height —
+   276px of band, minus a receipt, minus chrome, minus a title, minus
+   three tiles — and both times the plot ended up short enough that its
+   own baseline and day labels finished up behind the dock. Arithmetic in
+   a comment is a value that stops being true the moment a font loads. */
+.arti{ position:relative; width:calc(100% + 70px); height:100%; }
 
 .arti__win{
+  height:100%; display:flex; flex-direction:column;
   border-radius:var(--p-r-card); overflow:hidden;
   border:1px solid var(--p-border); background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
 }
 
 .arti__bar{
-  display:flex; align-items:center; gap:7px;
-  padding:7px 10px; border-bottom:1px solid var(--p-border);
+  display:flex; align-items:center; gap:6px; flex:none;
+  margin:0; padding:9px 12px;
+  background:var(--p-tint); border-bottom:1px solid var(--p-border);
 }
 
-.arti__bar i{ width:7px; height:7px; border-radius:50%; background:var(--p-line); flex:none; }
+.arti__bar i{ width:8px; height:8px; border-radius:50%; background:var(--p-border); flex:none; }
 
 .arti__url{
-  margin-left:4px; font-family:var(--fm); font-size:10px;
-  color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  display:flex; align-items:center; gap:6px;
+  flex:1; min-width:0; margin-left:6px; padding:3px 10px;
+  border-radius:var(--r-pill); background:var(--p-card);
+  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-.arti__body{ padding:10px 12px 12px; }
+.arti__url svg{ width:9px; height:9px; stroke:var(--p-mute); flex:none; }
 
-.arti__h{ font-size:13px; font-weight:600; margin:0 0 8px; }
+/* the flex chain has to be unbroken from the window to the plot: one
+   non-flex link in the middle and the chart comes out sixteen pixels tall */
+.arti__body{ flex:1; min-height:0; display:flex; flex-direction:column; padding:14px 16px 16px; }
 
-.arti__stats{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-bottom:10px; }
+.arti__dash{ flex:1; min-height:0; display:flex; flex-direction:column; }
 
-.arti__s{ padding:7px 8px; border-radius:var(--p-r-item); background:var(--p-tint); }
-
-.arti__s b{ display:block; font-size:14px; font-weight:600; line-height:1.2; }
-
-.arti__s span{ font-family:var(--fm); font-size:9px; color:var(--p-mute); }
-
-.arti__chart{ display:flex; align-items:flex-end; gap:6px; height:34px; margin:0; }
-
-.arti__chart i{
-  flex:1; border-radius:3px 3px 0 0; background:var(--p-run); opacity:.72;
-  height:var(--h); transform-origin:50% 100%;
+.arti__h{
+  display:flex; align-items:center; gap:8px; flex:none;
+  margin:0 0 8px; font-size:15px; font-weight:600; line-height:1.25;
 }
 
-/* LEFT, not right. At right:-16px it landed across the stat tiles and
-   the chart and lost its own last row off the card edge — the same deep
-   right crop the .vsui comment already warns about, made twice. On the
-   left it overlaps the window's bottom corner and nothing it covers is
-   load-bearing. Kept to 56% so the chart it sits over still reads as a
-   chart — at 70% only two stray bars showed past it, which looks like a
-   bug rather than a crop.
-
-   -16px hid its own last row once the mock type came down to 11px: the
-   panel is anchored by its BOTTOM, so the overhang is constant and a
-   shorter panel loses proportionally more of itself. -2px keeps all
-   three steps readable; the window behind it does the bleeding. */
-.arti__rows{ margin-top:11px; }
-
-.arti__rows p{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  margin:0; padding:5px 0; font-size:11px; line-height:1.3;
-  border-top:1px solid var(--p-line);
+/* a live badge is the cheapest thing that says "this is a running page
+   and not a picture of one", and it costs one word */
+.arti__live{
+  display:inline-flex; align-items:center; gap:5px; flex:none;
+  margin-left:auto; padding:2px 8px 2px 6px;
+  border-radius:var(--r-pill); background:var(--p-tint);
+  font-family:var(--fm); font-style:normal; font-size:9px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--p-mute);
 }
 
-.arti__rows span{ color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-.arti__rows b{ color:var(--p-fg); font-weight:500; flex:none; }
-
-.arti__trail{
-  position:absolute; left:-12px; bottom:-2px; width:56%;
-  padding:8px 10px; border-radius:var(--p-r-card);
-  border:1px solid var(--p-border); background:var(--p-card);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
-             0 12px 24px -14px rgb(var(--ink-rgb) / .34);
-  font-family:var(--fb);
+.arti__live span{
+  width:5px; height:5px; border-radius:50%; background:var(--p-run);
+  animation:artiLive 2s cubic-bezier(.33,0,.66,1) infinite;
 }
 
-.arti__trail p{
-  display:flex; align-items:center; gap:8px; margin:0; padding:2px 0;
-  font-size:11px; line-height:1.3; color:var(--p-mute);
+@keyframes artiLive{ 0%,100%{ opacity:.45 } 50%{ opacity:1 } }
+
+/* ONE LINE, NOT THREE TILES AND NOT A STACK. Tiles cost about thirty of
+   the two hundred and forty pixels this band has and spent them on a
+   fill. Stacking label under value then cost fifty-three, which is the
+   whole chart: the plot came out 30px at 1440 and 75px at 1260, a cliff
+   either side of a breakpoint that only existed because the two were
+   fighting for the same space. Inline, the row is twenty pixels at every
+   width and the chart never has to be rationed. */
+.arti__stats{ display:flex; align-items:baseline; gap:22px; flex:none; margin-bottom:12px; }
+
+.arti__s{ display:flex; align-items:baseline; gap:6px; min-width:0; }
+
+.arti__s b{ font-size:15px; font-weight:600; line-height:1.2; letter-spacing:-.015em; }
+
+/* THE MOVEMENT IS THE POINT. A dashboard figure with a bare number is a
+   label; the delta is what makes it a reading. It is also the one place
+   a second hue is earned — up and down have to be separable at 9px and
+   weight cannot do it. Both values are darker than the obvious ones:
+   #0E8A5F measures 4.30:1 on white and axe is right to fail it. */
+.arti__d{
+  display:inline-flex; align-items:center; gap:2px;
+  margin-left:5px; font-style:normal;
+  font-family:var(--fm); font-size:9px; vertical-align:2px;
 }
 
-.arti__trail p b{ color:var(--p-fg); font-weight:400; }
+.arti__d svg{ width:8px; height:8px; }
 
-.arti__tick{
-  width:12px; height:12px; flex:none; border-radius:50%;
-  background:var(--p-tint); display:grid; place-items:center;
+.arti__d--up{ color:#0A6B49; }
+
+.arti__d--up svg{ stroke:#0A6B49; }
+
+.arti__d--down{ color:#C2453B; }
+
+.arti__d--down svg{ stroke:#C2453B; }
+
+/* the label leads, the way a KPI is read aloud */
+.arti__s span{
+  order:-1; flex:none;
+  font-family:var(--fm); font-size:9px; letter-spacing:.06em; color:var(--p-mute);
 }
 
-.arti__tick svg{ width:8px; height:8px; stroke:var(--p-run); }
+/* AN AREA, NOT SEVEN BARS. Bars need height to say anything, and after
+   the chrome, the title and the figures this band has about forty pixels
+   left — at which point the tallest day was 32px and the shortest 12,
+   which is a texture rather than a reading. A filled curve is legible at
+   any height and carries the same seven readings. */
+.arti__chart{ flex:1; min-height:0; display:flex; flex-direction:column; padding-top:12px; }
+
+.arti__plot{
+  position:relative; flex:1; min-height:0;
+  border-bottom:1px solid var(--p-line);
+}
+
+.arti__svg{
+  display:block; width:100%; height:100%;
+  /* the wipe. A graphic may be revealed; the AXIS below it may not, which
+     is why the day labels live outside this element (RULES N3). */
+  clip-path:inset(0 0 0 0);
+  transition:clip-path .9s var(--e-out);
+}
+
+.arti.is-live .arti__svg:not(.is-on){ clip-path:inset(0 100% 0 0); }
+
+.arti__area{ fill:var(--p-run); opacity:.17; }
+
+.arti__line{ stroke:var(--p-run); stroke-width:2.2; stroke-linejoin:round; opacity:.9; }
+
+.arti__dot{
+  position:absolute; left:var(--x); top:var(--y);
+  width:7px; height:7px; margin:-3.5px 0 0 -3.5px;
+  border-radius:50%; background:var(--p-run);
+  box-shadow:0 0 0 2.5px var(--p-card);
+}
+
+.arti__val{
+  position:absolute; left:var(--x); top:var(--y);
+  transform:translate(-50%,-100%); margin-top:-9px;
+  font-family:var(--fm); font-size:9px; font-weight:500; color:var(--p-fg);
+  white-space:nowrap;
+}
+
+/* THE DOT MAY FADE; THE LABEL MAY NOT. `4.2×` is text, and text at part
+   opacity is text under its contrast ratio — axe caught this one at about
+   two runs in twenty, which is what a 400ms fade inside a nine-second
+   loop looks like from the outside. The rule is already written down
+   (RULES N3) and I broke it on the one element in this figure it applies
+   to. The dot is a graphic and keeps its fade. */
+.arti__dot{ transition:opacity .4s var(--e-out); }
+
+.arti__val{ transition:clip-path .4s var(--e-out); }
+
+.arti.is-live .arti__svg:not(.is-on) ~ .arti__dot{ opacity:0; }
+
+.arti.is-live .arti__svg:not(.is-on) ~ .arti__val{ clip-path:inset(0 100% 0 0); }
+
+.arti__axis{ display:flex; justify-content:space-between; flex:none; margin:0; padding-top:5px; }
+
+.arti__axis em{
+  font-style:normal; font-family:var(--fm); font-size:8px;
+  letter-spacing:.04em; color:var(--p-mute);
+}
+
+/* BELOW 1080 THE FIGURES GO. The band is `clamp(214px, 21vw, 276px)`, so
+   on a phone it is 214 — and chrome, title, three figures, a chart and a
+   receipt do not fit in it. Measured rather than eyeballed: the plot came
+   out ONE pixel tall and its axis sat nine pixels under the dock. The
+   deltas are what give way — a reading survives losing its change; it
+   does not survive losing its number. 1080 is measured, not chosen: below
+   it the three figures and their arrows no longer fit the card's width on
+   one line. */
+@media (max-width:1080px){
+  .arti__d{ display:none; }
+
+  /* and the day labels with them. At 390 the band is 214px and the stack
+     wants 223 — the floor under the plot then pushes the axis fourteen
+     pixels under the receipt. The days are the least load-bearing thing
+     in the figure: the curve still reads as a week without them. */
+  .arti__axis{ display:none; }
+}
+
+/* a floor, so no width between breakpoints can squeeze the plot to a line
+   the way 1120 once did */
+.arti__plot{ min-height:30px; }
+
+.arti__dock{
+  display:flex; align-items:center; gap:9px; flex:none;
+  padding:8px 16px;
+  background:var(--p-tint); border-top:1px solid var(--p-border);
+  font-family:var(--fb); font-size:12px; color:var(--p-fg);
+}
+
+.arti__k{ display:flex; flex:none; }
+
+.arti__tick{ width:9px; height:9px; stroke:var(--p-run); flex:none; }
+
+/* the four steps share one slot and take turns, so the strip never
+   changes height and the type never moves. Left-grouped with the
+   duration right behind the name: a counter pushed to the far right is
+   the first thing this window's 70px of right bleed removes.
+
+   THE RESTING FRAME IS THE FINISHED ONE. Without `.is-live` all four were
+   `display:block` in a row built for one line. */
+.arti__step{
+  display:none; flex:1; min-width:0; font-weight:400;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.arti__step:last-of-type{ display:block; }
+
+.arti.is-live .arti__step:last-of-type{ display:none; }
+
+.arti.is-live .arti__step.is-on{ display:block; }
+
+.arti__step i{
+  margin-left:9px; font-style:normal;
+  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+}
 
 
 /* D — Claude Code: "Built for shared work, not one terminal."
-   The only card whose picture carries the alternative's own form. A
-   terminal really is dark, so drawing it dark is accurate rather than a
-   theme break — and the shared surface then overlaps and outranks it,
-   which is the sentence. */
+   The terminal recedes to a ground — still running, still the
+   alternative's own form — and the foreground is what the sentence is
+   actually about: a workflow with an author, a schedule, ten people
+   using it, and a strip of its past runs, the newest of which fires
+   while you watch.
+
+   AND IT IS DRAWN AS A TERMINAL. The old one was flat grey monospace on
+   a dark box with three dots: no window title, no prompt colour, no
+   difference between what a person typed and what the machine said back.
+   Nothing in it was a terminal except the background. Every tone below
+   belongs to the terminal's own world and is fenced in its own group, so
+   it is never mistaken for a page token and never used outside this
+   component — the same fence `--t-shell` already sat behind. A terminal
+   really is coloured; drawing it monochrome to protect the page's
+   palette is drawing something that is not a terminal. */
 .tsh{ position:relative; width:100%; height:100%; }
 
-/* the terminal is the one that runs off the frame, pushed back past the
-   left edge. The shared surface must NOT bleed: its timestamps and
-   states live at its right margin and a crop deletes exactly them. */
 .tsh__term{
-  width:62%; height:100%;
+  --term-bg:#0E1317;
+  --term-bar:#171D23;
+  --term-rim:#2A333C;
+  --term-dim:#7C8792;      /* output           */
+  --term-cmd:#E9EEF3;      /* what was typed   */
+  --term-path:#6FB2C9;     /* the working dir  */
+  --term-file:#B9A66B;     /* a path in output */
+  --term-ok:#68B98A;       /* it worked        */
+  width:74%; height:calc(100% + 26px);
   margin-left:calc(-1 * clamp(20px,2vw,26px) - 16px);
-  padding:9px 11px 14px calc(clamp(20px,2vw,26px) + 16px);
   border-radius:0 var(--p-r-card) 0 0;
-  /* A WINDOW EDGE, and it is load-bearing. The shell is #12171C and the
-     dark band computes to roughly the same value — 1.16:1 — so without a
-     rim the terminal stopped being an object in dark mode and read as a
-     hole punched in the card. The hairline is the same in both themes, so
-     the mock still does not flip with the page (P1). */
-  border:1px solid var(--t-caret); border-left:0;
-  background:var(--t-shell); font-family:var(--fm); font-size:10.5px; line-height:1.75;
-  color:var(--t-dim);
+  border:1px solid var(--term-rim); border-left:0;
+  overflow:hidden;
+  background:var(--term-bg);
+  font-family:var(--fm); font-size:11px; line-height:1.85;
 }
 
-.tsh__term i{ display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--t-caret); margin-right:5px; }
+/* a real title bar: dots at one end, the session's name in the middle */
+.tsh__bar{
+  position:relative; display:flex; align-items:center; gap:6px;
+  margin:0; padding:8px 12px 8px calc(clamp(20px,2vw,26px) + 28px);
+  background:var(--term-bar); border-bottom:1px solid var(--term-rim);
+}
 
-.tsh__term p{ margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tsh__bar i{ width:8px; height:8px; border-radius:50%; flex:none; }
 
-.tsh__term p:first-of-type{ margin-top:7px; }
+/* the one place the alternative's own colours belong. Monochrome dots
+   are a design-system reflex; no terminal on earth has them. */
+.tsh__d1{ background:#E05C4B; }
 
-.tsh__term b{ color:var(--t-lit); font-weight:400; }
+.tsh__d2{ background:#D9A441; }
 
-.tsh__cur{ display:inline-block; width:5px; height:11px; background:var(--t-caret); vertical-align:-1px; }
+.tsh__d3{ background:#4FA96C; }
 
-.tsh__share{
-  position:absolute; right:10px; top:58px; width:66%;
-  padding:10px 12px; border-radius:var(--p-r-card);
+.tsh__title{
+  position:absolute; left:50%; transform:translateX(-50%);
+  font-size:10px; color:var(--term-dim); letter-spacing:.02em; white-space:nowrap;
+}
+
+.tsh__body{ padding:10px 14px 14px calc(clamp(20px,2vw,26px) + 30px); }
+
+.tsh__l{ margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--term-dim); }
+
+.tsh__p{ color:var(--term-path); }
+
+.tsh__d{ color:var(--term-rim); margin:0 6px 0 4px; }
+
+.tsh__c{ color:var(--term-cmd); }
+
+.tsh__l--f{ color:var(--term-file); padding-left:14px; }
+
+.tsh__l--f::before{ content:"› "; color:var(--term-rim); }
+
+.tsh__ok{ display:inline-flex; width:12px; margin-right:7px; vertical-align:-1px; }
+
+.tsh__tick{ width:10px; height:10px; stroke:var(--term-ok); flex:none; }
+
+/* NOT bled to the right: `Mon 09:00` sits at this panel's right margin,
+   and a crop takes the schedule off a card whose whole point is that it
+   runs on one. */
+.tsh__wf{
+  position:absolute; right:8px; top:16px; width:58%;
+  padding:13px 15px 11px; border-radius:var(--p-r-card);
   border:1px solid var(--p-border); background:var(--p-card);
   box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
-             0 16px 30px -16px rgb(var(--ink-rgb) / .38);
+             0 18px 36px -18px rgb(var(--ink-rgb) / .38);
   font-family:var(--fb); color:var(--p-fg);
 }
+
+.tsh__wfh{ display:flex; align-items:flex-start; gap:11px; margin:0 0 14px; }
+
+.tsh__av{ width:32px; height:32px; flex:none; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+
+.tsh__wfh span{ flex:1; min-width:0; }
+
+.tsh__wfh b{ display:block; font-size:14px; font-weight:500; line-height:1.3; }
+
+.tsh__wfh em{
+  display:block; margin-top:2px; font-style:normal;
+  font-size:12px; color:var(--p-mute);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.tsh__sched{
+  flex:none; font-style:normal; padding:3px 9px;
+  border-radius:var(--r-pill); background:var(--p-tint);
+  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+}
+
+/* every past run of this workflow, and then the one happening now. A
+   history strip is the cheapest way to say "this is not the first time",
+   and each bar is that run's own length — seven identical bars is a
+   progress meter, which is the one thing a history is not. */
+.tsh__runs{ display:flex; align-items:flex-end; gap:5px; height:30px; margin-bottom:14px; }
+
+.tsh__runs span{
+  flex:1; height:var(--h); border-radius:3px;
+  background:var(--p-run); opacity:.26;
+  transform-origin:50% 100%;
+  transition:transform .5s var(--e-out), opacity var(--t-state) var(--e-out);
+}
+
+/* every "not yet" is scoped under `.is-live`, without exception: with the
+   squashed transform on the base rule, no-JS and reduced motion got a row
+   of two-pixel slivers instead of a run history (RULES N2). */
+.tsh.is-live .tsh__runs span:not(.is-on){ transform:scaleY(.14); }
+
+/* `.tsh__runs span` is (0,1,1) and a bare `.tsh__run--now` is (0,1,0), so
+   the newest run silently kept the history's own 0.26 and the strip had
+   no "now" in it at all. Qualified, it wins. */
+.tsh__runs span.tsh__run--now{ opacity:.9; }
+
+.tsh__faces{ display:flex; align-items:center; margin:0 0 2px; padding-left:43px; }
+
+.tsh__face{
+  width:24px; height:24px; border-radius:50%; object-fit:cover; object-position:top;
+  margin-right:-7px; box-shadow:0 0 0 2px var(--p-card);
+}
+
+.tsh__faces em{ margin-left:16px; font-style:normal; font-size:12px; color:var(--p-mute); }
 
 
 /* ── how the set behaves ─────────────────────────────────────────────
@@ -2892,40 +3124,10 @@ h3{ font-family:var(--fd); }
    four different heights they fire one after another rather than all at
    once. Each is a single state change, not a loop: an entrance is
    allowed to be a performance, an idle is not. */
-.arti__chart i{ transform:scaleY(.08); transition:transform .62s var(--e-out); }
-
-.vs.is-in .arti__chart i{ transform:scaleY(1); }
-
-.arti__chart i:nth-child(1){ transition-delay:.10s }
-
-.arti__chart i:nth-child(2){ transition-delay:.16s }
-
-.arti__chart i:nth-child(3){ transition-delay:.22s }
-
-.arti__chart i:nth-child(4){ transition-delay:.28s }
-
-.arti__chart i:nth-child(5){ transition-delay:.34s }
-
-.arti__chart i:nth-child(6){ transition-delay:.40s }
-
-.arti__chart i:nth-child(7){ transition-delay:.46s }
-
-.arti__trail{ opacity:0; translate:0 10px; transition:opacity .5s var(--e-out) .5s, translate .5s var(--e-out) .5s; }
-
-.vs.is-in .arti__trail{ opacity:1; translate:0 0; }
-
-
-.tsh__share .vsui__faces img{ opacity:0; translate:-7px 0; transition:opacity .42s var(--e-out), translate .42s var(--e-out); }
-
-.vs.is-in .tsh__share .vsui__faces img{ opacity:1; translate:0 0; }
-
-.tsh__share .vsui__faces img:nth-child(1){ transition-delay:.14s }
-
-.tsh__share .vsui__faces img:nth-child(2){ transition-delay:.22s }
-
-.tsh__share .vsui__faces img:nth-child(3){ transition-delay:.30s }
-
-.tsh__share .vsui__faces img:nth-child(4){ transition-delay:.38s }
+/* Cards B and D no longer play a one-shot entrance: both now run the
+   cue loop in app.js §3b3, which is gated the same way and whose resting
+   frame is the finished figure. What is left here is the pinwheel note
+   above, which still describes cards A and C. */
 
 
 /* the three lanes are meant to read as SIMULTANEOUS, so they stay close
@@ -2937,12 +3139,11 @@ h3{ font-family:var(--fd); }
 .lane:nth-child(3) .vsui__ind-r{ animation-delay:-.64s }
 
 
+/* both figures are cue-driven now, and `.is-live` is never added under
+   reduced motion — so the resting frame IS the finished figure and there
+   is nothing left here to switch off but the two idle animations */
 @media (prefers-reduced-motion:reduce){
-  .arti__chart i,.arti__trail,
-  .tsh__share .vsui__faces img{ transition:none; transform:none; translate:none; opacity:1; }
-
-  .arti__chart i{ transform:scaleY(1); }
-
+  .arti__live span,.tsh__cur{ animation:none; }
 }
 
 .vsui__r{
@@ -4000,8 +4201,15 @@ h3{ font-family:var(--fd); }
      peek at every phone size, and the track's arithmetic is measured
      rather than assumed, so it follows the narrower lane on its own. */
   .lane{ flex:0 0 min(320px,76vw); }
-  .tsh__term{ width:70%; }
-  .tsh__share{ width:60%; }
+  /* ONE COLUMN, NOT A NARROWER TWO. At 70% of a 342px band the workflow
+     panel has 97px for its title, so "Weekly team digest" broke over
+     three lines and pushed its own team off the bottom of the card. The
+     terminal becomes the full ground and the panel sits across it —
+     which is the same reading, with the two surfaces stacked instead of
+     side by side. */
+  .tsh__term{ width:calc(100% + clamp(20px,2vw,26px) + 16px); }
+
+  .tsh__wf{ width:96%; right:0; top:auto; bottom:6px; }
   .scene.is-on{ grid-template-columns:1fr; }
   .scene__ui{ grid-column:auto; }
   .scene__side{ flex-direction:row; }
