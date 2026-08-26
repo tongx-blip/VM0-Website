@@ -168,6 +168,24 @@ figure before publishing.**
   .filter(e => getComputedStyle(e).textTransform === 'uppercase').length   // 0
 ```
 
+- **A mock that is meant to be CUT has to actually overflow.** Every device in
+  the comparison band bleeds off an edge, and a flex column will not let it:
+  its rows are flex items, so a list longer than the card does not overflow —
+  every row shrinks by a few pixels until the list fits, and the mock reads as
+  a short list that happens to have ended. Nothing in the CSS says so; the rows
+  simply measure less than their line-height. Measure the overflow, don't look
+  at it:
+
+```js
+[...document.querySelectorAll('.lanes .lane')].map(l => {
+  const rows = l.querySelectorAll('.lane__s');
+  return Math.round(rows[rows.length - 1].getBoundingClientRect().bottom -
+                    l.closest('.vs__viz').getBoundingClientRect().bottom);
+})   // every one > 0, at 390 / 768 / 1024 / 1280 / 1440 / 1920
+```
+
+  `flex:none` on the children is the fix, and it belongs on the container's
+  children as a rule, not on the one row that was noticed.
 - **Read the component, not the design system.** "It uses our tokens" is not the
   same as "it is our component". Open the `.tsx` that draws the thing and copy
   its class list. The values that have been wrong every time are the ones a
@@ -353,6 +371,19 @@ st.map((s, i) => {
 
 Two causes, both invisible in the CSS:
 
+- **`grid-template-rows: 0fr` does not absorb padding — on either edge, and
+  not on either ELEMENT.** The trap below is the track's own padding; the
+  same floor comes from the padding of the item *inside* the track, which
+  is the version that reads as a CSS bug rather than a layout one, because
+  the closed row keeps its label and paints it over its neighbour's:
+
+```js
+[...document.querySelectorAll('.lanes.is-live .lane__s:not(.is-on)')]
+  .map(r => Math.round(r.getBoundingClientRect().height))   // every one 0
+```
+
+  Give a collapsible row its air as **leading**, never as padding —
+  line-height is height a `0fr` track does collapse.
 - **`grid-template-rows: 0fr` does not absorb padding — on EITHER edge.** The
   track is floored at the collapsed item's padding box, so a gap meant for the
   open state is silently present on every closed one. `padding-top` shows as a

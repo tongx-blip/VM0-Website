@@ -65,6 +65,14 @@ a webfont), then adds `.is-in` with a 110ms cascade: headline → thesis + actio
 - **Connector marquees** — CSS keyframes, duration from `data-speed`, direction
   from `data-dir`. `animation-play-state` is `paused` until the rail is on
   screen, and pauses again on hover.
+- **The four lanes** (`app.js` §3b2) — the Codex card's agents each finish a
+  step on their own fixed interval (3.3 / 3.6 / 3.9 / 4.3s) from their own
+  offset, and each loops on its own whole number of seconds (11 / 12 / 13 / 14).
+  Every lane is therefore perfectly predictable on its own and the four never
+  coincide, which is the only honest way to draw work happening *at once*. The
+  arriving step is a `0fr → 1fr` shutter, never a fade (§N3), and the two
+  newest steps stand down a beat apart at the end of a lane's loop so the wrap
+  reads as the list settling rather than as a cut.
 - **Metric counters** — count up over 900ms with a cubic ease-out and finish on
   the **exact string in the markup** (`data-count`), so the copy is never
   changed by the animation. Skipped entirely under reduced motion.

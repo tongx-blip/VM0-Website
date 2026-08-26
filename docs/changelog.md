@@ -6,6 +6,60 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-26 · the Codex card runs
+
+Tong: *"this card doesn't look refined enough — add some detail, the
+agents can have names, add some animation, make it a loop."*
+
+**The picture argued against the sentence.** "Several AIs get more done at
+once" sat over four frozen task lists. Four lists are not "at once"; they
+are four lists. Each lane runs now: its live step finishes, a tick takes
+the pulse's place, the duration wipes in, and the next step opens above it
+and pushes the older ones down past the cut.
+
+**Each lane is regular; only the four together are not.** A lane finishes a
+step on its own fixed interval — 3.3, 3.6, 3.9, 4.3 seconds — from its own
+offset, and loops on its own whole number of seconds. Eleven, twelve,
+thirteen and fourteen seconds realign once every forty-two minutes, so the
+card reads as four independent runs without a single arbitrary number in
+the timeline. An even stagger would have read as one progress bar drawn
+four times, which is the opposite of the claim (RULES N6).
+
+**The agents are named.** Mira, Kai, Ines and Ravi. Four lanes headed by an
+avatar and the word "now" were four instances of one anonymous thing;
+"several AIs" only means something if each one is a different somebody.
+The timestamp moved to the right edge, where the product puts a row's meta,
+and the name took the left.
+
+**The finished steps say they are finished.** They were six identical grey
+dots, which reads as *pending*, so a lane showed no progress at all. Now a
+tick and the time the step took — the second column that makes a list of
+labels read as a log. The tick is grey, not the run blue: forty blue marks
+would leave nothing for the one step that is actually live to be marked
+*with*. The live step is a selected row, `--p-tint`, which is what the
+product draws.
+
+**The list was never cut, and the CSS said it was.** The comment over
+`.lanes` has always claimed the lanes "run to the bottom of the band and
+are cut there". They did not. `.lane` is a flex column and its rows are
+flex items, so a run longer than the card does not overflow — every row
+silently shrinks until it fits. Six rows at 16px looked deliberate; twelve
+would have too. `flex:none` on the rows, and the run is now 37–74px longer
+than the band at every width.
+
+**A `0fr` track is floored by the padding of the item inside it, not only
+its own.** The rows carried 3px above and below for spacing, so a closed
+row stayed 6px tall and its label overlapped its neighbour's for the whole
+transition — legible, doubled, and wrong. §4k of the gate names this trap
+from the track's side; this was the same trap from the item's. The row's
+air is leading now, which is height a `0fr` track does collapse.
+
+**The shutter is armed one painted frame late.** The resting frame has
+every row open, so adding `.is-live` and the transition together played the
+loop's opening state as an animation — nine rows sliding shut in front of
+the reader. `.is-warm` is added on the frame after the first cue pass.
+
+
 ## 2026-08-25 · no system components, and three dark-mode bugs
 
 **The language control was a native `<select>`.** It painted with the

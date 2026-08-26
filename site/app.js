@@ -265,6 +265,95 @@
     });
   }
 
+  /* ── 3b2. the four lanes, played as four independent runs ─────
+     The Codex card claims that several AIs get more done AT ONCE, and a
+     frozen picture of four task lists cannot say "at once" — it says
+     "four task lists". So each lane runs: its live step finishes, the
+     tick takes the pulse's place, its duration wipes in, and the next
+     step opens above it and pushes the older ones down past the cut.
+
+     THE IRREGULARITY IS AUTHORED, and it is the only thing about this
+     that is irregular. Each lane finishes a step on its own FIXED
+     interval — 3.3, 3.6, 3.9, 4.3 seconds — starting from its own offset
+     and looping on its own whole number of seconds. Every lane is
+     therefore perfectly predictable on its own, and the four never
+     coincide: 11 · 12 · 13 · 14 seconds realign once every 42 minutes.
+     One even stagger across all four would read as a single progress bar
+     drawn four times, which is the opposite of the sentence.
+
+     The resting frame is the finished run. `.is-live` is added here and
+     nowhere else, so no-JS, reduced motion and the moments before the
+     observer fires all get the complete figure. */
+  var lanesEl = doc.querySelector('.vs__viz--parallel .lanes');
+  if (lanesEl && !reduce) {
+    var LANE_CLOCK = [[2000, 3600, 12000],    // [first step, every, loop]
+                      [1100, 3300, 11000],
+                      [3800, 4300, 14000],
+                      [2900, 3900, 13000]];
+    // the two newest steps stand down a beat apart at the end of a lane's
+    // loop, so the wrap reads as the list settling back rather than as a cut
+    var LANE_FOLD = [700, 300];
+
+    var laneRows = [].slice.call(lanesEl.querySelectorAll('.lane'))
+      .map(function (lane) { return [].slice.call(lane.querySelectorAll('.lane__s')); });
+
+    var lRaf = 0, lT0 = null, lVis = false;
+
+    function lanePaint(now) {
+      lRaf = 0;
+      if (!lVis || document.hidden) { lT0 = null; return; }
+      if (lT0 === null) lT0 = now;
+      var t = now - lT0;
+
+      laneRows.forEach(function (rows, i) {
+        var c = LANE_CLOCK[i], lt = t % c[2], live = null;
+        rows.forEach(function (row, r) {
+          // everything below the top two is already on the board; the two
+          // newest arrive on this lane's clock, newest last
+          var on = r > 1 ||
+            (lt >= c[0] + (1 - r) * c[1] && lt < c[2] - LANE_FOLD[r]);
+          row.classList.toggle('is-on', on);
+          if (on && !live) live = row;      // the newest step present is the live one
+        });
+        rows.forEach(function (row) { row.classList.toggle('is-run', row === live); });
+      });
+      lRaf = requestAnimationFrame(lanePaint);
+    }
+
+    function laneRun(on) {
+      lVis = on;
+      if (!on) {
+        lT0 = null;
+        if (lRaf) { cancelAnimationFrame(lRaf); lRaf = 0; }
+        return;
+      }
+      if (!lanesEl.classList.contains('is-live')) {
+        lanesEl.classList.add('is-live');
+        // The shutter is armed one painted frame late. Added together,
+        // `.is-live` and the transition would play the loop's opening
+        // state as an animation — nine rows sliding shut in front of the
+        // reader — because the resting frame has every row open.
+        lRaf = requestAnimationFrame(function (ts) {
+          lanePaint(ts);
+          requestAnimationFrame(function () { lanesEl.classList.add('is-warm'); });
+        });
+        return;
+      }
+      if (!lRaf) lRaf = requestAnimationFrame(lanePaint);
+    }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { laneRun(e.isIntersecting); });
+      }, { threshold: 0.25 }).observe(lanesEl);
+    } else {
+      laneRun(true);
+    }
+    doc.addEventListener('visibilitychange', function () {
+      if (!document.hidden && lVis && !lRaf) lRaf = requestAnimationFrame(lanePaint);
+    });
+  }
+
   /* ── 3c. the product window, scaled as one object ─────────────
      The window is laid out at its real desktop size (--app-dw) and scaled
      into the marketing column by one factor. offsetHeight reads the

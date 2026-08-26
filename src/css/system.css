@@ -2286,30 +2286,147 @@ h3{ font-family:var(--fd); }
   font-family:var(--fb); color:var(--p-fg);
 }
 
+/* THE RUN IS LONGER THAN THE CARD, and that is the whole picture: a lane
+   cut at the bottom edge is a task list that keeps going, which is what
+   the section's other three devices do too. Without this the column is a
+   flex container and its rows are flex items, so a twelve-step run does
+   not overflow — every row silently shrinks by four pixels until the run
+   fits, and the card reads as four short lists that happen to have ended. */
+.lane > *{ flex:none; }
+
 .lane__h{ display:flex; align-items:center; gap:8px; margin-bottom:9px; }
 
 .lane__h img{ width:20px; height:20px; border-radius:6px; object-fit:cover; object-position:top; }
 
+/* THE AGENT IS NAMED. Four lanes headed by an avatar and the word "now"
+   are four instances of one anonymous thing; the sentence over them says
+   "several AIs", and several implies each one is a different somebody.
+   The name is the cheapest way to say that, and it is the name a person
+   would @-mention, so it also says these are addressable. */
+.lane__h b{
+  font-weight:500; font-size:12px; color:var(--p-fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* the timestamp moves to the right edge, which is where the product puts
+   a row's meta — and it gives the name the whole left side */
 .lane__h span{
+  margin-left:auto; padding-left:6px;
   font-family:var(--fm); font-size:10px; letter-spacing:.04em;
-  color:var(--p-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:var(--p-mute); white-space:nowrap;
 }
 
 .lane__t{ font-size:13px; line-height:1.35; margin:0 0 10px; }
 
+/* ── a step row ──────────────────────────────────────────────────────
+   A SHUTTER, not a fader. The row is a 1-track grid that the loop opens
+   from `0fr`, so an arriving step is clipped into view rather than faded
+   in — text at partial opacity is text under its contrast ratio, and a
+   figure that loops re-enters that state forever (`docs/motion.md`).
+
+   THE ROW HAS NO PADDING ANYWHERE — its air is leading. A `0fr` track is
+   floored at the padding box of the item inside it, so the 3px above and
+   below that used to separate these rows kept a closed row 6px tall and
+   its label overlapped its neighbour's for the whole transition. This is
+   the trap `docs/qa-checklist.md` §4k names, met from the item's side
+   rather than the track's. Line-height is height a `0fr` track does
+   collapse. */
 .lane__s{
-  display:flex; align-items:center; gap:8px;
-  font-size:11px; color:var(--p-mute); padding:3px 0;
+  display:grid; grid-template-rows:1fr; overflow:hidden;
+  margin:0; font-size:11px; color:var(--p-mute);
 }
 
-.lane__s .vsui__ind{ width:.7rem; height:.7rem; flex:none; }
+.lane__r{
+  display:flex; align-items:center; gap:8px; min-height:0; line-height:20px;
+  /* the live row's tint is drawn here rather than on .lane__s, so it
+     collapses with the track. Inline padding is free — a grid row track
+     is a height, and it does not see it. */
+  margin-inline:-6px; padding-inline:6px;
+  border-radius:var(--p-r-item);
+  transition:background-color var(--t-state) var(--e-out);
+}
+
+/* one slot, two glyphs, stacked — so the swap from running to finished is
+   a scale exchange in place and the label never shifts sideways. 12px, not
+   the .86rem the product's own rows use: the run indicator's ripple grows
+   to 1.56× and a wider one would be cut by the row's own clip. */
+.lane__k{
+  display:grid; place-items:center;
+  width:12px; height:12px; flex:none;
+}
+
+.lane__k > *{ grid-area:1/1; }
+
+.lane__k .vsui__ind{
+  width:100%; height:100%;
+  transform:scale(0); transition:transform var(--t-state) var(--e-spring);
+}
+
+/* GREY, not the run blue. Ten finished ticks per lane in --p-run would
+   put forty blue marks on the card and the one step that is actually
+   live would stop being the thing the eye finds. Colour marks the
+   running row and nothing else. */
+.lane__tick{
+  width:10px; height:10px; stroke:var(--p-mute);
+  transition:transform var(--t-state) var(--e-spring);
+}
 
 .lane__s em{ font-style:normal; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-.lane__done{
-  width:.7rem; height:.7rem; flex:none; border-radius:50%;
-  background:var(--p-line);
+/* how long the step took — the second column that makes a list of labels
+   read as a log. Wiped in with clip-path when the step finishes, because
+   it is text (see the shutter note above). */
+.lane__s i{
+  margin-left:auto; padding-left:6px;
+  font-family:var(--fm); font-style:normal; font-size:10px;
+  color:var(--p-mute); white-space:nowrap;
+  transition:clip-path var(--t-state) var(--e-out);
 }
+
+/* WHICH ROW IS LIVE IS ASKED TWICE, because the two states have different
+   sources of truth. Playing, it is whichever step app.js has most recently
+   opened. At rest — no JS, reduced motion, or the loop parked by hand for
+   an axe run — it is the newest step in the markup, and it has to be that
+   whatever class the loop happened to leave behind when it stopped. */
+.lanes:not(.is-live) .lane__s--now,
+.lanes.is-live .lane__s.is-run{ color:var(--p-fg); }
+
+/* the step being worked on is a selected row, which is what the product
+   draws and what gives each lane one place for the eye to land */
+.lanes:not(.is-live) .lane__s--now .lane__r,
+.lanes.is-live .lane__s.is-run .lane__r{ background:var(--p-tint); }
+
+.lanes:not(.is-live) .lane__s--now .vsui__ind,
+.lanes.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
+
+.lanes:not(.is-live) .lane__s--now .lane__tick,
+.lanes.is-live .lane__s.is-run .lane__tick{ transform:scale(0); }
+
+.lanes:not(.is-live) .lane__s--now i,
+.lanes.is-live .lane__s.is-run i{ clip-path:inset(0 100% 0 0); }
+
+/* only the live row's ring animates. Three rows per lane carry an
+   indicator because three of them take a turn at being live; leaving all
+   twelve of those keyframes running would be eight animations painting a
+   glyph scaled to nothing. */
+.lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-c,
+.lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-r,
+.lanes.is-live .lane__s:not(.is-run) .vsui__ind-c,
+.lanes.is-live .lane__s:not(.is-run) .vsui__ind-r{ animation:none; }
+
+/* ── the loop ────────────────────────────────────────────────────────
+   `.is-live` is added by app.js §3b2 and by nothing else, so the resting
+   frame — no JS, reduced motion, the moments before the observer fires —
+   is the whole run, every step present, exactly as it was before this
+   was a loop at all. */
+.lanes.is-live .lane__s{ grid-template-rows:0fr; }
+
+.lanes.is-live .lane__s.is-on{ grid-template-rows:1fr; }
+
+/* one painted frame later — see app.js §3b2. The opening state has nine of
+   eleven rows already open, and arming the transition in the same frame
+   plays the other two sliding shut in front of the reader. */
+.lanes.is-warm .lane__s{ transition:grid-template-rows var(--t-reveal) var(--e-out); }
 
 
 /* B — ChatGPT: "Does the work, not just the thinking."
