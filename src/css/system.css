@@ -2921,7 +2921,7 @@ h3{ font-family:var(--fd); }
 
 /* the flex chain has to be unbroken from the window to the plot: one
    non-flex link in the middle and the chart comes out sixteen pixels tall */
-.arti__body{ flex:1; min-height:0; display:flex; flex-direction:column; padding:14px 16px 16px; }
+.arti__body{ flex:1; min-height:0; display:flex; flex-direction:column; padding:14px 16px 20px; }
 
 .arti__dash{ flex:1; min-height:0; display:flex; flex-direction:column; }
 
@@ -3044,7 +3044,12 @@ h3{ font-family:var(--fd); }
 
 .arti.is-live .arti__svg:not(.is-on) ~ .arti__val{ clip-path:inset(0 100% 0 0); }
 
-.arti__axis{ display:flex; justify-content:space-between; flex:none; margin:0; padding-top:5px; }
+/* THE BOTTOM WAS CROWDED, and it was crowded by four horizontal things
+   inside sixty pixels: the curve, its baseline, the day row and the
+   receipt's own rule. The days need to belong to the baseline above them
+   rather than to the strip below, so the air goes between the axis and
+   the receipt, not between the baseline and the days. */
+.arti__axis{ display:flex; justify-content:space-between; flex:none; margin:0; padding-top:6px; }
 
 .arti__axis em{
   font-style:normal; font-family:var(--fm); font-size:8px;
@@ -3075,7 +3080,7 @@ h3{ font-family:var(--fd); }
 
 .arti__dock{
   display:flex; align-items:center; gap:9px; flex:none;
-  padding:8px 16px;
+  padding:11px 16px;
   background:var(--p-tint); border-top:1px solid var(--p-border);
   font-family:var(--fb); font-size:12px; color:var(--p-fg);
 }
@@ -3396,10 +3401,27 @@ h3{ font-family:var(--fd); }
 
    Inscribed in the band (50%/50%, transparent at 100%) it reaches zero
    exactly at the edge at every card width instead of at one. */
+/* THE MASK BELONGS TO THE HUB, NOT TO THE BAND. Masking the band masked
+   its own fill, so this card could not carry a tint — it was pinned to
+   `--tile`, the same value as the card body under it, and the figure and
+   the sentence ran into each other with no edge between them. Its three
+   siblings have had a hue-tinted band since they were built; this one
+   lost it to the vignette. `--hue-ops` because green sits between the
+   engineering blue above it and the leadership violet beside it, and
+   because the warm hues are out on a cool page (design-principles §4). */
 .vs__viz--context{
-  position:relative; padding:0; background:var(--tile);
-  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
-          mask-image:radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
+  position:relative; padding:0;
+  --vs-hue:var(--hue-ops);
+
+  /* 15%, NOT THE SHARED 9%, and the reason is coverage rather than taste.
+     The band's tint is what separates the figure from the sentence, and
+     how much separation 9% buys depends entirely on how dark the hue is:
+     the product teal lands 21 levels off `--tile`, the ops green only 12.
+     This card also has the least tint showing of the four — a wall of
+     near-white tiles covers most of it — so it starts with less area to
+     make the point with. 15% puts its edge at the same 21 levels the
+     other three get for free. */
+  --vs-tint:color-mix(in srgb, var(--vs-hue) 15%, var(--tile));
 }
 
 .hub{
@@ -3423,6 +3445,36 @@ h3{ font-family:var(--fd); }
   width:max-content;
   grid-template-columns:repeat(11, 52px);
   gap:11px;
+
+  /* THE FADE HAS TO FINISH BEFORE THE CUT. Two things were wrong and
+     they were the same thing: `#000 45%, transparent 100%` is a straight
+     line in alpha, and it still had the edge tiles at about 40% when the
+     band's `overflow:hidden` sliced them — so a half-painted tile was
+     chopped in half, which is what read as abrupt. Widening the ellipse
+     only made it worse: the tiles then arrived at the edge at 0.9 and
+     were cut at full strength.
+
+     Ten stops on an ease-out curve, sized so alpha is ~0.03 by the time
+     a tile reaches the band's edge — 266 of the hub's 355px horizontal
+     radius, 108 of its 140px vertical one, both about 76%. Nothing is
+     ever cut while it is still visible, and no tile is more than about a
+     fifth lighter than its neighbour.
+
+     It also gives the card its boundary back: with the outer tiles gone
+     rather than faint, the band's own tint shows as a clean strip under
+     them, which is the edge the figure and the sentence were missing. */
+  -webkit-mask-image:radial-gradient(ellipse 54% 48% at 50% 50%,
+    #000 0%, #000 22%,
+    rgb(0 0 0 / .95) 34%, rgb(0 0 0 / .84) 44%,
+    rgb(0 0 0 / .66) 53%, rgb(0 0 0 / .45) 62%,
+    rgb(0 0 0 / .25) 70%, rgb(0 0 0 / .10) 78%,
+    rgb(0 0 0 / .03) 86%, transparent 94%);
+          mask-image:radial-gradient(ellipse 54% 48% at 50% 50%,
+    #000 0%, #000 22%,
+    rgb(0 0 0 / .95) 34%, rgb(0 0 0 / .84) 44%,
+    rgb(0 0 0 / .66) 53%, rgb(0 0 0 / .45) 62%,
+    rgb(0 0 0 / .25) 70%, rgb(0 0 0 / .10) 78%,
+    rgb(0 0 0 / .03) 86%, transparent 94%);
 }
 
 .hub__t{

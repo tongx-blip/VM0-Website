@@ -6,6 +6,57 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-26 · the connector card gets its ground back
+
+Tong, on three screenshots: *"这个图一底部空间有点拥挤。图三，上边的图和下边字看不出
+分界，是不是需要有一个带颜色的背景？而且动画后边消失的有点生硬。"*
+
+**The Zapier card had no band tint, and could not have had one.** Its three
+siblings sit on `color-mix(--vs-hue 9%, --tile)`; this one was pinned to
+plain `--tile` — the same value as the card body under it — so the figure
+and the sentence ran together with no edge between them. The reason was
+mechanical: the vignette was a `mask-image` on the **band**, and a masked
+band masks its own fill, so a tint would have faded out at the card's
+edges. Moving the mask onto the hub lets the band carry a colour again.
+
+`--hue-ops`, because green sits between the engineering blue above it and
+the leadership violet beside it, and the warm hues are out on a cool page.
+At **15%** rather than the shared 9%, and that is coverage, not taste: how
+much separation 9% buys depends on how dark the hue is — the product teal
+lands 21 levels off `--tile`, the ops green only 12 — and this card has
+the least tint showing of the four, since a wall of near-white tiles
+covers most of it.
+
+**The falloff was one straight line, and it cut tiles in half.**
+`#000 45%, transparent 100%` still had the outer tiles at about 40% when
+the band's `overflow:hidden` sliced them, so a half-painted chip was
+chopped mid-way — which is what read as abrupt. Widening the ellipse made
+it worse: the tiles then arrived at the edge at 0.9 and were cut at full
+strength. Ten stops on an ease-out now, sized so alpha is ~0.03 by the
+time a tile reaches the band's edge. Nothing is cut while it is still
+visible, and fixing the fade is what gave the card its boundary: with the
+outer tiles gone rather than faint, the band's own tint shows as a clean
+strip under them.
+
+**The artifact's bottom was carrying four horizontal things in sixty
+pixels** — the curve, its baseline, the day row and the receipt's rule.
+The air went between the axis and the receipt rather than between the
+baseline and the days, because the days belong to the baseline above them;
+the receipt strip went from 8px of padding to 11. The curve also got its
+own range back (26–92 rather than 20–95), so it stops sitting low in a
+plot half of which is empty.
+
+**`tools/ship-figures.py` could only be run once.** It found the end of a
+band by matching `</div>\n      </div>`; run it again on a file it had
+already written and that marker was no longer the figure's own closing
+pair but the one two levels out, so it ate `.vs__viz`'s closer and the
+document unravelled from `<article>` to `</html>`. It balances tags now —
+and the first balance-aware version was still off by one, because
+`<(/?)div\b` matches `</div` without the `>`, so a `rindex` bounded by
+`m.end()` could not see the closer it had just found. A generator that
+cannot be run twice is a generator that will be run twice.
+
+
 ## 2026-08-26 · the other two figures, chosen from six
 
 Tong: *"这两个卡…下边的 cards 的 terminal 你画得也太草率了吧…每个给我三种不同的设计吧"*.

@@ -53,7 +53,7 @@ def _smooth(pts):
 
 
 def card_b(peak=5):
-    W, H, lo, hi = 280.0, 60.0, 20.0, 95.0
+    W, H, lo, hi = 280.0, 60.0, 26.0, 92.0   # the week's own range, +3 either side
     pts = [((W / (len(CHART) - 1)) * i, H - (v - lo) / (hi - lo) * (H - 8) - 4)
            for i, (_, v) in enumerate(CHART)]
     line = _smooth(pts)
@@ -163,11 +163,27 @@ def card_d():
 
 
 def splice(html, viz_class, figure):
+    """Replace everything inside the band, found by BALANCING tags rather
+    than by matching a `</div>\n      </div>` string.
+
+    The string version worked exactly once. Run it again — on a file this
+    script had already written — and the marker it keyed on was no longer
+    the figure's own closing pair but the one two levels out, so it ate
+    `.vs__viz`'s closer and the document unravelled from `<article>` all
+    the way to `</html>`. A generator that cannot be run twice is a
+    generator that will be run twice."""
     i = html.index(viz_class)
     start = html.index('>', i) + 1
-    # the marker is [close the figure root][close .vs__viz]; the generated
-    # figure closes its own root, so the first one has to be consumed too
-    end = html.index('</div>\n      </div>', start) + len('</div>')
+    depth, end, j = 1, None, start
+    while depth:
+        m = re.compile(r'<(/?)div\b').search(html, j)
+        if not m:
+            raise SystemExit('unbalanced div after ' + viz_class)
+        depth += -1 if m.group(1) else 1
+        end, j = m.start(), m.end()               # `end` is where the tag OPENS
+    # m.end() stops after `</div`, not after `</div>`, so a rindex bounded by
+    # it cannot see the closer it just found and silently returns the one
+    # before — which is how a balance-aware splice still ate a tag.
     return html[:start] + '\n        ' + figure + '\n      ' + html[end:]
 
 
