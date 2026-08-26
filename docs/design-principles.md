@@ -214,3 +214,103 @@ allowed, and it is chosen to clear AA on every ground the page uses — paper,
 wash and wash-2; accent text uses `--accent-ink`; every landmark has a
 unique accessible name; `prefers-reduced-motion` skips the choreography without
 leaving anything invisible; focus is visible.
+
+## 13. A section figure shows the claim happening
+
+Sections 0–12 are about the page. This one is about the **picture beside the
+words**, which is where most of the rework on this page has gone. Every rule
+here cost a round.
+
+### 13.1 A figure shows the claim happening. It does not restate it.
+
+The step is called **Run** and its claim is that Okou *"does the job in the
+open"*. The panel beside it was three finished paragraphs. A transcript proves
+work **happened**; it can never show work **happening**, so nothing was in the
+open. The fix was not better paragraphs — it was making the run play.
+
+Ask of any figure: *what does a reader see change?* If the answer is "nothing,
+they read it", it is a caption with a border, not a figure.
+
+### 13.2 One scene with states, not N pictures
+
+Run · Save · Hand over · Automate had four mocks on four painted panels that
+slid past one another. Four pictures: nothing carried over, the reader
+re-started at every step, and the section's own claim — *one chat becomes
+something the team keeps* — was described four times and shown zero.
+
+A multi-step figure is **one scene**. The same objects persist and move; a
+single attribute (`data-step`) is the only thing that changes; every object
+reads it and CSS does the rest. If an object exists in step 2 and step 4 it is
+the *same element*, not two.
+
+### 13.3 Abstracted product UI — not a screenshot, not a diagram
+
+Two failures, opposite directions:
+
+- **Too abstract.** A spine-and-nodes flow and a terminal log were both read as
+  *"跟 VM0 的产品看不出太大关联，就是贼抽象"*. Geometry that could belong to any
+  product belongs to none.
+- **Too literal.** A screenshot in a browser chrome goes stale every release,
+  cannot be translated, shows detail nobody is being asked to read, and looks
+  like every other SaaS page.
+
+The register in between: **the product's own chrome** — its cards, chips,
+radii, connector marks and accent — with the prose that carries no meaning
+**reduced to bars**. Recognisable as ours, readable at a glance, and it never
+goes stale because it was never a screenshot.
+
+### 13.4 One gesture per beat, and everything else stays still
+
+Name the gesture in one sentence before building it. In the workflow scene:
+the run *lifts, straightens and is renamed* at Save; the team *arcs in* at Hand
+over; a schedule *snaps on* at Automate. Nothing else moves during those
+moments. Motion spread evenly across a figure reads as noise, and the one thing
+that mattered gets no more attention than the four that did not.
+
+### 13.5 A gesture must deliver something
+
+The save card flew back toward the workflow list and **nothing arrived** — an
+object leaving with nothing landing is an empty gesture, and the reader is left
+looking at where it used to be. Whatever moves must change something at the far
+end: a row appears, a count goes up, a state flips.
+
+### 13.6 The ground serves the objects, and is re-decided when they change
+
+The four painted grounds were tuned when a single opaque mock covered most of
+the panel. The moment the objects started floating, twice as much artwork
+showed and every ground went from atmosphere to **picture** — the brick wall
+and the blue figure both won the composition outright, at any veil. Raising the
+veil further only made a muddy photograph.
+
+A ground is not a constant. If the thing standing on it changes shape, the
+ground is re-decided, and "make it darker" is not a re-decision.
+
+### 13.7 Tie a figure to the page with a token, not with adjacency
+
+The workflow scene's field is built from `--step-run / --save / --hand /
+--auto` — the **same four hues as the step markers in the left column**. The
+two halves of the ladder are now related by a token rather than by being next
+to each other, which is the only kind of relationship that survives someone
+editing one of them.
+
+### 13.8 A physical metaphor is a different register — choose it on purpose
+
+Sticky notes, paper, rotation and print shadows read as the physical world.
+Tong, on the version that used them: *"变铅纸的感觉更像是物理世界"*. That
+register is available for a brand moment; it is wrong for a figure whose
+subject is software, and mixing the two makes the software look like a prop.
+
+### 13.9 Check the geometry in every state, not only at rest
+
+Two collisions shipped inside one week: a card and a list overlapping at step
+4, and a sticky stage that resized between its own beats — which fed back into
+a layout value derived from its height and stopped the last beat activating at
+all. A figure with N states has N compositions, and each one is looked at.
+
+---
+
+**On being asked to redesign.** *"重构"* means replacing the **argument** —
+what the picture is trying to prove — not restyling the wireframe. Changing
+type sizes, spacing and easing on a layout that was never re-decided is
+decorating. And when the ask is visual, build it and let them look: arguing
+about quality in prose costs a round and settles nothing.

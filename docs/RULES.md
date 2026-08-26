@@ -116,6 +116,23 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | K3 | **Real content or nothing.** Placeholders declare themselves. | | QA §4c |
 | K4 | **A generated artefact is really generated** — authored as a plan, rendered by the template's own engine, and shipped as what it produced. | A hand-coded thing that resembles a website is not the product's output. | — |
 
+## Section figures
+
+Argued in `design-principles.md` §13. Every one of these cost a round.
+
+| # | Rule | Why | Checked |
+|---|---|---|---|
+| F1 | **A figure shows the claim happening, it does not restate it.** Ask what a reader sees *change*; "nothing, they read it" means it is a caption with a border. | The Run step's claim is "does the job in the open" and the panel was three finished paragraphs. A transcript proves work happened, never that it is happening. | By eye, per figure |
+| F2 | **One scene with states, not N pictures.** The same objects persist and move; one attribute is the only thing that changes; an object in two steps is the *same element*. | Four mocks on four sliding panels carried nothing over, so the section's own claim was described four times and shown zero. | QA §4n2 |
+| F3 | **Abstracted product UI** — the product's own chrome, with prose that carries no meaning reduced to bars. Not a diagram, not a screenshot. | Geometry that could belong to any product belongs to none ("贼抽象"); a screenshot goes stale, cannot be translated and shows detail nobody is reading. | By eye, per figure |
+| F4 | **One gesture per beat, everything else still.** Name the gesture in one sentence before building it. | Motion spread evenly reads as noise, and the one thing that mattered gets no more attention than the four that did not. | By eye, per state |
+| F5 | **A gesture must deliver something** at the far end — a row appears, a count moves, a state flips. | A card flew toward the list and nothing arrived; the reader is left looking at where it used to be. | By eye, per state |
+| F6 | **The ground serves the objects and is re-decided when they change.** "Make it darker" is not a re-decision. | Grounds tuned under one opaque mock became pictures the moment the objects floated — at any veil. | By eye, per figure |
+| F7 | **Tie a figure to the page with a token, not with adjacency.** | `--step-*` hues are shared by the scene's field and the step markers; adjacency does not survive someone editing one side. | QA §4n2 |
+| F8 | **A physical metaphor is a different register** — paper, notes, rotation, print shadows. Available for a brand moment, wrong for a figure whose subject is software. | Mixing the two makes the software look like a prop ("更像是物理世界"). | By eye |
+| F9 | **Check the geometry in every state, not only at rest.** N states are N compositions. | A card/list overlap and a stage that resized between its own beats both shipped in one week; the second broke the last beat entirely. | QA §4n2 |
+| F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
+
 ## Process
 
 | # | Rule | Why |

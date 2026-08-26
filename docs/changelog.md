@@ -180,6 +180,60 @@ air is leading now, which is height a `0fr` track does collapse.
 every row open, so adding `.is-live` and the transition together played the
 loop's opening state as an animation — nine rows sliding shut in front of
 the reader. `.is-warm` is added on the frame after the first cue pass.
+## 2026-08-26 · the rules for figures, and the parallel section rebuilt on them
+
+**The rules are written down.** `design-principles.md` §13 and `RULES.md`
+F1–F10. Sections 0–12 were all about the page; nothing in them covered **the
+picture beside the words**, which is where nearly all the rework on this page
+has gone. Every rule there cost a round, and each is written with the failure
+that produced it: a figure shows the claim happening rather than restating it;
+a multi-step figure is one scene with states, not N pictures; abstracted
+product UI, neither a diagram nor a screenshot; one gesture per beat; a gesture
+must deliver something; the ground is re-decided when the objects change; tie a
+figure to the page with a token rather than adjacency; a physical metaphor is a
+different register; check the geometry in every state; and "redesign" means
+replacing the argument, not restyling the wireframe.
+
+**Then the parallel section was rebuilt against them.** It was a flow chart —
+ask, hub, four status cards, two captions — that asserted all four of the
+section's claims and showed none. Worse, its four cards carried fixed statuses
+with one already reading *Done*, so **AT ONCE**, the word the whole section
+turns on, was the one thing a frozen tree could not say.
+
+Read off the copy, the four claims and what each one needs:
+
+| the copy says | the figure has to show |
+|---|---|
+| a chat for every task | one ask becomes four chats |
+| **nothing waits in line** | they advance **at the same time** |
+| nobody sits watching | the person leaves |
+| nothing stops when it sleeps | the work carries on without them |
+
+**The second claim is the whole figure.** The only honest proof of parallel is
+four progress lines moving together at *different* rates — a queue advances one
+bar at a time, so four bars at four speeds is a thing a queue physically cannot
+draw. Each lane carries its own `data-rate` (1 / 1.42 / 0.72 / 0.94, deliberately
+untidy) and they finish out of order at 0:04 · 0:05 · 0:06 · 0:07. The four
+clocks diverging *is* the argument.
+
+**Claims three and four are one gesture.** Half way through, the ask row dims
+and steps back — Ming has closed the tab — and the lanes do not follow. They
+stay at full strength and keep moving, because they are not on that person's
+machine. The status line says so while it happens. The note under the figure
+now captions something visible instead of asserting it.
+
+Each lane is tinted with a `--hue-*` token, the same set the page uses for
+disciplines elsewhere, so a lane's colour means something (§13.7). The four
+cards arrive **together**, not staggered: a stagger here would be the one thing
+the figure exists to deny.
+
+Under reduced motion or without JS the resting frame is the **finished**
+figure, with the four different finishing times already on the clocks.
+
+Gate: axe 0 violations both themes after a full-page walk, borders 0, bug sweep
+pass, reduced-motion pass, 390 no overflow, tokens 0, scopes 0.
+
+
 ## 2026-08-26 · the four steps become one scene
 
 **Four steps, four separate pictures.** Run / Save / Hand over / Automate each

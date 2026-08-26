@@ -1758,6 +1758,141 @@ h3{ font-family:var(--fd); }
 .wfstage.is-measuring .slackui{ height:auto !important; }
 
 
+/* ── THE PARALLEL FIGURE ─────────────────────────────────────────────
+   The section claims four things and the old figure — an ask, a hub, four
+   status cards and two captions — asserted all four and showed none. It
+   was a flow chart, and its four cards carried fixed statuses, one of
+   them already "Done", so the one word the section turns on, AT ONCE, was
+   the one thing a frozen tree could not say (§13.1).
+
+   Read off the copy, the four claims and what each one needs:
+
+     "a chat for every task"    one ask becomes four chats
+     "nothing waits in line"    they advance AT THE SAME TIME
+     "nobody sits watching"     the person leaves
+     "nothing stops when it     the work carries on without them
+      sleeps"
+
+   THE SECOND ONE IS THE WHOLE FIGURE. The only honest proof of parallel
+   is four progress lines moving together at DIFFERENT rates — a queue
+   advances one bar at a time, so four bars at four speeds is a thing a
+   queue physically cannot draw. Every card carries its own `data-rate`
+   and they finish out of order, which is why the rates are 1 / 1.42 /
+   0.72 / 0.94 rather than four tidy numbers.
+
+   The third and fourth claims are one gesture (§13.4): half way through,
+   the ask row dims and steps back — the person has gone — and the cards
+   do not. They stay at full strength and keep moving, because they are
+   not on that person's machine. That is the note under the figure, shown
+   instead of stated.
+
+   Each lane is tinted with a --hue-* token, the same set the rest of the
+   page uses for disciplines, so a lane's colour means something (§13.7). */
+.par{
+  margin-top:clamp(34px,4vw,56px);
+  display:flex; flex-direction:column; gap:clamp(14px,1.8vw,22px);
+}
+
+/* the ask, and the person who is about to leave */
+.par__ask{
+  align-self:center; max-width:min(100%, 46ch);
+  display:flex; align-items:center; gap:.7em; flex-wrap:wrap;
+  padding:.85em 1.15em; border-radius:var(--r-card);
+  background:var(--tile); color:var(--ink);
+  font-size:var(--t-sm);
+  transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-out);
+}
+.par__you{
+  display:inline-flex; align-items:center; gap:.45em;
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-mute);
+}
+.par__you img{ border-radius:var(--r-pill); }
+/* the person leaves; the work does not follow them out */
+.par.is-away .par__ask{ opacity:.4; transform:scale(.97); }
+
+.par__state{
+  align-self:center;
+  display:flex; align-items:center; gap:.55em;
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-mute);
+}
+.par__state i{
+  width:6px; height:6px; border-radius:var(--r-pill);
+  background:var(--accent-solid);
+  animation:parPulse 1.6s var(--e-out) infinite;
+}
+.par.is-done .par__state i{ background:rgb(var(--ok-rgb) / .85); animation:none; }
+@keyframes parPulse{ 0%,100%{ opacity:.35 } 50%{ opacity:1 } }
+
+/* four chats, side by side, because side by side is the claim */
+.par__grid{
+  display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:clamp(10px,1.3vw,18px); margin:0; padding:0; list-style:none;
+}
+.par__c{
+  display:flex; flex-direction:column; gap:.6em;
+  padding:clamp(12px,1.3vw,18px);
+  border-radius:var(--r-card);
+  background:var(--paper);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .07),
+             0 18px 34px -22px rgb(var(--ink-rgb) / .38);
+  /* they arrive together, not in a queue — a stagger here would be the
+     one thing the figure exists to deny */
+  opacity:0; transform:translateY(12px);
+  transition:opacity 520ms var(--e-out), transform 620ms var(--e-out);
+}
+.par.is-in .par__c{ opacity:1; transform:none; }
+.par__hd{ display:flex; align-items:center; gap:.5em; }
+.par__ic{
+  width:1.45em; height:1.45em; flex:none;
+  border-radius:var(--r-xs); background:color-mix(in srgb, var(--h) 12%, var(--tile));
+  display:grid; place-items:center;
+}
+.par__hd b{ font-size:var(--t-meta); font-weight:500; flex:1; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.par__el{
+  font-style:normal; font-family:var(--fm); font-size:var(--t-mono);
+  color:var(--ink-mute); font-variant-numeric:tabular-nums;
+}
+.par__do{ font-size:var(--t-meta); color:var(--ink-soft); }
+
+/* the proof: four of these, moving together, at four speeds */
+.par__bar{
+  height:4px; border-radius:var(--r-pill);
+  background:rgb(var(--ink-rgb) / .08);
+  overflow:hidden;
+}
+.par__bar i{
+  display:block; height:100%; width:100%;
+  border-radius:inherit; background:var(--h);
+  transform:scaleX(var(--p, 0)); transform-origin:left;
+}
+/* what the chat came back with. It replaces the doing-line rather than
+   sitting under it, so a finished lane is shorter, not busier (§13.5). */
+.par__out{
+  display:none; align-items:center; gap:.5em;
+  font-size:var(--t-meta); color:var(--ink);
+}
+.par__ok{
+  width:.55em; height:.55em; flex:none; border-radius:var(--r-pill);
+  background:rgb(var(--ok-rgb) / .85);
+}
+.par__c.is-done .par__do,
+.par__c.is-done .par__bar{ display:none; }
+.par__c.is-done .par__out{ display:flex; }
+
+@media (max-width:900px){
+  .par__grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width:520px){
+  .par__grid{ grid-template-columns:minmax(0,1fr); }
+}
+@media (prefers-reduced-motion:reduce){
+  .par__c,.par__ask{ transition:none; }
+  .par__state i{ animation:none; }
+}
+
 /* ── THE WORKFLOW SCENE ──────────────────────────────────────────────
    The four steps used to be four separate mocks on four painted panels
    that slid past one another. Four pictures, not one story: nothing

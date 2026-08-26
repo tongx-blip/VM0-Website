@@ -162,107 +162,106 @@
     }
   }
 
-  /* ── 3b. the parallel figure, played as a run ─────────────────
-     One rAF timeline, not a stack of timers, and it only advances while
-     the figure is on screen and the tab is in front. The page's resting
-     state is the finished frame, so reduced motion and no-JS both get a
-     complete figure rather than an empty one. */
-  var a2a = doc.getElementById('a2a');
-  if (a2a && !reduce) {
-    var askEl = a2a.querySelector('.a2a__ask');
-    var cards = [].slice.call(a2a.querySelectorAll('.a2a__card'));
-    var stats = cards.map(function (c) { return c.querySelector('.a2a__st'); });
-    var askText = askEl.textContent.replace(/\s+/g, ' ').trim();
+  /* ── 3b. the parallel figure ──────────────────────────────────
+     One rAF clock, four lanes reading it at four rates. The rates are
+     the argument: a queue advances one bar at a time, so four bars
+     moving together at different speeds is a thing a queue physically
+     cannot draw. They finish out of order for the same reason.
 
-    // the typed copy is decorative; the sentence itself stays readable
-    var sr = doc.createElement('span');
-    sr.className = 'a2a__sr';
-    sr.textContent = askText;
-    var typed = doc.createElement('span');
-    typed.setAttribute('aria-hidden', 'true');
-    var caret = doc.createElement('i');
-    caret.className = 'a2a__caret';
-    caret.setAttribute('aria-hidden', 'true');
-    askEl.textContent = '';
-    askEl.appendChild(sr);
-    askEl.appendChild(typed);
-    askEl.appendChild(caret);
+     Half way through, the person leaves. The ask row dims; the lanes do
+     not, because they are not on that person's machine — which is the
+     note under the figure, shown instead of stated.
 
-    var TYPE_START = 640;
-    var TYPE_MS = 34;                       // per character
-    var typeEnd = TYPE_START + askText.length * TYPE_MS;
+     It runs only while on screen and while the tab is in front, and the
+     resting state under reduced motion or no JS is the FINISHED figure,
+     never an empty one. */
+  var par = doc.getElementById('par');
+  if (par) {
+    var parCards = [].slice.call(par.querySelectorAll('.par__c'));
+    var parState = doc.getElementById('parState');
+    var parLabel = parState ? parState.querySelector('span') : null;
+    var RUN_MS = 5200;          // the whole figure, once
 
-    // Each task reports back on its own clock, and NOT in the order they
-    // were opened — the middle one finishes first. That out-of-order beat
-    // is the whole argument of the section, so it is written down here
-    // rather than falling out of an even stagger.
-    var CUES = [
-      [120,  '.a2a__step'],
-      [420,  '.a2a__ask'],
-      [typeEnd + 300, '.a2a__hub'],
-      [typeEnd + 700, '.a2a__stage'],
-      [typeEnd + 1000, cards[0]], [typeEnd + 1140, cards[1]],
-      [typeEnd + 1280, cards[2]], [typeEnd + 1420, cards[3]],
-      [typeEnd + 1950, stats[0]],
-      [typeEnd + 2210, stats[2]],          // CRM refresh lands first
-      [typeEnd + 2570, stats[1]],
-      [typeEnd + 2930, stats[3]],
-      [typeEnd + 3450, '.a2a__back']
-    ];
-    var LOOP = typeEnd + 9500;
-
-    var t0 = null, raf = 0, visible = false;
-
-    function paint(now) {
-      raf = 0;
-      if (!visible || document.hidden) { t0 = null; return; }
-      if (t0 === null) t0 = now;
-      var t = now - t0;
-      if (t > LOOP) { reset(); t0 = now; t = 0; }
-
-      typed.textContent = askText.slice(
-        0, Math.max(0, Math.min(askText.length,
-          Math.floor((t - TYPE_START) / TYPE_MS)))
-      );
-      askEl.classList.toggle('is-typed', t >= typeEnd);
-
-      CUES.forEach(function (cue) {
-        var el = typeof cue[1] === 'string' ? a2a.querySelector(cue[1]) : cue[1];
-        if (el) el.classList.toggle('is-on', t >= cue[0]);
-      });
-      raf = requestAnimationFrame(paint);
+    function fmt(sec) {
+      return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
     }
-
-    function reset() {
-      typed.textContent = '';
-      askEl.classList.remove('is-typed');
-      CUES.forEach(function (cue) {
-        var el = typeof cue[1] === 'string' ? a2a.querySelector(cue[1]) : cue[1];
-        if (el) el.classList.remove('is-on');
-      });
-    }
-
-    function run(on) {
-      visible = on;
-      if (on) {
-        a2a.classList.add('is-live');
-        if (!raf) raf = requestAnimationFrame(paint);
-      } else {
-        t0 = null;
-        if (raf) { cancelAnimationFrame(raf); raf = 0; }
-      }
-    }
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { run(e.isIntersecting); });
-      }, { threshold: 0.25 }).observe(a2a);
-    } else {
-      run(true);
-    }
-    doc.addEventListener('visibilitychange', function () {
-      if (!document.hidden && visible && !raf) raf = requestAnimationFrame(paint);
+    /* each lane's own finishing time, written before either branch so the
+       reduced-motion resting frame shows four different clocks rather than
+       four zeros — the figure's whole point is that they are not in step */
+    parCards.forEach(function (c) {
+      var rate = parseFloat(c.dataset.rate) || 1;
+      c.dataset.done = fmt(Math.round((RUN_MS / 1000) / rate));
     });
+
+    function parFinish() {
+      par.classList.add('is-in', 'is-away', 'is-done');
+      parCards.forEach(function (c) {
+        c.classList.add('is-done');
+        c.style.setProperty('--p', 1);
+        var el = c.querySelector('.par__el');
+        if (el) el.textContent = c.dataset.done || el.textContent;
+      });
+      if (parLabel) parLabel.textContent = 'Four chats \u00b7 all reported back';
+    }
+
+    if (reduce || !('requestAnimationFrame' in window)) {
+      parFinish();
+    } else {
+      var parT0 = null, parRaf = null, parOn = false, parPlayed = false;
+
+      function parPaint(t) {
+        if (parT0 === null) parT0 = t;
+        var e = t - parT0;
+        var away = e > RUN_MS * 0.42;
+        par.classList.toggle('is-away', away);
+        if (parLabel) {
+          parLabel.textContent = away
+            ? 'Ming closed the tab \u00b7 the chats carry on'
+            : 'Four chats opened \u00b7 all running';
+        }
+        var allDone = true;
+        parCards.forEach(function (c) {
+          var rate = parseFloat(c.dataset.rate) || 1;
+          var p = Math.min(1, (e / RUN_MS) * rate);
+          c.style.setProperty('--p', p.toFixed(4));
+          var el = c.querySelector('.par__el');
+          // a finished lane's clock stops at its own time; a running one
+          // keeps counting, so the four numbers visibly diverge
+          if (el) el.textContent = p >= 1 ? c.dataset.done : fmt(Math.round(e / 1000));
+          if (p >= 1) c.classList.add('is-done'); else allDone = false;
+        });
+        if (allDone) {
+          parRaf = null; parPlayed = true;
+          par.classList.add('is-done');
+          if (parLabel) parLabel.textContent = 'Four chats \u00b7 all reported back';
+          return;
+        }
+        parRaf = requestAnimationFrame(parPaint);
+      }
+
+      function parStart() {
+        if (parRaf || parPlayed) return;
+        parRaf = requestAnimationFrame(parPaint);
+      }
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            parOn = e.isIntersecting;
+            if (parOn) { par.classList.add('is-in'); parStart(); }
+            else if (parRaf) { cancelAnimationFrame(parRaf); parRaf = null; parT0 = null; }
+          });
+        }, { threshold: 0.32 }).observe(par);
+      } else {
+        par.classList.add('is-in'); parStart();
+      }
+
+      doc.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (parRaf) { cancelAnimationFrame(parRaf); parRaf = null; parT0 = null; }
+        } else if (parOn) { parStart(); }
+      });
+    }
   }
 
   /* ── 3b2. the four lanes, played as four independent runs ─────

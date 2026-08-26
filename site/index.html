@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=0384b5e0">
+<link rel="stylesheet" href="styles.css?r=993dd6b9">
 </head>
 <body>
 
@@ -710,45 +710,50 @@
     when it is done.
   </p>
 
-  <div class="a2a reveal" id="a2a">
+  <!-- One ask, four chats, and the only honest proof of "nothing waits in
+       line" is four progress lines advancing AT THE SAME TIME at different
+       rates — a queue cannot do that. The person leaves half way through
+       and the work carries on, which is what the note underneath claims
+       and what the old flow-chart could only assert. -->
+  <div class="par reveal" id="par">
 
-    <p class="a2a__step">You ask once</p>
-    <p class="a2a__ask">Get everything ready for Thursday&rsquo;s launch.</p>
+    <p class="par__ask">
+      <span class="par__you"><img src="assets/brand/avatar-2.png?v=22fa90af" alt="" width="22" height="22">Ming</span>
+      Get everything ready for Thursday&rsquo;s launch.
+    </p>
 
-    <span class="a2a__stem" aria-hidden="true"></span>
+    <p class="par__state" id="parState"><i></i><span>Four chats opened &middot; all running</span></p>
 
-    <p class="a2a__hub"><span class="a2a__av"><img src="assets/brand/avatar-1.png?v=d05bae67" alt=""></span>Okou<em>core agent</em></p>
-
-    <span class="a2a__stem a2a__stem--long" aria-hidden="true"></span>
-
-    <div class="a2a__stage">
-      <p class="a2a__label">Four tasks, each in its own chat</p>
-      <ul class="a2a__row">
-      <li class="a2a__card" style="--ci:0">
-        <p class="a2a__t">Landing page</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm"><img src="assets/brand/avatar-1.png?v=d05bae67" alt=""></span>Okou</p>
-        <p class="a2a__st"><span class="a2a__dot is-run"></span>Building the page</p>
+    <ul class="par__grid" id="parGrid">
+      <li class="par__c" style="--pi:0; --h:var(--hue-marketing)" data-rate="1">
+        <p class="par__hd"><span class="par__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
+          <b>Landing page</b><em class="par__el">0:00</em></p>
+        <p class="par__do">Building the page</p>
+        <p class="par__bar"><i></i></p>
+        <p class="par__out"><span class="par__ok"></span>Published to a URL</p>
       </li>
-      <li class="a2a__card" style="--ci:1">
-        <p class="a2a__t">Launch newsletter</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub"><img src="assets/brand/avatar-3.png?v=c2b53996" alt=""></span>Writer<em>sub-agent</em></p>
-        <p class="a2a__st"><span class="a2a__dot is-run"></span>Drafting the copy</p>
+      <li class="par__c" style="--pi:1; --h:var(--hue-sales)" data-rate="1.42">
+        <p class="par__hd"><span class="par__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
+          <b>CRM refresh</b><em class="par__el">0:00</em></p>
+        <p class="par__do">Matching records</p>
+        <p class="par__bar"><i></i></p>
+        <p class="par__out"><span class="par__ok"></span>412 records updated</p>
       </li>
-      <li class="a2a__card" style="--ci:2">
-        <p class="a2a__t">CRM refresh</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm a2a__av--sub"><img src="assets/brand/avatar-4.png?v=6fa57d60" alt=""></span>Revenue<em>sub-agent</em></p>
-        <p class="a2a__st"><span class="a2a__dot is-done"></span>Done, 412 records</p>
+      <li class="par__c" style="--pi:2; --h:var(--hue-ads)" data-rate="0.72">
+        <p class="par__hd"><span class="par__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
+          <b>Launch newsletter</b><em class="par__el">0:00</em></p>
+        <p class="par__do">Drafting the copy</p>
+        <p class="par__bar"><i></i></p>
+        <p class="par__out"><span class="par__ok"></span>Draft, not sent</p>
       </li>
-      <li class="a2a__card" style="--ci:3">
-        <p class="a2a__t">Launch deck</p>
-        <p class="a2a__by"><span class="a2a__av a2a__av--sm"><img src="assets/brand/avatar-1.png?v=d05bae67" alt=""></span>Okou</p>
-        <p class="a2a__st"><span class="a2a__dot is-run"></span>Pulling the numbers</p>
+      <li class="par__c" style="--pi:3; --h:var(--hue-leadership)" data-rate="0.94">
+        <p class="par__hd"><span class="par__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
+          <b>Launch deck</b><em class="par__el">0:00</em></p>
+        <p class="par__do">Pulling the numbers</p>
+        <p class="par__bar"><i></i></p>
+        <p class="par__out"><span class="par__ok"></span>Eight slides</p>
       </li>
-      </ul>
-    </div>
-
-    <span class="a2a__return" aria-hidden="true"></span>
-    <p class="a2a__back">Each chat reports back as its task finishes</p>
+    </ul>
 
   </div>
 
@@ -1184,6 +1189,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=df8052a4"></script>
+<script src="app.js?r=92b5952e"></script>
 </body>
 </html>
