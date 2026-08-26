@@ -33,7 +33,7 @@ PINNED_PREFIXES = (
 # every third-party mock in base.css was reported as a token violation.
 MOCK_SELECTORS = re.compile(
     r'\.(vsui|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
-    r'|perms|okoui|ochat|oresult|appui|tplwin|tpl|step|mock|shot|acard|a2a)'
+    r'|perms|okoui|ochat|oresult|appui|tplwin|tpl|step|mock|shot|acard|a2a|wfo)'
     r'(?:__|--|\b)'
 )
 

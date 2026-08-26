@@ -24,7 +24,12 @@
   // product surfaces (.vsui, .lane, .arti__win, .tsh__share) and naming them
   // one at a time meant the audit failed every time a new one was added.
   // Everything inside a media band is a mock by definition.
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vs__viz';
+  // .wfo is the workflow scene's product surfaces — an Okou workflow card
+  // and the team's workflow list. Their internal rules are the product's own
+  // chrome, the same argument as .perms and .absui, so the subtree is named
+  // here rather than left as a quiet violation of a rule this audit claims
+  // to enforce (docs/design-principles.md §1).
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vs__viz,.wfo';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;

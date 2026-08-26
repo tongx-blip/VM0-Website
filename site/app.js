@@ -566,7 +566,15 @@
   var deck = ladder ? ladder.querySelector('.ladder__deck') : null;
   var panels = ladder ? [].slice.call(ladder.querySelectorAll('.ladder__panel')) : [];
 
+  /* One scene, four states. The four sliding panels are gone: `data-step`
+     on the scene is the only thing that changes, and every object in it
+     reads that one attribute — same mechanic as the control section, and
+     the reason the four steps now read as one story rather than four
+     unrelated pictures. */
+  var wfScene = doc.getElementById('wfScene');
+
   function syncStages(n) {
+    if (wfScene) wfScene.dataset.step = n;
     stages.forEach(function (s) { s.classList.toggle('is-on', s.dataset.step === n); });
     // the deck scrolls to the step instead of the panels being swapped out,
     // so the three that are not showing have to be hidden from a reader

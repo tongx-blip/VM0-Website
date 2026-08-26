@@ -518,136 +518,13 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .slackui__railitem.is-on svg{ stroke:#fff; }
 
-
-/* channel sidebar */
-.slackui__side{ background:#3F0E40; padding:12px 0 0; color:rgba(255,255,255,.72); }
-
-.slackui__team{
-  padding:0 14px 12px; margin-bottom:6px;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  color:#fff; font-size:15px; font-weight:800; letter-spacing:-.01em;
-}
-
-.slackui__team b{ font-weight:400; font-size:10px; opacity:.7; }
-
-.slackui__grp{
-  padding:12px 14px 4px;
-  font-size:12.5px; color:rgba(255,255,255,.62);
-}
-
-.slackui__list li{
-  display:flex; align-items:center; gap:6px;
-  padding:5px 14px;
-  font-size:14px; color:rgba(255,255,255,.72);
-}
-
-.slackui__list li i{ font-style:normal; opacity:.62; }
-
 .slackui__list li.is-on{ background:#1164A3; color:#fff; font-weight:700; }
 
 .slackui__list li.is-on i{ opacity:.9; }
 
 
-/* thread */
-.slackui__main{ display:flex; flex-direction:column; background:#fff; min-width:0; }
-
-.slackui__head{
-  display:flex; align-items:baseline; gap:10px;
-  padding:13px 18px;
-  border-bottom:1px solid #E1E1E1;
-}
-
-.slackui__head b{ font-size:15px; font-weight:800; letter-spacing:-.01em; }
-
-.slackui__head span{ font-size:12.5px; color:#616061; }
-
-
-.slackui__msgs{ flex:1; padding:8px 0; }
-
-.slackui__msg{
-  display:grid; grid-template-columns:36px minmax(0,1fr); gap:9px;
-  padding:9px 18px;
-  transition:background .16s;
-}
-
-.slackui__msg:hover{ background:#F8F8F8; }
-
-.slackui__av{
-  width:36px; height:36px; border-radius:8px;   /* Slack uses rounded squares */
-  display:grid; place-items:center; flex:none;
-  font-size:14px; font-weight:700; color:#fff;
-}
-
-.slackui__av--m{ background:#2EB67D; }
-
-.slackui__av--app{ background:#1D1C1D; }
-
-.slackui__av--app img{ width:20px; height:20px; }
-
-
-.slackui__meta{ display:flex; align-items:center; gap:7px; margin-bottom:2px; }
-
-.slackui__meta b{ font-size:15px; font-weight:800; letter-spacing:-.01em; color:#1D1C1D; }
-
-.slackui__meta time{ font-size:12px; color:#616061; }
-
-.slackui__badge{
-  font-size:10px; font-weight:700; letter-spacing:.02em;
-  background:#DDD; color:#616061;
-  padding:1px 5px; border-radius:2px;          /* a label, not a pill */
-}
-
-.slackui__text{ font-size:15px; line-height:1.46; color:#1D1C1D; }
-
-.slackui__mention{
-  color:#1264A3; background:rgba(29,155,209,.1);
-  padding:0 2px; border-radius:3px; font-weight:500;
-}
-
-.slackui__bullets{ margin-top:5px; display:flex; flex-direction:column; gap:2px; }
-
-.slackui__bullets li{ font-size:15px; line-height:1.46; color:#1D1C1D; }
-
-.slackui__bullets li::before{ content:"• "; color:#616061; }
-
-.slackui__bullets b{ font-weight:700; }
-
-
-.slackui__reacts{ display:flex; gap:6px; margin-top:8px; }
-
-.slackui__react{
-  font-size:12px; color:#1D1C1D;
-  border:1px solid #DDD; background:#F8F8F8;
-  padding:2px 8px; border-radius:12px;         /* Slack's reaction pills */
-}
-
-.slackui__thread{
-  margin-top:6px;
-  font-size:13px; font-weight:700; color:#1264A3;
-}
-
-.slackui__thread em{ font-style:normal; font-weight:400; color:#616061; margin-left:8px; }
-
-
-.slackui__composer{
-  display:flex; align-items:center; gap:9px;
-  margin:10px 18px 16px; padding:10px 12px;
-  border:1px solid #8D8D8E; border-radius:8px;
-  font-size:14px; color:#616061;
-}
-
-.slackui__plus{
-  width:20px; height:20px; border-radius:50%;
-  border:1px solid #BDBDBD; color:#616061;
-  display:grid; place-items:center; font-size:14px; line-height:1;
-}
-
-.slackui__send{ margin-left:auto; color:#BDBDBD; }
-
-
 @media (max-width:860px){
   .slackui{ grid-template-columns:1fr; min-height:0; }
-.slackui__side{ display:none; }
 
 }
 
@@ -690,21 +567,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 /* ─────────────── Slack: channel column only, channels switch scenes ─────── */
 .slackui{ grid-template-columns:230px minmax(0,1fr); }
 
-.slackui__ch{ cursor:pointer; transition:background .16s, color .16s; }
-
-.slackui__ch:hover{ background:rgba(255,255,255,.08); color:#fff; }
-
 .slackui__ch.is-on{ background:#1164A3; color:#fff; font-weight:700; }
-
-.slackui__pane{ display:none; flex-direction:column; height:100%; }
 
 .slackui__pane.is-on{ display:flex; }
 
 .slackui__pane.is-on .slackui__msg{ animation:slackIn .34s var(--ease) both; }
-
-.slackui__msg:nth-child(2){ animation-delay:.06s; }
-
-.slackui__msg:nth-child(3){ animation-delay:.12s; }
 
 @keyframes slackIn{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
 
@@ -720,112 +587,11 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   font-size:12.5px; line-height:1.6; color:var(--ink-soft);
 }
 
-
-/* ─────────── Slack: three different message shapes ─────────── */
-.slackui__av--l{ background:#E01E5A; }
-
-.slackui__av--s{ background:#ECB22E; color:#1D1C1D; }
-
-.slackui__ctx{
-  display:flex; align-items:center; gap:6px;
-  font-size:12.5px; color:#616061; margin-bottom:8px;
-}
-
-/* an attachment block, with Slack's coloured left bar */
-.slackui__attach{
-  border-left:4px solid #E01E5A;
-  padding:2px 0 2px 12px;
-  margin-bottom:10px;
-}
-
-.slackui__attitle{ font-size:15px; font-weight:700; color:#1D1C1D; margin-bottom:4px; }
-
-.slackui__attext{ font-size:14.5px; line-height:1.5; color:#1D1C1D; }
-
-.slackui__fields{ display:flex; gap:26px; margin-top:10px; }
-
-.slackui__fields span{ display:flex; flex-direction:column; font-size:14px; font-weight:700; color:#1D1C1D; }
-
-.slackui__fields i{ font-style:normal; font-size:12px; font-weight:400; color:#616061; }
-
-/* Slack's action buttons */
-.slackui__actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-
-.slackui__btn{
-  border:1px solid #DDD; border-radius:4px;
-  background:#fff; color:#1D1C1D;
-  padding:7px 13px; font-size:13.5px; font-weight:700;
-  font-family:inherit; cursor:pointer;
-}
-
-.slackui__btn--primary{ background:#007A5A; border-color:#007A5A; color:#fff; }
-
-/* a shared file */
-.slackui__file{
-  display:flex; align-items:center; gap:11px;
-  border:1px solid #DDD; border-radius:8px;
-  padding:11px 13px; margin:10px 0 4px; max-width:340px;
-}
-
-.slackui__fileic{
-  width:34px; height:34px; flex:none; border-radius:6px;
-  display:grid; place-items:center;
-  background:#1264A3; color:#fff;
-  font-size:11px; font-weight:700;
-}
-
-.slackui__filetxt{ display:flex; flex-direction:column; line-height:1.35; }
-
-.slackui__filetxt b{ font-size:14px; font-weight:700; color:#1264A3; }
-
-.slackui__filetxt i{ font-style:normal; font-size:12px; color:#616061; }
-
 /* connector marks: percentage-sized SVGs need a fixed box to paint into */.perms__list img{ width:100%; height:100%; }
-
-
-/* ─────────── workflow stage: one abstract UI per step ─────────── */
-.wfstage{ display:none; }
 
 .wfstage.is-on{ display:block; animation:wfIn .38s var(--ease) both; }
 
 @keyframes wfIn{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:none } }
-
-
-.absui{
-  background:#fff;
-  border:1px solid var(--hairline);
-  border-radius:var(--r-card);
-  box-shadow:0 3px 8px rgba(0,0,0,.06), 0 28px 60px -26px rgba(0,0,0,.32);
-  overflow:hidden;
-  min-height:400px;
-  display:flex; flex-direction:column;
-}
-
-.absui__bar{
-  display:flex; align-items:center; gap:7px;
-  padding:13px 17px;
-  border-bottom:1px solid var(--hairline);
-  background:var(--paper-2);
-}
-
-.absui__bar i{ width:9px; height:9px; border-radius:50%; background:rgba(0,0,0,.14); }
-
-.absui__bar i:first-child{ background:var(--orange); }
-
-.absui__bar i:nth-child(2){ background:var(--yellow); }
-
-.absui__bar i:nth-child(3){ background:var(--green); }
-
-.absui__bar span{ margin-left:10px; font-size:12.5px; color:var(--ink-soft); }
-
-.absui__body{ padding:22px; display:flex; flex-direction:column; gap:16px; flex:1; }
-
-
-.absui__ask{
-  align-self:flex-end; max-width:86%;
-  background:var(--paper-2); border-radius:14px;
-  padding:13px 16px; font-size:14px; line-height:1.55; color:var(--ink);
-}
 
 .absui__dot.is-done{ background:var(--green); }
 
@@ -833,92 +599,65 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .absui__dot.is-next{ background:var(--yellow); }
 
-.absui__note{
-  margin-top:auto; padding-top:14px;
-  border-top:1px solid var(--hairline);
-  font-size:13px; color:var(--ink-soft);
-}
-
 .wfstage .slackui{ }
-
-
-/* ── panels redrawn from the real product screens ── */
-.absui__body--chat{ gap:18px; }
-
-.absui__stream{ display:flex; flex-direction:column; gap:12px; }
-
-.absui__stream p{ font-size:14px; line-height:1.6; color:var(--ink); }
-
-.absui__live{
-  display:flex; align-items:center; gap:9px;
-  font-size:13.5px; color:var(--ink-mute);
-}
-
-.absui__ldots{ display:flex; gap:3px; }
-
-.absui__ldots i{ width:5px; height:5px; border-radius:50%; background:var(--orange); animation:ld 1.1s ease-in-out infinite; }
-
-.absui__ldots i:nth-child(2){ animation-delay:.15s; }
-
-.absui__ldots i:nth-child(3){ animation-delay:.3s; }
 
 @keyframes ld{ 0%,100%{ opacity:.25 } 50%{ opacity:1 } }
 
-.absui__composer{
-  display:flex; align-items:center; justify-content:space-between;
-  margin:0 22px 22px; padding:14px 16px;
-  border:1px solid var(--hairline); border-radius:var(--r-card);
-  font-size:13.5px; color:var(--ink-mute);
+/* the container's own reveal fade is switched off — the rows carry the
+   entrance, and one fewer opacity animation over text is one fewer way
+   for axe to catch a line mid-transition */
+.absui__run.reveal{ opacity:1; transform:none; transition:none; }
+
+.absui__run.is-in > *,
+.absui__run.is-in .absui__rsteps > li{
+  animation:runIn 520ms var(--e-out) both;
+  animation-delay:calc(var(--ri, 0) * 440ms);
 }
 
-.absui__stop{ width:26px; height:26px; border-radius:8px; background:var(--orange); }
+/* the end state is a generous negative inset so the clip never crops the
+   tick's outer glow or a descender */
+@keyframes runIn{
+  from{ clip-path:inset(0 0 100% 0); transform:translateY(9px) }
+  to  { clip-path:inset(-40% -40% -40% -40%); transform:none }
+}
+
+/* the header swaps in place: "working" wipes away, "worked for" wipes in
+   behind it. Text again, so again a wipe and not a fade. */
+.absui__run.is-in .absui__ldots{ animation:runOff 300ms var(--e-out) 2860ms both; }
+
+.absui__run.is-in .absui__rlive{ animation:runWipeOut 300ms var(--e-out) 2860ms both; }
+
+.absui__run.is-in .absui__rdone{ animation:runWipeIn 300ms var(--e-out) 2980ms both; }
+
+@keyframes runOff{ from{ opacity:1 } to{ opacity:0 } }
+
+@keyframes runWipeOut{ from{ clip-path:inset(-40% -40% -40% -40%) } to{ clip-path:inset(0 0 100% 0) } }
+
+@keyframes runWipeIn { from{ clip-path:inset(0 0 100% 0) } to{ clip-path:inset(-40% -40% -40% -40%) } }
+
+.absui__run.is-in .absui__rtick::before{
+  animation:tickOff 220ms var(--e-out) calc(var(--ri, 0) * 440ms + 700ms) both;
+}
+
+.absui__run.is-in .absui__rtick::after{
+  animation:tickOn 320ms var(--e-spring) calc(var(--ri, 0) * 440ms + 700ms) both;
+}
+
+@keyframes tickOff{ from{ opacity:1 } to{ opacity:0 } }
+
+@keyframes tickOn { from{ opacity:0; transform:scale(.5) } to{ opacity:1; transform:none } }
 
 
-/* the Workflows list, Automated filter on */
-.absui__sub{ font-size:13.5px; color:var(--ink-soft); }
+/* Reduced motion skips the choreography, it does not hide the run.
+   Everything lands in its finished state: rows present, ticks done,
+   header already reading "Worked for". */
+@media (prefers-reduced-motion:reduce){.absui__run.is-in > *,.absui__run.is-in .absui__rsteps > li{ clip-path:none; transform:none; animation:none; }
+.absui__run.is-in .absui__rtick::before{ opacity:0; animation:none; }
+.absui__run.is-in .absui__rtick::after{ opacity:1; transform:none; animation:none; }
 
-.absui__filters{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
-
-.absui__filters span{
-  padding:6px 13px; border:1px solid var(--hairline); border-radius:var(--r-btn);
-  font-size:12.5px; color:var(--ink);
 }
 
 .absui__filters span.is-on{ background:var(--ink); border-color:var(--ink); color:#fff; }
-
-.absui__filters em{
-  margin-left:auto; font-style:normal;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:11px; color:var(--ink-mute);
-}
-
-.absui__wfs{ display:flex; flex-direction:column; }
-
-.absui__wfs li{
-  display:flex; align-items:center; gap:12px;
-  padding:14px 2px; border-bottom:1px solid var(--hairline);
-}
-
-.absui__wfs li:last-child{ border-bottom:0; }
-
-.absui__wfn{ font-size:14.5px; font-weight:600; color:var(--ink); }
-
-.absui__tag{
-  padding:3px 9px; border-radius:var(--r-pill);
-  background:color-mix(in srgb, var(--green) 16%, #fff);
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink);
-}
-
-.absui__wfs em{
-  margin-left:auto; font-style:normal;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:11.5px; color:var(--ink-mute);
-}
-
-.absui__pane .absui__stream p{ font-size:13.5px; line-height:1.55; }
-
-.absui__wfs--mini .absui__wfn{ font-size:13.5px; }
 
 .absui__wfs--mini li.is-new{
   padding-left:11px;
@@ -980,8 +719,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 .perms__list{ border-top:1px solid var(--hairline); }
-
-.slackui,.slackui__main{ color:var(--ink); }
+.slackui{ color:var(--ink); }
 
 .nav__burger span{ background:var(--g-300); }
 
@@ -1046,8 +784,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   .rot.is-on{ animation:none; }
 
 }
-
-.fan .absui{ max-width:1040px; margin-inline:auto; min-height:0; }
 
 
 /* ── 03 / at once ─────────────────────────────────────────────
@@ -1300,276 +1036,20 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 }
 
-
-/* ============================================================
-   v40 — product-accurate workflow handoff and steadier motion
-   ============================================================ */
-
-/* The active ladder marker is a clean rule, not a rounded bracket. */
-
-/* Step 2: the real chat rhythm on the left, the real workflow-page
-   hierarchy on the right. Both sides share one grid and one baseline. */
-.flowui{ min-height:520px; }
-
-.flowui__top{
-  height:52px; flex:none;
-  display:flex; align-items:center; gap:10px;
-  padding:0 18px;
-  border-bottom:1px solid var(--hairline);
-  background:#fff;
-  font-size:14px; font-weight:600; color:var(--ink);
-}
-
-.flowui__agent,.flowchat__avatar{
-  display:grid; place-items:center; flex:none;
-  background:var(--g-900);
-  border:1px solid var(--hairline);
-}
-
-.flowui__agent{ width:30px; height:30px; border-radius:10px; }
-
-.flowui__agent img{ width:20px; height:20px; }
-
-.flowui__grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  flex:1; min-height:0;
-}
-
-.flowchat{
-  min-width:0;
-  display:flex; flex-direction:column;
-  padding:22px;
-  border-right:1px solid var(--hairline);
-  background:var(--paper-ink);
-}
-
-.flowchat__ask{
-  align-self:flex-end;
-  max-width:84%;
-  padding:12px 14px;
-  border-radius:14px;
-  background:var(--g-900);
-  font-size:13px; line-height:1.5; color:var(--ink);
-}
-
-.flowchat__reply{
-  display:grid; grid-template-columns:34px minmax(0,1fr); gap:10px;
-  margin:20px 0 6px;
-}
-
-.flowchat__avatar{ width:34px; height:34px; border-radius:11px; }
-
-.flowchat__avatar img{ width:22px; height:22px; }
-
-.flowchat__answer{ min-width:0; }
-
-.flowchat__worked{
-  margin:1px 0 7px;
-  font-size:12px; font-weight:600; color:var(--ink);
-}
-
-.flowchat__worked span{ font-weight:400; color:var(--ink-mute); }
-
-.flowchat__answer > p:not(.flowchat__worked){
-  font-size:13px; line-height:1.55; color:var(--ink-soft);
-}
-
-.flowsave{
-  margin-top:13px;
-  border:1px solid var(--hairline);
-  border-radius:14px;
-  overflow:hidden;
-  background:var(--paper-ink);
-}
-
-.flowsave__head{
-  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-  padding:13px 14px 10px;
-}
-
-.flowsave__head > span{ display:flex; flex-direction:column; min-width:0; }
-
-.flowsave__head b{ font-size:13.5px; font-weight:600; color:var(--ink); }
-
-.flowsave__head i{
-  margin-top:2px;
-  font-style:normal; font-size:11.5px; color:var(--ink-mute);
-}
-
-.flowsave__head em{
-  flex:none;
-  padding:3px 7px;
-  border-radius:7px;
-  background:var(--g-900);
-  font-style:normal; font-size:10.5px; color:var(--ink-soft);
-}
-
-.flowsave > p{
-  padding:0 14px 13px;
-  font-size:12px; line-height:1.45; color:var(--ink-mute);
-}
-
-.flowsave__actions{
-  display:flex; gap:8px;
-  padding:10px 14px 13px;
-  border-top:1px solid var(--hairline);
-}
-
-.flowsave__actions span{
-  padding:7px 11px;
-  border:1px solid var(--hairline);
-  border-radius:9px;
-  font-size:11.5px; font-weight:500; color:var(--ink);
-}
-
-.flowsave__actions .flowsave__primary{
-  background:var(--g-200); border-color:var(--g-200); color:var(--paper-ink);
-}
-
-.flowchat__composer{
-  min-height:52px;
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  margin-top:auto; padding:8px 8px 8px 14px;
-  border:1px solid var(--g-600);
-  border-radius:16px;
-  font-size:12.5px; color:var(--ink-mute);
-}
-
-.flowchat__send{
-  width:34px; height:34px; flex:none;
-  display:grid; place-items:center;
-  border-radius:11px;
-  background:var(--g-200); color:var(--paper-ink);
-  font-size:15px;
-}
-
-.flowlist{
-  min-width:0;
-  display:flex; flex-direction:column;
-  padding:22px;
-  background:var(--g-900);
-}
-
-.flowlist__head{
-  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-}
-
-.flowlist__head > span{ display:flex; flex-direction:column; min-width:0; }
-
-.flowlist__head b{ font-size:16px; font-weight:600; color:var(--ink); }
-
-.flowlist__head i{
-  margin-top:3px;
-  font-style:normal; font-size:11.5px; line-height:1.35; color:var(--ink-mute);
-}
-
-.flowlist__head > em{
-  flex:none;
-  padding:7px 9px;
-  border:1px solid var(--g-600);
-  border-radius:9px;
-  background:var(--paper-ink);
-  font-style:normal; font-size:11px; font-weight:500; color:var(--ink);
-}
-
-.flowlist__filters{ display:flex; gap:6px; margin:16px 0 12px; }
-
-.flowlist__filters span{
-  padding:5px 9px;
-  border:1px solid var(--hairline);
-  border-radius:8px;
-  background:var(--paper-ink);
-  font-size:11px; color:var(--ink-soft);
-}
-
 .flowlist__filters span.is-on{ background:var(--g-800); color:var(--ink); }
-
-.flowlist__items{
-  overflow:hidden;
-  border:1px solid var(--hairline);
-  border-radius:14px;
-  background:var(--paper-ink);
-}
-
-.flowlist__items li{
-  display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px;
-  min-height:72px; padding:12px 13px;
-  border-bottom:1px solid var(--hairline);
-}
-
-.flowlist__items li:last-child{ border-bottom:0; }
 
 .flowlist__items li.is-new{ box-shadow:inset 3px 0 0 var(--g-300); }
 
-.flowlist__items li > span{ display:flex; flex-direction:column; min-width:0; }
-
-.flowlist__items b{
-  font-size:12.5px; font-weight:600; line-height:1.3; color:var(--ink);
-}
-
-.flowlist__items i{
-  margin-top:3px;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  font-style:normal; font-size:11px; color:var(--ink-mute);
-}
-
-.flowlist__items em{
-  font-style:normal; font-size:10.5px; white-space:nowrap; color:var(--ink-mute);
-}
-
 .flowlist__items li.is-new em{ color:var(--ink); font-weight:500; }
-
-.flowlist__note{
-  margin-top:auto; padding-top:14px;
-  font-size:11.5px; color:var(--ink-mute);
-}
 
 
 /* Every Slack channel occupies the same viewport. Longer channels scroll
    inside the message area, so switching tabs never moves the page. */
 .wfstage .slackui{ height:580px; min-height:580px; }
 
-.slackui__main,.slackui__pane{ min-height:0; }
-
-.slackui__main{ height:100%; }
-
-.slackui__msgs{
-  min-height:0;
-  overflow-y:auto;
-  scrollbar-gutter:stable;
-}
-
-.slackui__head,.slackui__composer{ flex:none; }
-
 
 @media (max-width:860px){
-  .flowui{ min-height:0; }
-
-  .flowui__grid{ grid-template-columns:1fr; }
-
-  .flowchat{ min-height:500px; border-right:0; border-bottom:1px solid var(--hairline); }
-
-  .flowlist{ min-height:420px; }
-
   .wfstage .slackui{ height:560px; min-height:560px; }
-
-}
-
-@media (max-width:520px){
-  .flowui__top{ padding-inline:14px; }
-
-  .flowchat,.flowlist{ padding:16px; }
-
-  .flowchat__ask{ max-width:92%; }
-
-  .flowchat__reply{ grid-template-columns:30px minmax(0,1fr); gap:8px; }
-
-  .flowchat__avatar{ width:30px; height:30px; }
-
-  .flowsave__head{ flex-direction:column; }
-
-  .flowlist__head{ flex-direction:column; }
 
 }
 
@@ -2003,7 +1483,7 @@ img{ filter:none; }
 
 /* radius policy, restated in one place */
 .panel{ border-radius:0; }
-.vs,.quote,.perms,.slackui,.absui,.a2a__card,.a2a__ask{
+.vs,.quote,.perms,.slackui,.a2a__card,.a2a__ask{
   border-radius:var(--r-card);
 }
 .btn{ border-radius:var(--r-btn); }
@@ -2903,17 +2383,32 @@ h3{ font-family:var(--fd); }
 
 .reach__line.is-on{ pointer-events:auto; }
 
+/* CLIP-PATH, NOT OPACITY — and this one is a bug fix, not a preference.
+   The words used to fade in and out per word, on a loop, which means
+   there is always some word sitting at opacity .4 somewhere in the
+   phrase. axe measures one instant: it returned a real colour-contrast
+   VIOLATION on roughly one audit in three, naming whichever two words
+   happened to be mid-fade, and a different pair every time. It was
+   shipping on the published draft, and it is exactly the failure
+   qa-checklist §1 describes — "text that fades is text below contrast,
+   and a loop re-enters that state forever. The fix is clip-path."
+
+   Un-clipping shows a word at full colour at every instant, so there is
+   no partial-alpha text to catch. It is also the page's own headline
+   idiom (`data-reveal="mask"`), so the statement now rises the way every
+   other headline on the page does. The negative inset at rest keeps the
+   clip off descenders. */
 .reach__line .w{
   display:inline-block;
-  opacity:0; transform:translateY(.46em);
-  transition:opacity 460ms var(--e-out), transform 460ms var(--e-out);
+  clip-path:inset(0 0 100% 0); transform:translateY(.46em);
+  transition:clip-path 460ms var(--e-out), transform 460ms var(--e-out);
   transition-delay:calc(var(--wi, 0) * 22ms);
 }
 
-.reach__line.is-on .w{ opacity:1; transform:none; }
+.reach__line.is-on .w{ clip-path:inset(-40% -40% -40% -40%); transform:none; }
 
 .reach__line.is-out .w{
-  opacity:0; transform:translateY(-.34em);
+  clip-path:inset(100% 0 0 0); transform:translateY(-.34em);
   transition-duration:var(--t-exit);
   transition-delay:calc(var(--wi, 0) * var(--t-word));
 }
@@ -3290,78 +2785,6 @@ h3{ font-family:var(--fd); }
   overflow:hidden;
 }
 
-/* ── the deck ──────────────────────────────────────────────────────
-   Four panels stacked vertically inside the frame and scrolled by one
-   transform. Changing step SLIDES rather than cuts, so the four screens
-   read as one thing being looked through rather than four unrelated
-   pictures — and it is the same gesture the pin itself is making. */
-.ladder__deck{
-  position:absolute; inset:0;
-  display:grid; grid-auto-rows:100%;
-  transform:translate3d(0, calc(var(--i, 0) * -100%), 0);
-  transition:transform 640ms var(--e-elegant);
-  will-change:transform;
-}
-
-/* Each screen sits ON a painted ground rather than on a flat mat: the brand
-   layer carries the colour and the product keeps its own white. The marker
-   beside each step is the hue of the ground behind it, so the two columns are
-   tied together by something other than being next to each other. */
-.ladder__panel{
-  position:relative;
-  display:grid; place-items:center;
-  padding:var(--wf-pad);
-  overflow:hidden;
-  background:var(--wf-media-bg);
-}
-
-/* The ground is shown as it was painted. The veil under the screen is what
-   keeps it from competing — see below — not a blur. */
-.ladder__panel::before{
-  content:"";
-  position:absolute; inset:0;
-  background-image:var(--ground);
-  background-size:cover;
-  background-position:center;
-  filter:saturate(var(--sat, 1));
-}
-
-/* then one flat step of ink, so every ground lands the screen on the same
-   value no matter how light or dark the painting under it is */
-.ladder__panel::after{
-  content:"";
-  position:absolute; inset:0;
-  /* --veil is per-ground and COMPUTED, not chosen: 1 − target ÷ that
-     painting's own mean luminance, so a pale pink and a deep green both land
-     the screen on the same value. */
-  background:
-    radial-gradient(120% 96% at 50% 46%,
-      rgb(var(--ink-rgb) / calc(var(--veil, .2) * .55)), transparent 74%),
-    linear-gradient(rgb(var(--ink-rgb) / var(--veil, .2)),
-                    rgb(var(--ink-rgb) / var(--veil, .2)));
-  pointer-events:none;
-}
-
-/* every panel is in the DOM at once now, so the switch is position rather
-   than display — app.js hides the three closed ones from a reader */
-.ladder__panel .wfstage{ display:block; }
-
-/* the switch itself is `display:none / block` in the component layer, which
-   also keeps the three closed steps out of the accessibility tree.
-
-   Every screen lays out at ONE design width and is then scaled into the mat,
-   the way a photograph is fitted to a frame. The factor is measured in
-   `app.js` rather than written down, because the mat is fluid now — a
-   hard-coded height is only ever right at one viewport. Fitting also beats
-   cropping here: the bottom of these screens is the action row and the
-   composer, which is the point of the picture. */
-.wfstage{
-  position:absolute; z-index:1; top:50%; left:50%;
-  width:var(--dw, 760px);
-  height:var(--dh, 520px);
-  transform:translate(-50%, -50%) scale(var(--fit, 1));
-}
-
 /* how app.js takes the measurement: laid out at the design width, its own
    height, nothing scaled, nothing visible */
 .wfstage.is-measuring{
@@ -3374,6 +2797,349 @@ h3{ font-family:var(--fd); }
 
 .wfstage.is-measuring .absui,
 .wfstage.is-measuring .slackui{ height:auto !important; }
+
+
+
+/* ── THE WORKFLOW SCENE ──────────────────────────────────────────────
+   The four steps used to be four separate mocks on four painted panels
+   that slid past one another. Four pictures, not one story: nothing
+   carried over, so the reader had to re-read each screen from scratch
+   and the ladder's own claim — that one chat becomes something the team
+   keeps — was never actually shown happening.
+
+   This is ONE SCENE with four states. The same objects persist and move:
+   the ask, the run, the workflow it condenses into, the team it goes to,
+   the schedule that finally makes it self-running. `data-step` on the
+   scene is the single source of truth; every object reads it and CSS
+   does the rest, which is the same mechanic the control section uses.
+
+   WHERE THE BOLDNESS GOES. One gesture per step and nothing else:
+     1 the steps tick over as the run works
+     2 the run CONDENSES into a workflow card — the pivot of the section
+     3 the team arcs in around it
+     4 a schedule snaps on and the future runs stack up behind it
+   Everything between those four moments stays still on purpose. The
+   painted grounds carry the colour so the components never have to.
+
+   Every value here is a token. The one literal is the ground artwork's
+   own veil, which is per-painting and computed, exactly as before. */
+.wfsc{
+  position:absolute; inset:0;
+  container-type:size;
+  overflow:hidden;
+  border-radius:inherit;
+  font-family:var(--fb);
+}
+
+/* ── the ground: a tinted field, not a painting ──────────────────────
+   The four painted grounds are gone from this scene. They were tuned
+   when one opaque mock covered most of the panel; with the objects
+   floating, twice as much artwork shows and every one of them went from
+   atmosphere to picture — the brick wall and the blue figure both won
+   the composition outright, at any veil I raised them to. Raising the
+   veil further just made a muddy photograph.
+
+   Mixed light — 17/11/5% and no more. A stronger tint turns the amber
+   step into a cream field, which is the exact register this page has
+   already rejected once; at these percentages it reads as a tinted
+   neutral that happens to agree with the marker beside it.
+
+   The field is built from --step-run / --save / --hand / --auto, which
+   are the SAME four hues as the step markers in the left column: the two
+   halves of the ladder are now tied together by a token rather than by
+   being next to each other. It carries the colour without ever having a
+   subject, it flips with the theme because --tile does, and it costs no
+   image. The brand's painted layer still lives everywhere else. */
+.wfsc__g{
+  position:absolute; inset:0;
+  opacity:0;
+  transition:opacity var(--t-reveal) var(--e-elegant);
+  background:
+    radial-gradient(78% 68% at 20% 10%,
+      color-mix(in srgb, var(--h) 17%, transparent), transparent 68%),
+    radial-gradient(66% 58% at 84% 90%,
+      color-mix(in srgb, var(--h) 11%, transparent), transparent 70%),
+    color-mix(in srgb, var(--h) 5%, var(--tile));
+}
+
+.wfsc[data-step="1"] .wfsc__g[data-g="1"],
+.wfsc[data-step="2"] .wfsc__g[data-g="2"],
+.wfsc[data-step="3"] .wfsc__g[data-g="3"],
+.wfsc[data-step="4"] .wfsc__g[data-g="4"]{ opacity:1; }
+
+
+/* ── the objects ─────────────────────────────────────────────────────
+   Positioned in container units so the whole scene scales with the mat
+   instead of being measured and fitted by script. */
+.wfo{
+  position:absolute;
+  opacity:0; pointer-events:none;
+  transition:opacity var(--t-state) var(--e-out),
+             transform var(--t-reveal) var(--e-out);
+  will-change:transform, opacity;
+}
+
+.wfsc .wfo{ font-size:clamp(11px, 2.15cqw, 15px); line-height:1.45; }
+
+
+/* the surfaces are the page's own card: fill plus shadow, never an
+   outline, at the page's own radius */
+.wfo--ask,.wfo--run,.wfo--list{
+  background:var(--paper); color:var(--ink);
+  border-radius:var(--r-card);
+  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .09),
+             0 30px 56px -26px rgb(var(--ink-rgb) / .46);
+}
+
+
+/* 1 · the ask ─────────────────────────────────────────────────────── */
+.wfo--ask{
+  left:5cqw; top:9cqh; width:min(46cqw, 30rem);
+  padding:1.15em 1.3em;
+  transform:translateY(1.4em) rotate(-1.1deg);
+}
+
+.wfo__ask{ color:var(--ink); }
+
+.wfo--ask figcaption{
+  display:flex; align-items:center; gap:.55em;
+  margin-top:.85em; color:var(--ink-mute);
+  font-family:var(--fm); font-size:.72em; letter-spacing:.07em; text-transform:uppercase;
+}
+
+.wfo--ask figcaption img{ border-radius:var(--r-pill); }
+
+.wfsc[data-step="1"] .wfo--ask{ opacity:1; transform:rotate(-1.1deg); }
+
+/* it recedes rather than vanishing — the workflow came from it */
+.wfsc[data-step="2"] .wfo--ask{
+  opacity:.34; transform:translate(-2cqw, -3cqh) scale(.88) rotate(-1.1deg);
+}
+
+.wfsc[data-step="3"] .wfo--ask,
+.wfsc[data-step="4"] .wfo--ask{
+  opacity:0; transform:translate(-6cqw, -6cqh) scale(.8) rotate(-1.1deg);
+}
+
+
+/* 1→2 · the run, which becomes the workflow ───────────────────────── */
+.wfo--run{
+  left:26cqw; top:34cqh; width:min(48cqw, 32rem);
+  transform:translateY(1.6em) rotate(.7deg);
+}
+
+.wfsc[data-step="1"] .wfo--run{ opacity:1; transform:rotate(.7deg); }
+
+/* THE PIVOT: it lifts, straightens and settles into the middle as the
+   thing the team keeps, rather than a thing that happened once */
+.wfsc[data-step="2"] .wfo--run{
+  opacity:1; transform:translate(2cqw, -12cqh) scale(1.04) rotate(0deg);
+}
+
+.wfsc[data-step="3"] .wfo--run{
+  opacity:1; transform:translate(-7cqw, -13cqh) scale(.94) rotate(-.6deg);
+}
+
+.wfsc[data-step="4"] .wfo--run{
+  opacity:1; transform:translate(-19cqw, -6cqh) scale(.78) rotate(-1.4deg);
+}
+
+.wfo__hd{
+  position:relative;
+  display:flex; align-items:center; gap:.6em;
+  padding:.85em 1em; border-bottom:1px solid var(--hairline);
+}
+
+.wfo__ic{
+  width:1.65em; height:1.65em; flex:none;
+  border-radius:var(--r-xs); background:var(--tile);
+  display:grid; place-items:center;
+}
+
+.wfo__ttl{ font-weight:500; font-size:.95em; padding-right:6.5em; }
+
+.wfo__tag{
+  margin-left:auto; font-style:normal;
+  font-family:var(--fm); font-size:.68em; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+
+/* the header label is the state, so it swaps with the state */
+.wfo__tag--run,.wfo__tag--wf{ position:absolute; right:1.1em; top:50%; transform:translateY(-50%);
+  transition:opacity var(--t-state) var(--e-out); }
+
+.wfo__tag--wf{ opacity:0; }
+
+/* --accent-wash, not --accent-solid: the card is --paper and --paper
+   flips, so this label needs the token that flips with it. */
+.wfsc[data-step="1"] .wfo__tag--run{ opacity:1; color:var(--accent-wash); }
+
+.wfsc:not([data-step="1"]) .wfo__tag--run{ opacity:0; }
+
+.wfsc:not([data-step="1"]) .wfo__tag--wf{ opacity:1; }
+
+
+.wfo__steps{ list-style:none; margin:0; padding:.7em 1em .8em; }
+
+.wfo__steps li{
+  display:flex; align-items:center; gap:.65em;
+  padding:.42em 0; color:var(--ink-soft); font-size:.92em;
+  opacity:.32;
+  transition:opacity var(--t-state) var(--e-out);
+  transition-delay:calc(var(--si, 0) * 90ms);
+}
+
+/* step 1: they tick over. After that they are simply the recipe. */
+.wfsc[data-step="1"] .wfo__steps li{ opacity:1; }
+
+.wfsc:not([data-step="1"]) .wfo__steps li{ opacity:1; }
+
+.wfo__mk{
+  width:1.35em; height:1.35em; flex:none;
+  border-radius:var(--r-xs); background:var(--paper);
+  box-shadow:0 0 0 1px var(--hairline);
+  display:grid; place-items:center;
+}
+
+.wfo__foot{
+  display:flex; align-items:center; gap:.5em;
+  padding:.75em 1em; border-top:1px solid var(--hairline);
+}
+
+.wfo__chip{
+  display:inline-flex; align-items:center; gap:.4em;
+  padding:.35em .75em; border-radius:var(--r-pill);
+  background:var(--wash-2); color:var(--ink-soft);
+  font-family:var(--fm); font-size:.68em; letter-spacing:.08em; text-transform:uppercase;
+  transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-spring);
+}
+
+.wfo__chip svg{ width:1.1em; height:1.1em; }
+
+.wfo__chip--go{ background:var(--accent-solid); color:var(--paper-ink); }
+
+/* the two chips are the two moments: the offer, then the schedule */
+.wfo__chip--go{ opacity:0; transform:scale(.86); }
+
+.wfsc[data-step="2"] .wfo__chip--go{ opacity:1; transform:none; }
+
+.wfo__chip--sched{ opacity:0; transform:scale(.86); }
+
+.wfsc[data-step="4"] .wfo__chip--sched{ opacity:1; transform:none; }
+
+.wfsc[data-step="1"] .wfo__foot,
+.wfsc[data-step="3"] .wfo__foot{ opacity:0; }
+
+.wfo__foot{ transition:opacity var(--t-state) var(--e-out); }
+
+
+/* 3 · the workspace it now belongs to ─────────────────────────────── */
+.wfo--team{
+  left:24cqw; top:58cqh; display:flex; gap:.9em;
+}
+
+.wfo__who{ position:relative; display:block; opacity:0; transform:translateY(1.2em) scale(.8);
+  transition:opacity 480ms var(--e-out), transform 620ms var(--e-spring);
+  transition-delay:calc(var(--wi, 0) * 110ms); }
+
+.wfo__who img{ border-radius:var(--r-pill); box-shadow:0 0 0 3px var(--paper); display:block; }
+
+.wfo__who i{
+  position:absolute; left:50%; top:calc(100% + .35em); transform:translateX(-50%);
+  font-style:normal; font-family:var(--fm); font-size:.62em; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-soft); white-space:nowrap;
+}
+
+.wfsc[data-step="3"] .wfo--team{ opacity:1; }
+
+.wfsc[data-step="3"] .wfo__who{ opacity:1; transform:none; }
+
+/* the team belongs to step 3. Held at .4 over the blue ground it read as
+   litter behind the list rather than as a memory of the step before. */
+.wfsc[data-step="4"] .wfo--team{ opacity:0; }
+
+
+.wfo--perm{
+  left:24cqw; top:73cqh; width:min(42cqw,27rem);
+  color:var(--ink-soft); font-size:.9em;
+  transform:translateY(.8em);
+}
+
+.wfo--perm b{ font-weight:600; color:var(--ink); }
+
+.wfsc[data-step="3"] .wfo--perm{ opacity:1; transform:none; }
+
+
+/* 4 · it stops needing to be asked ────────────────────────────────── */
+
+.wfo--list{
+  right:4cqw; top:31cqh; width:min(38cqw, 25rem);
+  transform:translateX(2.4em) rotate(.9deg);
+}
+
+.wfsc[data-step="4"] .wfo--list{ opacity:1; transform:rotate(.9deg); }
+
+.wfo__row{
+  display:flex; align-items:center; gap:.6em;
+  padding:.7em 1em; border-bottom:1px solid var(--hairline);
+  font-size:.9em;
+}
+
+.wfo__row:last-child{ border-bottom:0; }
+
+.wfo__row i{ width:.5em; height:.5em; flex:none; border-radius:var(--r-pill); background:rgb(var(--ok-rgb) / .7); }
+
+.wfo__row em{
+  margin-left:auto; font-style:normal;
+  font-family:var(--fm); font-size:.72em; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+
+.wfo__row--new{ background:color-mix(in srgb, var(--accent-solid) 8%, var(--paper)); }
+
+.wfo__row--new em{ color:var(--accent-wash); }
+
+
+/* Narrow: the scene stops being a composition and becomes a column.
+   Container units that read well beside a 700px stage put four floating
+   objects on top of one another at 390 — the ask sat across the card and
+   the title broke to three lines. In one column each step shows only the
+   objects it is actually about. */
+@media (max-width:820px){
+  .wfsc{
+    padding:clamp(14px,4vw,22px);
+    display:flex; flex-direction:column; justify-content:center; gap:12px;
+  }
+
+  .wfsc .wfo{ font-size:12.5px; }
+
+  .wfo{
+    position:static; width:auto; max-width:100%;
+    transform:none; opacity:1; display:none;
+  }
+
+  .wfsc[data-step="1"] .wfo--ask,
+  .wfsc[data-step="1"] .wfo--run,
+  .wfsc[data-step="2"] .wfo--run,
+  .wfsc[data-step="3"] .wfo--run,
+  .wfsc[data-step="3"] .wfo--perm,
+  .wfsc[data-step="4"] .wfo--run,
+  .wfsc[data-step="4"] .wfo--list{ display:block; }
+
+  .wfsc[data-step="3"] .wfo--team{ display:flex; }
+
+  .wfo__who{ opacity:1; transform:none; }
+
+  .wfo__ttl{ padding-right:5.5em; }
+
+}
+
+
+@media (prefers-reduced-motion:reduce){
+  .wfsc__g,.wfo,.wfo__who,.wfo__chip,.wfo__steps li,.wfo__foot,
+  .wfo__tag--run,.wfo__tag--wf{ transition:none; }
+
+}
 
 
 /* every mock fills the stage box instead of setting its own height or shadow */
@@ -3499,7 +3265,6 @@ h3{ font-family:var(--fd); }
    one line but hung the statement off the top of a 700px screen. */
 .ctrl{ --ctrl-beat:max(68vh, var(--ctrl-h, 68vh)); }
 
-
 .ctrl__steps{ display:flex; flex-direction:column; }
 
 .ctrl__step{
@@ -3545,9 +3310,7 @@ h3{ font-family:var(--fd); }
   transition:opacity var(--t-state) var(--e-out);
 }
 
-
 .ctrl__step.is-on{ opacity:1; }
-
 
 
 /* ── the spot illustration ──────────────────────────────────────────
@@ -3582,21 +3345,15 @@ h3{ font-family:var(--fd); }
   background-size:contain;
 }
 
-
 .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1.png); }
-
 
 .ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2.png); }
 
-
 .ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3.png); }
-
 
 .ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4.png); }
 
-
 .ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5.png); }
-
 
 
 /* the way out of each beat. A soft fill, not an outline (§1), at the
@@ -3790,7 +3547,6 @@ h3{ font-family:var(--fd); }
 
 }
 
-
 /* The stated-preference route, exactly as on the testimonial rail: the
    fade comes out and the column goes back to standing down by COLOUR,
    between two values that both clear AA on this ground. Nothing is lost
@@ -3798,12 +3554,10 @@ h3{ font-family:var(--fd); }
 @media (prefers-reduced-transparency:reduce), (prefers-contrast:more){
   .ctrl__step{ opacity:1; }
 
-
   .ctrl__step:not(.is-on) h3,
   .ctrl__step:not(.is-on) p{ color:var(--ink-mute); }
 
 }
-
 
 /* One column: the stage no longer sits beside the step it belongs to, so
    the whole beat choreography is switched off rather than left running
@@ -4797,7 +4551,6 @@ h3{ font-family:var(--fd); }
 @media (prefers-reduced-transparency:reduce), (prefers-contrast:more){
   .qcell > .quote{ opacity:1; }
 
-
 }
 .qcell{ container-type:inline-size; display:flex; }
 .quote{
@@ -5372,29 +5125,6 @@ h3{ font-family:var(--fd); }
 
   .ladder__frame{ height:var(--wf-h); }
 
-  /* nothing is pinned here and the mat is a different shape, so the screen
-     fills the box and the clipped edge fades instead of being fitted */
-  .wfstage{
-    position:static; width:100%; height:100%;
-    transform:none;
-  }
-
-  .wfstage .slackui__msgs,
-  .wfstage .absui__wfs,
-  .wfstage .absui__body,
-  .wfstage .flowui__grid{
-    -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
-            mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
-  }
-
-  /* the thread is centred, so it can run off either end */
-  .wfstage .absui__body--chat{
-    -webkit-mask-image:linear-gradient(to bottom, transparent, #000 28px,
-                                       #000 calc(100% - 28px), transparent);
-            mask-image:linear-gradient(to bottom, transparent, #000 28px,
-                                       #000 calc(100% - 28px), transparent);
-  }
-
   .scene.is-on{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); }
 
 }
@@ -5403,7 +5133,6 @@ h3{ font-family:var(--fd); }
    the thread about a hundred pixels wide. The design layer has the last word. */
 @media (max-width:860px){
   .slackui{ grid-template-columns:minmax(0,1fr); }
-.slackui__side{ display:none; }
 
 }
 
@@ -5559,18 +5288,13 @@ h3{ font-family:var(--fd); }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]) .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1-dark.png); }
 
-
   :root:not([data-theme="light"]) .ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2-dark.png); }
-
 
   :root:not([data-theme="light"]) .ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3-dark.png); }
 
-
   :root:not([data-theme="light"]) .ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4-dark.png); }
 
-
   :root:not([data-theme="light"]) .ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5-dark.png); }
-
 
 }
 :root[data-theme="dark"] .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1-dark.png); }

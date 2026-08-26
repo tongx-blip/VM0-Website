@@ -114,6 +114,425 @@ air is leading now, which is height a `0fr` track does collapse.
 every row open, so adding `.is-live` and the transition together played the
 loop's opening state as an animation — nine rows sliding shut in front of
 the reader. `.is-warm` is added on the frame after the first cue pass.
+## 2026-08-26 · the four steps become one scene
+
+**Four steps, four separate pictures.** Run / Save / Hand over / Automate each
+had its own mock on its own painted panel, and the panels slid past one
+another. Nothing carried over between them, so the reader re-read each screen
+from scratch and the section's own claim — that one chat becomes something the
+team keeps — was described but never shown happening.
+
+**It is one scene with four states now.** The same objects persist and move:
+the ask, the run, the workflow it condenses into, the team it goes to, the
+schedule that finally makes it self-running. `data-step` on the scene is the
+only thing that changes; every object reads that one attribute and CSS does
+the rest, which is the same mechanic the control section uses. The four
+sliding panels and the per-stage measure-and-fit script are gone with them.
+
+**Where the boldness goes — one gesture per step, and nothing else:**
+
+1. **Run** — the ask sits in the person's own words, the run works beneath it
+2. **Save** — the ask recedes and the run *lifts, straightens and is renamed*:
+   a thing that happened once becomes a thing the team keeps. This is the
+   pivot of the section and it is the loudest moment in it
+3. **Hand over** — the card moves aside and the team arcs in around it, each
+   with their own permissions
+4. **Automate** — a schedule snaps on and it lands in the workflows list
+
+Everything between those four moments stays still on purpose.
+
+**The painted grounds came out.** They were tuned when one opaque mock covered
+most of the panel; with the objects floating, twice as much artwork shows and
+every one of them went from atmosphere to picture. The brick wall and the blue
+figure both won the composition outright — at any veil, and a heavier veil only
+made a muddy photograph. The field is built from `--step-run / --save / --hand
+/ --auto` instead: the **same four hues as the step markers in the left
+column**, so the two halves of the ladder are tied together by a token rather
+than by being next to each other. Mixed at 17/11/5% and no more — a stronger
+tint turns the amber step into a cream field, which this page has rejected
+once already.
+
+**Three things caught on the way:**
+
+- A `python` string replace against `index.html` silently did nothing, because
+  `build-css.py` had already stamped `?v=` into the very `url(...)` I was
+  matching on. It printed `ok` and changed no bytes. The tell was
+  `--h: ""` and `background: none` in the computed style, not the script.
+- `--accent-solid` on the RUNNING label failed contrast in dark mode: the card
+  is `--paper` and `--paper` flips, so the label needs `--accent-wash`, the
+  token that flips with it.
+- The scene's card rules are the product's own chrome, so `.wfo` is **named**
+  in `tools/audit.js` and `tools/tokens.py` rather than left as a quiet
+  violation of a rule the audit still claims to enforce.
+
+**Narrow screens get a column, not a composition.** Container units that read
+well beside a 700px stage stacked four floating objects on top of one another
+at 390. Below 820px each step shows only the objects it is about.
+
+Ladder verified 1 1 2 3 4 4 with the scene matching the step at every position;
+axe 0 violations in both themes after a full-page walk.
+
+
+## 2026-08-26 · the Run step actually runs
+
+**The step is called "Run" and its panel was a transcript.** Three finished
+paragraphs, which show that work *happened* and never that it is happening —
+against a claim that reads "Okou works out the angle and **does the job in
+the open**". Nothing was in the open.
+
+So the run plays. Each line arrives, works, and resolves, in order, and the
+run ends on the artifact it produced: five steps with the connector each one
+reached, the reasoning underneath, then the draft in Resend. The rule is one
+sentence on purpose — deterministic and one-shot, not a loop that invents a
+new pattern each cycle. The same facts the three paragraphs carried are all
+still there; they are a trace now instead of a summary.
+
+No new observer and no per-frame JS: `.absui__run` carries `reveal`, the
+page's one observer adds `is-in`, and the delays are a custom property on
+each row. Named under `absui__` so it inherits the mock exemptions rather
+than needing new ones.
+
+**It played to an empty room first.** Keyed off `.wfstage.is-on`, which is in
+the markup at load, the whole run finished while the section was still a
+screen and a half below the fold — every visitor arrived to a finished
+transcript again, which is precisely what it replaced. The reveal observer is
+the right trigger because it is the one that knows the section is on screen.
+
+**Then it made the a11y gate non-deterministic, and that turned out not to be
+its fault.** Auditing straight after the page-walk returned 1 violation on
+roughly one pass in three. The nodes moved every time — and they were not the
+run at all:
+
+```
+.reach__line.is-on > .w:nth-child(7)   ← then 4/5, then 3/4 …
+```
+
+The **reach statement's word-by-word fade**, looping, always leaving some word
+at partial opacity for axe to catch. Reproduced on the published draft, so it
+has been shipping. Fixed the way `qa-checklist` §1 already prescribed for
+exactly this — *"text that fades is text below contrast, and a loop re-enters
+that state forever. The fix is clip-path"* — the words now un-clip upward,
+which is also the page's own headline idiom, so the statement rises the way
+every other headline does. **14 consecutive audits across a full rotation:
+0 violations.**
+
+The run's own entrances went the same way before the cause was known, and
+they stay that way on the merits: no text on this page fades any more. The
+ticks still crossfade on opacity, because a dot is not text and carries no
+contrast floor.
+
+**What actually caught it:** auditing *immediately after* the walk, while
+things are still moving, rather than at rest. Six audits at rest were clean;
+the defect only exists mid-animation. That is now in the checklist.
+
+
+## 2026-08-25 · the page shipped its own name in two typefaces
+
+**Archivo 600 in the header, IBM Plex Mono 500 in the footer** — same size,
+same tracking, different face and different weight. The footer lockup was
+authored during the footer rebuild and picked up `--fm` because everything
+else in a footer column is mono; nothing caught it because no check had ever
+compared the two. A logo does not have variants. The footer now renders the
+header's lockup to the pixel, icon included (20px, was 24).
+
+It stays at `--t-wordmark` rather than growing to suit the footer: at 16px or
+more a 600 weight trips the heading-weight gate, where the wordmark is the one
+exemption *because* it sits under that threshold. Added to the checklist as
+4n1, with the icon size in the same check — the mark and the word are one
+lockup.
+
+**Still open, not changed:** the footer's language button renders "English" in
+Instrument Sans 12px inside a row where every other item is IBM Plex Mono 500
+uppercase. By the page's own convention a control is utility text and belongs
+in mono. Left alone because it is a control that was designed and signed off
+two rounds ago — flagged rather than quietly restyled.
+
+
+## 2026-08-25 · the beat gets shorter, and the stage stops moving
+
+**68vh, not 100vh.** A full screen per beat fixed the uneven heights and cost
+the thing the fade exists for: with a screen between them you never watch the
+next statement arrive, you only see the one you are on and then, later,
+another one. The beat is `max(68vh, --ctrl-h)` now — 722px at 1440×900, about
+four fifths of a screen — so two steps share the viewport at the handoff and
+the grey-to-bright change is something you watch rather than something you
+find. The floor is the frame because the first step centres on the stage, and
+one expression makes those two requirements stop fighting.
+
+**The stage was resizing under the reader, and it broke the last beat.**
+Beat 5 swaps the permission list for the activity trail and the window came
+out 106px shorter. `--ctrl-h` was written straight back from that, so
+`--ctrl-beat` shrank, all five steps shrank with it, the document lost 530px
+mid-scroll — and step 5 was carried past the middle of the screen by the
+reflow it had itself caused, so it never lit up at all. `on=-1`.
+
+Two fixes, both structural rather than a nudged number. `--ctrl-h` now tracks
+the **tallest** state the frame has been measured in, reset only when the
+frame's *width* changes — width is the tell, because a beat change never
+alters it and a viewport resize always does. And `.ctrl__frame` takes that
+value as a `min-height`, so the sticky stage is a fixed object instead of one
+that changes size as you read it. All five beats verified at 722/722/722/722/
+722 with the frame at 722 throughout.
+
+**The activity trail was five rows short of its own window.** With the stage
+pinned, beat 5 left 245px of empty tinted ground under the trail. Rather than
+shrink the frame back, the trail became the length the window is: eleven rows
+from *Run started* through *Sandbox destroyed*, which is what a run trail
+actually looks like and makes the two tabs the same shape.
+
+**A contrast failure that had been shipping, and the gate hole that hid it.**
+`--p-mute` (`#788192`, the product's gray-700) measures 3.9:1 on white, and
+this page draws the mocks that use it at 9–12px — 28 failing nodes across the
+parallel-work lanes, the artifact card and the workflow rows. Confirmed
+present on the published draft before this round, so it is not a regression;
+it is something every previous audit missed. **axe only sees revealed
+elements**, and every run so far had been from one or two scroll positions,
+so whole sections were never in the DOM axe measured. The rule now is: walk
+the page top to bottom, return to the top, *then* audit — and that is written
+into the checklist as the way the a11y gate is run, not as a footnote.
+
+P1 pins a mock to the product's own values and that is still the rule, but a
+pinned value does not outrank the contrast floor. `--p-mute` steps one stop
+down its own ramp to gray-800 (`#666F7E`): 5.1:1 on `--p-card`, 4.6:1 on
+`--p-tint`, same hue line. Walk-then-audit now returns **0 violations in both
+themes**.
+
+**On the site-wide type question:** the audit says no. Page-level prose already
+runs 21 (section ledes) · 15 (`.note`, `.figcap`) · 13.5 (footnotes,
+disclaimers, comparison-card body), and `--t-body`'s 17px is reached by
+exactly two rendered elements — the hero paragraph and the connector line.
+The control step at `--t-sm` did not become an outlier; it joined the 15px
+supporting-prose tier it belongs to. Nothing else needs to move, and dropping
+`--t-body` globally would be the wrong lever for what is really "the hero
+paragraph is a point too big".
+
+
+## 2026-08-25 · one screen per beat, and a report that fills its window
+
+**Every control step is one viewport tall.** It was `min-height:54vh`, which
+put two beats on a screen and changed the stage twice per scroll, and left
+each step a slightly different height depending on whether its paragraph ran
+to three lines or four. One screen per beat is the cadence this mechanic is
+for. Measured: `900, 900, 900, 900, 900`.
+
+**The first step still centres on the frame,** but it can no longer do that
+by being exactly as tall as the frame. The box stays one viewport and the
+*content box* is cut back to the frame's height with a bottom padding, so
+centring inside it lands the block on the frame's middle line while the step
+stays the same height as the other four. `frameMid === blockMid === 479`.
+
+**The beat is scored in pixels of the band, not `intersectionRatio`.** The
+ratio is measured against the *element*, so it depends on how tall a step
+happens to be: at one viewport per step the most any step can ever score is
+band ÷ step ≈ 0.24, and the observer's 0.25 threshold would never have
+fired again. Comparing `intersectionRect.height` asks the question the beat
+actually turns on — which step is sitting in the middle of the screen — and
+keeps asking it correctly whatever the steps are resized to. All five beats
+re-verified end to end.
+
+**The mobile first step was 100px taller than its siblings.** The narrow
+block overrode `padding-top` while the wide layout's bottom value
+(`100vh - --ctrl-h`) stayed in place. `padding-block`, both values.
+
+**The Team Digest preview did not fill its window.** `ops-v2.jpg` was
+**880×870** where every other artifact page on this page is 1400–4000px
+tall, so the preview ended a third of the way down and the "Scroll down"
+hint below it was a lie — `scrollHeight - clientHeight` was too small to
+scroll. Rebuilt at 880×2246 in the same visual language, with four sections
+added to the three it had: *Shipped This Week*, *Delivery Throughput*, *By
+Team* and *Next Week*, plus two more budget rows and a fourth blocker. The
+window now overflows by **586px** and the hint is true.
+
+Two things fixed while in there: the header row read `VARIANCESTATUS`
+because the fourth column had no right padding, and the five summary tiles
+wrapped 4 + 1 instead of sitting five across. The card thumbnail
+(`ops-v2-card.jpg`) was re-cut from the same render so the chat's preview
+and the full page agree.
+
+**"Prepared by Zero" → "Prepared by Okou"** in the report header. Not a copy
+rewrite — a product mock naming the wrong product.
+
+
+## 2026-08-25 · the column fades, and the fan stops spreading
+
+**The step paragraph was at the page's full prose size.** 17px is right for
+prose that IS the content; this paragraph supports a statement and sits
+beside a product screen whose own body text is 13.5px, so at 17px it
+out-weighed both and made the column read heavy. `--t-sm` — the token that
+already means *secondary prose* — and the page's eleven type sizes stay
+eleven. The site-wide `--t-body` is untouched; that is a separate decision.
+
+**The spots came down** from `clamp(78,8.2vw,112)` to
+`clamp(64,6.4vw,88)`, and their own opacity curve is gone. The step fades
+as one block now, and a drawing on its own curve inside a block on another
+curve is two mechanics narrating one state.
+
+**The first step is centred on the FRAME.** Third attempt, and the first
+two are worth recording: a 12vh indent put the statement near the stage's
+centre by luck and left the window's top edge floating against nothing; a
+top alignment made the two columns start on one line but hung the
+statement off the top of a 700px screen. What it wants is the middle of
+the thing it is talking about. No clamp can do that — the frame's height
+is whatever the product mock inside it comes out at — so app.js §13
+measures it into `--ctrl-h` with a ResizeObserver and the step is made
+exactly that tall. Both columns still start on one line, because it is the
+step's BOX that grew, not its content that moved down. `padding-block:0`,
+not `padding-top:0`: with a 20px bottom padding still on it the content
+centred 10px high, which is precisely the near-miss that reads as "not
+quite aligned" and cannot be seen in the CSS. Measured: `frameMid ===
+blockMid === 479`.
+
+**The steps fade, and the fade cost the paragraph its colour.** Resting
+steps are `opacity:.6`; the one in the middle of the viewport is 1. First
+attempt rested at 0.34 with the existing colours and axe returned a real
+**violation**, 15 nodes — *not* the `incomplete` the testimonial cards
+get. Worth knowing why the two differ: the rail's cards carry a
+`transform`, so axe declines to composite them; these do not, so it
+composites, and it is right to. The floor is arithmetic — resting text has
+to clear 4.5:1 on paper *after* the fade, and `--ink-soft` cannot at any
+opacity you would notice. Moving the paragraph to `--ink` buys the
+headroom (`#0C0F12` at 0.6 over white composites to `#6D6D6D`) and 0.6 is
+still a fade you can plainly see. A paragraph in full ink is a small
+deviation from the page's prose colour and it is the price of the fade,
+not a preference.
+
+**The fan was spreading instead of compressing.** Cards that shrink inside
+a track of unchanged width leave the leftover width sitting between them,
+so the visible gap *grew* with distance: 31px beside the centre card, 78px
+two out. Physically backwards — a fan compresses towards its edges, and
+growing gaps read as spacing done by accident. `app.js` §12 now rebuilds
+each card's position from the widths actually on screen (the scaled half
+of each neighbour plus a gap that scales too) and hands the difference
+back as `--x`. Gaps now run 29 · 26 · 24 outward, and they stay inside
+24–29px at every point between snap positions, so nothing jumps mid-drag.
+The translate is on the card, never the track, so every snap position is
+exactly where it was.
+
+`translateX` is written **before** `scale`. The other order scales the
+translation too and every card lands short by its own scale factor.
+
+
+## 2026-08-25 · the quotes get a middle
+
+**The rail had no subject.** Six cards read from the left edge at one size,
+so the row was a list you scrolled rather than a set with something in it
+being read. It centres now: whichever card is on the rail's centre line is
+full size and full strength, its neighbours are 0.91 and 0.65, and the pair
+beyond are 0.82 and 0.30. Past that the size keeps shrinking and the fade
+stops — the far cards have to read as *smaller*, not as absent, and below
+0.3 the row only looks broken at the edges.
+
+**One number drives both curves.** `app.js` §12 writes `--d` on each cell —
+its distance from the centre line, measured in cards — and the CSS reads it
+for the size and the strength. It is continuous, not stepped, so a card
+halfway between two slots is halfway between two sizes and a drag feels
+attached to the finger. With no JS, `--d` is 0 everywhere and every card
+renders full size: the fallback is the plain rail, not a blank one.
+
+**Three things had to be got right, and two of them bit first.**
+
+- `.reveal.is-in{ opacity:1; transform:none }` is (0,2,0) and later in the
+  file than `.qcell`, so the first version silently lost every declaration
+  while the correct `--d` sat on the element unused. The paint moved to
+  `.qcell > .quote`, which also leaves the grid track alone — the track is
+  what the centre line is measured against, so scaling it would move the
+  thing being measured.
+- `getBoundingClientRect().width` reports the **scaled** box. The pitch
+  would have shrunk with the cards, the arrows would have stepped short of
+  a slot, and every distance would have been measured in a unit that
+  changes as you scroll. `offsetWidth` is the layout width. A rect's
+  *centre* is safe under a centred scale, which is why `depth()` may still
+  use one.
+- Percentages: the rail pads itself by `50% - card/2` so a card can reach
+  the centre, so the card width can no longer be a percentage of the rail's
+  content box — that would be defined in terms of a padding defined in
+  terms of it. `--q-card` is stated against the viewport now and lands
+  within 2px of where the `(100% - 3g)/3.5` version put it.
+
+**The set loops.** Centring is what created the problem: with a finite row
+the first card can only be centred with the whole left half of the section
+empty, and the last with the right half empty — 37% of the rail, at the two
+positions a visitor most reliably reaches by pressing an arrow until it
+stops. The set is cloned before and after, the reader always sits in the
+middle copy, and `scrollend` puts them back by exactly one set width onto
+identical content at an identical snap position, so nothing moves on
+screen. The jump is on `scrollend` and not during the scroll because
+setting `scrollLeft` under a finger cancels the gesture, and there is a
+whole set width of slack on each side, so there is no hurry. Neither arrow
+is ever disabled now: there are no ends.
+
+**The clones are `aria-hidden` and `inert`,** so the six quotes are
+announced once, and marked `is-in` because the reveal observer only ever
+watched the originals.
+
+**The phone floor was wrong.** A flat 272px card is wider than the peek
+room a 390px rail has, so the neighbours showed as ten-pixel slivers that
+read as a clipping bug rather than as "there is more". `min(272px, 68vw)`.
+
+**On the fade, honestly.** axe reports the off-centre cards as
+*incomplete*, not as a violation — it cannot composite an inherited
+opacity — and "the tool could not tell" is not the same as "it is fine".
+The judgement recorded: the off-centre cards are previews rather than
+reading material, every one of them reaches full strength on the centre
+line by drag, wheel, arrow or keyboard, and a screen reader never sees the
+fade at all. But a *stated* preference outranks that judgement, so
+`prefers-reduced-transparency` and `prefers-contrast: more` both take the
+opacity out and leave the depth to size alone.
+
+
+## 2026-08-25 · the control steps get a drawing, a measure and a way out
+
+**Five spot illustrations, one per beat.** Supplied from the brand's own
+illustration set — the same register as the avatars, the stickers and the
+landscape, not a sixth visual language — and matched to the claim each one
+sits above: two hands and a pair of gears for granular permissions, a hand
+striking out a mail on a screen for approval gates, two hands holding a
+dashed frame for isolated execution, a hand pointing at a globe it does not
+touch for credentials, and a presented chart for the activity trail.
+
+They are **backgrounds, not `<img>`**. The five drawings have five aspect
+ratios; a fixed box with `background-size:contain` lands all of them on one
+baseline and one left edge without five `aspect-ratio` rules, they are
+decorative so they want no alt text, and the browser fetches only the theme
+whose declaration actually applies — five files per visitor, not ten.
+
+**The dark variant is a second asset, not `invert(1)`.** The fix that was
+right for the monochrome connector marks yesterday is wrong here: these
+drawings contain people, and inverting them changes their skin. Each spot
+was re-inked instead — white paper keyed to transparent by unmultiplying
+against white, achromatic ink inverted so the drawing reads as white pen on
+a dark ground, every chromatic pixel left exactly as painted. The spots also
+stand down between beats on opacity, which *is* the right instrument here:
+the reason it was wrong for the headings (all five are read on the way past,
+so none may drop under the contrast floor) does not apply to a decorative
+drawing carrying no information of its own.
+
+**The two columns were too close.** At 64px the window's right edge and the
+statement's first character were near enough that the eye grouped them into
+one crowded block; a sticky stage has to read as a separate object the text
+is talking *about*. 104px at 1440.
+
+**The first step was indented 12vh and now aligns with the frame.** It was
+pushed down so its statement would land on the stage's optical centre, which
+meant the section opened with the window's top edge floating against nothing
+and no cue for where the right column began. Aligning the two tops does the
+work the indent was attempting. Measured, not eyeballed: `frameTop ===
+spotTop === 7332`.
+
+**The paragraphs were one sentence each and the beats had no exit.** Each
+one now says what it actually means — that reading a Drive folder and saving
+a Gmail draft are two separate grants, that a person answers the approval
+rather than a settings page, that the microVM is destroyed rather than
+reused, that a call to an unconnected host never leaves the sandbox, that
+the engine underneath is open source — and each ends in a soft-fill button
+into the product. Five identical ghost chips rather than anything louder:
+the section's boldness is spent on beat 3 and stays there.
+
+**One column needed its own spacing.** `min-height:54vh` was carrying the
+distance between beats on the wide layout; with it gone at ≤1000px the
+button of one step landed almost on the spot of the next, and the spot,
+sized against a half-width column at `8.2vw`, came out a third of the
+measure it sits above. Both are set explicitly in that block now.
 
 
 ## 2026-08-25 · no system components, and three dark-mode bugs

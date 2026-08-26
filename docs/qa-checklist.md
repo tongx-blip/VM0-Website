@@ -19,9 +19,43 @@ agent-browser open http://localhost:8931/
 
 ## 1. Accessibility — must be **0 violations**
 
-```bash
-agent-browser a11y            # expect: violations 0, passes 41
+**WALK THE PAGE FIRST.** axe only measures elements that are actually
+rendered, and most of this page is behind a reveal observer — anything still
+at `opacity:0` is skipped in silence. Auditing from the top, or from wherever
+the last check left the scroll, covers a fraction of the page and returns a
+clean 0 for sections axe never looked at. Walk down in viewport steps, sit at
+the bottom, come back to the top, *then* audit:
+
+```js
+(async () => {
+  const step = Math.round(innerHeight * 0.8);
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+    window.scrollTo({ top: y, behavior: 'instant' }); await wait(90);
+  }
+  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
+  await wait(300);
+  window.scrollTo({ top: 0, behavior: 'instant' }); await wait(300);
+  return [...document.querySelectorAll('.reveal,[data-reveal]')]
+    .filter(el => parseFloat(getComputedStyle(el).opacity) < 0.9).length;  // ~0
+})()
 ```
+
+```bash
+agent-browser a11y            # expect: violations 0
+```
+
+This is not theoretical. `--p-mute` at 9–12px measured 3.9:1 and shipped 28
+failing nodes across the parallel-work lanes, the artifact card and the
+workflow rows — through every audit run before this one, because the lanes
+were never revealed at the position the audit was run from.
+
+**A pinned mock value does not outrank the contrast floor.** P1 pins a product
+mock to the product's own palette, and that stands — but the product spends
+its greys on 14px+ rows and this page draws the same mocks at 9–12px. When the
+two collide, step down the product's own ramp rather than inventing a colour
+or quietly leaving it: `--p-mute` is gray-800, not the gray-700 the product
+uses, and the reason is written where the token is declared.
 
 **Audit the resting frame.** A looping animation makes this check
 non-deterministic — axe measures one instant, and an element caught mid-fade
@@ -34,6 +68,25 @@ document.getElementById('a2a').classList.remove('is-live');
 Then run it *again* without parking, ~20 times across a full loop. Anything that
 reproduces is a real defect: text that fades is text below contrast, and a loop
 re-enters that state forever. The fix is `clip-path`, not a quieter audit.
+
+**Audit while things are still moving, not only at rest.** Six audits at rest
+came back clean while the page was shipping a real violation; it only exists
+mid-animation. Run the audit *immediately* after the walk, and repeat it a
+dozen times without pausing:
+
+```bash
+for i in $(seq 1 14); do agent-browser a11y | sed -n '2p'; sleep 0.6; done
+# every line must read violations: 0
+```
+
+The nodes move between runs when it is an animation — `.reach__line .w:nth-child(7)`
+on one pass, `(4)` and `(5)` on the next. A wandering node list *is* the
+diagnosis: something is fading, and it is text.
+
+**No text on this page fades.** Entrances, exits and swaps of anything with
+words in it use `clip-path` (and `transform`), never `opacity` — the reach
+statement, the run trace in the Run step, the headline masks. Opacity is for
+dots, rules, illustrations and other things with no contrast floor.
 
 Recurring causes, in the order they have actually bitten:
 
@@ -477,6 +530,31 @@ window's width it lands within a few dozen pixels of the window's height:
 })
 ```
 
+**Check the source images, not just the live measurement** — a hidden pane
+reports 0 whatever its content is, so the DOM check only ever tells you about
+the one scene that is showing. The artefact pages are all 880 wide, and their
+heights are the real answer:
+
+```bash
+cd site/assets/artifact && python3 - <<'EOF'
+import struct, glob
+for f in sorted(glob.glob('*.jpg')):
+    d = open(f,'rb').read(); i = 2
+    while i < len(d):
+        if d[i] != 0xFF: i += 1; continue
+        m = d[i+1]
+        if m in (0xC0,0xC1,0xC2,0xC3):
+            print(f, struct.unpack('>HH', d[i+5:i+9])[::-1]); break
+        if m in (0xD8,0xD9) or 0xD0 <= m <= 0xD7: i += 2; continue
+        i += 2 + struct.unpack('>H', d[i+2:i+4])[0]
+EOF
+```
+
+A full page runs 1400–4000px. `ops-v2.jpg` shipped at **870** and the Team
+Digest preview ended a third of the way down its window with a "Scroll down"
+hint under it that could not be obeyed. Anything near 900 is a page that was
+cropped to a viewport instead of captured whole.
+
 Three traps:
 
 - **Forcing reveals open does not render a page.** Adding `is-in` and setting
@@ -903,6 +981,138 @@ So also assert containment, which is the symptom a human notices first:
 
 **And never regex across nested tags of the same name.** Match on a unique
 attribute, or rebuild the block from its opening tag by counting depth.
+
+## 4n1. One logo, rendered one way
+
+The wordmark appears in the header and in the footer, and they are authored in
+different places months apart. Every property must match — the page shipped
+its own name in **Archivo 600** at the top and **IBM Plex Mono 500** at the
+bottom, at the same size and the same tracking, which reads as a mistake
+rather than as a variant:
+
+```js
+['.nav__logo span', '.footer__mark span'].map(s => {
+  const c = getComputedStyle(document.querySelector(s));
+  return [c.fontFamily.split(',')[0], c.fontWeight, c.fontSize, c.letterSpacing].join('/');
+})   // two identical strings
+```
+
+Check the icon beside it too — `.nav__logo img` and `.footer__mark img` are
+one lockup, so one size.
+
+**Do not grow the wordmark past 16px.** The heading-weight gate (4i) allows
+600 nowhere outside a product mock, and the wordmark is its one exemption
+*because* it sits under that threshold. A larger footer lockup at 600 turns
+that exemption into a violation.
+
+## 4n2. A sticky stage must not resize between its own states
+
+If a pinned stage swaps content per beat, measure it in **every** state, not
+just the one that happens to be showing:
+
+```js
+const f = document.querySelector('.ctrl__frame');
+[1,2,3,4,5].map(b => { f.dataset.beat = b; return b + ':' + f.offsetHeight; })
+// one number, five times
+```
+
+A stage that shrinks at one beat is not just ugly. If anything derives a
+layout value from its height — here `--ctrl-beat`, which sets all five step
+heights — the shrink feeds back: the steps shrink, the document loses height
+mid-scroll, and the beat that caused it gets carried past the observer band
+before it can activate. The symptom is the last beat never lighting up
+(`findIndex(is-on) === -1`) while the first four are fine.
+
+Two rules that came out of it:
+
+- **Derive from the maximum, never the current value.** `--ctrl-h` tracks the
+  tallest state seen, and `.ctrl__frame` takes it as a `min-height` so the
+  stage is a fixed object.
+- **Reset the maximum on width, not on every resize callback.** A beat change
+  fires the ResizeObserver too; only a real viewport change alters the width.
+
+```js
+[...document.querySelectorAll('.ctrl__step')].map(s => Math.round(s.offsetHeight))
+// identical at every beat, and equal to the frame
+```
+
+## 4o. A centre-focused rail
+
+The testimonial rail centres a card and fades the rest. Four things it gets
+wrong the moment any of them is touched:
+
+```js
+// 1. the paint actually applies. `.reveal.is-in{opacity:1;transform:none}` is
+//    (0,2,0) and later in the file than `.qcell` — it silently wins, and the
+//    correct `--d` sits on the element doing nothing.
+[...document.querySelectorAll('.qcell')].map(c =>
+  c.style.getPropertyValue('--d') + ' → ' +
+  getComputedStyle(c.querySelector('.quote')).transform)
+// d 0 → matrix(1,…), d 1 → 0.91, d 2 → 0.82 — never all matrix(1)
+
+// 2. the pitch is the LAYOUT width. A bounding rect reports the scaled box,
+//    so every distance would be measured in a unit that shrinks as you scroll.
+document.querySelector('.qcell').offsetWidth   // constant at a given viewport
+
+// 3. one arrow press moves exactly one slot
+const p = document.querySelector('.proof'), a = p.scrollLeft;
+document.querySelectorAll('.railnav__b')[1].click();
+// after the smooth scroll: p.scrollLeft - a === card + gap
+
+// 4. the loop puts you back. Push it to either extreme and wait for scrollend.
+p.scrollLeft = 0;      // → settles back to one set width in, not at 0
+```
+
+**Percentages in a self-padded scroller.** The rail pads itself by
+`50% - card/2`, so a card width written as a percentage of the rail's
+*content* box is defined in terms of a padding defined in terms of it.
+`--q-card` must stay stated against the viewport.
+
+**The gaps must SHRINK outward.** A card that scales inside a track of
+unchanged width leaves the leftover width between the cards, so the row
+spreads instead of compressing:
+
+```js
+const q = [...document.querySelectorAll('.qcell')]
+  .map(c => c.querySelector('.quote').getBoundingClientRect())
+  .filter(r => r.right > -300 && r.left < innerWidth + 300);
+q.slice(1).map((r, i) => Math.round(r.left - q[i].right))
+// monotonic towards the middle — e.g. 24, 26, 29, 29, 26, 24. Never 31, 78.
+```
+
+Re-run it **between** snap positions (`p.style.scrollSnapType='none'`, then
+`p.scrollLeft += 94`) — the offsets are interpolated per card, and a
+mistake there shows as the row jumping a few pixels at each slot boundary
+while looking perfect at rest.
+
+**`translateX` goes before `scale`.** The other order scales the
+translation too, and every card lands short by its own scale factor.
+
+## 4p. An opacity fade over text is a contrast change
+
+axe composites an inherited `opacity` **unless** the element also carries a
+`transform`, in which case it downgrades to `incomplete`. So two fades of
+the same depth can report differently, and the `incomplete` one is the tool
+declining to judge rather than passing. Never read it as a pass.
+
+Compute the floor before choosing the value: resting text must clear 4.5:1
+on its ground *after* the fade. On white, `--ink` (`#0C0F12`) survives down
+to about 0.56; `--ink-soft` does not survive any fade you would notice. If
+a design needs a deeper fade than the type can pay for, the type colour has
+to darken to buy it — that is what `.ctrl__step p` at `--ink` is for.
+
+Two fades on this page, and they are not the same case:
+
+- **`.ctrl__step`** — 0.6, and every statement is read at full strength as
+  it passes the middle of the viewport. This one axe checks; it must be 0
+  violations.
+- **`.qcell > .quote`** — down to 0.3, and axe returns `incomplete`. The
+  recorded judgement: the off-centre cards are previews rather than reading
+  material, any one of them reaches full strength on the centre line by
+  drag, wheel, arrow or keyboard, and a screen reader never sees the fade.
+  Both fades take `prefers-reduced-transparency` and `prefers-contrast:
+  more` as an exit. If a fade is ever extended to text nobody can bring to
+  full strength, neither judgement holds.
 
 ## 5. Type scale
 

@@ -1328,6 +1328,146 @@ a.acard .acard__txt i{ color:var(--ink); }
 .absui__ldots i:nth-child(2){ animation-delay:.15s; }
 .absui__ldots i:nth-child(3){ animation-delay:.3s; }
 @keyframes ld{ 0%,100%{ opacity:.25 } 50%{ opacity:1 } }
+
+/* ── THE RUN, PLAYED RATHER THAN TRANSCRIBED ─────────────────────────
+   The step beside this panel is called "Run" and its claim is that Okou
+   "does the job in the open". The panel used to be three finished
+   paragraphs, which is a transcript: it shows that work HAPPENED, never
+   that it is happening. Nothing was in the open.
+
+   So the run plays. Each line arrives, works, and resolves, in order,
+   and the run ends on the thing it produced. That is the whole rule, and
+   it is one sentence on purpose — the motion is deterministic and
+   one-shot, not a loop that invents a new pattern every cycle.
+
+   It is driven by the page's ONE reveal observer — `.absui__run` carries
+   `reveal`, so `.is-in` lands when the ladder is actually on screen. The
+   first version keyed off `.wfstage.is-on`, which is in the markup at
+   load: the whole run played out while the section was still a screen
+   and a half below the fold, and every visitor arrived to a finished
+   transcript again. No new observer and no per-frame JS either way — the
+   delays are a custom property on each row and CSS computes the rest.
+
+   NO TEXT FADES. Every line arrives by un-clipping upward — the page's
+   own `mask` idiom — not by fading. That is not a style choice: axe
+   measures one instant, and text caught at opacity .4 reports below
+   contrast, so a fading run made the accessibility gate return 1
+   violation on one pass and 0 on the next. Un-clipping shows a line at
+   full contrast at every instant, so the check is deterministic and the
+   text is never actually hard to read. The ticks still crossfade on
+   opacity, because a dot is not text and carries no contrast floor. */
+.absui__run{ display:flex; flex-direction:column; gap:14px; }
+/* the container's own reveal fade is switched off — the rows carry the
+   entrance, and one fewer opacity animation over text is one fewer way
+   for axe to catch a line mid-transition */
+.absui__run.reveal{ opacity:1; transform:none; transition:none; }
+.absui__run > *,
+.absui__rsteps > li{
+  clip-path:inset(0 0 100% 0);
+}
+.absui__run.is-in > *,
+.absui__run.is-in .absui__rsteps > li{
+  animation:runIn 520ms var(--e-out) both;
+  animation-delay:calc(var(--ri, 0) * 440ms);
+}
+/* the end state is a generous negative inset so the clip never crops the
+   tick's outer glow or a descender */
+@keyframes runIn{
+  from{ clip-path:inset(0 0 100% 0); transform:translateY(9px) }
+  to  { clip-path:inset(-40% -40% -40% -40%); transform:none }
+}
+
+/* the header swaps from working to worked, in place */
+.absui__rh{
+  position:relative;
+  display:flex; align-items:center; gap:9px;
+  font-size:13.5px; color:var(--ink-mute);
+}
+.absui__rlive,.absui__rdone{ display:block; }
+.absui__rdone{ position:absolute; left:24px; clip-path:inset(0 0 100% 0); }
+/* the header swaps in place: "working" wipes away, "worked for" wipes in
+   behind it. Text again, so again a wipe and not a fade. */
+.absui__run.is-in .absui__ldots{ animation:runOff 300ms var(--e-out) 2860ms both; }
+.absui__run.is-in .absui__rlive{ animation:runWipeOut 300ms var(--e-out) 2860ms both; }
+.absui__run.is-in .absui__rdone{ animation:runWipeIn 300ms var(--e-out) 2980ms both; }
+@keyframes runOff{ from{ opacity:1 } to{ opacity:0 } }
+@keyframes runWipeOut{ from{ clip-path:inset(-40% -40% -40% -40%) } to{ clip-path:inset(0 0 100% 0) } }
+@keyframes runWipeIn { from{ clip-path:inset(0 0 100% 0) } to{ clip-path:inset(-40% -40% -40% -40%) } }
+
+.absui__rsteps{ display:flex; flex-direction:column; }
+.absui__rsteps li{
+  display:flex; align-items:center; gap:11px;
+  padding:9px 2px;
+  font-size:13.5px; color:var(--ink);
+}
+.absui__rsteps em{
+  margin-left:auto; font-style:normal;
+  font-family:"IBM Plex Mono", ui-monospace, monospace;
+  font-size:10px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.absui__rsteps b{ font-weight:400; }
+
+/* one box, two states stacked: the ring that means "running" and the
+   filled dot that means "done". They crossfade 700ms after the row
+   lands, so every row is visibly worked rather than instantly true. */
+.absui__rtick{
+  position:relative; width:13px; height:13px; flex:none;
+}
+.absui__rtick::before,
+.absui__rtick::after{
+  content:''; position:absolute; inset:0; border-radius:50%;
+}
+.absui__rtick::before{
+  box-shadow:inset 0 0 0 1.7px var(--blue), 0 0 0 3px rgba(0,150,255,.16);
+}
+.absui__rtick::after{
+  background:var(--green); opacity:0; transform:scale(.5);
+}
+.absui__run.is-in .absui__rtick::before{
+  animation:tickOff 220ms var(--e-out) calc(var(--ri, 0) * 440ms + 700ms) both;
+}
+.absui__run.is-in .absui__rtick::after{
+  animation:tickOn 320ms var(--e-spring) calc(var(--ri, 0) * 440ms + 700ms) both;
+}
+@keyframes tickOff{ from{ opacity:1 } to{ opacity:0 } }
+@keyframes tickOn { from{ opacity:0; transform:scale(.5) } to{ opacity:1; transform:none } }
+
+.absui__rsay{ font-size:14px; line-height:1.6; color:var(--ink); }
+
+/* what the run produced. The run ends here rather than on a status
+   line, because the artifact is the point of the section. */
+.absui__rout{
+  display:flex; align-items:center; gap:11px;
+  padding:12px 14px; border-radius:var(--r-card);
+  background:var(--paper-2);
+}
+.absui__rfi{
+  flex:none; padding:5px 8px; border-radius:6px;
+  background:color-mix(in srgb, var(--blue) 14%, #fff);
+  font-family:"IBM Plex Mono", ui-monospace, monospace;
+  font-size:9.5px; letter-spacing:.08em; color:var(--blue);
+}
+.absui__rft{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.absui__rft b{ font-size:13.5px; font-weight:600; color:var(--ink); }
+.absui__rft i{ font-style:normal; font-size:11.5px; color:var(--ink-mute); }
+
+/* Reduced motion skips the choreography, it does not hide the run.
+   Everything lands in its finished state: rows present, ticks done,
+   header already reading "Worked for". */
+@media (prefers-reduced-motion:reduce){
+  .absui__run > *,
+  .absui__rsteps > li,
+  .absui__run.is-in > *,
+  .absui__run.is-in .absui__rsteps > li{ clip-path:none; transform:none; animation:none; }
+  .absui__ldots{ opacity:0; animation:none; }
+  .absui__rlive{ clip-path:inset(0 0 100% 0); animation:none; }
+  .absui__rdone{ clip-path:none; animation:none; }
+  .absui__rtick::before,
+  .absui__run.is-in .absui__rtick::before{ opacity:0; animation:none; }
+  .absui__rtick::after,
+  .absui__run.is-in .absui__rtick::after{ opacity:1; transform:none; animation:none; }
+}
 .absui__composer{
   display:flex; align-items:center; justify-content:space-between;
   margin:0 22px 22px; padding:14px 16px;

@@ -13,3 +13,7 @@ Thumbs.db
 .idea/
 .vscode/
 node_modules/
+
+# design exploration, not part of the site
+redesign/
+generated/
