@@ -1868,9 +1868,183 @@ h3{ font-family:var(--fd); }
 /* the product shot, with the brand stickers pinned around it */
 .showcase{
   position:relative;
-  margin-top:clamp(44px, 5vw, 76px);
-  padding-bottom:clamp(28px, 3vw, 48px);
+  /* The bottom reserve holds the unlock popover. The hero clips (its doodles
+     run off the edge), and the section under it is a card that would cover
+     anything escaping anyway — so the room has to be inside. The box moves
+     up by what the reserve grows, which leaves the hero's height alone. */
+  margin-top:clamp(28px, 3vw, 44px);
+  padding-bottom:clamp(168px, 12vw, 190px);
 }
+
+/* ── the hero's prompt box ───────────────────────────────────────────
+   THE PRODUCT'S OWN COMPOSER, 1:1. Every number here is read out of
+   `turbo/apps/platform` rather than eyeballed from a screenshot:
+
+     shell radius        24px   (--zero-composer-radius: 1.5rem)
+     shell border        0.7px  (.zero-composer, gray-400)
+     shell shadow        0 2px 12px / 0 0 0 .5px  (--zero-card-shadow)
+     focus ring          0.7px gray-500 at inset -0.7px + a 48px veil
+     editor inset        16px   (px-4 pt-4)
+     control row inset   16px   (px-4 pb-4 pt-1)
+     control size        32px   (size="icon-sm" → h-8 w-8)
+     control radius      8px    (Button's rounded-lg)
+     glyph               18px   (iconSize="md")
+     placeholder         the real string, from i18n en-US
+
+   Colour comes from THIS page's tokens, not the app's — same brand
+   orange either way, and a mock that ignored the page's ink would be the
+   one thing on it that does not follow the theme. The edge is the
+   exception worth naming: --hairline is the page's divider weight and
+   the composer's edge is what makes it read as the product's box at all,
+   so it is taken from the ink channel at the alpha that lands on the
+   app's own gray-400. Derived, not typed. */
+.pbox{
+  /* The app's radius scale, not this page's: 24px shell and 8px control are
+     what make it the product's box rather than one of ours. Declared here so
+     they are named values with a provenance, not two numbers in a rule. */
+  --pbox-r:24px;          /* --zero-composer-radius: 1.5rem */
+  --pbox-ctrl-r:8px;      /* Button's rounded-lg            */
+  --pbox-ctrl-h:32px;     /* size="icon-sm" → h-8           */
+  --pbox-edge:color-mix(in srgb, var(--ink) 20%, transparent);
+  position:relative; z-index:1;
+  width:min(760px, 100%); margin-inline:auto;
+  background:var(--paper);
+  border:0.7px solid var(--pbox-edge);
+  border-radius:var(--pbox-r);
+  box-shadow:0 2px 12px rgb(var(--ink-rgb) / .04), 0 0 0 .5px rgb(var(--ink-rgb) / .02);
+}
+
+.pbox__ph{
+  margin:0; padding:16px 16px 0;
+  /* 96px is the EDITOR's min-height in the app; the 16px inset sits on top
+     of it, and box-sizing would otherwise eat it. */
+  min-height:calc(96px + 16px);
+  font-family:var(--fb); font-size:var(--t-sm); line-height:1.55;
+  color:var(--ink-mute);
+}
+
+.pbox__row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; padding:4px 16px 16px;
+}
+
+.pbox__grp{ display:flex; align-items:center; gap:8px; }
+
+
+/* One control family, three roles: quiet icon, quiet label, filled send.
+   All 32px tall on an 8px radius — a control 16px in from a 24px corner
+   needs exactly 8px to stay concentric. */
+.pbox__ib,.pbox__pick,.pbox__send{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:var(--pbox-ctrl-h); border:0; border-radius:var(--pbox-ctrl-r);
+  font-family:var(--fb); font-size:14px; font-weight:500;
+  cursor:pointer;
+  transition:background var(--t-state) var(--e-out), color var(--t-state) var(--e-out);
+}
+
+.pbox__ib{ width:var(--pbox-ctrl-h); padding:0; background:transparent; color:var(--ink-mute); }
+
+.pbox__pick{ gap:4px; padding:0 12px; background:transparent; color:var(--ink-mute); }
+
+.pbox__ib:hover,.pbox__pick:hover{ background:var(--wash-2); color:var(--ink); }
+
+.pbox__ib svg,.pbox__send svg{ width:18px; height:18px; }
+
+.pbox__pick .pbox__chev{ width:16px; height:16px; }
+
+.pbox__sliders{ display:none; width:18px; height:18px; }
+
+.pbox__send{
+  width:var(--pbox-ctrl-h); padding:0;
+  background:var(--accent-solid); color:var(--paper-ink);
+}
+
+.pbox__send:hover{ background:var(--accent-wash); }
+
+
+/* ── the unlock note ─────────────────────────────────────────────────
+   A popover hanging off the box, not a modal over the page: nothing here
+   is destructive and nothing needs the page dimmed to be understood. It
+   is the one place on this page that takes the BRAND primary on its
+   button — page primaries are the dark neutral, dialog primaries are the
+   brand colour, and this is a dialog (ui-design: Buttons). */
+.unlock{
+  position:absolute; z-index:4;
+  top:calc(100% - 10px);
+  left:clamp(0px, calc(var(--ux, 50%) - 140px), calc(100% - 280px));
+  width:280px;
+  padding:18px 18px 16px;
+  background:var(--paper);
+  border-radius:var(--r-card);
+  /* the box's own edge, NOT --ink-rgb: that is the shadow channel and it
+     does not swap with the theme, so on a dark ground it drew near-black on
+     near-black and the popover had no edge at all (RULES F30). */
+  box-shadow:var(--e-2), 0 0 0 .7px var(--pbox-edge);
+  text-align:left;
+}
+
+.unlock[hidden]{ display:none; }
+
+.unlock__t{
+  margin:0 0 6px; font-family:var(--fb);
+  font-size:16px; font-weight:600; letter-spacing:-.01em; color:var(--ink);
+}
+
+.unlock__b{
+  margin:0 0 14px; font-family:var(--fb);
+  font-size:var(--t-meta); line-height:1.5; color:var(--ink-soft);
+}
+
+.unlock__a{ margin:0; display:flex; justify-content:flex-end; }
+
+/* The PRODUCT's button, not the page's. Every button on this page is mono
+   uppercase; inside a picture of the app that would be the one thing in the
+   frame that is not the app (RULES P1). So: sentence case, 8px radius, the
+   brand primary — which is also the platform's own rule that a dialog's
+   primary is the brand colour while a page's is the dark neutral. */
+.unlock__btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:34px; padding:0 14px;
+  border-radius:var(--pbox-ctrl-r, 8px);
+  background:var(--accent-solid); color:var(--paper-ink);
+  font-family:var(--fb); font-size:14px; font-weight:500;
+  letter-spacing:0; text-transform:none; text-decoration:none;
+  transition:background var(--t-state) var(--e-out);
+}
+
+.unlock__btn:hover{ background:var(--accent-wash); color:var(--paper-ink); }
+
+
+@media (prefers-reduced-motion: no-preference){
+  .unlock{ animation:unlockIn 180ms var(--e-out) both; }
+
+}
+
+@keyframes unlockIn{
+  from{ opacity:0; transform:translateY(-4px); }
+  to{ opacity:1; transform:none; }
+}
+
+
+@media (max-width:560px){
+  .pbox__ph{ min-height:68px; }
+
+  .unlock{ left:0; width:100%; }
+
+  /* The app collapses the model picker to a 32px icon at this width
+     (`h-8 w-8 px-0 sm:w-auto sm:px-3` on the trigger) — a two-word label in a
+     row with five other controls wraps and takes the row with it. */
+  .pbox__pick{ width:var(--pbox-ctrl-h); padding:0; }
+
+  .pbox__pick span,.pbox__pick .pbox__chev{ display:none; }
+
+  .pbox__sliders{ display:block; }
+
+  /* the drawings sat on the box once it stopped being a 16:10 slab */
+  .showcase__sticker{ display:none; }
+
+}
+
 
 .showcase__sticker{
   position:absolute; z-index:2;
@@ -1879,13 +2053,21 @@ h3{ font-family:var(--fd); }
   pointer-events:none;
 }
 
-.showcase__sticker--tl{ left:-1.5%;  top:-5%;  transform:rotate(-8deg); }
+/* Placed around a 760px box, not the 16:10 slab that used to be here: they
+   sit in the gutters either side of it and stay clear of the popover, which
+   drops out of the box's bottom edge. */
+.showcase__sticker--tl{ left:4%;   top:-16%;  transform:rotate(-8deg); }
 
-.showcase__sticker--tr{ right:-1.5%; top:-7%;  transform:rotate(6deg); }
+.showcase__sticker--tr{ right:4%;  top:-20%;  transform:rotate(6deg); }
 
-.showcase__sticker--bl{ left:2%;     bottom:6%; transform:rotate(5deg); }
+.showcase__sticker--bl{ left:9%;   bottom:2%; transform:rotate(5deg); }
 
-.showcase__sticker--br{ right:1%;    bottom:3%; transform:rotate(-6deg); }
+.showcase__sticker--br{ right:9%;  bottom:6%; transform:rotate(-6deg); }
+
+@media (max-width:900px){
+  .showcase__sticker--bl,.showcase__sticker--br{ display:none; }
+
+}
 
 
 /* brand texture behind the hero type */
@@ -5754,38 +5936,6 @@ h3{ font-family:var(--fd); }
 .scenes__tab{ border-radius:var(--r-pill); }
 .nav__links a,.nav__signin{ border-radius:var(--r-btn); }
 
-/* ── image placeholders: obviously unfinished, still tidy ──
-      <figure class="ph ph--wide" data-ph="Product screen · 2560×1600">
-        <span class="ph__label">Product image</span>
-      </figure>                                                     */
-.ph{
-  position:relative;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:7px;
-  margin:0;
-  aspect-ratio:16 / 10;
-  border-radius:var(--r-card);
-  background:
-    radial-gradient(120% 90% at 50% 0%, var(--paper) 0%, transparent 60%),
-    var(--wash-2);
-  box-shadow:var(--e-3);
-  overflow:hidden;
-}
-.ph--wide{ aspect-ratio:16 / 9; }
-.ph--square{ aspect-ratio:1 / 1; }
-.ph--band{ aspect-ratio:21 / 6; }
-.panel > .ph{ margin-top:clamp(36px, 4vw, 60px); }
-.ph__label{
-  font-family:var(--fm); font-weight:500;
-  font-size:var(--t-mono); letter-spacing:.18em; text-transform:uppercase;
-  color:var(--ink-mute);
-}
-.ph::after{
-  content:attr(data-ph);
-  font-family:var(--fm); font-size:10px; letter-spacing:.08em;
-  color:var(--ink-mute); opacity:.7;
-}
-
 /* ── agent avatars ── */
 .avatar{
   display:block; flex:none;
@@ -5892,7 +6042,7 @@ h3{ font-family:var(--fd); }
 .ladder__steps{ text-align:left; }
 
 @media (max-width:960px){
-  .ph{ aspect-ratio:4 / 3; }
+  .cta__scene{ width:190%; height:clamp(150px, 44vw, 260px); }
 
   /* the drawing moves above the footer at this width and is 312px tall
      (430 x .725), so the buttons need at least that much clearance */

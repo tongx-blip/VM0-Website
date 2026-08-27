@@ -29,7 +29,7 @@
   // chrome, the same argument as .perms and .absui, so the subtree is named
   // here rather than left as a quiet violation of a rule this audit claims
   // to enforce (docs/design-principles.md §1).
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vs__viz,.wfo';
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vs__viz,.wfo,.pbox';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
@@ -53,7 +53,7 @@
 /* ── 2. TYPE-SCALE — page-level type must stay on the scale. Product mocks
       are exempt: they mimic app UI at its own sizes. ───────────────── */
 (() => {
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl';
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl,.pbox';
   const sizes = {};
   document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
     if (el.closest(MOCK) || !el.textContent.trim()) return;

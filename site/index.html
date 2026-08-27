@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=799cf858">
+<link rel="stylesheet" href="styles.css?r=7c3cae4f">
 </head>
 <body>
 
@@ -73,9 +73,41 @@
 
   <!-- the product shot: replace the placeholder with the real capture -->
   <div class="showcase" data-reveal="scale">
-    <figure class="ph ph--wide" data-ph="Product screen · 2560×1600">
-      <span class="ph__label">Product image</span>
-    </figure>
+    <!-- The product's own composer, 1:1: 24px shell, 16px inset, 32px
+         controls, the real placeholder string. See docs/changelog.md. -->
+    <div class="pbox" id="pbox">
+      <p class="pbox__ph">Ask me to automate workflows, manage tasks&hellip;</p>
+      <div class="pbox__row">
+        <div class="pbox__grp">
+          <button class="pbox__ib" type="button" data-unlock aria-label="Attach a file">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05 12.25 20.24a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <button class="pbox__ib" type="button" data-unlock aria-label="Use a template">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+          </button>
+          <button class="pbox__ib" type="button" data-unlock aria-label="Connect a tool">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg>
+          </button>
+        </div>
+        <div class="pbox__grp">
+          <button class="pbox__pick" type="button" data-unlock aria-label="Select model"><span>Select model</span>
+            <svg class="pbox__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            <svg class="pbox__sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+          </button>
+          <button class="pbox__ib" type="button" data-unlock aria-label="Use your voice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect width="6" height="13" x="9" y="2" rx="3"/></svg>
+          </button>
+          <button class="pbox__send" type="button" data-unlock aria-label="Send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="unlock" id="unlock" hidden>
+        <h3 class="unlock__t" id="unlockT">Unlock more features</h3>
+        <p class="unlock__b">Attach files, pick a model, and connect your tools once you sign in.</p>
+        <p class="unlock__a"><a class="unlock__btn" href="#cta">Get started for free</a></p>
+      </div>
+    </div>
     <img class="showcase__sticker showcase__sticker--tl" src="assets/brand/sticker-idea.png?v=085a9c42" alt="" aria-hidden="true">
     <img class="showcase__sticker showcase__sticker--tr" src="assets/brand/avatar-2.png?v=22fa90af" alt="" aria-hidden="true">
     <img class="showcase__sticker showcase__sticker--bl" src="assets/brand/avatar-4.png?v=6fa57d60" alt="" aria-hidden="true">
@@ -1189,6 +1221,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=9ef4d1da"></script>
+<script src="app.js?r=21f64e84"></script>
 </body>
 </html>

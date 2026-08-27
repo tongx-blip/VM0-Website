@@ -1545,4 +1545,62 @@
       if (e.key === 'Escape' && !langMenu.hidden) { langOpen(false); langBtn.focus(); }
     });
   }
+
+  /* ───────────────────────────────────────────────────────────────────
+     14. the hero prompt box: every control is a locked door
+
+     The box is the product's composer, so every control on it looks live.
+     None of them can be — this is a marketing page — so all of them say
+     the same thing: sign in. One note, moved under whichever control was
+     pressed, rather than five notes or one that always sits in the middle
+     and makes you look for what you just clicked.
+     ─────────────────────────────────────────────────────────────────── */
+  var pbox = doc.getElementById('pbox');
+  var unlock = doc.getElementById('unlock');
+  if (pbox && unlock) {
+    var lastTrigger = null;
+
+    function unlockOpen(trigger) {
+      var box = pbox.getBoundingClientRect();
+      var t = trigger.getBoundingClientRect();
+      /* the popover is centred on the control and clamped inside the box by
+         the CSS `clamp()`, so this only has to say where the control is */
+      unlock.style.setProperty('--ux', (t.left + t.width / 2 - box.left) + 'px');
+      unlock.hidden = false;
+      lastTrigger = trigger;
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function unlockClose() {
+      if (unlock.hidden) return;
+      unlock.hidden = true;
+      if (lastTrigger) lastTrigger.setAttribute('aria-expanded', 'false');
+      lastTrigger = null;
+    }
+
+    [].slice.call(pbox.querySelectorAll('[data-unlock]')).forEach(function (btn) {
+      btn.setAttribute('aria-controls', 'unlock');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (lastTrigger === btn) { unlockClose(); return; }
+        unlockOpen(btn);
+      });
+    });
+
+    doc.addEventListener('click', function (e) {
+      if (!unlock.contains(e.target)) unlockClose();
+    });
+    doc.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !unlock.hidden) {
+        var back = lastTrigger;
+        unlockClose();
+        if (back) back.focus();
+      }
+    });
+    /* a popover pinned to a control has to follow it, and the control moves
+       with the layout */
+    window.addEventListener('resize', unlockClose);
+  }
 })();

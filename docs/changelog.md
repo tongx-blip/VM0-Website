@@ -6,6 +6,70 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the hero is the product's own prompt box
+
+Feedback 02 — *"这个页面有三个方向：1. chatbox 2. UI 页面 3. 品牌向的
+storytelling"* — resolved as (1), with the spec: *"做成prompt box，一比一的
+prompt box … 用户点任何prompt box上的btn都会出发unlock的弹窗 … 用我们的
+Design token & styles"*.
+
+**Every number in it is read out of `turbo/apps/platform`, not eyeballed from
+a screenshot.** The live app is behind auth, so the reference is the source:
+
+| | value | where it comes from |
+|---|---|---|
+| shell radius | 24px | `--zero-composer-radius: 1.5rem` |
+| shell border | 0.7px | `.zero-composer` on `gray-400` |
+| shell shadow | `0 2px 12px` + `0 0 0 .5px` | `--zero-card-shadow` |
+| editor inset | 16px | `px-4 pt-4` |
+| editor height | 96px (68 under 560) | `min-h-[96px]` / `min-h-[68px]` |
+| control row | 16px, 4px above | `px-4 pb-4 pt-1` |
+| control size | 32px | `size="icon-sm"` → `h-8 w-8` |
+| control radius | 8px | Button's `rounded-lg` |
+| glyph | 18px | `iconSize="md"` |
+| icons | Paperclip, LayoutTemplate, Plug, Mic, ArrowUp, ChevronDown | the composer's own lucide imports |
+| placeholder | "Ask me to automate workflows, manage tasks…" | `chat.composer.placeholder`, en-US |
+| picker label | "Select model" | `chat.composer.selectModel` |
+| picker on mobile | collapses to a 32px icon | `h-8 w-8 px-0 sm:w-auto sm:px-3` |
+
+**Colour comes from this page, not the app.** Same brand orange either way, and
+a mock that ignored the page's ink would be the one thing on it that does not
+follow the theme. One exception, named where it lives: the shell's edge. The
+page's `--hairline` is its divider weight, and the composer's edge is what
+makes the box read as the product's at all, so it is taken from the ink
+channel at the alpha that lands on the app's own `gray-400` — derived, not
+typed, and it therefore swaps with the theme.
+
+**The unlock note.** Every control on the box looks live and none of them can
+be, so all of them say the same thing. It is a popover hanging off the box
+rather than a modal over the page — nothing here is destructive and nothing
+needs the page dimmed to be understood — and it moves under whichever control
+was pressed, instead of sitting in the middle and making you look for what you
+just clicked. Its button is the PRODUCT's, not the page's: sentence case, 8px
+radius, brand primary. Every button on this page is mono uppercase; inside a
+picture of the app that would be the one thing in the frame that is not the
+app (RULES P1) — and it matches the platform's own rule that a dialog's
+primary is the brand colour while a page's primary is the dark neutral.
+
+**Three things the build turned up:**
+
+* **The hero clips**, and the section under it is a card that would cover
+  anything escaping anyway — so the popover's room had to be *inside*. The box
+  moved up by what the bottom reserve grew, which leaves the hero's height
+  alone.
+* **The popover had no edge in dark mode.** Its ring was `rgb(var(--ink-rgb) /
+  .06)` — the shadow channel again, which does not swap with the theme, so it
+  drew near-black on near-black. Same defect as the index bar two entries up,
+  found the same way. It takes the box's own derived edge now.
+* **`.ph`, the image placeholder, is gone** — the hero was its only user, and
+  a component nothing references is dead weight in a file people read.
+
+`.pbox` is on the two MOCK exemption lists in `tools/audit.js`: it draws a
+border because the app draws a border, which is exactly what the exemption is
+for.
+
+---
+
 ## 2026-08-27 · the nine that did not need a decision
 
 Tong sent 22 annotated screenshots (web-design-feedback.sites.vm0.io) and asked
