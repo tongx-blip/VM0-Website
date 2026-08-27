@@ -1010,6 +1010,14 @@ h3{ font-family:var(--fd); }
   padding-bottom:0;
   border-top:0;
   overflow:hidden;
+  /* THE PAGE'S OWN GROUND, not a white slab. Every other section here is a
+     white card floating on --wash; the hero was the one full-bleed white
+     panel, so it ended in a hard seam against the first grey gap. On --wash
+     the hero reads as page rather than as a section, the cards below start
+     cleanly, and the prompt box — white, like the app's composer on the
+     app's off-white background — gets the separation it needs to read as a
+     surface at all. */
+  background:transparent;
 }
 .stack{
   grid-column:1 / 13;
@@ -1079,6 +1087,63 @@ h3{ font-family:var(--fd); }
   clip-path:inset(100% -20% -30% -20%);
 }
 #rotator .line{ white-space:nowrap; }
+
+/* ── the hero's text stack: three tiers is one too many ──────────────
+   Measured against the field before changing anything. Linear: 64px
+   headline straight into a 15px body — two tiers. Attio: a 13px eyebrow,
+   a 64px headline, an 18px line — two tiers and a marker. v0, whose hero
+   IS a prompt box like ours: one 32px line and nothing else. Cursor: one
+   26px sentence. Nobody stacks a display, a mid-size sentence and a
+   paragraph, because the middle one reads as a second headline arguing
+   with the first — which is exactly what ours did at 96 / 38 / 20, three
+   centred grey-ish blocks in one typeface.
+
+   Three ways out, switched by `data-hero` on the section so the choice is
+   one word rather than a rewrite. All three keep every word: the copy is
+   not ours to cut, only its arrangement.  */
+
+/* A · FOLD — the rotating line drops to body size and becomes the leading
+   sentence of the paragraph, in full-strength ink against the paragraph's
+   softer grey. This is the page's OWN rule, already written down for
+   sections: "a section's claim, folded into the first sentence of its
+   paragraph … it carries more weight than the sentence after it". The
+   hero was the one place not obeying it. */
+.hero[data-hero="fold"] .display--tail{
+  font-family:var(--fb);
+  font-size:var(--t-body); line-height:1.6;
+  letter-spacing:-.005em;
+  font-weight:600;
+  color:var(--ink);
+  white-space:normal;
+}
+.hero[data-hero="fold"] #rotator{ min-height:1.6em; }
+.hero[data-hero="fold"] #rotator .line{ white-space:normal; }
+/* the two read as one paragraph, so the gap between them closes to a
+   line's leading rather than the stack's */
+.hero[data-hero="fold"] .hero__body{ margin-top:calc(clamp(18px, 2vw, 26px) * -1 + 4px); }
+
+/* B · EYEBROW — the rotating line moves ABOVE the display and becomes a
+   marker: small, quiet, sentence case. Attio's shape. It gives the
+   rotation a reason to exist — a line that changes above a thesis that
+   does not reads as "here is another way to put it" — and it buys the
+   display the top of the page to itself. */
+.hero[data-hero="eyebrow"] .stack{ position:relative; }
+.hero[data-hero="eyebrow"] .display--tail{
+  order:-1;
+  font-family:var(--fb);
+  font-size:var(--t-sm); line-height:1.4;
+  font-weight:500; letter-spacing:0;
+  color:var(--ink-mute);
+}
+.hero[data-hero="eyebrow"] #rotator{ min-height:1.4em; }
+
+/* C · CUT — the middle tier leaves the hero entirely: display, paragraph,
+   buttons, box. What v0 and Cursor do when the demo is the hero. The
+   boldest of the three and the only one that loses five lines of copy
+   from the page, which is why it is not the default. */
+/* #rotator sets `display:block` from an ID, which outranks a class+attribute
+   selector — the first version of this rule did nothing at all. */
+.hero[data-hero="cut"] #rotator{ display:none; }
 
 /* the product shot, with the brand stickers pinned around it */
 .showcase{

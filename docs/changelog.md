@@ -6,6 +6,58 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the hero stops being a white slab, and stops arguing with itself
+
+Tong: *"header的三段text设计有点粗糙 … 你也可以去做一些网站hero调研 … hero可以用
+默认的背景色现在hero白色背景和下边的section截开有点奇怪"*.
+
+**The ground.** Every section on this page is a white card floating on
+`--wash`. The hero was the one full-bleed white panel, so it ended in a hard
+seam against the first grey gap — the page started as a white sheet and then
+turned into cards. It sits on the page's own ground now. That also fixes
+something the prompt box needed: white-on-white gave it nothing to be a
+surface *against*, and white on `--wash` is exactly the relationship the app's
+composer has with the app's background.
+
+**The three text blocks.** Measured the field before touching anything:
+
+| | hero text stack |
+|---|---|
+| Linear | 64px headline → 15px body. Two tiers. |
+| Attio | 13px eyebrow → 64px headline → 18px line. Two tiers and a marker. |
+| v0 (a prompt-box hero, like ours) | one 32px line. That is all. |
+| Cursor | one 26px sentence, left. |
+
+Nobody stacks a display, a mid-size sentence and a paragraph. Ours was
+96 / 38 / 20 — three centred, grey-ish blocks in one typeface — and the middle
+one read as a second headline arguing with the first. The two with a prompt
+box in the hero are the most direct about it: when the box is the signature
+element, the copy above it collapses to one line.
+
+Three ways out, on `data-hero` so the choice is one word rather than a
+rewrite, and all three keep every word — the copy is not ours to cut, only its
+arrangement:
+
+* **`fold`** (default) — the rotating line drops to body size and becomes the
+  leading sentence of the paragraph, full-strength ink against the paragraph's
+  softer grey. This is the page's OWN rule, already written down for sections:
+  *"a section's claim, folded into the first sentence of its paragraph … it
+  carries more weight than the sentence after it"*. The hero was the one place
+  not obeying it.
+* **`eyebrow`** — the rotating line moves above the display at 15px, quiet.
+  Attio's shape. It gives the rotation a reason to exist and hands the display
+  the top of the page.
+* **`cut`** — the middle tier leaves the hero entirely. What v0 and Cursor do.
+  The boldest, and the only one that loses five lines of copy, which is why it
+  is not the default.
+
+**`cut` did nothing on the first pass.** `#rotator` sets `display:block` from
+an ID, which outranks `.hero[data-hero="cut"] .display--tail`. The screenshot
+is what caught it — the variant rendered identically to the default and the
+CSS looked correct.
+
+---
+
 ## 2026-08-27 · the hero is the product's own prompt box
 
 Feedback 02 — *"这个页面有三个方向：1. chatbox 2. UI 页面 3. 品牌向的
