@@ -6,6 +6,85 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the scene is a layout, not an arrangement
+
+Tong, with three screenshots: *"icon太小了。header右边的padding和左边的padding
+不一致。两张卡的距离太近了 … icon如果是圆形就圆形，方形就和header统一，不要有
+椭圆的。图二的头像第一版做的就挺好，应该和card有overlap，并且文字可能需要换个
+位置。图三两个cards没有居中 … 整体检查一下字体大小和字重，比如图三的字号就一
+大堆。看着很不舒服。即使是视觉展示，ui和Responsive也要严谨"*.
+
+Seven complaints, five root causes. Each one was a number that had been
+guessed instead of derived.
+
+**Composition was done with `transform:scale()`.** Five resting states
+carried `.85`, `.8`, `1.04`, `.8` and `.78`, so the same 12.5px label
+rendered at five sizes and a `.78` card sat beside a `1.0` list. That is
+what "字号一大堆" was looking at — not seven type sizes but one type size
+photographed through five lenses. Every resting scale is gone; objects
+move and fade, and nothing changes size except during an entrance.
+
+**The type scale had six sizes, three of them inside 5% of each other.**
+17.6 / 16.7 / 16.2 / 15.9 / 12.0 / 11.4. Three near-identical body sizes
+do not read as a hierarchy, they read as carelessness. Collapsed to
+three: `1em` for a card's name, `.88em` for anything read as a sentence,
+`.68em` for anything read as a label — with nested sizes stated as the
+fraction that lands back on one of the three, so a label inside a `.88em`
+row is written `.77em`.
+
+**Every inset was written `1em`, which meant four different insets.**
+`1em` resolves in each element's own font-size, so the header indented
+17.6px and the list rows 15.5px — the row dots sat two pixels inside the
+icon directly above them. Hoisting it to `--wfo-pad:1em` on the card was
+not enough either: an *unregistered* custom property inherits as raw
+tokens, so the `em` was simply re-resolved in the child, which is the
+same bug wearing a variable. `@property --wfo-pad{syntax:'<length>'}`
+makes it compute once, in the card's em. Header, steps, rows, footer and
+chip now all land on 17.6px, measured.
+
+**The header tag was absolutely positioned.** `right:1.1em` against a
+`1em` left padding is a 0.1em asymmetry you can see, and the title
+reserved room for it with a guessed `padding-right:6.5em`, so a longer
+tag was cut off — "RUNNIN". It is a three-column grid now: one inset on
+both sides, and the tag has its own track, so it cannot collide with the
+title at any width.
+
+**The canvas was the wrong shape for its contents.** At 760×460 the card
+measured 59% of the canvas height on its own, which is why step 3's
+avatars ended up *inside* it and step 4's pair had 2cqw between them.
+Measured the card (18em: header 4.2, steps 11.3, footer 2.7), derived
+545 from it, and re-placed all four states from the probe rather than by
+eye. Every state's subject is now centred to within 1cqh, the step-2
+memory recedes straight up on the card's own axis instead of drifting
+left, the step-3 avatars lap the card's bottom edge by a third of their
+height with the caption dropped to its own row below, and step 4's two
+cards are centred as a pair with 8cqw between them — the run card giving
+up 6cqw of width so the list has room to set every name on one line.
+
+**The empty footer.** Steps 1 and 3 hid the footer with `opacity:0`,
+which left a 4.2em blank band inside the card and made the avatars lap
+into nothing. It collapses now.
+
+**And the responsive bug underneath all of it: `2.05cqw` on the canvas
+was measuring the frame.** An element is never its own container, so a
+container unit written on `.wfsc__cv` — which *is* the container —
+resolved against the scene outside it. Whenever the canvas was
+height-capped the type came out oversized relative to it and every object
+grew in percentage terms: the card ran 37cqh tall at 1920×1080 and 43cqh
+at 1024×900. The composition only ever held at one window size. Written
+as `min(2.05cqw, calc(2.05cqh * 760 / 545))` it is 2.05% of whichever
+dimension the canvas actually took, and the four states now measure
+identically at 1024×900, 1280×760, 1440×700, 1440×900 and 1920×1080.
+
+Two of these were found only because a probe was fixed first. `resize`
+is not a command — it is `set viewport` — and the four "identical across
+every viewport" readings that looked like a pass were four readings of
+the same 1440px window. And the inner-alignment numbers were nonsense
+until transitions were disabled, because a 640ms transform was still
+running under the measurement.
+
+---
+
 ## 2026-08-26 · half as many things, drawn twice the size
 
 Tong, with three reference screenshots beside ours: *"logo 背景有点亮，除了

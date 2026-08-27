@@ -1226,6 +1226,84 @@ Two fades on this page, and they are not the same case:
   more` as an exit. If a fade is ever extended to text nobody can bring to
   full strength, neither judgement holds.
 
+## 4q1. A container unit written on the container measures the wrong box
+
+An element is **never its own query container**. A `cqw` written on the same
+element that declares `container-type` resolves against the *next container
+out*. On a letterboxed canvas — `width:min(100%, calc(100cqh * W / H))` inside
+a scene — that is the frame, not the canvas, so the moment the canvas is
+height-capped the type is oversized relative to what it sits in and every
+child grows in percentage terms. The scene's card measured 37cqh tall at
+1920×1080 and 43cqh at 1024×900 from exactly this.
+
+Either move the declaration to a wrapper *inside* the container, or write the
+letterbox out longhand against the outer container:
+
+    font-size: min(2.05cqw, calc(2.05cqh * 760 / 545));
+
+Check it, do not assume it:
+
+    getComputedStyle(cv).fontSize / cv.getBoundingClientRect().width  // → 2.05%
+
+at three viewports, at least one of them height-constrained (1440×700) and one
+width-constrained (1024×900). If the ratio is not constant, the unit is
+resolving against the wrong box.
+
+## 4q2. One inset per card, and `1em` is not it
+
+`padding: … 1em` on four parts of one card is four different insets, because
+`em` resolves in each part's own font-size — a `.88em` row indents 15.5px
+under a `1em` header's 17.6px, and the dots sit two pixels inside the icon
+directly above them.
+
+Hoisting it to a custom property is not the fix on its own. An **unregistered**
+custom property inherits as raw tokens, so `--pad:1em` declared on the card is
+re-resolved in whichever child substitutes it — the same bug wearing a
+variable. Register it so it computes once, at the declaration:
+
+    @property --wfo-pad{ syntax:'<length>'; inherits:true; initial-value:0px; }
+
+Verify by measuring, with **transitions disabled** (see 4n2b) and the object's
+own `transform` cleared, that every inset in the card is one number:
+
+    hdIcL 17.6  tagR 17.6  bodyL 17.6  chipL 17.6
+
+A hidden sibling measured instead of a visible one will read wrong for an
+innocent reason — `scale(.86)` moves a bounding box's left edge inward by 7%
+of its width. Measure the element that is actually on.
+
+## 4q3. Composition is position, never scale
+
+A resting state may not carry `transform:scale()`. Five states at `.85`, `.8`,
+`1.04`, `.8` and `.78` render the same 12.5px label at five sizes and put a
+`.78` card beside a `1.0` list — which reads to anyone looking at it as a mess
+of type sizes, not as depth. Objects move, rotate and fade between states;
+scale belongs to an entrance and ends at 1.
+
+    [...scene.querySelectorAll('[class*="--"]')]
+      .map(e => getComputedStyle(e).transform)      // no matrix with a≠1 at rest
+
+## 4q4. Three type sizes in a mock, not six
+
+Count the distinct computed sizes inside a figure across **all** its states:
+
+    const seen={}; for (const s of steps){ scene.dataset.step=s; await wait(700);
+      scene.querySelectorAll('*').forEach(e=>{const c=getComputedStyle(e);
+        if(e.textContent.trim()) seen[c.fontSize+' '+c.fontWeight]=1}) }
+
+Three is the ceiling: a name, a sentence, a label. Six with three of them
+inside 5% of each other (17.6 / 16.7 / 16.2 / 15.9) is not a hierarchy. State
+nested sizes as the fraction that lands back on one of the three — a `.68em`
+label inside a `.88em` row is written `.77em`.
+
+## 4q5. `resize` is not a command
+
+It is `agent-browser set viewport <w> <h>`. `resize` returns an error the
+shell swallows, the window stays at whatever it was, and a sweep across four
+viewports returns four readings of the same one — which looks exactly like a
+perfectly responsive layout. Always print `innerWidth` alongside the
+measurement so the sweep proves it actually moved.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

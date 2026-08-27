@@ -2776,12 +2776,25 @@ h3{ font-family:var(--fd); }
    whose type stops scaling is a canvas whose layout breaks: fixed boxes,
    growing text. Legibility at the small end is handled by the stacked
    layout below 820px, not by a floor here. */
+/* 760 × 545, not 760 × 460. The card is 18em tall on its own — measured,
+   not estimated — and at the old ratio that was 59% of the canvas, which
+   left no room to put anything beneath it without a collision. The ratio
+   is a consequence of what has to fit, so it is derived from the tallest
+   object rather than picked. */
 .wfsc__cv{
   position:relative;
-  aspect-ratio:760 / 460;
-  width:min(100%, calc(100cqh * 760 / 460));
+  aspect-ratio:760 / 545;
+  width:min(100%, calc(100cqh * 760 / 545));
   container-type:size;
-  font-size:2.05cqw;
+  /* Resolved against the SCENE, not the canvas — an element is never its
+     own container, so a bare 2.05cqw here measured the frame and not the
+     letterboxed canvas inside it. Whenever the canvas was height-capped
+     the type came out oversized against it, and every object grew in
+     percentage terms: the card ran 37cqh tall at 1920 and 43cqh at 1024,
+     which is why the composition only held at one window size. Written
+     out the long way, it is 2.05% of whichever of the two the canvas
+     actually took. */
+  font-size:min(2.05cqw, calc(2.05cqh * 760 / 545));
 }
 
 /* ── the ground: a tinted field, not a painting ──────────────────────
@@ -2824,11 +2837,25 @@ h3{ font-family:var(--fd); }
 /* ── the objects ─────────────────────────────────────────────────────
    Positioned in container units so the whole scene scales with the mat
    instead of being measured and fitted by script. */
+/* ONE inset for the whole card. Written as `1em` on each part it came
+   out four different numbers, because each part has its own font-size:
+   the header indented 17.6px and the list rows 15.5px, so the dots sat
+   2px inside the icon directly above them. Declaring `--wfo-pad:1em` on
+   the card is not enough on its own — an UNREGISTERED custom property
+   inherits as raw tokens, so the `em` is re-resolved in whatever child
+   substitutes it, which is the same bug wearing a variable. Registering
+   it as a <length> makes it compute once, in the card's em, and inherit
+   as an absolute value. */
+@property --wfo-pad{ syntax:'<length>'; inherits:true; initial-value:0px; }
+
+
 .wfo{
+  --wfo-pad:1em;
   position:absolute;
   opacity:0; pointer-events:none;
   transition:opacity var(--t-state) var(--e-out),
-             transform var(--t-reveal) var(--e-out);
+             transform var(--t-reveal) var(--e-out),
+             width var(--t-reveal) var(--e-out);
   will-change:transform, opacity;
 }
 
@@ -2847,7 +2874,7 @@ h3{ font-family:var(--fd); }
 
 /* 1 · the ask ─────────────────────────────────────────────────────── */
 .wfo--ask{
-  left:5cqw; top:9cqh; width:min(46cqw, 30rem);
+  left:12cqw; top:22cqh; width:min(44cqw, 30rem);
   padding:1.15em 1.3em;
   transform:translateY(1.4em) rotate(-1.1deg);
 }
@@ -2857,7 +2884,7 @@ h3{ font-family:var(--fd); }
 .wfo--ask figcaption{
   display:flex; align-items:center; gap:.55em;
   margin-top:.85em; color:var(--ink-mute);
-  font-family:var(--fm); font-size:.72em; letter-spacing:.07em; text-transform:uppercase;
+  font-family:var(--fm); font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
 }
 
 .wfo--ask figcaption img{ border-radius:var(--r-pill); }
@@ -2865,19 +2892,29 @@ h3{ font-family:var(--fd); }
 .wfsc[data-step="1"] .wfo--ask{ opacity:1; transform:rotate(-1.1deg); }
 
 /* it recedes rather than vanishing — the workflow came from it */
+/* NO SCALE IN A RESTING STATE. Five different scale() values across the
+   four steps meant the same 12.5px label rendered at five sizes — a
+   0.78 card beside a 1.0 list is two type scales in one picture, and it
+   read exactly as "字号一大堆". Objects move and fade; they do not
+   resize. Scale is for an entrance, not for composition. */
+/* It recedes straight UP, on the card's own axis. Drifting up-LEFT put a
+   44cqw shape at 8cqw with a dead-centre card beside it, and the group
+   came out 8/27 — every eye reads that as "the picture slid left". A
+   subject that is centred can only stay centred if what recedes recedes
+   along the same axis. */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.34; transform:translate(-3cqw, -11cqh) scale(.85) rotate(-1.1deg);
+  opacity:.3; transform:translate(11cqw, -20cqh) rotate(-1.1deg);
 }
 
 .wfsc[data-step="3"] .wfo--ask,
 .wfsc[data-step="4"] .wfo--ask{
-  opacity:0; transform:translate(-6cqw, -6cqh) scale(.8) rotate(-1.1deg);
+  opacity:0; transform:translate(11cqw, -37cqh) rotate(-1.1deg);
 }
 
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
 .wfo--run{
-  left:26cqw; top:37cqh; width:min(48cqw, 32rem);
+  left:36cqw; top:39cqh; width:min(46cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 
@@ -2886,44 +2923,67 @@ h3{ font-family:var(--fd); }
 /* THE PIVOT: it lifts, straightens and settles into the middle as the
    thing the team keeps, rather than a thing that happened once */
 .wfsc[data-step="2"] .wfo--run{
-  opacity:1; transform:translate(0, -10cqh) scale(1.04) rotate(0deg);
+  opacity:1; transform:translate(-9cqw, -11cqh) rotate(0deg);
 }
 
-/* Step 3 has to hold THREE things — the card, the team and the line —
-   and the card alone is 53% of the canvas. Measured, not eyeballed: at
-   scale .94 it ran 21→74% while the avatars sat at 58→65%, i.e. inside
-   it. It lifts and shrinks so the other two have somewhere to be. */
+/* Step 3 holds THREE things — the card, the team and the line. The card
+   lifts so the other two have somewhere to be; it does not shrink, and
+   the avatars are MEANT to lap its bottom edge by half their height.
+   That lap is the point: the people are on the workflow, not filed
+   under it. Every other pair in this scene has to clear. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -21cqh) scale(.8) rotate(-.6deg);
+  opacity:1; transform:translate(-9cqw, -16cqh) rotate(-.6deg);
 }
 
 .wfsc[data-step="4"] .wfo--run{
-  opacity:1; transform:translate(-19cqw, -6cqh) scale(.78) rotate(-1.4deg);
+  opacity:1; width:min(40cqw, 28rem);
+  transform:translate(-29cqw, -11cqh) rotate(-1.2deg);
 }
 
+/* A GRID, not a flex row with an absolutely-placed tag. The tag sat at
+   `right:1.1em` against a 1em left padding — a 0.1em asymmetry you can
+   see — and the title reserved room for it with a guessed
+   `padding-right:6.5em`, so a longer tag simply got cut off ("RUNNIN").
+   Three columns, one inset on both sides, and the tag cannot collide
+   with the title because it has its own track. */
 .wfo__hd{
-  position:relative;
-  display:flex; align-items:center; gap:.6em;
-  padding:.85em 1em; border-bottom:1px solid var(--hairline);
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center; gap:.7em;
+  padding:.8em var(--wfo-pad); border-bottom:1px solid var(--hairline);
 }
 
+/* ONE SHAPE FAMILY. App marks are rounded squares at a radius
+   proportional to their own size, so the header mark and the row marks
+   read as the same kind of object at two sizes instead of "a square and
+   a circle". People stay circles — an avatar is not an app. Both went up
+   a size: at 1.35em a connector mark is a smudge. */
 .wfo__ic{
-  width:1.65em; height:1.65em; flex:none;
-  border-radius:var(--r-xs); background:var(--tile);
+  width:2em; height:2em; flex:none;
+  border-radius:.58em; background:var(--tile);
   display:grid; place-items:center;
 }
 
-.wfo__ttl{ font-weight:500; font-size:.95em; padding-right:6.5em; }
+.wfo__ic img{ width:1.15em; height:1.15em; }
+
+/* THREE type sizes in this whole scene: 1em for a card's name, .88em for
+   anything read as a sentence, .68em for anything read as a label. It
+   carried six — 17.6 / 16.7 / 16.2 / 15.9 / 12.0 / 11.4 — and three of
+   them sat inside 5% of each other, which is not a hierarchy, it is
+   noise. Nested sizes are stated as the fraction that lands back on one
+   of the three (a .68em label inside a .88em row is .77em). */
+.wfo__ttl{ font-weight:500; font-size:1em; min-width:0;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .wfo__tag{
-  margin-left:auto; font-style:normal;
+  grid-column:3; grid-row:1; font-style:normal; justify-self:end;
   font-family:var(--fm); font-size:.68em; letter-spacing:.1em; text-transform:uppercase;
   color:var(--ink-mute);
 }
 
 /* the header label is the state, so it swaps with the state */
-.wfo__tag--run,.wfo__tag--wf{ position:absolute; right:1.1em; top:50%; transform:translateY(-50%);
-  transition:opacity var(--t-state) var(--e-out); }
+/* the two state tags share one grid cell, so neither reserves width
+   from the other and the swap cannot move anything */
+.wfo__tag--run,.wfo__tag--wf{ transition:opacity var(--t-state) var(--e-out); }
 
 .wfo__tag--wf{ opacity:0; }
 
@@ -2936,11 +2996,11 @@ h3{ font-family:var(--fd); }
 .wfsc:not([data-step="1"]) .wfo__tag--wf{ opacity:1; }
 
 
-.wfo__steps{ list-style:none; margin:0; padding:.7em 1em .8em; }
+.wfo__steps{ list-style:none; margin:0; padding:.55em var(--wfo-pad) .65em; }
 
 .wfo__steps li{
   display:flex; align-items:center; gap:.65em;
-  padding:.42em 0; color:var(--ink-soft); font-size:.92em;
+  padding:.3em 0; color:var(--ink-soft); font-size:.88em;
   opacity:.32;
   transition:opacity var(--t-state) var(--e-out);
   transition-delay:calc(var(--si, 0) * 90ms);
@@ -2952,11 +3012,13 @@ h3{ font-family:var(--fd); }
 .wfsc:not([data-step="1"]) .wfo__steps li{ opacity:1; }
 
 .wfo__mk{
-  width:1.35em; height:1.35em; flex:none;
-  border-radius:var(--r-xs); background:var(--paper);
+  width:1.7em; height:1.7em; flex:none;
+  border-radius:.49em; background:var(--paper);
   box-shadow:0 0 0 1px var(--hairline);
   display:grid; place-items:center;
 }
+
+.wfo__mk img{ width:1em; height:1em; }
 
 /* The two chips are two STATES of the same slot, so they sit on one
    anchor. Left in flow, the hidden "Save workflow" chip still took its
@@ -2964,11 +3026,11 @@ h3{ font-family:var(--fd); }
    moved the visible schedule chip sideways. That was the timestamp that
    "kept moving". */
 .wfo__foot{
-  position:relative; height:2.9em;
-  padding:.75em 1em; border-top:1px solid var(--hairline);
+  position:relative; height:2.7em;
+  padding:.75em var(--wfo-pad); border-top:1px solid var(--hairline);
 }
 
-.wfo__foot .wfo__chip{ position:absolute; left:1em; top:50%; }
+.wfo__foot .wfo__chip{ position:absolute; left:var(--wfo-pad); top:50%; }
 
 .wfo__chip{
   display:inline-flex; align-items:center; gap:.4em;
@@ -2993,14 +3055,25 @@ h3{ font-family:var(--fd); }
 .wfsc[data-step="4"] .wfo__chip--sched{ opacity:1; transform:translateY(-50%); }
 
 .wfsc[data-step="1"] .wfo__foot,
-.wfsc[data-step="3"] .wfo__foot{ opacity:0; }
+.wfsc[data-step="3"] .wfo__foot{
+  opacity:0; height:0; padding-top:0; padding-bottom:0; border-top-width:0;
+}
 
-.wfo__foot{ transition:opacity var(--t-state) var(--e-out); }
+.wfo__foot{ transition:opacity var(--t-state) var(--e-out),
+              height var(--t-state) var(--e-out),
+              padding var(--t-state) var(--e-out); }
 
 
 /* 3 · the workspace it now belongs to ─────────────────────────────── */
 .wfo--team{
-  left:24cqw; top:67cqh; display:flex; align-items:center; gap:.75em;
+  /* Aligned to the CARD's left edge, not to an eyeballed indent, and
+     laid out as a grid so the caption can drop to its own row. Beside
+     the avatars it would have sat half over the card — the avatars lap
+     the card on purpose, the label must not. */
+  left:27cqw; top:58cqh;
+  display:grid; grid-template-columns:repeat(3, auto);
+  justify-content:start; align-items:center;
+  column-gap:.7em; row-gap:.6em;
 }
 
 .wfo__who,.wfo__ran{ position:relative; display:block; opacity:0; transform:translateY(1.2em) scale(.8);
@@ -3015,9 +3088,9 @@ h3{ font-family:var(--fd); }
    small. A label that cannot fit under the thing it labels belongs
    beside the group instead. */
 .wfo__ran{
-  font-style:normal; font-family:var(--fm); font-size:.66em; letter-spacing:.08em;
+  grid-column:1 / -1;
+  font-style:normal; font-family:var(--fm); font-size:.68em; letter-spacing:.08em;
   text-transform:uppercase; color:var(--ink-mute); white-space:nowrap;
-  margin-left:.35em;
 }
 
 .wfsc[data-step="3"] .wfo--team{ opacity:1; }
@@ -3031,8 +3104,8 @@ h3{ font-family:var(--fd); }
 
 
 .wfo--perm{
-  left:24cqw; top:83cqh; width:min(44cqw,28rem);
-  color:var(--ink-soft); font-size:.9em;
+  left:27cqw; top:74cqh; width:min(46cqw,29rem);
+  color:var(--ink-soft); font-size:.88em;
   transform:translateY(.8em);
 }
 
@@ -3044,25 +3117,36 @@ h3{ font-family:var(--fd); }
 /* 4 · it stops needing to be asked ────────────────────────────────── */
 
 .wfo--list{
-  right:4cqw; top:31cqh; width:min(38cqw, 25rem);
+  right:7cqw; top:30cqh; width:min(38cqw, 25rem);
   transform:translateX(2.4em) rotate(.9deg);
 }
 
 .wfsc[data-step="4"] .wfo--list{ opacity:1; transform:rotate(.9deg); }
 
+/* Two lines per row, always — name over schedule. As a one-line flex row
+   the name and the time competed for the same 126px: "Monthly product
+   newsletter" wrapped to two lines and "1ST 09:00" wrapped to two, so
+   three rows came out three different heights and the block read as a
+   pile of type sizes. Giving each field its own line makes every row the
+   same height regardless of how long the name is. */
 .wfo__row{
-  display:flex; align-items:center; gap:.6em;
-  padding:.7em 1em; border-bottom:1px solid var(--hairline);
-  font-size:.9em;
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  align-items:center; column-gap:.6em; row-gap:.08em;
+  padding:.55em var(--wfo-pad); border-bottom:1px solid var(--hairline);
+  font-size:.88em;
 }
+
+.wfo__row i{ grid-row:1 / span 2; align-self:center; }
+
+.wfo__row span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .wfo__row:last-child{ border-bottom:0; }
 
 .wfo__row i{ width:.5em; height:.5em; flex:none; border-radius:var(--r-pill); background:rgb(var(--ok-rgb) / .7); }
 
 .wfo__row em{
-  margin-left:auto; font-style:normal;
-  font-family:var(--fm); font-size:.72em; letter-spacing:.07em; text-transform:uppercase;
+  grid-column:2; justify-self:start; white-space:nowrap; font-style:normal;
+  font-family:var(--fm); font-size:.77em; letter-spacing:.07em; text-transform:uppercase;
   color:var(--ink-mute);
 }
 
