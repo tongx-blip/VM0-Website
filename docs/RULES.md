@@ -133,6 +133,9 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F7 | **Tie a figure to the page with a token, not with adjacency.** | `--step-*` hues are shared by the scene's field and the step markers; adjacency does not survive someone editing one side. | QA §4n2 |
 | F8 | **A physical metaphor is a different register** — paper, notes, rotation, print shadows. Available for a brand moment, wrong for a figure whose subject is software. | Mixing the two makes the software look like a prop ("更像是物理世界"). | By eye |
 | F9 | **Check the geometry in every state, not only at rest.** N states are N compositions. | A card/list overlap and a stage that resized between its own beats both shipped in one week; the second broke the last beat entirely. | QA §4n2 |
+| F11 | **A figure that must be read whole fits the window** — design size plus one scale factor, with a legibility floor. Available height is the stage offset minus the header, not the offset doubled. | A stage sized only by its content ran off the bottom of a 700px window; mirroring the whole top offset threw away 60px on windows that did not need it. | QA §4n3 |
+| F12 | **A composition is designed at a fixed ratio and centred**, never assembled from per-object container units. | Independent `cqw`/`cqh` anchors drift apart when the frame's *aspect* changes; at wide-and-short the whole scene sat in a corner. | QA §4n3 |
+| F13 | **Two states of one slot share one anchor.** A hidden element still takes its width. | An `opacity:0` chip kept its place in flow and pushed the visible one sideways on every resize — read as a timestamp that "kept moving". | QA §4n3 |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process

@@ -1384,12 +1384,47 @@
        a stale maximum forever. Width is the tell: a beat change never
        alters it, a resize always does. */
     var ctrlGrid = doc.querySelector('.ctrl');
+    var ctrlStage = doc.querySelector('.ctrl__stage');
     var ctrlMax = 0, ctrlW = 0;
+
+    /* THE STAGE FITS THE VIEWPORT, and its contents scale to match.
+       The frame was as tall as the product mock inside it and nothing
+       else — 722px, whatever the browser was. On a short window the
+       screen simply ran off the bottom and the reader never saw the row
+       the whole beat was about.
+
+       So the mock keeps its own design size and the stage scales it, the
+       way a photograph is fitted to a frame: one factor, everything
+       inside it in proportion. `offsetHeight` ignores transforms, so the
+       natural height keeps measuring correctly while the scale is on.
+
+       A floor of 0.62: below that the product's own 13px rows stop being
+       readable, and a picture nobody can read is worse than one that is
+       cropped. Under it the frame simply keeps its height. */
     function ctrlHeight() {
       if (!ctrlGrid) return;
       if (ctrlWin.offsetWidth !== ctrlW) { ctrlW = ctrlWin.offsetWidth; ctrlMax = 0; }
       ctrlMax = Math.max(ctrlMax, ctrlWin.offsetHeight);
-      ctrlGrid.style.setProperty('--ctrl-h', ctrlMax + 'px');
+
+      var pad = 0;
+      var frame = doc.querySelector('.ctrl__frame');
+      if (frame) {
+        var fs = getComputedStyle(frame);
+        pad = parseFloat(fs.paddingTop) + parseFloat(fs.paddingBottom);
+      }
+      var top = ctrlStage ? parseFloat(getComputedStyle(ctrlStage).top) || 0 : 0;
+      /* The bottom air is the stage's own offset MINUS the header, not the
+         whole offset: the top number exists to clear a floating header and
+         there is no header at the bottom. Mirroring it whole threw away
+         60px of usable height and scaled the mock down on viewports that
+         did not need it. */
+      var navH = parseFloat(getComputedStyle(doc.documentElement)
+                   .getPropertyValue('--nav-h')) || 0;
+      var avail = window.innerHeight - top - Math.max(16, top - navH) - pad;
+      var fit = Math.max(0.62, Math.min(1, ctrlMax ? avail / ctrlMax : 1));
+
+      ctrlGrid.style.setProperty('--ctrl-fit', fit.toFixed(4));
+      ctrlGrid.style.setProperty('--ctrl-h', Math.round(ctrlMax * fit + pad) + 'px');
     }
     if ('ResizeObserver' in window) {
       new ResizeObserver(ctrlHeight).observe(ctrlWin);

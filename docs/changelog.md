@@ -290,6 +290,56 @@ air is leading now, which is height a `0fr` track does collapse.
 every row open, so adding `.is-live` and the transition together played the
 loop's opening state as an animation — nine rows sliding shut in front of
 the reader. `.is-warm` is added on the frame after the first cue pass.
+## 2026-08-27 · figures fit the window, and compositions stop drifting
+
+Three responsive faults, reported together, with two root causes.
+
+**The control stage ignored the browser's height.** The frame was as tall as
+the product mock inside it — 722px, whatever the window was — so on a short
+viewport the permission screen simply ran off the bottom and the reader never
+saw the row the beat was about. The mock now keeps its design size and the
+stage scales it into whatever height is left, the way a photograph is fitted
+to a frame: one factor, everything inside in proportion. `offsetHeight`
+ignores transforms, so the natural height keeps measuring correctly while the
+scale is on. Verified fitting at 1440×620 through 1280×1100.
+
+Two details that were wrong on the first pass: the available height is the
+stage's offset **minus the header**, not the offset doubled — the top number
+exists to clear a floating header and there is no header at the bottom, and
+mirroring it whole threw away 60px on windows that did not need it. And beat
+3's `scale(.94)` had to become `scale(calc(var(--ctrl-fit) * .94))`, or the
+pull-back would have thrown the viewport fit away.
+
+**The workflow scene was not a composition.** Its objects each did their own
+`cqw` / `cqh` arithmetic against the frame, which is five things doing five
+sums: change the frame's *aspect* and they drift apart, the group stops being
+centred, and at wide-and-short the whole scene sat in the top-left with a
+quarter of the frame empty. It is a fixed-ratio canvas now — designed once at
+760 × 460, letterboxed into the frame and centred — so cq units inside it are
+canvas units with a fixed relationship and nothing can drift. Measured centred
+to the pixel at 1600×620 and 1280×1000 alike.
+
+Type inside the canvas scales with it rather than clamping. A canvas whose
+type stops scaling is a canvas whose layout breaks: fixed boxes, growing text.
+Legibility at the small end is the stacked layout below 820px, not a floor.
+
+**The timestamp that "kept moving"** was the schedule chip. The `Save
+workflow` chip beside it was only `opacity:0` — still in flow, still taking
+its width, and that width came from the canvas, so every resize pushed the
+visible chip sideways. Two states of one slot sit on one anchor.
+
+Swept the rest of the page at 1440×620 and 1440×700: nothing else is taller
+than the window except the hero's `.ph` product-image placeholder, which is
+width-driven by its own aspect ratio and is a slot waiting to be replaced.
+Flagged rather than changed.
+
+Written up as `qa-checklist` §4n3 and `RULES.md` F11–F13.
+
+Gate: axe 0 violations both themes after a full-page walk, borders 0, bug
+sweep pass, no horizontal overflow at 390 / 768 / 1440×700 / 1920, tokens 0,
+scopes 0.
+
+
 ## 2026-08-26 · the rules for figures, and the parallel section rebuilt on them
 
 **The rules are written down.** `design-principles.md` §13 and `RULES.md`

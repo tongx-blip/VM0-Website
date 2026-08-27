@@ -1017,6 +1017,54 @@ one lockup, so one size.
 *because* it sits under that threshold. A larger footer lockup at 600 turns
 that exemption into a violation.
 
+## 4n3. A figure fits the viewport, and its contents scale with it
+
+Two separate failures, one answer.
+
+**A figure sized only by its content ignores the browser.** The control
+stage was as tall as the product mock inside it — 722px, whatever the window
+was — so on a short viewport the screen ran off the bottom and the reader
+never saw the row the beat was about. A figure that must be seen whole is
+**fitted**: the mock keeps its design size and one scale factor puts it in
+whatever height is left.
+
+```js
+// nothing that has to be read whole may be taller than the window
+['.ctrl__frame','.ladder__view','.wfsc'].map(s => {
+  const el = document.querySelector(s); if (!el) return s + ':—';
+  return s + ':' + (el.getBoundingClientRect().height <= innerHeight);
+})   // all true, at 1440×620 as well as 1440×900
+```
+
+The available height is the stage's offset **minus the header**, not the
+offset doubled: the top number exists to clear a floating header and there
+is no header at the bottom. Mirroring it whole threw away 60px and scaled
+the mock down on viewports that did not need it. Keep a floor (0.62) — below
+it the product's 13px rows stop being readable, and a picture nobody can
+read is worse than one that is cropped.
+
+**A composition positioned in container units is not a composition.** The
+workflow scene's objects each did their own `cqw` / `cqh` arithmetic against
+the frame. Change the frame's **aspect** and they drift apart, the group
+stops being centred, and at wide-and-short the whole scene sat in a corner.
+
+Design it once at a fixed size, keep that ratio at every scale, and centre
+it:
+
+```js
+const f = document.querySelector('.ladder__frame').getBoundingClientRect();
+const c = document.querySelector('.wfsc__cv').getBoundingClientRect();
+[Math.round(c.left - f.left) === Math.round(f.right - c.right),   // centred
+ Math.round(c.top  - f.top)  === Math.round(f.bottom - c.bottom)]
+// true at 1600×620 and 1280×1000 alike
+```
+
+**A hidden element still takes its width.** The step-4 schedule chip appeared
+to wander as the browser was resized: the `Save workflow` chip beside it was
+only `opacity:0`, still in flow, and its width came from the canvas — so
+every resize pushed the visible chip sideways. Two states of one slot sit on
+**one anchor**, not side by side.
+
 ## 4n2. A sticky stage must not resize between its own states
 
 If a pinned stage swaps content per beat, measure it in **every** state, not

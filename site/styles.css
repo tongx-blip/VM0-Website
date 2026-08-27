@@ -2756,6 +2756,32 @@ h3{ font-family:var(--fd); }
   overflow:hidden;
   border-radius:inherit;
   font-family:var(--fb);
+  display:grid; place-items:center;
+}
+
+/* ── A FIXED-ASPECT CANVAS, SCALED AND CENTRED ───────────────────────
+   The objects were positioned independently in cqw / cqh against the
+   frame. That is not a composition, it is five things each doing its own
+   arithmetic: change the frame's ASPECT and they drift apart, the group
+   stops being centred, and at a wide-and-short frame the whole scene sat
+   in the top-left corner with a quarter of the frame empty.
+
+   The composition is designed once, at 760 × 460, and the canvas keeps
+   that ratio at every size — so cq units inside it are canvas units with
+   a FIXED relationship to one another and nothing can drift. The canvas
+   letterboxes itself into the frame and `place-items:center` puts it in
+   the middle, which is the other half of what was wrong.
+
+   Type scales with the canvas rather than clamping, because a canvas
+   whose type stops scaling is a canvas whose layout breaks: fixed boxes,
+   growing text. Legibility at the small end is handled by the stacked
+   layout below 820px, not by a floor here. */
+.wfsc__cv{
+  position:relative;
+  aspect-ratio:760 / 460;
+  width:min(100%, calc(100cqh * 760 / 460));
+  container-type:size;
+  font-size:2.05cqw;
 }
 
 /* ── the ground: a tinted field, not a painting ──────────────────────
@@ -2806,7 +2832,7 @@ h3{ font-family:var(--fd); }
   will-change:transform, opacity;
 }
 
-.wfsc .wfo{ font-size:clamp(11px, 2.15cqw, 15px); line-height:1.45; }
+.wfsc .wfo{ line-height:1.45; }
 
 
 /* the surfaces are the page's own card: fill plus shadow, never an
@@ -2860,11 +2886,11 @@ h3{ font-family:var(--fd); }
 /* THE PIVOT: it lifts, straightens and settles into the middle as the
    thing the team keeps, rather than a thing that happened once */
 .wfsc[data-step="2"] .wfo--run{
-  opacity:1; transform:translate(2cqw, -12cqh) scale(1.04) rotate(0deg);
+  opacity:1; transform:translate(0, -10cqh) scale(1.04) rotate(0deg);
 }
 
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-7cqw, -13cqh) scale(.94) rotate(-.6deg);
+  opacity:1; transform:translate(-9cqw, -14cqh) scale(.94) rotate(-.6deg);
 }
 
 .wfsc[data-step="4"] .wfo--run{
@@ -2928,14 +2954,22 @@ h3{ font-family:var(--fd); }
   display:grid; place-items:center;
 }
 
+/* The two chips are two STATES of the same slot, so they sit on one
+   anchor. Left in flow, the hidden "Save workflow" chip still took its
+   width — and that width is derived from the canvas, so every resize
+   moved the visible schedule chip sideways. That was the timestamp that
+   "kept moving". */
 .wfo__foot{
-  display:flex; align-items:center; gap:.5em;
+  position:relative; height:2.9em;
   padding:.75em 1em; border-top:1px solid var(--hairline);
 }
+
+.wfo__foot .wfo__chip{ position:absolute; left:1em; top:50%; }
 
 .wfo__chip{
   display:inline-flex; align-items:center; gap:.4em;
   padding:.35em .75em; border-radius:var(--r-pill);
+  transform:translateY(-50%);
   background:var(--wash-2); color:var(--ink-soft);
   font-family:var(--fm); font-size:.68em; letter-spacing:.08em; text-transform:uppercase;
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-spring);
@@ -2946,13 +2980,13 @@ h3{ font-family:var(--fd); }
 .wfo__chip--go{ background:var(--accent-solid); color:var(--paper-ink); }
 
 /* the two chips are the two moments: the offer, then the schedule */
-.wfo__chip--go{ opacity:0; transform:scale(.86); }
+.wfo__chip--go{ opacity:0; transform:translateY(-50%) scale(.86); }
 
-.wfsc[data-step="2"] .wfo__chip--go{ opacity:1; transform:none; }
+.wfsc[data-step="2"] .wfo__chip--go{ opacity:1; transform:translateY(-50%); }
 
-.wfo__chip--sched{ opacity:0; transform:scale(.86); }
+.wfo__chip--sched{ opacity:0; transform:translateY(-50%) scale(.86); }
 
-.wfsc[data-step="4"] .wfo__chip--sched{ opacity:1; transform:none; }
+.wfsc[data-step="4"] .wfo__chip--sched{ opacity:1; transform:translateY(-50%); }
 
 .wfsc[data-step="1"] .wfo__foot,
 .wfsc[data-step="3"] .wfo__foot{ opacity:0; }
@@ -3033,6 +3067,12 @@ h3{ font-family:var(--fd); }
    the title broke to three lines. In one column each step shows only the
    objects it is actually about. */
 @media (max-width:820px){
+  .wfsc__cv{
+    position:static; aspect-ratio:auto; width:auto; container-type:normal;
+    font-size:12.5px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+
   .wfsc{
     padding:clamp(14px,4vw,22px);
     display:flex; flex-direction:column; justify-content:center; gap:12px;
@@ -3127,19 +3167,26 @@ h3{ font-family:var(--fd); }
      window comes out 106px shorter; without this floor the whole sticky
      stage shrank at the last beat. --ctrl-h is the TALLEST state the
      frame has been measured in — see app.js §13. */
-  min-height:var(--ctrl-h, auto);
+  height:var(--ctrl-h, auto);
   padding:clamp(20px,2.4vw,36px);
   border-radius:var(--r-lg);
   background:color-mix(in srgb, var(--hue-engineering) 7%, var(--tile));
 }
 
+/* the mock lays out at its own design size and the stage scales it into
+   whatever height the browser leaves — see app.js §13. Anchored at the
+   top so a scaled screen still starts where the frame's padding does. */
 .ctrl__win{
   position:relative;
+  transform:scale(var(--ctrl-fit, 1));
+  transform-origin:top center;
   transition:transform var(--t-state) var(--e-out),
              filter var(--t-state) var(--e-out);
 }
 
-.ctrl__frame[data-beat="3"] .ctrl__win{ transform:scale(.94); }
+/* beat 3 pulls the window back, on top of the fit rather than instead of
+   it — writing scale(.94) alone would throw the viewport fit away */
+.ctrl__frame[data-beat="3"] .ctrl__win{ transform:scale(calc(var(--ctrl-fit, 1) * .94)); }
 
 
 /* the five marks. They encode something true — which of five moments this
