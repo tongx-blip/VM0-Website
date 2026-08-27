@@ -529,7 +529,19 @@
     // Tightened: the old 3.4s to the result was a long time to hold someone at
     // a tab they did not choose. This still reads as an exchange — each beat
     // settles before the next — and everything is on screen inside 2.6s.
-    var CUE = [0, 700, 1700, 2600];    // ask · thinking · reply · result
+    // ask · thinking · reply · result — and then whatever a scene adds
+    // after it. The Storefront thread continues past the payoff with a
+    // second person, so the array is a floor rather than the whole list:
+    // an index past the end lands one STEP after the last named beat.
+    // Note the result now arrives at 2100, EARLIER than the 2600 this was
+    // tightened to; the team beats are a coda, not a delay before it.
+    var CUE = [0, 550, 1300, 2100];
+    var CUE_STEP = 800;
+
+    function cueAt(i) {
+      return i < CUE.length ? CUE[i]
+           : CUE[CUE.length - 1] + (i - CUE.length + 1) * CUE_STEP;
+    }
     var SIDE = [450, 850];             // the two connectors, as Okou reaches
     var PAGE = 300;                    // the page lands in its window, early
     var oRaf = 0, oT0 = null, oPane = null;
@@ -558,7 +570,7 @@
       var t = now - oT0;
       var stage = oPane.closest('.ostage');
       [].slice.call(oPane.querySelectorAll('.ochat__row')).forEach(function (row, i) {
-        var on = t >= CUE[i];
+        var on = t >= cueAt(i);
         if (row.classList.contains('ochat__row--typing')) {
           on = t >= CUE[1] && t < CUE[2];   // thinking, then it is replaced
         }
@@ -571,7 +583,8 @@
         var win = stage.querySelector('.tplwin');
         if (win) win.classList.toggle('is-on', t >= PAGE);
       }
-      if (t < CUE[CUE.length - 1] + 900) oRaf = requestAnimationFrame(oTick);
+      var last = cueAt(oPane.querySelectorAll('.ochat__row').length - 1);
+      if (t < last + 900) oRaf = requestAnimationFrame(oTick);
     }
 
     // the visible pane is whichever scene is on; watch the section, not each pane

@@ -355,6 +355,72 @@ running under the measurement.
 
 ---
 
+
+## 2026-08-26 · Storefront Launch becomes a channel, not a DM
+
+Feedback 03 on the board: *"这个场景可以融合几个 slack 场景，现在表达的多是
+个人工作"*. Rewritten for the Storefront Launch tab; the other six scenes
+still carry their old two-party exchange.
+
+**The layout was saying "individual" louder than the words were.** The
+asker's message sat right-aligned, with no avatar and no name — the
+direct-message idiom, the two-column shape every phone messaging app uses
+to mean *you, and one other*. Everything else was Okou answering that one
+person. No amount of new copy fixes a shape that says DM.
+
+So the change is structural first: **nobody is right-aligned any more.**
+Every message is a face, a name and a line in one column, because in a
+channel they are all addressed to the room. A channel chip names the room
+and says who else is in it; a second person, Dan, picks the work up after
+the artifact lands. Two humans and Okou, six messages.
+
+**It also ties the three columns into one story.** The connector cards on
+the left have always asserted *Google Drive — brand brief read from the
+shared folder* and *Gmail — launch announcement drafted, unsent*, and the
+conversation never once referred to either. Maya's ask now ends "Brand kit
+is in Drive", and Okou's last line answers Dan with "Drafted in Gmail —
+unsent, yours to send." The left column stops being a caption and starts
+being what the run reached for.
+
+**The artifact card became a link, and paid for the two new people.** It
+was a 252px card holding a picture of the published page — eighty pixels
+from the window on the right that shows that same page at full size and
+scrollable. Two pictures of one thing, the larger of them the panel's
+biggest element. As a chip it says the same in sixty, and the ~190px it
+gives back is exactly what the second person and the channel line cost.
+The panel's content height is unchanged: 553px before, 553px after.
+
+**Okou stopped wearing a human face.** Its rows used `avatar-1`, which was
+harmless while it was the only party answering one unnamed asker. With
+Maya and Dan in the room it was one illustrated face among three and the
+reader had to work out which was the software.
+
+**Two pieces of white text on a painting, and axe would not have caught
+either.** The first pass put the channel line and every sender name
+directly on `run-green.jpg`. That painting has pale passages — its
+lightest pixel under those labels is rgb(218,233,168), which gives white
+**1.13:1**. axe reports a photographic backdrop as *incomplete*, not as a
+violation, so this would have shipped through a clean gate while being
+invisible. QA §4k4 exists for exactly this and its recipe is to compute
+against the lightest thing the chrome can ever sit on. The names moved
+inside the bubbles, where Slack puts them anyway and where `--paper` makes
+the question moot; the channel line took an `--ink` .72 scrim, which
+composites to #4C4F52 over white and carries white at 7.4:1 on any passage
+of any painting a tab can set.
+
+**The cue list was a four-element array indexed by row order.** Six rows
+meant `CUE[4]` was `undefined`, `t >= undefined` is false, and the last two
+messages would never have appeared. It falls back to one step past the last
+named beat now. The result also lands at 2100ms rather than 2600 — earlier
+than the timing this was tightened to, with the team beats as a coda rather
+than a delay in front of the payoff.
+
+**Copy note.** The hard rule is that design work does not rewrite copy.
+This item is the exception the board itself states — *"改的是场景本身和对话
+内容，不是排版"* — and the narrative was asked for. Maya and the Litoral
+brief were already the scene's; Dan, the channel name and the two
+follow-up lines are new and are the part to argue with.
+
 ## 2026-08-26 · half as many things, drawn twice the size
 
 Tong, with three reference screenshots beside ours: *"logo 背景有点亮，除了
