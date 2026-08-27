@@ -570,8 +570,17 @@
       var t = now - oT0;
       var stage = oPane.closest('.ostage');
       [].slice.call(oPane.querySelectorAll('.ochat__row')).forEach(function (row, i) {
-        var on = t >= cueAt(i);
-        if (row.classList.contains('ochat__row--typing')) {
+        // A SCENE MAY STATE ITS OWN TIMELINE. The shared array is indexed
+        // by row order, which couples every scene's timing to every other
+        // scene's row count — the Slack scene has seven rows and a ghost
+        // line that is not in the message flow at all. `data-cue` and
+        // `data-until` let it say what it means; the other six keep the
+        // array and the class-based typing case.
+        var from = row.dataset.cue !== undefined ? +row.dataset.cue : cueAt(i);
+        var until = row.dataset.until !== undefined ? +row.dataset.until : Infinity;
+        var on = t >= from && t < until;
+        if (row.dataset.cue === undefined &&
+            row.classList.contains('ochat__row--typing')) {
           on = t >= CUE[1] && t < CUE[2];   // thinking, then it is replaced
         }
         row.classList.toggle('is-on', on);
@@ -583,7 +592,11 @@
         var win = stage.querySelector('.tplwin');
         if (win) win.classList.toggle('is-on', t >= PAGE);
       }
-      var last = cueAt(oPane.querySelectorAll('.ochat__row').length - 1);
+      var rows = oPane.querySelectorAll('.ochat__row');
+      var last = cueAt(rows.length - 1);
+      for (var k = 0; k < rows.length; k++) {
+        if (rows[k].dataset.cue !== undefined) last = Math.max(last, +rows[k].dataset.cue);
+      }
       if (t < last + 900) oRaf = requestAnimationFrame(oTick);
     }
 

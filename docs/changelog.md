@@ -525,6 +525,56 @@ running under the measurement.
 ---
 
 
+## 2026-08-27 · the flicker, the icons, and a panel that had nothing to sit on
+
+Tong: *"动画跳闪了一下。icon不太好看，找圆角实心icon，去开源icon库找。现在这个
+slack对话框和背景差别不大。融在一起了"*.
+
+**The flicker was a 42px layout jump, twice per play.** The typing
+indicator was a message-shaped row inside the list, toggled with
+`display`. In a bottom-anchored column that moves everything above it —
+measured, the first message's top ran 398 → 356 → 398 as the ghost line
+appeared and left. It is a **reserved 17px slot** between the list and the
+composer now, whose height never changes, which is also where Slack puts
+its own typing indicator. First message holds at 379 through the whole
+play.
+
+Getting it out of the list meant the shared cue array no longer described
+this scene, so rows carry `data-cue` / `data-until` and the loop prefers
+them. The array is indexed by row order, which coupled every scene's
+timing to every other scene's row count; the six older scenes keep it.
+
+**The icons were drawn by hand.** They come from real libraries now:
+the composer's send mark is **Phosphor Icons** `paper-plane-tilt`, fill
+weight (MIT) — rounded and solid, inlined because it has to inherit
+`currentColor`. The reaction is real **Twemoji** `2705` (CC-BY 4.0),
+vendored to `site/assets/icons/` with its licence beside it rather than
+loaded from a CDN. Still not a font glyph: an emoji character renders as a
+different picture on every operating system, which is the opposite of high
+fidelity for a component whose job is to look like a screenshot — and the
+page still contains no emoji *glyphs* (T6).
+
+**The panel dissolved because it was the lightest thing in the row.**
+Pure white on a section that is also pure white, separated by one
+`#E4E6E9` hairline — and the connector cards beside it are `#F6F6F6`,
+*darker* than it. It had nothing to sit on.
+
+Two things fix it, and the first is the answer to "make it more like
+Slack" as well: **Slack's dark sidebar**. A 44px aubergine rail cannot
+blend into anything, and it is the single most recognisable thing about
+the product. The second is a **window shadow**, which is the one case S3
+reserves a shadow for — a product window sitting on a section.
+
+The rail costs 44px of a panel that was already tight, so the eleven-width
+sweep was re-run: no overflow, no clipping and 25px of composer clearance
+from 390 to 1920.
+
+**And the resting frame was announcing that Okou was still typing.** The
+ghost line's hidden state was scoped under `.is-live`, so with no JS or
+under reduced motion it sat open permanently — four messages after the
+work had shipped. Hidden by default, shown only when cued; its dots stop
+under reduced motion.
+
 ## 2026-08-27 · the Slack panel at high fidelity
 
 Tong: *"很多ui bug，检查一下，我说了就算是网站展示图，也要按high fi的设计去做。

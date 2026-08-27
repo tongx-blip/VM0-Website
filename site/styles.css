@@ -6718,7 +6718,8 @@ h3{ font-family:var(--fd); }
   --slk-link:#1264A3;
   --slk-tint:#F8F8F8;
   --slk-card:#FFFFFF;
-  display:flex; flex-direction:column;
+  --slk-rail:#3F0E40;     /* Slack's aubergine */
+  display:grid; grid-template-columns:auto 1fr;
   padding:0; gap:0;
   background:var(--slk-card);
   /* A WINDOW'S OWN EDGE, which is the exception S4 already names for
@@ -6726,8 +6727,45 @@ h3{ font-family:var(--fd); }
      Without it a white panel on a white section card has no edge at all. */
   border:1px solid var(--slk-line);
   overflow:hidden;
+  /* A WINDOW SITTING ON A SECTION, which is the one thing S3 reserves a
+     shadow for — and this needed it: the panel is pure white on a section
+     that is also pure white, separated by a #E4E6E9 hairline and nothing
+     else, while the connector cards beside it are DARKER than it. It was
+     the lightest thing in the row with nothing to sit on, so it dissolved.
+     The rail does most of the separating and the shadow finishes it. */
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
+             0 18px 40px -20px rgb(var(--ink-rgb) / .30);
   font-family:var(--fb);
 }
+
+/* ── the rail ────────────────────────────────────────────────────────
+   Slack's single most recognisable feature is its dark sidebar, and it
+   is also the cheapest possible answer to "the panel blends into the
+   page": a 44px column of aubergine cannot blend into anything. Icon
+   width only, which is what Slack's own collapsed workspace rail is. */
+.slk__rail{
+  display:flex; flex-direction:column; align-items:center; gap:9px;
+  width:44px; padding:12px 0;
+  background:var(--slk-rail);
+}
+
+.slk__ws{
+  display:grid; place-items:center;
+  width:26px; height:26px; border-radius:8px;
+  background:var(--slk-card);
+}
+
+.slk__ws img{ width:17px; height:17px; }
+
+.slk__rail i{
+  width:22px; height:22px; border-radius:7px; flex:none;
+  background:rgb(255 255 255 / .13);
+}
+
+.slk__rail i.is-here{ background:rgb(255 255 255 / .30); }
+
+/* everything that was the panel is now the panel's second column */
+.slk__pane{ display:flex; flex-direction:column; min-width:0; }
 
 /* the painting, and the veil that went with it, are gone */
 .ochat--slack::before,.ochat--slack::after{ content:none; }
@@ -6961,17 +6999,50 @@ h3{ font-family:var(--fd); }
 
 }
 
-.slk__typing{ display:flex; align-items:center; gap:5px; margin:0; padding:11px 0 9px; }
+/* ── the ghost line ─────────────────────────────────────────────────
+   A RESERVED SLOT, and out of the message flow entirely. Inline in the
+   list it toggled `display`, and in a bottom-anchored column that moved
+   every message above it by 42px — up as it appeared, down as it left,
+   twice per play. That is the flicker. Here it is a fixed 17px strip
+   between the list and the composer whose height never changes, so
+   nothing above it can move; Slack puts its typing indicator under the
+   message pane anyway. */
+.slk__ghost{
+  display:flex; align-items:center; gap:6px; flex:none;
+  height:17px; margin:0 clamp(14px,1.4vw,18px) 2px;
+  font-size:var(--t-meta); color:var(--slk-mute);
+  /* Clipped, never faded: it carries a sentence (RULES N3).
 
-.slk__typing i{
-  width:6px; height:6px; border-radius:50%;
-  background:var(--slk-mute); opacity:.45;
+     AND HIDDEN AT REST. The resting frame is the FINISHED conversation
+     (N2), and in a finished conversation nobody is typing — scoped under
+     `.is-live` this sat open permanently under reduced motion and no-JS,
+     announcing that Okou was still working on something it had already
+     shipped four messages ago. */
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path 200ms var(--e-out);
+}
+
+.ochat--slack.is-live .slk__ghost.is-on{ clip-path:inset(0 0 0 0); }
+
+.slk__ghost-d{ display:inline-flex; align-items:center; gap:3px; }
+
+.slk__ghost-d i{
+  width:4px; height:4px; border-radius:50%;
+  background:var(--slk-mute); opacity:.5;
   animation:oType 1.25s var(--e-elegant) infinite;
 }
 
-.slk__typing i:nth-child(2){ animation-delay:.16s; }
+.slk__ghost-d i:nth-child(2){ animation-delay:.16s; }
 
-.slk__typing i:nth-child(3){ animation-delay:.32s; }
+.slk__ghost-d i:nth-child(3){ animation-delay:.32s; }
+
+@media (prefers-reduced-motion:reduce){
+  .slk__ghost-d i{ animation:none; }
+
+}
+
+/* the reaction is real Twemoji artwork, so it is sized, never recoloured */
+.slk__emoji{ width:15px; height:15px; display:block; flex:none; }
 
 
 /* the result, as the reference draws it: a titled card holding the page */
