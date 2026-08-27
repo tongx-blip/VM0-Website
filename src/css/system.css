@@ -5535,7 +5535,7 @@ h3{ font-family:var(--fd); }
    panel. `--accent` rather than `--accent-solid`: it sits on --paper at
    reading size, which is the one ground the brand orange clears (C1). */
 .ochat__at{
-  background:none; color:var(--accent-ink); font-weight:500;
+  background:none; color:var(--accent); font-weight:500;
 }
 
 /* OKOU IS NOT A PERSON. Its rows wore `avatar-1` — an illustrated human
@@ -5560,14 +5560,14 @@ h3{ font-family:var(--fd); }
    missing. Same argument as the peak label that reprinted its own KPI. */
 .ochip{
   display:flex; align-items:center; gap:10px;
-  padding:9px 12px; border-radius:12px;
+  padding:9px 12px; border-radius:var(--r-card);
   background:var(--paper);
   max-width:min(100%, 340px);
 }
 
 .ochip__ic{
   display:grid; place-items:center; flex:none;
-  width:30px; height:30px; border-radius:8px;
+  width:30px; height:30px; border-radius:var(--r-btn);
   background:var(--wash);
 }
 

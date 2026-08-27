@@ -51,6 +51,12 @@ arrangement:
   The boldest, and the only one that loses five lines of copy, which is why it
   is not the default.
 
+**Three lint failures came in with the rebase**, from the Storefront Launch
+commit rather than this one: `.ochip` and `.ochip__ic` had raw radii, and
+`.ochat__at` painted `var(--accent-ink)`, which is not declared anywhere — so
+the one coloured word in that panel was falling back to inherited ink. The
+comment above the rule says `--accent`, which is what it is now.
+
 **`cut` did nothing on the first pass.** `#rotator` sets `display:block` from
 an ID, which outranks `.hero[data-hero="cut"] .display--tail`. The screenshot
 is what caught it — the variant rendered identically to the default and the
