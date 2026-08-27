@@ -43,8 +43,10 @@ narrating a structure the layout should already make obvious.
 
 **Exception:** borders *inside* a product mock (the Okou app window, Slack, the
 permissions table, the workflow list) stay. There they depict the product's own
-UI. The `NO-RULES` audit in `tools/audit.js` exempts those subtrees and must
-otherwise return 0.
+UI — and that now includes a mock of somebody *else's* product: the Storefront
+Launch scene draws a Slack channel, whose header rule, AGENT badge, unfurl bar,
+composer field and window edge are all Slack's chrome. The `NO-RULES` audit in
+`tools/audit.js` exempts those subtrees by name and must otherwise return 0.
 
 **Consequences to remember**
 - Status is a tinted fill (`ALLOWED` / `DENIED` / `NOT GRANTED`), never a

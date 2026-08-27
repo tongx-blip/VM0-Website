@@ -414,6 +414,56 @@ running under the measurement.
 ---
 
 
+## 2026-08-27 · the Storefront scene is a Slack channel, drawn as one
+
+Tong: *"其实我们本意是想做的更像slack。也许可以做一个更像slack的假的对话界面，
+然后把团队成员和agent的交流过程加上动画做进去，那可能就不需要有图片背景了"* —
+with a screenshot of a real Slack thread that already has Okou in it.
+
+The pass before this got the SHAPE right — one column, names, faces,
+nobody right-aligned — and kept two things Slack does not have.
+
+**Chat bubbles.** Slack has none. A message is plain text under a bold
+name, on the channel's own white. Bubbles are the messaging-app idiom, and
+drawing them was most of why the panel still read as a chat rather than as
+a workspace.
+
+**A painted ground.** Slack is white. Removing the painting also removed
+the problem the pass before had to solve with a scrim and a paragraph of
+contrast arithmetic: with no photograph behind the type there is nothing
+to compute against.
+
+What the reference carries and this now does: an **AGENT badge** beside
+the app's name — how Slack marks a bot, and the one element that says
+outright that a member of this channel is software — a timestamp after
+every name, mentions as tinted chips, an unfurl with a left rule rather
+than a card, reactions as small counted pills, a member facepile with a
+count in the header, and a composer on the floor. The composer is drawn
+rather than an `<input>`: a mock full of real form controls is a mock full
+of focusable elements nobody can use (QA §4k2).
+
+**The exchange plays.** Maya asks → the ghost line appears where the reply
+will land → Okou answers → it publishes and the unfurl arrives → a
+reaction pops from somebody who never typed → Dan picks it up → Okou
+drafts the follow-up. Seven beats on the timeline that was already there:
+the container kept `.ochat`/`.ochat__row`, so app.js drives it unchanged.
+
+**A mock half-pinned is a mock broken in one theme.** Slack's ink is its
+own near-black and does not follow the page, so the ground under it cannot
+either — the first pass left the panel on `--paper`, that token inverts,
+and eleven nodes of #1D1C1D landed on #171C21 in dark mode. Every value in
+the panel is pinned now, which is what P1 has always meant. The same fault
+`.perms__tabs span.is-on` shipped with.
+
+**And the panel's borders are another application's chrome.** A channel
+header rule, an AGENT badge, an unfurl bar, a composer field and the
+window's own edge — five things the NO-RULES audit counted as page
+furniture until `.ochat` was named in its exemption list, which is the
+exception S4 states and the reason `.vs__viz` is already on it.
+
+Still the Storefront Launch tab only; the other six scenes keep their
+two-party exchange until their conversations are written.
+
 ## 2026-08-26 · Storefront Launch becomes a channel, not a DM
 
 Feedback 03 on the board: *"这个场景可以融合几个 slack 场景，现在表达的多是

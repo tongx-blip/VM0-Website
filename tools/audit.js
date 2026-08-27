@@ -29,7 +29,12 @@
   // chrome, the same argument as .perms and .absui, so the subtree is named
   // here rather than left as a quiet violation of a rule this audit claims
   // to enforce (docs/design-principles.md §1).
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,.vs__viz,.wfo,.pbox';
+  // `.ochat` draws SLACK — a channel header rule, an AGENT badge, an
+  // unfurl's left bar, a composer field and the panel's own window edge.
+  // Every one is another application's chrome, which is the exception S4
+  // states and the same reason `.vs__viz` is already on this list.
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,' +
+               '.vs__viz,.wfo,.pbox,.ochat';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;

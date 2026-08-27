@@ -5592,6 +5592,236 @@ h3{ font-family:var(--fd); }
 }
 
 
+/* ══════════════════════════════════════════════════════════════════
+   A SLACK CHANNEL — the Storefront Launch scene
+   Feedback 03: "其实我们本意是想做的更像slack … 那可能就不需要有图片背景了".
+
+   Held against a real Slack thread with Okou in it, the first pass had
+   the shape right — one column, names, faces, nobody right-aligned — and
+   two things Slack does not have:
+
+     · CHAT BUBBLES. Slack has none. A message is plain text under a bold
+       name, on the channel's own white. Bubbles are the messaging-app
+       idiom, and drawing them was most of why it still read as a chat
+       rather than as a workspace.
+     · A PAINTED GROUND. Slack is white. The painting was also what forced
+       the scrim and the contrast arithmetic in the pass before this one —
+       remove it and both problems go with it.
+
+   What the reference does carry, and this now does: an AGENT badge beside
+   the app's name (how Slack marks a bot, and the clearest statement that
+   one party here is software), a timestamp after every name, mentions as
+   tinted chips, an unfurl with a left rule rather than a card, and
+   reactions as small counted pills.
+
+   The container keeps `.ochat`/`.ochat__row`, so the conversation
+   timeline in app.js drives it unchanged. */
+.ochat--slack{
+  /* PINNED LIGHT IN BOTH MODES, like every other product mock on this
+     page (P1) — and pinned COMPLETELY, which is the part that bites. The
+     ink here is Slack's own near-black and it does not follow the theme,
+     so the ground it sits on cannot either: the first pass left the panel
+     on `--paper`, that token inverts in dark mode, and eleven nodes of
+     #1D1C1D landed on #171C21. Exactly the fault `.perms__tabs span.is-on`
+     shipped with — a mock half-pinned is a mock broken in one theme. */
+  --slk-line:#E4E6E9;
+  --slk-ink:#1D1C1D;      /* Slack's own near-black */
+  --slk-mute:#616061;
+  --slk-link:#1264A3;
+  --slk-tint:#F8F8F8;
+  --slk-card:#FFFFFF;
+  display:flex; flex-direction:column;
+  padding:0; gap:0;
+  background:var(--slk-card);
+  /* A WINDOW'S OWN EDGE, which is the exception S4 already names for
+     `.tplwin`: this is another application's chrome, not page furniture.
+     Without it a white panel on a white section card has no edge at all. */
+  border:1px solid var(--slk-line);
+  overflow:hidden;
+  font-family:var(--fb);
+}
+
+/* the painting, and the veil that went with it, are gone */
+.ochat--slack::before,.ochat--slack::after{ content:none; }
+
+.slk__list{ flex:1; min-height:0; padding-bottom:6px; }
+
+.slk__bar{
+  display:flex; align-items:center; gap:10px; flex:none;
+  margin:0; padding:13px clamp(14px,1.4vw,18px);
+  border-bottom:1px solid var(--slk-line);
+  background:var(--slk-card);
+}
+
+.slk__ch{
+  display:inline-flex; align-items:baseline; gap:1px;
+  font-size:var(--t-sm); font-weight:600; color:var(--slk-ink);
+}
+
+.slk__ch i{ font-style:normal; color:var(--slk-mute); font-weight:400; }
+
+.slk__faces{ display:flex; align-items:center; margin-left:auto; }
+
+.slk__faces img{
+  width:22px; height:22px; border-radius:6px; object-fit:cover; object-position:top;
+  margin-right:-5px; box-shadow:0 0 0 2px var(--slk-card);
+}
+
+.slk__faces em{
+  margin-left:11px; font-style:normal;
+  font-size:var(--t-meta); color:var(--slk-mute);
+}
+
+/* ── a message ──────────────────────────────────────────────────────
+   Slack's own metrics: a 36px rounded-square avatar, the name and time
+   on one line above the text, and the text starting at the avatar's
+   right edge rather than in a bubble. */
+.slk__msg,.slk__react{
+  display:flex; align-items:flex-start; gap:9px;
+  padding:5px clamp(14px,1.4vw,18px);
+}
+
+.slk__msg:first-of-type{ padding-top:12px; }
+
+.slk__av{
+  width:36px; height:36px; flex:none;
+  border-radius:8px; overflow:hidden;
+  background:var(--slk-tint);
+}
+
+.slk__av img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+
+/* Okou is an app in this workspace, not one of the faces */
+.slk__av--okou{ display:grid; place-items:center; background:var(--slk-tint); }
+
+.slk__av--okou img{ width:22px; height:22px; object-fit:contain; }
+
+/* the reaction row hangs under the message it belongs to */
+.slk__av--gap{ background:none; }
+
+.slk__body{ min-width:0; flex:1; }
+
+.slk__meta{
+  display:flex; align-items:baseline; gap:7px;
+  margin:0 0 1px; line-height:1.3;
+}
+
+.slk__meta b{ font-size:var(--t-sm); font-weight:600; color:var(--slk-ink); }
+
+/* THE BADGE IS THE POINT. It is how Slack marks an app, and it is the
+   one element that says outright that a member of this channel is
+   software — which is the whole subject of the scene. */
+.slk__badge{
+  flex:none; font-style:normal;
+  padding:1px 5px; border-radius:3px;
+  background:var(--slk-tint); border:1px solid var(--slk-line);
+  font-size:9px; font-weight:600; letter-spacing:.04em;
+  color:var(--slk-mute);
+}
+
+.slk__meta time{
+  font-size:var(--t-meta); color:var(--slk-mute);
+  white-space:nowrap;
+}
+
+.slk__say{
+  margin:0; font-size:var(--t-sm); line-height:1.48;
+  color:var(--slk-ink);
+}
+
+.slk__at{
+  background:color-mix(in srgb, var(--slk-link) 12%, transparent);
+  color:var(--slk-link); font-weight:500;
+  padding:0 2px; border-radius:3px;
+}
+
+/* ── the unfurl ─────────────────────────────────────────────────────
+   Slack draws a shared link as a left rule and a stack, not as a card.
+   The window on the right is already showing this page at full size, so
+   this stays a reference and never becomes a second picture of it. */
+.slk__unfurl{
+  margin-top:7px; padding-left:11px;
+  border-left:3px solid var(--slk-line);
+}
+
+.slk__unfurl-h{
+  display:flex; align-items:center; gap:5px;
+  margin:0 0 2px;
+  font-size:var(--t-meta); font-weight:600; color:var(--slk-mute);
+}
+
+.slk__unfurl-ic{ display:grid; place-items:center; flex:none; }
+
+.slk__unfurl-t{
+  margin:0; font-size:var(--t-sm); font-weight:600; color:var(--slk-link);
+  line-height:1.35;
+}
+
+.slk__unfurl-u{
+  margin:1px 0 0;
+  font-family:var(--fm); font-size:var(--t-meta); color:var(--slk-mute);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ── reactions ──────────────────────────────────────────────────────
+   Counted pills, and the tick is drawn rather than typed: T6 forbids
+   emoji on this page and a mock is not a licence to bring the one
+   pictogram the page has none of. */
+.slk__pills{ display:flex; gap:6px; margin:5px 0 0; }
+
+.slk__pill{
+  display:inline-flex; align-items:center; gap:5px;
+  padding:2px 8px; border-radius:var(--r-pill);
+  background:color-mix(in srgb, var(--slk-link) 10%, transparent);
+  border:1px solid color-mix(in srgb, var(--slk-link) 24%, transparent);
+  font-size:var(--t-meta); color:var(--slk-link);
+}
+
+.slk__pill svg{ width:11px; height:11px; stroke:var(--slk-link); }
+
+.slk__pill b{ font-weight:600; }
+
+.slk__pill--eyes{
+  background:none; border-color:var(--slk-line); color:var(--slk-mute);
+}
+
+/* ── the composer ───────────────────────────────────────────────────
+   Not an input: a mock full of real form controls is a mock full of
+   focusable elements nobody can use (QA §4k2). It is drawn, and it is
+   what makes the panel a place rather than a transcript. */
+.slk__composer{
+  display:flex; align-items:center; gap:10px; flex:none;
+  margin:0 clamp(14px,1.4vw,18px) clamp(14px,1.4vw,18px);
+  padding:9px 10px 9px 13px;
+  border:1px solid var(--slk-line); border-radius:8px;
+  font-size:var(--t-sm); color:var(--slk-mute);
+}
+
+.slk__composer span{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.slk__send{
+  display:grid; place-items:center; flex:none;
+  width:24px; height:24px; border-radius:5px;
+  background:var(--slk-tint);
+}
+
+.slk__send svg{ width:13px; height:13px; stroke:var(--slk-mute); }
+
+
+/* ── the ghost line ─────────────────────────────────────────────── */
+.slk__typing{ display:flex; align-items:center; gap:5px; margin:0; padding:11px 0 9px; }
+
+.slk__typing i{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--slk-mute); opacity:.45;
+  animation:oType 1.25s var(--e-elegant) infinite;
+}
+
+.slk__typing i:nth-child(2){ animation-delay:.16s; }
+
+.slk__typing i:nth-child(3){ animation-delay:.32s; }
+
+
 /* the result, as the reference draws it: a titled card holding the page */
 /* The result is the point of the panel, so it is the largest thing in it —
    the reference gives it most of the column and a tall crop of the page. */
