@@ -672,8 +672,83 @@
      unrelated pictures. */
   var wfScene = doc.getElementById('wfScene');
 
+  /* ───────────────────────────────────────────────────────────────────
+     15. the scene's two loops
+
+     Beat 1 runs a RUNNER down the five-connector chain; beat 3 hands the
+     card from one teammate to the next. Both are loops, both stop dead
+     when their beat is not showing, and both are the same shape: an index
+     that advances on a timer and writes one class.
+
+     They exist because the two beats were making a claim in text that
+     the picture was not making. "It does the job" was a list that faded
+     in, and "anyone can run it" was a caption under three static faces.
+     ─────────────────────────────────────────────────────────────────── */
+  var runCard = doc.querySelector('.wfo--run');
+  var runSteps = [].slice.call(doc.querySelectorAll('.wfo__steps li'));
+  var runner = doc.querySelector('.wfo__runner');
+  var faces = [].slice.call(doc.querySelectorAll('.wfo__who'));
+  var byTag = doc.querySelector('.wfo__tag--by');
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var chainAt = 0, chainTimer = null, handAt = 0, handTimer = null;
+
+  function chainTo(i) {
+    if (!runner || !runSteps.length) return;
+    chainAt = i % runSteps.length;
+    runSteps.forEach(function (li, n) {
+      li.classList.toggle('is-live', n === chainAt);
+      li.classList.toggle('is-done', n < chainAt);
+    });
+    var mk = runSteps[chainAt].querySelector('.wfo__mk');
+    if (mk) {
+      /* offsetTop is measured against the list, which is the runner's
+         containing block — no getBoundingClientRect, so the scale the whole
+         scene is under cannot leak into the number. */
+      runner.style.setProperty('--ry', (mk.offsetTop - runner.offsetTop) + 'px');
+    }
+  }
+
+  function chainRun(on) {
+    if (chainTimer) { clearInterval(chainTimer); chainTimer = null; }
+    if (runCard) runCard.classList.toggle('is-running', !!on);
+    if (!on) {
+      /* clear both classes — `chainTo(0)` would leave row 0 live, and a live
+         row hides its own connector mark, so the Gmail step simply vanished
+         on every beat after the first. */
+      runSteps.forEach(function (li) { li.classList.remove('is-live', 'is-done'); });
+      return;
+    }
+    if (reduced) { chainTo(runSteps.length - 1); return; }
+    chainTo(0);
+    chainTimer = setInterval(function () { chainTo(chainAt + 1); }, 1150);
+  }
+
+  function handTo(i) {
+    if (!faces.length) return;
+    handAt = i % faces.length;
+    faces.forEach(function (f, n) { f.classList.toggle('is-holding', n === handAt); });
+    if (byTag) {
+      var f = faces[handAt];
+      var img = f.querySelector('img');
+      var av = byTag.querySelector('.wfo__byav');
+      var nm = byTag.querySelector('b');
+      if (av && img) av.style.backgroundImage = 'url(' + img.getAttribute('src') + ')';
+      if (nm) nm.textContent = f.dataset.who || '';
+    }
+  }
+
+  function handRun(on) {
+    if (handTimer) { clearInterval(handTimer); handTimer = null; }
+    if (!on) { faces.forEach(function (f) { f.classList.remove('is-holding'); }); return; }
+    handTo(0);
+    if (reduced) return;
+    handTimer = setInterval(function () { handTo(handAt + 1); }, 1900);
+  }
+
   function syncStages(n) {
     if (wfScene) wfScene.dataset.step = n;
+    chainRun(n === '1');
+    handRun(n === '3');
     stages.forEach(function (s) { s.classList.toggle('is-on', s.dataset.step === n); });
     // the deck scrolls to the step instead of the panels being swapped out,
     // so the three that are not showing have to be hidden from a reader

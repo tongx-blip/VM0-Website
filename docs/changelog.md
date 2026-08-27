@@ -6,6 +6,79 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the four beats tell the product's own story now
+
+Feedback 07–11, taken as one piece of work rather than five patches: 07 and 08
+are the Run beat, 09 is Save, 10 is Hand over, 11 is Automate — the whole
+scene. Tong: *"都你来决定，做完我来验收，动效可以更活泼一些"*.
+
+**Reading the product's strings first changed what this was.** The scene was
+telling a story the object model does not have:
+
+| what the product does | what the page drew |
+|---|---|
+| a workflow comes out of a conversation (`createInChat`: *"Start from a conversation when no workflow fits yet"*) | the user presses a **SAVE WORKFLOW** button |
+| a workflow has **visibility: public / private**, public meaning shared inside your workspace (`visibilityHelp`) | a tag that says "Workflow" |
+| other members build **automations** on it — schedule, Gmail, Calendar, GitHub, webhook are all trigger types | a list of three other **workflow names** |
+| making it private **stops the automations other members built** (`visibility.confirmDescription`) | three static faces and a caption |
+
+That last row is why 11 read as "不够直给": the panel was showing the wrong
+object. Once it shows automations *on this one workflow*, the relationship
+between a workflow and its schedule is self-evident — one workflow, three ways
+it gets triggered, three different people.
+
+**07 · the scenario** is `KOL Research to Partnership Draft` from the official
+`workflow-automation-examples`: X · Notion · Google Sheets · Gmail · Slack,
+five connectors ending in Slack, and a growth job rather than an engineering
+one — the page's default audience is non-technical business users. It replaces
+a four-step chain of which three marks were Okou or Notion.
+
+**08 · the runner travels the chain.** A list that fades in tells you the
+recipe; something moving down it tells you the job is being done. An orange
+runner sits on the connector mark of whichever step is live and steps down all
+five, the finished rows keeping a green ring. It rides *on* the mark rather
+than beside it so the row cannot reflow as it passes, and its `--ry` comes
+from `offsetTop`, which the scene's viewport scaling cannot leak into.
+
+**09 · the agent asks.** The orange SAVE WORKFLOW button is gone. The footer
+holds a question and two answers — *"Make this a public workflow?"* /
+`Make public` · `Not now` — in the product's own words.
+
+**10 · the card changes hands.** The facepile hands it over: whoever is
+holding it lifts out of the stack and takes the header, and the caption is
+now *"anyone in the workspace can run it"*, which is what public means.
+
+**11 · automations, not workflows.** The right panel is the same workflow with
+an `Automations` sub-head and three rows — `Every Monday, 09:00` (Maya),
+`When a creator replies` (Dan), `Before the growth sync` (Ines). The card's
+own chip changed from `Mon 09:00` to `3 automations`, because the schedule was
+otherwise printed twice 200px apart.
+
+**And one the rebase turned up.** `--ground` had no declaration anywhere —
+the Slack-channel work removed the inline styles that set it, which exposed
+that `.ladder__panel` is not in the markup at all. It, `.ladder__deck` and the
+`.wfstage` base rules are leftovers from the sliding-panel design the single
+`.wfsc` scene replaced; 78 lines, gone. The first attempt cut a comment in
+half and `build-css.py` refused to write the file, which is exactly the trap
+it was given that check for. The `.wfstage` rules still sitting inside the
+narrow media query are also dead but interleaved with live ones, and this file
+has another session in it — left for a pass that can be done carefully.
+
+**Four things the build turned up:**
+
+* **A live row hides its own connector mark**, and `chainRun(false)` was
+  calling `chainTo(0)` — so the Gmail step simply vanished on every beat after
+  the first. Off means off: clear both classes.
+* **The byline and "Public" share the header's third grid cell**, and the rule
+  hiding the tag sat *before* the `:not([data-step="1"])` that sets it —
+  losing on order, not on specificity. "Public" showed as a ghost behind the
+  name. `display:none`, after.
+* **The card gained a fifth step**, so all four states were re-derived from
+  the probe. Every subject is centred to within 1cqh again and the avatars lap
+  the card's bottom edge by 13px rather than sitting 50px inside it.
+* **The Gmail mark was being stretched** — its SVG is 134×100 and the mark is
+  a 16px square with the default `object-fit:fill`. The audit caught it;
+  `contain` fixes it for every non-square connector.
 ## 2026-08-27 · the stage becomes one frame, and Okou gets a window of its own
 
 Tong: *"Slack 之外的其他 tab。左侧的那个头像应该用 agent 头像。另外现在 Slack

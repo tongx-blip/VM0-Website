@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=b451ec30">
+<link rel="stylesheet" href="styles.css?r=f1684cd5">
 </head>
 <body>
 
@@ -619,7 +619,7 @@
 
             <!-- 1 · the ask, in the person's own words -->
             <figure class="wfo wfo--ask">
-              <p class="wfo__ask">put together what the team shipped this week and post it to #team every Monday</p>
+              <p class="wfo__ask">find the creators worth partnering with this month and draft the outreach</p>
               <figcaption><img src="assets/brand/avatar-2.png?v=22fa90af" alt="" width="20" height="20">Ming &middot; 09:12</figcaption>
             </figure>
 
@@ -627,37 +627,52 @@
             <article class="wfo wfo--run">
               <p class="wfo__hd">
                 <span class="wfo__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
-                <b class="wfo__ttl">Weekly team digest</b>
+                <b class="wfo__ttl">Creator shortlist</b>
                 <em class="wfo__tag wfo__tag--run">Running</em>
-                <em class="wfo__tag wfo__tag--wf">Workflow</em>
+                <em class="wfo__tag wfo__tag--wf">Public</em>
+                <em class="wfo__tag wfo__tag--by" aria-hidden="true"><span class="wfo__byav"></span><b></b></em>
               </p>
+              <!-- Five connectors, ending in Slack. The chain is the official
+                   `KOL Research to Partnership Draft` example, in the order the
+                   job is actually done. The runner travels it — see app.js §15. -->
               <ol class="wfo__steps">
-                <li style="--si:0"><span class="wfo__mk"><img src="assets/connectors/linear.svg?v=cd69ddff" alt="" width="11" height="11"></span>Read the release notes</li>
-                <li style="--si:1"><span class="wfo__mk"><img src="assets/connectors/notion.svg?v=a6ffb7a4" alt="" width="11" height="11"></span>Pull the open blockers</li>
-                <li style="--si:2"><span class="wfo__mk"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="11" height="11"></span>Write the summary</li>
-                <li style="--si:3"><span class="wfo__mk"><img src="assets/connectors/slack.svg?v=55532dd8" alt="" width="11" height="11"></span>Post it to #team</li>
+                <li style="--si:0"><span class="wfo__mk wfo__mk--x"><img src="assets/connectors/x_marketing.svg?v=c14ad383" alt="" width="11" height="11"></span>Read their recent posts</li>
+                <li style="--si:1"><span class="wfo__mk"><img src="assets/connectors/notion_marketing.svg?v=03359f6d" alt="" width="11" height="11"></span>Check the partnership brief</li>
+                <li style="--si:2"><span class="wfo__mk"><img src="assets/connectors/google-sheet.svg?v=9a0ec714" alt="" width="11" height="11"></span>Score them against the ICP</li>
+                <li style="--si:3"><span class="wfo__mk"><img src="assets/connectors/gmail_marketing.svg?v=f4a3e85b" alt="" width="11" height="11"></span>Draft the outreach</li>
+                <li style="--si:4"><span class="wfo__mk"><img src="assets/connectors/slack.svg?v=55532dd8" alt="" width="11" height="11"></span>Post the shortlist to #growth</li>
+                <span class="wfo__runner" aria-hidden="true"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
               </ol>
               <p class="wfo__foot">
-                <span class="wfo__chip wfo__chip--go">Save workflow</span>
-                <span class="wfo__chip wfo__chip--sched"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Mon 09:00</span>
+                <span class="wfo__chip wfo__chip--go"><i>Make this a public workflow?</i><span><b>Make public</b><em>Not now</em></span></span>
+                <span class="wfo__chip wfo__chip--sched"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>3 automations</span>
               </p>
             </article>
 
             <!-- 3 · the workspace it now belongs to -->
+            <!-- The facepile hands the card over: whoever is holding it lifts out
+                 of the stack and takes the header. Public means shared inside the
+                 workspace, so this is the object's own behaviour, not decoration. -->
             <div class="wfo wfo--team" aria-hidden="true">
-              <span class="wfo__who" style="--wi:0"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="34" height="34"></span>
-              <span class="wfo__who" style="--wi:1"><img src="assets/brand/avatar-3.png?v=c2b53996" alt="" width="34" height="34"></span>
-              <span class="wfo__who" style="--wi:2"><img src="assets/brand/avatar-4.png?v=6fa57d60" alt="" width="34" height="34"></span>
-              <i class="wfo__ran" style="--wi:3">three teammates ran it this week</i>
+              <span class="wfo__who" style="--wi:0" data-who="Maya"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="34" height="34"></span>
+              <span class="wfo__who" style="--wi:1" data-who="Dan"><img src="assets/brand/avatar-3.png?v=c2b53996" alt="" width="34" height="34"></span>
+              <span class="wfo__who" style="--wi:2" data-who="Ines"><img src="assets/brand/avatar-4.png?v=6fa57d60" alt="" width="34" height="34"></span>
+              <i class="wfo__ran" style="--wi:3">anyone in the workspace can run it</i>
             </div>
             <p class="wfo wfo--perm">Each teammate runs it with <b>their own</b> permissions</p>
 
             <!-- 4 · it stops needing to be asked -->
+            <!-- ONE workflow, three ways it gets triggered, three different
+                 people. It used to list three WORKFLOW names, which is why the
+                 relationship between a workflow and its schedule never read. A
+                 schedule is one trigger type in the product among Gmail,
+                 Calendar, GitHub and webhooks. -->
             <div class="wfo wfo--list">
-              <p class="wfo__hd"><span class="wfo__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span><b class="wfo__ttl">Workflows</b><em class="wfo__tag">Team</em></p>
-              <p class="wfo__row wfo__row--new"><i></i><span>Weekly team digest</span><em>Mon 09:00</em></p>
-              <p class="wfo__row"><i></i><span>Monthly product newsletter</span><em>1st 09:00</em></p>
-              <p class="wfo__row"><i></i><span>Morning error triage</span><em>Daily 08:30</em></p>
+              <p class="wfo__hd"><span class="wfo__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span><b class="wfo__ttl">Creator shortlist</b><em class="wfo__tag">Public</em></p>
+              <p class="wfo__sub">Automations</p>
+              <p class="wfo__row wfo__row--new"><i></i><span>Every Monday, 09:00</span><em>Maya</em></p>
+              <p class="wfo__row"><i></i><span>When a creator replies</span><em>Dan</em></p>
+              <p class="wfo__row"><i></i><span>Before the growth sync</span><em>Ines</em></p>
             </div>
 
             </div>
@@ -1208,6 +1223,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=f1f6003d"></script>
+<script src="app.js?r=a4d3a67b"></script>
 </body>
 </html>

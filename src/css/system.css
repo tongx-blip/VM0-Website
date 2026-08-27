@@ -1971,84 +1971,6 @@ h3{ font-family:var(--fd); }
   background:var(--wf-media-bg);
   overflow:hidden;
 }
-/* ── the deck ──────────────────────────────────────────────────────
-   Four panels stacked vertically inside the frame and scrolled by one
-   transform. Changing step SLIDES rather than cuts, so the four screens
-   read as one thing being looked through rather than four unrelated
-   pictures — and it is the same gesture the pin itself is making. */
-.ladder__deck{
-  position:absolute; inset:0;
-  display:grid; grid-auto-rows:100%;
-  transform:translate3d(0, calc(var(--i, 0) * -100%), 0);
-  transition:transform 640ms var(--e-elegant);
-  will-change:transform;
-}
-/* Each screen sits ON a painted ground rather than on a flat mat: the brand
-   layer carries the colour and the product keeps its own white. The marker
-   beside each step is the hue of the ground behind it, so the two columns are
-   tied together by something other than being next to each other. */
-.ladder__panel{
-  position:relative;
-  display:grid; place-items:center;
-  padding:var(--wf-pad);
-  overflow:hidden;
-  background:var(--wf-media-bg);
-}
-/* The ground is shown as it was painted. The veil under the screen is what
-   keeps it from competing — see below — not a blur. */
-.ladder__panel::before{
-  content:"";
-  position:absolute; inset:0;
-  background-image:var(--ground);
-  background-size:cover;
-  background-position:center;
-  filter:saturate(var(--sat, 1));
-}
-/* then one flat step of ink, so every ground lands the screen on the same
-   value no matter how light or dark the painting under it is */
-.ladder__panel::after{
-  content:"";
-  position:absolute; inset:0;
-  /* --veil is per-ground and COMPUTED, not chosen: 1 − target ÷ that
-     painting's own mean luminance, so a pale pink and a deep green both land
-     the screen on the same value. */
-  background:
-    radial-gradient(120% 96% at 50% 46%,
-      rgb(var(--ink-rgb) / calc(var(--veil, .2) * .55)), transparent 74%),
-    linear-gradient(rgb(var(--ink-rgb) / var(--veil, .2)),
-                    rgb(var(--ink-rgb) / var(--veil, .2)));
-  pointer-events:none;
-}
-/* every panel is in the DOM at once now, so the switch is position rather
-   than display — app.js hides the three closed ones from a reader */
-.ladder__panel .wfstage{ display:block; }
-/* the switch itself is `display:none / block` in the component layer, which
-   also keeps the three closed steps out of the accessibility tree.
-
-   Every screen lays out at ONE design width and is then scaled into the mat,
-   the way a photograph is fitted to a frame. The factor is measured in
-   `app.js` rather than written down, because the mat is fluid now — a
-   hard-coded height is only ever right at one viewport. Fitting also beats
-   cropping here: the bottom of these screens is the action row and the
-   composer, which is the point of the picture. */
-.wfstage{
-  position:absolute; z-index:1; top:50%; left:50%;
-  width:var(--dw, 760px);
-  height:var(--dh, 520px);
-  transform:translate(-50%, -50%) scale(var(--fit, 1));
-}
-/* how app.js takes the measurement: laid out at the design width, its own
-   height, nothing scaled, nothing visible */
-.wfstage.is-measuring{
-  display:block !important;
-  visibility:hidden !important;
-  top:0; left:0;
-  height:auto !important;
-  transform:none !important;
-}
-.wfstage.is-measuring .absui,
-.wfstage.is-measuring .slackui{ height:auto !important; }
-
 
 /* ── THE PARALLEL FIGURE ─────────────────────────────────────────────
    The section claims four things and the old figure — an ask, a hub, four
@@ -2344,7 +2266,7 @@ h3{ font-family:var(--fd); }
 
 /* 1 · the ask ─────────────────────────────────────────────────────── */
 .wfo--ask{
-  left:12cqw; top:22cqh; width:min(44cqw, 30rem);
+  left:12cqw; top:19cqh; width:min(44cqw, 30rem);
   padding:1.15em 1.3em;
   transform:translateY(1.4em) rotate(-1.1deg);
 }
@@ -2368,7 +2290,7 @@ h3{ font-family:var(--fd); }
    subject that is centred can only stay centred if what recedes recedes
    along the same axis. */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.3; transform:translate(11cqw, -20cqh) rotate(-1.1deg);
+  opacity:.3; transform:translate(11cqw, -18cqh) rotate(-1.1deg);
 }
 .wfsc[data-step="3"] .wfo--ask,
 .wfsc[data-step="4"] .wfo--ask{
@@ -2377,7 +2299,7 @@ h3{ font-family:var(--fd); }
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
 .wfo--run{
-  left:36cqw; top:39cqh; width:min(46cqw, 32rem);
+  left:36cqw; top:36cqh; width:min(46cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 .wfsc[data-step="1"] .wfo--run{ opacity:1; transform:rotate(.7deg); }
@@ -2392,7 +2314,7 @@ h3{ font-family:var(--fd); }
    That lap is the point: the people are on the workflow, not filed
    under it. Every other pair in this scene has to clear. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -16cqh) rotate(-.6deg);
+  opacity:1; transform:translate(-9cqw, -18cqh) rotate(-.6deg);
 }
 .wfsc[data-step="4"] .wfo--run{
   opacity:1; width:min(40cqw, 28rem);
@@ -2419,7 +2341,7 @@ h3{ font-family:var(--fd); }
   border-radius:.58em; background:var(--tile);
   display:grid; place-items:center;
 }
-.wfo__ic img{ width:1.15em; height:1.15em; }
+.wfo__ic img{ width:1.15em; height:1.15em; object-fit:contain; }
 /* THREE type sizes in this whole scene: 1em for a card's name, .88em for
    anything read as a sentence, .68em for anything read as a label. It
    carried six — 17.6 / 16.7 / 16.2 / 15.9 / 12.0 / 11.4 — and three of
@@ -2436,15 +2358,75 @@ h3{ font-family:var(--fd); }
 /* the header label is the state, so it swaps with the state */
 /* the two state tags share one grid cell, so neither reserves width
    from the other and the swap cannot move anything */
-.wfo__tag--run,.wfo__tag--wf{ transition:opacity var(--t-state) var(--e-out); }
+.wfo__tag--run,.wfo__tag--wf,.wfo__tag--by{ transition:opacity var(--t-state) var(--e-out); }
+.wfo__tag--by{
+  display:none; align-items:center; gap:.42em;
+  text-transform:none; letter-spacing:0; font-family:var(--fb); font-size:.8em;
+  color:var(--ink-soft);
+}
+/* The byline TAKES the tag's slot rather than sharing it — all three tags
+   live in the header's third column, so showing two at once stacked them on
+   one another. "Public" is already said at the beat before and the beat
+   after; while the card is being handed round, the header's job is to say
+   who is holding it. (The rule that hides "Public" lives further down, after
+   the `:not([data-step="1"])` that would otherwise beat it.) */
+.wfsc[data-step="3"] .wfo__tag--by{ display:flex; }
+.wfo__byav{
+  width:1.5em; height:1.5em; flex:none; border-radius:var(--r-pill);
+  background-size:cover; background-position:center;
+  box-shadow:0 0 0 .12em var(--paper);
+}
+.wfo__tag--by b{ font-weight:500; color:var(--ink); }
+/* whoever is holding the card lifts out of the pile */
+.wfo__who{ transition:opacity 480ms var(--e-out), transform 620ms var(--e-spring); }
+.wfo__who.is-holding{ transform:translateY(-.34em) scale(1.08); z-index:9; }
+.wfo__who:not(.is-holding){ opacity:.55; }
 .wfo__tag--wf{ opacity:0; }
 /* --accent-wash, not --accent-solid: the card is --paper and --paper
    flips, so this label needs the token that flips with it. */
 .wfsc[data-step="1"] .wfo__tag--run{ opacity:1; color:var(--accent-wash); }
 .wfsc:not([data-step="1"]) .wfo__tag--run{ opacity:0; }
 .wfsc:not([data-step="1"]) .wfo__tag--wf{ opacity:1; }
+/* …except while the card is being handed round, when the slot belongs to
+   whoever is holding it. This has to come AFTER the `:not()` above — the
+   earlier attempt sat before it and lost, which is why "Public" showed as a
+   ghost behind the byline. `display`, not `opacity`: they share a grid cell,
+   so an invisible tag still occupies it. */
+.wfsc[data-step="3"] .wfo__tag--wf{ display:none; }
 
-.wfo__steps{ list-style:none; margin:0; padding:.55em var(--wfo-pad) .65em; }
+.wfo__steps{ position:relative; list-style:none; margin:0; padding:.55em var(--wfo-pad) .65em; }
+/* THE RUNNER. It sits on the connector mark of whichever step is live and
+   travels down the chain — five connectors, ending in Slack. A list that
+   just fades in tells you the recipe; something moving down it tells you
+   the job is being done. It rides on top of the mark rather than beside
+   it, so the row does not reflow as it passes. */
+.wfo__runner{
+  position:absolute; left:var(--wfo-pad); top:0;
+  /* the same em context as the mark it covers — .wfo__mk lives inside an
+     .88em row, so 1.7em means 27px there and 30px out here */
+  font-size:.88em;
+  width:1.7em; height:1.7em; border-radius:.49em;
+  display:grid; place-items:center;
+  background:var(--accent-solid);
+  box-shadow:0 0 0 .18em color-mix(in srgb, var(--accent-solid) 22%, transparent);
+  opacity:0;
+  transform:translateY(var(--ry, 0px)) scale(.7);
+  transition:transform 420ms var(--e-spring), opacity var(--t-state) var(--e-out);
+  pointer-events:none;
+}
+.wfo__runner img{ width:1em; height:1em; filter:brightness(0) invert(1); }
+.wfsc[data-step="1"] .wfo--run.is-running .wfo__runner{
+  opacity:1; transform:translateY(var(--ry, 0px)) scale(1);
+}
+/* the row the runner is on comes to full strength and its mark steps back,
+   so the two never fight for the same 27px */
+.wfo__steps li.is-live{ color:var(--ink); }
+.wfo__steps li.is-live .wfo__mk{ opacity:0; }
+.wfo__steps li.is-done .wfo__mk{ box-shadow:0 0 0 1px color-mix(in srgb, var(--ok-ink) 45%, transparent); }
+.wfo__mk{ transition:opacity 180ms var(--e-out), box-shadow var(--t-state) var(--e-out); }
+/* X ships as a currentColor glyph, so it follows the ink and inverts with
+   the theme the way the real mark does */
+.wfo__mk--x{ color:var(--ink); }
 .wfo__steps li{
   display:flex; align-items:center; gap:.65em;
   padding:.3em 0; color:var(--ink-soft); font-size:.88em;
@@ -2461,7 +2443,9 @@ h3{ font-family:var(--fd); }
   box-shadow:0 0 0 1px var(--hairline);
   display:grid; place-items:center;
 }
-.wfo__mk img{ width:1em; height:1em; }
+/* contain, not the default fill: not every connector mark is square —
+   Gmail ships 134x100 and was being stretched into a 16px box. */
+.wfo__mk img{ width:1em; height:1em; object-fit:contain; }
 /* The two chips are two STATES of the same slot, so they sit on one
    anchor. Left in flow, the hidden "Save workflow" chip still took its
    width — and that width is derived from the canvas, so every resize
@@ -2481,7 +2465,28 @@ h3{ font-family:var(--fd); }
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-spring);
 }
 .wfo__chip svg{ width:1.1em; height:1.1em; }
-.wfo__chip--go{ background:var(--accent-solid); color:var(--paper-ink); }
+/* NOT A BUTTON THE USER PRESSES. Saving is not something you go and do in
+   this product — a workflow comes out of a conversation (`createInChat`:
+   "Start from a conversation when no workflow fits yet"), and the agent is
+   the one who offers. So the slot holds a question and two answers, and it
+   uses the product's own word for the share: PUBLIC means inside your
+   workspace (`visibilityHelp`). */
+.wfo__chip--go{
+  /* the question and its two answers span the footer, so the row can never
+     be wider than the card it sits in */
+  right:var(--wfo-pad); justify-content:space-between; white-space:nowrap;
+  gap:.7em; padding:.4em .85em .4em .85em;
+  background:var(--paper); color:var(--ink-soft);
+  box-shadow:0 0 0 1px var(--hairline), 0 6px 18px -12px rgb(var(--ink-rgb) / .5);
+  text-transform:none; letter-spacing:0; font-family:var(--fb); font-size:.8em;
+}
+.wfo__chip--go i{ font-style:normal; color:var(--ink); }
+.wfo__chip--go b{
+  padding:.34em .7em; border-radius:var(--r-pill);
+  background:var(--accent-solid); color:var(--paper-ink); font-weight:500;
+}
+.wfo__chip--go em{ font-style:normal; color:var(--ink-mute); padding-right:.3em; }
+.wfo__chip--go span{ display:flex; align-items:center; gap:.5em; }
 /* the two chips are the two moments: the offer, then the schedule */
 .wfo__chip--go{ opacity:0; transform:translateY(-50%) scale(.86); }
 .wfsc[data-step="2"] .wfo__chip--go{ opacity:1; transform:translateY(-50%); }
@@ -2501,7 +2506,7 @@ h3{ font-family:var(--fd); }
      laid out as a grid so the caption can drop to its own row. Beside
      the avatars it would have sat half over the card — the avatars lap
      the card on purpose, the label must not. */
-  left:27cqw; top:58cqh;
+  left:27cqw; top:59cqh;
   /* Flex-wrap, not a 3-column grid. The caption spans the full width, and
      a grid distributes a spanning item's size back over the tracks it
      spans — so a 262px caption pushed the three `auto` avatar columns
@@ -2545,7 +2550,7 @@ h3{ font-family:var(--fd); }
 .wfsc[data-step="4"] .wfo--team{ opacity:0; }
 
 .wfo--perm{
-  left:27cqw; top:74cqh; width:min(46cqw,29rem);
+  left:27cqw; top:77cqh; width:min(46cqw,29rem);
   color:var(--ink-soft); font-size:.88em;
   transform:translateY(.8em);
 }
@@ -2555,7 +2560,7 @@ h3{ font-family:var(--fd); }
 /* 4 · it stops needing to be asked ────────────────────────────────── */
 
 .wfo--list{
-  right:7cqw; top:30cqh; width:min(38cqw, 25rem);
+  right:7cqw; top:28cqh; width:min(38cqw, 25rem);
   transform:translateX(2.4em) rotate(.9deg);
 }
 .wfsc[data-step="4"] .wfo--list{ opacity:1; transform:rotate(.9deg); }
@@ -2565,6 +2570,11 @@ h3{ font-family:var(--fd); }
    three rows came out three different heights and the block read as a
    pile of type sizes. Giving each field its own line makes every row the
    same height regardless of how long the name is. */
+.wfo__sub{
+  margin:0; padding:.7em var(--wfo-pad) .1em;
+  font-family:var(--fm); font-size:.68em; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-mute);
+}
 .wfo__row{
   display:grid; grid-template-columns:auto minmax(0,1fr);
   align-items:center; column-gap:.6em; row-gap:.08em;
