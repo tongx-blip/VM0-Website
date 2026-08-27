@@ -401,6 +401,24 @@ const v = document.querySelector('.ladder__view').getBoundingClientRect();
 [Math.round(v.top - n.bottom), Math.round(innerHeight - v.bottom)]   // equal
 ```
 
+**Sweep the band, not the corners.** A panel whose content wraps will fit at
+some widths and overflow at others, and the four widths everyone tests are not
+a sample — they are four points that can all land in the gaps. The Slack panel
+shipped with its composer painted through the last message at *every* width
+from 1080 to 1400, and passed 390/768/1024/1440. Step through the range:
+
+```bash
+for w in 1010 1060 1120 1160 1220 1280 1320 1440; do  # …and 390/768/1920
+  # set the viewport, then, per overflowing candidate:
+  #   list.scrollHeight - list.clientHeight            → 0
+  #   composer.top - lastMessage.bottom                → > 0
+done
+```
+
+Anything that lays text over a fixed footer needs `overflow` on the scrolling
+part. A flex child with `min-height:0` and no `overflow` does not clip — it
+spills, and paints over whatever comes after it.
+
 Re-run the width check at **390 / 768 / 1024 / 1280 / 1920** — the failure mode
 is a header whose width expression happens to agree with the cards at the one
 width you looked at.

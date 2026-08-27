@@ -525,6 +525,63 @@ running under the measurement.
 ---
 
 
+## 2026-08-27 · the Slack panel at high fidelity
+
+Tong: *"很多ui bug，检查一下，我说了就算是网站展示图，也要按high fi的设计去做。
+头像的外轮廓线，文字overlap等等，还有emoji的使用，icon等，要高保真"*. Five real
+defects, and the first one had shipped.
+
+**Text overlapping text, at every width between ~1080 and ~1400.**
+`.slk__list` was `flex:1` with no `overflow`, so once the messages were
+taller than the panel the list simply spilled out of its own box and
+painted the last message straight through the composer — 98px of overlap
+at 1120, 67 at 1200, 36 at 1280, gone by 1400. The reason it shipped is
+worth writing down: the sweep tested 390, 768, 1024 and 1440, and all four
+happened to fit. That is the failure QA §4j already names — a width
+expression that agrees with you at the one width you looked at — and the
+answer is the same one: sweep the band, not the corners.
+
+The fix is also the correct product behaviour. A channel scrolls and hangs
+from the bottom, so the list is `overflow:hidden` and bottom-anchored: it
+cannot overlap anything at any width, and what survives a squeeze is the
+newest message, which is what Slack keeps.
+
+**The outline around the avatars.** Every `avatar-*.png` is a circle
+inscribed in a 320px square — it touches all four edge midpoints and its
+corners are fully transparent. Framed at Slack's 8px rounded square with a
+tinted fill behind it, those corners showed the fill: a hard little wedge
+at each corner of every face. The facepile was worse — a 2px ring on a
+square box around circular art draws a rounded-square outline floating
+clear of the picture inside it. Circular frames, no fill. Slack does draw
+member avatars as rounded squares, but losing that is cheaper than
+shipping four visible artefacts, and `.slk__av--okou` keeps the square,
+which is how Slack draws an *app* icon anyway.
+
+**The reaction was a generic tick.** A Slack reaction is an emoji and a
+count. The mark is drawn as an inline SVG rather than typed: a font glyph
+renders as a different picture on every operating system, which is the
+opposite of high fidelity for something whose whole job is to look like a
+screenshot — and T6 keeps emoji *glyphs* off this page. `✅` is a green
+rounded square with a white check, and now that is what it is. The
+invented "Seen by 6" pill went with it; Slack has no such control, and the
+count on the reaction already says other people are in the room.
+
+**The send mark pointed backwards.** `m5 12 14-7-5 7 5 7z` draws a plane
+aimed left. It is a filled plane aimed right now.
+
+**The AGENT badge rode high.** A 9px badge baselined against a 15px name
+sits with its box above the cap line; Slack centres it.
+
+**And the panel had to fit after all that.** Grouping the two consecutive
+Okou messages — which is what Slack does, and drops the repeated avatar,
+name and badge — plus a spacer that holds an indent instead of a 36px row
+height, recovered most of it. In the 1001–1280 band, where the three
+column stage squeezes this panel to 441px, the reaction and the unfurl's
+service line stand down: they are the two elements that are texture rather
+than narrative, and the header's facepile still says the room has eight
+people in it. Measured at eleven widths from 390 to 1920: nothing clipped,
+nothing overlapping.
+
 ## 2026-08-27 · the Storefront scene is a Slack channel, drawn as one
 
 Tong: *"其实我们本意是想做的更像slack。也许可以做一个更像slack的假的对话界面，

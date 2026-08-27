@@ -5706,7 +5706,19 @@ h3{ font-family:var(--fd); }
 /* the painting, and the veil that went with it, are gone */
 .ochat--slack::before,.ochat--slack::after{ content:none; }
 
-.slk__list{ flex:1; min-height:0; padding-bottom:6px; }
+/* A CHANNEL SCROLLS, AND IT HANGS FROM THE BOTTOM. Without `overflow`
+   this list simply spilled out of its own box and painted the last
+   message straight through the composer — 98px of overlap at 1120, 67 at
+   1200, 36 at 1280, gone by 1400. The first sweep tested 390/768/1024/
+   1440 and all four happened to fit, which is the failure QA §4j already
+   names: a width expression that agrees with you at the one width you
+   looked at. Clipped and bottom-anchored it cannot overlap at any width,
+   and the newest message is the one kept — which is what Slack does. */
+.slk__list{
+  flex:1; min-height:0; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding-bottom:6px;
+}
 
 .slk__bar{
   display:flex; align-items:center; gap:10px; flex:none;
@@ -5724,8 +5736,11 @@ h3{ font-family:var(--fd); }
 
 .slk__faces{ display:flex; align-items:center; margin-left:auto; }
 
+/* the ring has to be round too — on a square box around circular art it
+   drew a rounded-square outline floating clear of the picture inside it,
+   which is the most visible of the four */
 .slk__faces img{
-  width:22px; height:22px; border-radius:6px; object-fit:cover; object-position:top;
+  width:22px; height:22px; border-radius:50%; object-fit:cover;
   margin-right:-5px; box-shadow:0 0 0 2px var(--slk-card);
 }
 
@@ -5740,32 +5755,54 @@ h3{ font-family:var(--fd); }
    right edge rather than in a bubble. */
 .slk__msg,.slk__react{
   display:flex; align-items:flex-start; gap:9px;
-  padding:5px clamp(14px,1.4vw,18px);
+  padding:3px clamp(14px,1.4vw,18px);
 }
+
+/* a grouped message hangs at the first one's text indent and says
+   nothing twice — no second avatar, no second name, no second badge */
+.slk__msg--cont{ padding-top:1px; }
+
+.slk__react{ padding-top:1px; padding-bottom:5px; }
 
 .slk__msg:first-of-type{ padding-top:12px; }
 
+/* CIRCLES, BECAUSE THE ART IS A CIRCLE. Every avatar-*.png is a circle
+   inscribed in a 320px square: it touches all four edge midpoints and
+   its four corners are fully transparent. Framed at Slack's 8px rounded
+   square, those corners showed the frame's own fill — a hard little
+   wedge at each corner, which is the outline Tong is pointing at. At 50%
+   nothing is cropped and there is nothing behind the art to leak.
+
+   Slack does draw member avatars as rounded squares; it draws APP icons
+   that way too, and `.slk__av--okou` keeps the square. Losing that
+   distinction is cheaper than shipping four visible artefacts. */
 .slk__av{
   width:36px; height:36px; flex:none;
-  border-radius:8px; overflow:hidden;
-  background:var(--slk-tint);
+  border-radius:50%; overflow:hidden;
 }
 
-.slk__av img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+.slk__av img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 /* Okou is an app in this workspace, not one of the faces */
 .slk__av--okou{ display:grid; place-items:center; background:var(--slk-tint); }
 
 .slk__av--okou img{ width:22px; height:22px; object-fit:contain; }
 
-/* the reaction row hangs under the message it belongs to */
-.slk__av--gap{ background:none; }
+/* the spacer holds the INDENT, not a row height. At 36px square it was
+   forcing the reaction row to 42px to show a 17px pill, and every grouped
+   message to a 36px floor it did not need — 19px of the panel spent on
+   an element that draws nothing. */
+.slk__av--gap{ background:none; height:0; }
 
 .slk__body{ min-width:0; flex:1; }
 
+/* CENTRED, NOT BASELINED. A 9px badge baselined against a 15px name
+   sits with its box riding high above the cap line; Slack centres it on
+   the name. The name and the time keep their own baseline relationship
+   because they are both text. */
 .slk__meta{
-  display:flex; align-items:baseline; gap:7px;
-  margin:0 0 1px; line-height:1.3;
+  display:flex; align-items:center; gap:7px;
+  margin:0 0 1px; line-height:1.35;
 }
 
 .slk__meta b{ font-size:var(--t-sm); font-weight:600; color:var(--slk-ink); }
@@ -5774,8 +5811,8 @@ h3{ font-family:var(--fd); }
    one element that says outright that a member of this channel is
    software — which is the whole subject of the scene. */
 .slk__badge{
-  flex:none; font-style:normal;
-  padding:1px 5px; border-radius:3px;
+  flex:none; font-style:normal; align-self:center;
+  padding:2px 5px; border-radius:3px; line-height:1;
   background:var(--slk-tint); border:1px solid var(--slk-line);
   font-size:9px; font-weight:600; letter-spacing:.04em;
   color:var(--slk-mute);
@@ -5829,23 +5866,27 @@ h3{ font-family:var(--fd); }
    Counted pills, and the tick is drawn rather than typed: T6 forbids
    emoji on this page and a mock is not a licence to bring the one
    pictogram the page has none of. */
-.slk__pills{ display:flex; gap:6px; margin:5px 0 0; }
+.slk__pills{ display:flex; gap:6px; margin:6px 0 0; }
 
+/* A REACTION IS AN EMOJI AND A COUNT, and the emoji is DRAWN rather
+   than typed. A font glyph renders as a different picture on every
+   operating system, which is the opposite of high fidelity for something
+   whose whole job is to be a screenshot of a real product — and T6 keeps
+   emoji *glyphs* off this page. An inline SVG of the specific mark is
+   deterministic, sharp at 14px, and is what the reference actually
+   shows. The pill's own geometry is Slack's: 15px tall, fully round,
+   tinted with its link blue. */
 .slk__pill{
   display:inline-flex; align-items:center; gap:5px;
-  padding:2px 8px; border-radius:var(--r-pill);
+  padding:2px 9px 2px 6px; border-radius:var(--r-pill);
   background:color-mix(in srgb, var(--slk-link) 10%, transparent);
-  border:1px solid color-mix(in srgb, var(--slk-link) 24%, transparent);
+  border:1px solid color-mix(in srgb, var(--slk-link) 30%, transparent);
   font-size:var(--t-meta); color:var(--slk-link);
 }
 
-.slk__pill svg{ width:11px; height:11px; stroke:var(--slk-link); }
+.slk__pill svg{ width:14px; height:14px; display:block; }
 
 .slk__pill b{ font-weight:600; }
-
-.slk__pill--eyes{
-  background:none; border-color:var(--slk-line); color:var(--slk-mute);
-}
 
 /* ── the composer ───────────────────────────────────────────────────
    Not an input: a mock full of real form controls is a mock full of
@@ -5867,10 +5908,30 @@ h3{ font-family:var(--fd); }
   background:var(--slk-tint);
 }
 
-.slk__send svg{ width:13px; height:13px; stroke:var(--slk-mute); }
+.slk__send svg{ width:14px; height:14px; fill:var(--slk-mute); }
 
 
 /* ── the ghost line ─────────────────────────────────────────────── */
+/* ── the band where the middle column is narrowest ──────────────────
+   Between the 1000px one-column breakpoint and about 1280 the three-column
+   stage squeezes this panel to ~440px, six messages wrap to their longest,
+   and the opening ask is the thing that gets clipped off the top. The
+   reaction is the one element here that is texture rather than narrative —
+   the header's facepile still says the room has eight people in it — so it
+   is what gives way, and the rows tighten by a pixel each side. */
+@media (min-width:1001px) and (max-width:1280px){
+  .slk__react{ display:none; }
+
+  .slk__msg{ padding-top:2px; padding-bottom:2px; }
+
+  /* and the unfurl's service line, which is the least load-bearing of its
+     three: the title and the URL both say what it is, and the Okou mark
+     is already on the message above it. Measured at 1120, where the panel
+     is at its narrowest 441px and the ask was still losing its first line
+     by twelve pixels. */
+  .slk__unfurl-h{ display:none; }
+}
+
 .slk__typing{ display:flex; align-items:center; gap:5px; margin:0; padding:11px 0 9px; }
 
 .slk__typing i{

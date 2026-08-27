@@ -28,11 +28,18 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML = os.path.join(ROOT, 'site', 'index.html')
 
 AVA = 'assets/brand/avatar-%d.png'
-TICK = ('<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round" '
-        'stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>')
+REACT = ('<svg viewBox="0 0 20 20" aria-hidden="true">'
+         '<rect width="20" height="20" rx="5" fill="#3AA76D"/>'
+         '<path d="M5.6 10.4 8.4 13.2 14.4 6.9" fill="none" stroke="#fff" '
+         'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 
-def msg(beat, avatar, name, time, body, agent=False, extra=''):
+def msg(beat, avatar, name, time, body, agent=False, extra='', cont=False):
+    if cont:
+        return ('\n              <div class="ochat__row slk__msg slk__msg--cont" data-beat="%s">'
+                '<span class="slk__av slk__av--gap" aria-hidden="true"></span>'
+                '<div class="slk__body"><p class="slk__say">%s</p>%s</div></div>'
+                % (beat, body, extra))
     badge = '<i class="slk__badge">AGENT</i>' if agent else ''
     face = ('<span class="slk__av slk__av--okou">'
             '<img src="assets/okou-icon.svg" alt="" width="22" height="22"></span>'
@@ -66,8 +73,8 @@ def build():
         + '<em>8</em></span></p>'
 
         + msg('ask', 2, 'Maya', '9:24 AM',
-              '<mark class="slk__at">@Okou</mark> build the one-pager for Litoral — hero, '
-              'the short story, three room tiles. Brand kit is in Drive.')
+              '<mark class="slk__at">@Okou</mark> build the Litoral one-pager — hero, '
+              'the story, three room tiles. Brand kit is in Drive.')
 
         # Slack's own ghost line, kept inline where the message will land
         + '\n              <div class="ochat__row slk__msg slk__msg--typing ochat__row--typing" aria-hidden="true">'
@@ -76,11 +83,10 @@ def build():
           '<div class="slk__body"><p class="slk__typing"><i></i><i></i><i></i></p></div></div>'
 
         + msg('reply', 1, 'Okou', '9:24 AM',
-              'Read the brand brief in Drive. One page, minimal — publishing as soon '
-              'as it reads right.', agent=True)
+              'Read the brand brief. Publishing as soon as it reads right.', agent=True)
 
         + msg('result', 1, 'Okou', '9:26 AM',
-              'Published. Live now:', agent=True, extra=UNFURL)
+              'Published. Live now:', agent=True, extra=UNFURL, cont=True)
 
         # somebody else in the room reacted — the cheapest proof that the
         # channel has more people in it than the two who typed
@@ -88,8 +94,7 @@ def build():
           '<span class="slk__av slk__av--gap" aria-hidden="true"></span>'
           '<div class="slk__body"><p class="slk__pills">'
           '<span class="slk__pill">%s<b>4</b></span>'
-          '<span class="slk__pill slk__pill--eyes">Seen by 6</span>'
-          '</p></div></div>' % TICK
+          '</p></div></div>' % REACT
 
         + msg('ask2', 3, 'Dan', '9:31 AM',
               'Reads well. Can you send the launch note to the list?')
@@ -104,8 +109,8 @@ def build():
         '\n              <p class="slk__composer">'
         '<span>Message #launch-litoral</span>'
         '<i class="slk__send" aria-hidden="true">'
-        '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" '
-        'stroke-linejoin="round"><path d="m5 12 14-7-5 7 5 7z"/></svg></i></p>')
+        '<svg viewBox="0 0 24 24" aria-hidden="true">'
+        '<path d="M3.4 20.4 21 12 3.4 3.6 3.4 10.2 15 12 3.4 13.8Z"/></svg></i></p>')
 
     # the slice this replaces runs up to `<figure class="tplwin">`, so it
     # contains `.ochat`'s own closing tag — the replacement has to as well
