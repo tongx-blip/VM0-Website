@@ -670,54 +670,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 /* ── connector authorization, drawn from the real per-agent
       Authorization tab: breadcrumb, agent header, three tabs,
       then the rows the firewall actually decides on ── */
-.perms__crumb{
-  padding:16px 20px 0;
-  font-size:12.5px; color:var(--ink-mute);
-}
-
-.perms__crumb i{ font-style:normal; margin:0 7px; color:var(--g-500); }
-
-.perms__head{
-  display:flex; align-items:center; gap:12px;
-  padding:12px 20px 14px;
-}
-
-.perms__ava{
-  width:36px; height:36px; flex:none;
-  display:grid; place-items:center;
-  border:1px solid var(--hairline); border-radius:11px;
-  background:var(--g-900);
-}
-
-.perms__id{ display:flex; flex-direction:column; line-height:1.35; }
-
-.perms__id b{ font-size:16px; font-weight:600; color:var(--ink); letter-spacing:-.015em; }
-
-.perms__id i{ font-style:normal; font-size:12.5px; color:var(--ink-mute); }
-
-.perms__tabs{
-  display:flex; gap:4px; width:max-content;
-  margin:0 20px 14px;
-  padding:3px; border-radius:var(--r-btn);
-  background:var(--g-900);
-}
-
-.perms__tabs span{
-  padding:6px 13px; border-radius:9px;
-  border:1px solid transparent;
-  font-size:13px; color:var(--ink-mute);
-}
-
-.perms__tabs span.is-on{
-  /* --paper, not #fff. In dark mode --ink is near-white, so a hard white
-     pill put white text on a white chip and the active tab disappeared.
-     The token audit could not see it: this lives inside .perms, which is
-     mock-exempt, and the exemption assumes a mock is PINNED to one theme.
-     This one follows the theme, so the literal was a real bug. */
-  background:var(--paper); border-color:var(--hairline);
-  color:var(--ink); font-weight:500;
-}
-
 .perms__list{ border-top:1px solid var(--hairline); }
 .slackui{ color:var(--ink); }
 
@@ -1388,7 +1340,12 @@ h3{ font-family:var(--fd); }
   /* The two versions of the header, side by side and in one place. Everything
      inside reads these four; nothing inside names a colour. Switching ground
      is then a four-line swap rather than a second copy of the component. */
-  --nav-ground:var(--nav-fill);
+  /* NO GROUND UNTIL IT DETACHES. A fill is right for a header that floats
+     over content — it is what makes it legible over anything (RULES S3) —
+     but at the top of the page the bar is not floating over anything yet,
+     and a grey slab across the whole window above a white hero is just a
+     band of grey. It takes its ground at the moment it becomes a card. */
+  --nav-ground:transparent;
   --nav-ink:var(--ink-soft);
   --nav-ink-hi:var(--ink);
   --nav-accent:var(--accent-wash);
@@ -1438,6 +1395,7 @@ h3{ font-family:var(--fd); }
    its padding, which at 22px made a 54px bar read as a lozenge; the header
    is the width of a card, so it is a card. */
 .nav.is-stuck{
+  --nav-ground:var(--nav-fill);
   top:var(--nav-top);
   left:var(--card-gap); right:var(--card-gap);
   height:var(--nav-h-stuck);
@@ -1465,12 +1423,13 @@ h3{ font-family:var(--fd); }
    be DARKENED to clear AA (--accent-wash); on this one --accent itself
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
-  --nav-ground:var(--nav-fill-dark);
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
   --nav-chip:rgb(var(--paper-rgb) / .1);
 }
+
+.nav.is-dark.is-stuck{ --nav-ground:var(--nav-fill-dark); }
 
 
 .nav__logo{
@@ -1665,6 +1624,18 @@ h3{ font-family:var(--fd); }
 
 .btn--ghost{ background:var(--wash-2); border-color:transparent; color:var(--ink); }
 
+/* On the closing band the ground is --wash and the button is --wash-2 —
+   one step apart, which does not read as a button, it reads as a smudge on
+   the ground. On this ground the secondary takes --paper, which is what a
+   surface is here: a fill and an elevation, never an outline (RULES S3).
+   On the white section cards --wash-2 is still right, so this is scoped. */
+.close .btn--ghost{
+  background:var(--paper); color:var(--ink);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05), 0 8px 20px -14px rgb(var(--ink-rgb) / .3);
+}
+
+.close .btn--ghost:hover{ background:var(--paper); }
+
 .btn--ghost:hover{
   background:var(--wash-2); color:var(--ink);
   transform:translateY(-1px);
@@ -1803,7 +1774,10 @@ h3{ font-family:var(--fd); }
    product shot directly underneath it. */
 .hero{
   position:relative;
-  padding-top:clamp(120px, 13vh, 172px);
+  /* +36px at every size. With the header no longer painting a ground, the
+     hero's first line sat directly under the window edge with nothing
+     between them, and the whole block read as having ridden up. */
+  padding-top:clamp(156px, 17vh, 212px);
   padding-bottom:0;
   border-top:0;
   overflow:hidden;
@@ -2207,7 +2181,11 @@ h3{ font-family:var(--fd); }
   flex:none;
   display:grid; place-items:center;
   border-radius:var(--r-card);
-  background:var(--wash-2);
+  /* --wash-1, not --wash-2. Forty of these in a row at --wash-2 read as a
+     grey band with logos in it rather than as logos: at that count the tile
+     is the pattern and the mark is the detail, so the tile has to step back
+     one. One tile alone on a page would still take --wash-2. */
+  background:var(--wash);
 }
 
 
@@ -2669,6 +2647,18 @@ h3{ font-family:var(--fd); }
 
 .par__hd b{ font-size:var(--t-meta); font-weight:500; flex:1; min-width:0;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ONE campaign, four chats. Four unrelated titles read as four errands;
+   the shared kicker is what makes them one job broken into parts, which is
+   the whole claim of this section. Repeated on purpose — it is a group tag,
+   not four labels, so it is set small, mono and muted and the eye reads it
+   once. No numbering: a `01 /` on each would read as filing, not sequence. */
+.par__seq{
+  margin:0 0 .5em;
+  font-family:var(--fm); font-size:var(--t-meta); font-weight:400;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
 
 .par__el{
   font-style:normal; font-family:var(--fm); font-size:var(--t-mono);
@@ -3624,31 +3614,15 @@ h3{ font-family:var(--fd); }
 /* 5 · what the run left behind.
    NOT a card floating over an empty frame — that is what it was, and it
    read as a small panel adrift with no relationship to the beat before
-   it. The trail is the SAME WINDOW on a different tab: the breadcrumb,
-   the agent header and the tab strip all stay, "Authorization" hands over
-   to "Activity", and only the body swaps. That is both how the product
-   works and the connective tissue beat 4 was missing. */
+   it. The trail is the same window with a different body — the window's
+   own chrome (breadcrumb, agent identity, tab strip) is gone: it was
+   settings UI in a picture that is not about settings. */
 .ctrail{ display:none; }
 
 .ctrl__frame[data-beat="5"] .ctrail{ display:block; }
 
 .ctrl__frame[data-beat="5"] .perms__list,
 .ctrl__frame[data-beat="5"] .perms__note{ display:none; }
-
-
-/* the tab strip follows the body */
-.perms__tab--act{ transition:none; }
-
-.ctrl__frame[data-beat="5"] .perms__tab--auth{
-  background:transparent; border-color:transparent;
-  color:var(--ink-mute); font-weight:400; box-shadow:none;
-}
-
-.ctrl__frame[data-beat="5"] .perms__tab--act{
-  background:var(--paper); border-color:var(--hairline);
-  color:var(--ink); font-weight:500;
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .08);
-}
 
 
 .ctrail__r{
@@ -5166,7 +5140,7 @@ h3{ font-family:var(--fd); }
 .panel--cta{
   background:transparent;
   border-top:0;
-  padding-top:clamp(88px,8vw,132px);
+  padding-top:clamp(64px,5.6vw,96px);
 }
 .cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
 
@@ -5732,9 +5706,6 @@ h3{ font-family:var(--fd); }
 .perms__list li{ border-bottom-color:rgb(var(--ink-rgb) / .06); }
 .perms__list li:hover{ background:var(--wash); }
 .perms__note{ border-top:0; background:var(--wash); color:var(--ink-soft); }
-.perms__ava{ border:0; background:var(--wash-2); }
-.perms__tabs{ background:var(--wash-2); }
-.perms__tabs span.is-on{ border-color:transparent; box-shadow:0 1px 2px rgb(var(--ink-rgb) / .08); }
 
 /* status is carried by a tinted fill, not an outline */
 /* 11px, not 10.5: the page has an 11px floor and a mock is still read. */
@@ -5908,10 +5879,11 @@ h3{ font-family:var(--fd); }
    lands 297-492px above the footer panel's top edge; at the old padding
    the buttons sat at 400 — inside it, with a scribble crossing "Add to
    Slack". This lifts them to about 530. */
-.panel--cta{ padding-bottom:clamp(300px, 22vw, 360px); }  /* Sized for the
+.panel--cta{ padding-bottom:clamp(232px, 16.5vw, 276px); }  /* Sized for the
    drawing, not for a black ground: at 35vw this left a screen of empty grey
-   between the buttons and the mountains. The floor is the phone case, where
-   the drawing sits above the footer and is 312px tall. */
+   between the buttons and the mountains. Cut again from 22vw — the buttons
+   can sit ON the drawing's empty sky, which is what the sky is for, and the
+   whole tail was reading as a screen of nothing before the page ended. */
 
 /* ── section furniture that the centred rule needs ── */.scenes__tabs{ justify-content:center; }
 .metrics{ text-align:center; }
@@ -5964,13 +5936,18 @@ h3{ font-family:var(--fd); }
 #sceneCopy{ min-height:calc(2 * 1.55em); }
 
 /* the three figures and their note read as one object on the page */
+/* NO CARD OF ITS OWN. Three grey tiles inside a white card inside a white
+   section card is three grounds to say one thing, and the middle one says
+   nothing the section card had not already said — same colour, one shadow
+   apart. The tiles stay (they are what keeps three figures on a shared
+   vertical, RULES §4q); the card they were sitting on goes. */
 .figures{
   grid-column:1 / 13;
   margin-top:clamp(44px, 5vw, 72px);
-  padding:clamp(30px, 3.4vw, 52px) clamp(20px, 3vw, 48px) clamp(22px, 2.4vw, 34px);
-  background:var(--paper);
-  border-radius:var(--r-lg);
-  box-shadow:var(--e-2);
+  padding:0;
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
 }
 /* ── the KPI row: three tiles, label over figure ───────────────────
    Each figure sits on the same surface as the panels above it — same grey,

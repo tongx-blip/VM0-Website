@@ -6,6 +6,70 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the nine that did not need a decision
+
+Tong sent 22 annotated screenshots (web-design-feedback.sites.vm0.io) and asked
+for the small ones to be changed outright, with the rest held for a round where
+he can rule on them one at a time. Nine were unambiguous. What each was, and
+what was actually wrong:
+
+* **01 · the grey header.** *"灰色导航bar 显得不好看"*. A fill is right for a
+  header that floats over content — it is what makes it legible over anything
+  (RULES S3) — but at the top of the page it is not floating over anything
+  yet, and a grey slab across the window above a white hero is just a band of
+  grey. It takes its ground at the moment it becomes a card (`is-stuck`), and
+  the dark version follows the same rule.
+* **01 · the hero rides up.** *"感觉有些往上蹿"*. With no ground under the
+  header, the first line sat under the window edge with nothing between them.
+  +36px of hero padding at every size.
+* **04 · the digest's connectors.** *"左边的 connector可以是 asana, google
+  drive, linear 之类的"*. They were Slack and Google Calendar — the output and
+  the trigger — on a rail labelled *what the run reached into*. Now Linear
+  ("shipped issues read from the team board") and Google Drive ("specs read
+  from the shared folder"), which are what a digest reads FROM. No Asana icon
+  in the set; Linear and Drive are both in it.
+* **05 · the metrics.** *"这个太多层了"*. Three grey tiles inside a white card
+  inside a white section card — three grounds to say one thing, and the middle
+  one said nothing the section card had not, being the same colour one shadow
+  away. The tiles stay; the card they sat on is gone.
+* **06 · the connector wall.** *"感觉这个灰色好重"*. Forty tiles at `--wash-2`
+  read as a grey band with logos in it: at that count the tile is the pattern
+  and the mark is the detail, so the tile steps back to `--wash`. One tile
+  alone would still take `--wash-2`.
+* **13 · four chats, one job.** *"这里的标题可以有些序列感 … Launch campaign A -
+  landing page"*. Four unrelated titles read as four errands. A shared
+  "LAUNCH CAMPAIGN" kicker on its own line above each title — repeated on
+  purpose, set small and muted so it reads once, as a group tag. No numbering:
+  `01 /` on each would read as filing, not sequence.
+* **15 · the agent-settings chrome.** *"这一部分的 UI 都可以去掉"*. Breadcrumb,
+  agent identity row and tab strip removed from the permission mock, along
+  with the beat-5 rules that drove the tab strip and the base.css rules behind
+  it. Beat 5 still swaps its body; it just no longer explains itself with a
+  tab.
+* **22 · the secondary button.** *"感觉这个灰色的button 怪怪的"*. On the closing
+  band the ground is `--wash` and the button was `--wash-2` — one step apart,
+  which does not read as a button, it reads as a smudge. On that ground it
+  takes `--paper` and an elevation. Scoped: on the white section cards
+  `--wash-2` is still right.
+* **22 · the tail.** *"太高了"*. The closing section's padding was sized for
+  the drawing as if the drawing needed clearance; it does not, because the
+  buttons can sit on its empty sky. 8vw→5.6vw on top, 22vw→16.5vw below.
+
+**Held for the next round, and why:** 02 (three directions for the hero visual
+— his call), 03 / 07 / 08 / 10 / 11 (scenario and narrative rewrites), 05's
+second half (per-scene numbers, which need his prototype), 09 (the save button
+is factually wrong about the product — the agent should ask; the replacement
+is product copy), 12 (which sentence is ambiguous from the annotation), 14 and
+16 (copy and the real product card), 17 (a new figure), 21 (three abstract
+cards replacing the comparison), and 19+20 (demote the whole security block).
+
+**18 is held even though it looks small.** *"这个也太多了，不需要表达"* — the
+network card is beat 4's only content, and `.perms` is at .3 behind it.
+Deleting it leaves that beat showing a dimmed list and nothing else. It is the
+same decision as 20, not a separate one.
+
+---
+
 ## 2026-08-27 · the frame follows the window, the picture sits in the middle of it
 
 Tong: *"图一没有上下居中，底下的step组件位置也错了，应该一直在灰色的frame里，

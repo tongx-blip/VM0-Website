@@ -1594,44 +1594,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 /* ── connector authorization, drawn from the real per-agent
       Authorization tab: breadcrumb, agent header, three tabs,
       then the rows the firewall actually decides on ── */
-.perms__crumb{
-  padding:16px 20px 0;
-  font-size:12.5px; color:var(--ink-mute);
-}
-.perms__crumb i{ font-style:normal; margin:0 7px; color:var(--g-500); }
-.perms__head{
-  display:flex; align-items:center; gap:12px;
-  padding:12px 20px 14px;
-}
-.perms__ava{
-  width:36px; height:36px; flex:none;
-  display:grid; place-items:center;
-  border:1px solid var(--hairline); border-radius:11px;
-  background:var(--g-900);
-}
-.perms__id{ display:flex; flex-direction:column; line-height:1.35; }
-.perms__id b{ font-size:16px; font-weight:600; color:var(--ink); letter-spacing:-.015em; }
-.perms__id i{ font-style:normal; font-size:12.5px; color:var(--ink-mute); }
-.perms__tabs{
-  display:flex; gap:4px; width:max-content;
-  margin:0 20px 14px;
-  padding:3px; border-radius:var(--r-btn);
-  background:var(--g-900);
-}
-.perms__tabs span{
-  padding:6px 13px; border-radius:9px;
-  border:1px solid transparent;
-  font-size:13px; color:var(--ink-mute);
-}
-.perms__tabs span.is-on{
-  /* --paper, not #fff. In dark mode --ink is near-white, so a hard white
-     pill put white text on a white chip and the active tab disappeared.
-     The token audit could not see it: this lives inside .perms, which is
-     mock-exempt, and the exemption assumes a mock is PINNED to one theme.
-     This one follows the theme, so the literal was a real bug. */
-  background:var(--paper); border-color:var(--hairline);
-  color:var(--ink); font-weight:500;
-}
 .perms__list{ border-top:1px solid var(--hairline); }
 .slackui,.slackui__main{ color:var(--ink); }
 .nav__burger span{ background:var(--g-300); }
