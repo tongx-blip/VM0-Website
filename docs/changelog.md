@@ -6,6 +6,32 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the teammates are a stack, and they scale
+
+Tong, on the step-3 figure: *"这里的头像可以变成stack的方式"*.
+
+Three separated avatars are three people who each did something; a
+facepile is one group who share a thing, which is exactly what the
+sentence under it says. They lap by a quarter of an avatar, ringed in the
+card's own paper so the seam reads on both the card and the ground they
+straddle, leftmost on top so the group is read left to right.
+
+**It did not work the first time, and the reason is worth keeping.** The
+block was a three-column grid so the caption could span the full width —
+but a grid distributes a spanning item's size back over the tracks it
+spans, so a 262px caption pushed the three `auto` avatar columns apart and
+quietly ate the negative margins that make a stack. Nothing looked broken;
+the avatars simply stayed where they were. Flex-wrap with the caption at
+`flex:0 0 100%` gives the same two rows without the feedback loop.
+
+**And the avatars were 34 hard pixels** — the `width` attribute, never
+overridden. Every other number in this scene scales with the canvas, so
+the faces grew and shrank *relative to the type beside them* at every
+window size. Sized in em now, with the ring in em too: 37.5px at 1920,
+26.3px at 390, and a lap of exactly 25% at both.
+
+---
+
 ## 2026-08-27 · the scene is a layout, not an arrangement
 
 Tong, with three screenshots: *"icon太小了。header右边的padding和左边的padding

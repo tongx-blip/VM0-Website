@@ -2199,21 +2199,38 @@ h3{ font-family:var(--fd); }
      the avatars it would have sat half over the card — the avatars lap
      the card on purpose, the label must not. */
   left:27cqw; top:58cqh;
-  display:grid; grid-template-columns:repeat(3, auto);
-  justify-content:start; align-items:center;
-  column-gap:.7em; row-gap:.6em;
+  /* Flex-wrap, not a 3-column grid. The caption spans the full width, and
+     a grid distributes a spanning item's size back over the tracks it
+     spans — so a 262px caption pushed the three `auto` avatar columns
+     apart and the negative margins that make the stack were silently
+     absorbed. Here the avatars are a plain row and the caption takes a
+     100% basis, which can only land on the next line. */
+  display:flex; flex-wrap:wrap; align-items:center; row-gap:.6em;
 }
+/* A STACK, not a row. Three separated avatars are three people who each
+   did something; a facepile is one group who share a thing — which is
+   the sentence underneath it. The lap is a third of an avatar, the ring
+   is the card's own paper so the seam reads on both grounds it crosses,
+   and the leftmost sits on top so the group is read left to right. */
+.wfo__who + .wfo__who{ margin-left:-.52em; }
+.wfo__who{ z-index:calc(9 - var(--wi, 0)); }
 .wfo__who,.wfo__ran{ position:relative; display:block; opacity:0; transform:translateY(1.2em) scale(.8);
   transition:opacity 480ms var(--e-out), transform 620ms var(--e-spring);
   transition-delay:calc(var(--wi, 0) * 110ms); }
-.wfo__who img{ border-radius:var(--r-pill); box-shadow:0 0 0 3px var(--paper); display:block; }
+/* Sized in em, not left to the 34px width attribute. Every other number
+   in this scene scales with the canvas; a fixed pixel avatar grew and
+   shrank relative to the type it sits under at every window size. */
+.wfo__who img{
+  width:2.1em; height:2.1em; display:block;
+  border-radius:var(--r-pill); box-shadow:0 0 0 .17em var(--paper);
+}
 /* ONE caption for the group. Three per-avatar labels, each `nowrap` and
    centred under a 34px avatar, are wider than the avatars are apart —
    they overlapped into "RAN IT RAN IT RAN IT" the moment the canvas got
    small. A label that cannot fit under the thing it labels belongs
    beside the group instead. */
 .wfo__ran{
-  grid-column:1 / -1;
+  flex:0 0 100%;
   font-style:normal; font-family:var(--fm); font-size:.68em; letter-spacing:.08em;
   text-transform:uppercase; color:var(--ink-mute); white-space:nowrap;
 }

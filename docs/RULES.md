@@ -143,6 +143,8 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F18 | **The canvas ratio is derived from the tallest object, not chosen.** Measure it first. | At 760×460 the card alone was 59% of the height, so step 3's avatars landed inside it and step 4's pair had 2cqw between them. | QA §4n3 |
 | F19 | **A container unit belongs on a child of the container, not on the container.** An element is never its own container. | `2.05cqw` on the canvas measured the frame; the card was 37cqh at 1920 and 43cqh at 1024, so the composition held at one window size only. | QA §4q1 |
 | F20 | **What recedes recedes on the subject's axis.** | A centred subject with a 44cqw memory drifting off to one side reads as the whole picture having slid. | QA §4n3 |
+| F21 | **People who share a thing are a stack, not a row.** Lap a quarter, ring in the surface's own paper, first on top. | Three separated avatars read as three separate events; the caption underneath says they are one group. | QA §4q6 |
+| F22 | **An `<img>` with no CSS size is a hard pixel size** and will not scale with the figure. | 34px avatars grew and shrank relative to the type beside them at every window size. | QA §4q7 |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process

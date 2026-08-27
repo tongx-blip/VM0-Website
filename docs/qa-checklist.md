@@ -1304,6 +1304,35 @@ viewports returns four readings of the same one — which looks exactly like a
 perfectly responsive layout. Always print `innerWidth` alongside the
 measurement so the sweep proves it actually moved.
 
+## 4q6. A grid track is sized by what spans it
+
+`grid-column:1 / -1` on a wide caption does not just place it — the track
+sizing algorithm distributes its width back over every `auto` track it spans.
+A 262px caption over three avatar columns pushed them apart and silently
+absorbed the negative margins that were supposed to make a facepile. Nothing
+errors; the layout just ignores you.
+
+When one row needs items packed (overlapped, gapless, centred as a unit) and
+another row is full-width, use `flex-wrap` with the full-width item at
+`flex:0 0 100%`. It cannot feed back into the first row's sizing.
+
+Assert the lap, do not look at it:
+
+    const a=[...els].map(e=>e.getBoundingClientRect());
+    (a[0].right - a[1].left) / a[0].width   // → the intended fraction
+
+## 4q7. An `<img>` with no CSS size is a hard pixel size
+
+`width`/`height` attributes are a fallback, not a design decision. Inside a
+figure whose every other number scales with the canvas, an unstyled `<img>`
+stays at its attribute size and therefore changes size *relative to the type
+beside it* at every window. Give it `width`/`height` in em, and any ring or
+border in em too.
+
+    // same figure, four viewports — the ratio is what must hold
+    avatar 37.5 lap 9.3 (25%)   //  1920x1080
+    avatar 26.3 lap 6.5 (25%)   //   390x844
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every
