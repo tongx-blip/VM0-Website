@@ -1676,3 +1676,18 @@ okou host ./site --site okou-ai-teammate-swiss-draft
 Then re-run §1 and §2 against the live draft URL — the hosted build loads real
 webfonts, which has changed measured heights before. Promoting to the production
 slug is a separate, deliberate decision.
+
+- **An attribute is only an anchor if one kind of element carries it.** The tab
+  buttons and the scene panels both carry `data-scene`, and every button sits
+  above every panel — so a splice keyed on `data-scene="x"` wrote into the same
+  panel seven times while reporting success. Verify a generator by reading the
+  document back (what channel is in each scene?), never by its own summary.
+- **Anything a generator strips, that generator must also write.** A value set
+  by a one-off script outside the generator is gone on its next run.
+- **No thread may cast two faces that read alike at 36px.** `avatar-1` and
+  `avatar-4` are both light-skinned and auburn and are indistinguishable at
+  message size.
+- **Text is never dimmed with `opacity`** — not even a panel standing down
+  behind another panel. On the dark ground `opacity:.3` composites label ink to
+  1.8:1. Recede by colour, by focus (`filter:blur`), or by scale, and pair it
+  with `aria-hidden` if the thing is genuinely not content at that moment.

@@ -6,6 +6,88 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · four of the seven scenes are a channel; the other three lost the photograph
+
+Tong: *"你可以看一下哪些场景适合做slack多人协作的，然后把对应tab下中间区域做成
+slack的多人对话流。其他适合单人的场景就还是以我们自己的界面样式为主，但是可以加
+一些图二这个section的背景色，去掉背景图片"*
+
+**The split, and the test that produced it.** The question is not "could more
+than one person care about this" — everything passes that. It is "does this
+work actually happen in a channel, with more than one person in it":
+
+| scene | reading | why |
+| --- | --- | --- |
+| Storefront Launch | `#launch-litoral` | brief, build, review, announce — four hands |
+| Incident Triage | `#incident-checkout` | incidents ARE a channel: responders, a bot posting, an on-call handover at 7:40am |
+| Team Digest | `#team` | the output *is* a channel post. "Post it to #team." |
+| Ad Campaign | `#paid-acquisition` | "a draft in Meta, waiting on you" — the approval is the collaboration |
+| Lead Scoring | Okou's own UI | a background job whose hand-off is to HubSpot, not to people |
+| Spec Writing | Okou's own UI | one PM writing; shared for comment afterwards |
+| Board Deck | Okou's own UI | one exec, before a board meeting, confidential by nature |
+
+Copy is close to verbatim where a line already existed. The brief was to change
+who is in the room, not what the work is.
+
+**`tools/slack-scene.py` became `tools/slack-scenes.py`, data-driven.** One
+`SCENES` dict, one `build()`, and every row carries its own `data-cue`, so a
+scene's timing no longer depends on an array indexed by row order and shared
+with the scenes that are not Slack.
+
+**The bug that made the first run silently overwrite one panel four times.**
+`scene_span()` looked up `data-scene="<key>"` and then walked forward to the
+next `<div class="ochat">`. But **the tab buttons carry `data-scene` too**, and
+all seven of them sit above all seven panels — so every key found its tab, then
+walked into the *marketing* panel. Four builds, one target, and the generator
+still printed `slack scenes: ads, engineering, marketing, ops`. It reported on
+its intent, not on the document. The anchor is now
+`<div class="scene…" data-scene="<key>"`, which only the panel matches, and the
+verification prints each scene's *actual* channel name rather than trusting the
+generator's own summary.
+
+> **An attribute you search for is only an anchor if exactly one kind of
+> element carries it.** Check that before writing a splice, not after.
+
+**The wash, and why it is not cream.** The three single-person scenes lose the
+painted photograph. It was doing two jobs — separating the panel from the page,
+and giving each tab its own colour — and only the second is worth keeping. They
+now take a soft radial wash in **their own scene hue** (`--tab` restated on the
+panel, mixed 17% → 7% into `--paper`), not the warm off-white of the reference,
+because warm cream is the one ground this page has already rejected as *"太
+AI"* — see `docs/design-principles.md` §4. It also follows the theme, where the
+photograph could not: in dark mode the wash becomes a dark tint of the same hue,
+while the Slack panels stay pinned light, because Slack is Slack (P1).
+
+**The hue restatement had to move into the generator.** It was first set by a
+one-off script — and the generator's own wash pass rewrites that same `style`
+attribute, so it was gone on the next run. Anything a generator strips, that
+generator has to also write.
+
+**Two participants read as the same person.** `avatar-1` and `avatar-4` are both
+light-skinned and auburn, and at 36px they are indistinguishable; `#team` cast
+Noah as 4 and Ravi as 1, in the same thread. Ravi took 3. No thread may cast
+both, and the facepiles were re-cast to match.
+
+**A pre-existing dark-mode violation, found by gating properly.** `.perms` stood
+down at beats 2 and 4 with `opacity:.3`. On the dark ground that composites the
+label ink to **1.8:1** and axe called it — one serious violation, 19 nodes, and
+it was there at HEAD before any of this. **This is the sixth `opacity`-on-text
+bug this week** (`.arti__val`, `.par__ask`, `.ocard`, `.lead-in`, `.slk__ghost`,
+now `.perms`). It stands down by *focus* instead: `filter:blur(3px) saturate(.6)`
+plus `scale:.985`, and app.js sets `aria-hidden` on the same beat, because a
+panel covered by another panel is not content while it is covered. It also
+simply looks better — a list behind a modal genuinely is out of focus.
+
+**Gate.** axe 0 violations across 14 samples on all seven tabs at 1440, plus
+light and dark at the two covered beats. Overlap sweep at **13 widths** (390,
+600, 768, 900, 1024, 1080, 1120, 1200, 1280, 1360, 1440, 1600, 1920) × four
+Slack panels: no message crossing the composer, no row escaping the pane —
+this sweep exists because the composer-through-the-last-message bug shipped
+past a four-width check. `audit.js` §1 and §6 PASS, §5 PASS under reduced
+motion. Mobile 390 checked by eye.
+
+---
+
 ## 2026-08-27 · the prompt box types, and three of its four icons were wrong
 
 Tong: *"看看 hero有什么问题，button和prompt box在一起会不会有点奇怪？另外prompt

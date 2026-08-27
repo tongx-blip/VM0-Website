@@ -3823,12 +3823,19 @@ h3{ font-family:var(--fd); }
              scale var(--t-state) var(--e-out);
 }
 
-.perms{ transition:opacity var(--t-state) var(--e-out); }
+.perms{ transition:filter var(--t-state) var(--e-out),
+                    scale var(--t-state) var(--e-out); }
 
 /* whichever layer is up, the list behind it stands down rather than
-   disappearing — every beat happens TO the list */
+   disappearing — every beat happens TO the list.
+
+   IT STANDS DOWN BY FOCUS, NOT BY OPACITY. `opacity:.3` composited the
+   label ink to 1.8:1 against the dark ground and axe called it. A list
+   that is genuinely behind a modal is out of focus, and a blur says that
+   without claiming the text underneath is still readable — app.js pairs
+   this with aria-hidden so it leaves the tree at the same moment. */
 .ctrl__frame[data-beat="2"] .perms,
-.ctrl__frame[data-beat="4"] .perms{ opacity:.3; }
+.ctrl__frame[data-beat="4"] .perms{ filter:blur(3px) saturate(.6); scale:.985; }
 
 
 
@@ -6492,6 +6499,36 @@ h3{ font-family:var(--fd); }
   min-width:0;
   background:var(--o-fill);
 }
+/* ── the wash, for the scenes that are NOT a channel ─────────────────
+   Lead Scoring, Spec Writing and Board Deck are one person's job, so they
+   keep Okou's own conversation — and they lose the painted photograph
+   behind it. The painting was doing two jobs, separating the panel from
+   the page and giving each tab its own colour, and only the second is
+   worth keeping.
+
+   A SOFT WASH IN THE SCENE'S OWN HUE, not the cream of the reference. The
+   shape is the reference's — a light corner falling away across the panel
+   — but the colour comes from the tab's `--tab` hue at 7%, for two
+   reasons: it keeps the per-scene colour the painting used to carry, and
+   warm off-white is the one ground this page has already rejected
+   ("太 AI", design-principles §4). Say the word and it becomes the cream.
+
+   `--tab` is set on the tab button, so the scene restates it; the
+   fallback keeps the wash neutral if a scene ever forgets. */
+.scene[data-scene] .ochat:not(.ochat--slack){
+  --ochat-hue:var(--tab, var(--ink));
+  background:
+    radial-gradient(140% 150% at 8% 4%,
+      color-mix(in srgb, var(--ochat-hue) 17%, var(--paper)) 0%,
+      color-mix(in srgb, var(--ochat-hue) 11%, var(--paper)) 52%,
+      color-mix(in srgb, var(--ochat-hue) 7%, var(--paper)) 100%);
+}
+
+/* the painting and its veil are gone with it */
+.ochat:not(.ochat--slack)::before{ content:none; }
+
+.ochat:not(.ochat--slack)::after{ content:none; }
+
 /* the ground is per-tab: each scene sets --ground, and --veil computed from
    that painting's own mean luminance so every one lands the bubbles on the
    same value (docs/design-system.md §15) */

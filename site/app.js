@@ -1365,6 +1365,21 @@
       });
       ctrlSteps.forEach(function (el) { el.classList.toggle('is-on', el === best); });
       if (best) ctrlWin.dataset.beat = best.dataset.beat;
+
+      /* BEATS 2 AND 4 PUT A LAYER OVER THE LIST, and the list behind it
+         stands down. It used to stand down with `opacity:.3`, which on a
+         dark ground composites the label ink down to 1.8:1 — axe called
+         it, correctly. A panel covered by another panel is not content
+         while it is covered, so it says so: aria-hidden takes it out of
+         the tree, and the recede is a colour in CSS, not a fade over
+         text. Same mistake as .arti__val, .par__ask and .ocard — text
+         may never be dimmed with opacity. */
+      var covered = ctrlWin.dataset.beat === '2' || ctrlWin.dataset.beat === '4';
+      var permsEl = ctrlWin.querySelector('.perms');
+      if (permsEl) {
+        if (covered) permsEl.setAttribute('aria-hidden', 'true');
+        else permsEl.removeAttribute('aria-hidden');
+      }
     }
 
     /* HOW MUCH OF THE BAND a step covers, in pixels — not
