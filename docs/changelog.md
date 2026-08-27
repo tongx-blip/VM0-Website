@@ -6,6 +6,57 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the frame follows the window, the picture sits in the middle of it
+
+Tong: *"图一没有上下居中，底下的step组件位置也错了，应该一直在灰色的frame里，
+灰色frame的高矮取决于Browser的高度。frame里的展示图应该用户按左右上下居中"*.
+
+Three things, and the first two share a cause.
+
+**A transform does not move a layout box.** `.ctrl__win` is scaled with
+`transform:scale()`, and the index bar was a plain sibling after it — so the
+bar was laid out after the mock's FULL-SIZE box while the frame was only as
+tall as the *scaled* one. Every point of scale pushed the bar further past the
+frame's bottom edge; at 0.87 it was outside it entirely. It is out of flow
+now, riding in the frame's bottom padding like a caption on a mat, which is
+also what lets the picture be centred in the whole frame rather than in a row
+above it. The padding band it sits in was already clear of the picture, so it
+costs the picture no height.
+
+**The frame's height now comes from the window** — `innerHeight` minus the
+same clearance top and bottom — rather than from the mock. Its proportions
+were following the content around instead of the browser, and whatever height
+was left over collected on one side.
+
+**And the picture is centred in it, both ways.** `align-items:center` was not
+enough on its own: with no `grid-template-rows` the implicit row is `auto`, so
+it grew to the item, a picture taller than the frame made the *row* taller
+than the frame, and there was nothing left to centre inside — the whole
+overflow went out of the bottom and got clipped. `minmax(0,1fr)` pins the row
+to the content box, an oversized item then overflows it equally at both ends,
+and the scale, taken about the item's centre rather than its top, lands the
+picture in the middle. Measured in all five beats at 390x844, 1024x640,
+1024x768, 1280x800, 1344x1095, 1440x700, 1440x900, 1600x1200, 1920x1080 and
+2560x1440: top gap equals bottom gap, left equals right, index inside, nothing
+clipped — and every statement still lands within 1px of the frame's centre.
+
+**A shape cap, because "as tall as the window" has a limit.** At 2560x1440 it
+made the frame 616 wide by 1236 tall: a narrow grey slab with a card swimming
+in the middle. It is capped at 1.6x its own width — the frame's width does not
+depend on its height, so the cap cannot feed back — and it only bites above
+about 1250px of window.
+
+**Found on the way, and real:** the four unlit index marks were
+`rgb(var(--ink-rgb) / .10)`. `--ink-rgb` is the *shadow* channel and does not
+swap with the theme, on purpose (§1), so in dark mode the marks painted
+near-black on a near-black ground — 1.09, i.e. they were not there at all.
+`--ink` swaps; at 13% it is 1.32 in light and 1.46 in dark.
+
+The three probes this took are in `tools/probes/` now rather than in /tmp,
+where they were lost twice. They are the gate for this section.
+
+---
+
 ## 2026-08-27 · the stage was measuring itself
 
 Tong, with two screenshots of #control at 1344x1095 and 1330x801: *"这个区域

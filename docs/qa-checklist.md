@@ -1383,6 +1383,42 @@ for the escape test. `getComputedStyle(e).opacity` reads only the element's own
 value, so a child of an `opacity:0` parent looks visible and every hidden
 state reports a false escape.
 
+## 4q11. A transform does not move a layout box
+
+Anything laid out *after* a scaled element is placed against that element's
+full-size box, not against what you can see. The control section's index bar
+was a sibling after a `scale(0.87)` mock inside a frame sized to the scaled
+height, so it sat outside the frame entirely — and it got further out with
+every point of scale.
+
+If a thing must stay inside a frame that a transform is resizing, take it out
+of flow. Then assert it, in every state:
+
+    idx.getBoundingClientRect().bottom <= frame.getBoundingClientRect().bottom
+
+## 4q12. `align-items:center` needs a row to centre in
+
+An implicit grid row is `auto`, so it grows to its item. Give a fixed-height
+container one oversized item and the ROW becomes taller than the container:
+centring inside the row is then a no-op, and the whole overflow leaves from
+the bottom. `grid-template-rows:minmax(0,1fr)` pins the row to the content
+box, and an oversized item overflows it equally at both ends.
+
+Pair it with `transform-origin:center` — an origin of `top center` makes a
+shrinking picture drift upward out of the middle it was placed in.
+
+Assert the air, don't look at it. `getBoundingClientRect()` on a scaled
+element is the *visual* box, which is exactly what you want here:
+
+    top === bottom  &&  left === right      // in every state, every viewport
+
+## 4q13. Keep the probes in the repo
+
+`tools/probes/` — `ctrl-frame.js`, `ctrl-align.js`, `ctrl-sweep.js`. These are
+the gate for #control, they took a session to get right, and twice they were
+written to /tmp and lost when the sandbox reset. A probe that has to be
+rewritten is a probe that will be rewritten wrong.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

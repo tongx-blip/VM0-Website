@@ -149,6 +149,10 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F24 | **A scroll-linked pair aligns on the line the observer uses** — the middle of the viewport, not a fixed sticky offset. | A fixed offset aligns at one window height and drifts by half the difference at every other. | QA §4q9 |
 | F25 | **A symmetric height budget, because the frame is centred.** Reserving clearance at the top only makes centring impossible. | 671px of frame in an 800px window put every statement 31px above the frame's centre. | QA §4q9 |
 | F26 | **Viewport fitting only applies while the stage is parked.** Read the layout, do not repeat its breakpoint. | The stacked layout kept scaling: 819px of content inside a 904px frame. | QA §4q10 |
+| F27 | **A transform does not move a layout box.** Anything that must stay inside a frame a transform is resizing comes out of flow. | The index bar was laid out after the mock's full-size box and ended up outside a frame sized to the scaled one. | QA §4q11 |
+| F28 | **A framed picture is centred in the frame, both axes** — `minmax(0,1fr)` row, `align-items:center`, `transform-origin:center`. | An implicit `auto` row grows to its item, so centring is a no-op and the overflow all leaves from the bottom. | QA §4q12 |
+| F29 | **A stage's height follows the window; its shape has a cap.** | "As tall as the window allows" made a 616x1236 grey slab at 2560x1440. Cap on the width, which cannot feed back. | QA §4q12 |
+| F30 | **A channel token is not a fill token.** `--ink-rgb` is the shadow channel and does not swap with the theme. | Four of five index marks painted near-black on near-black in dark mode: contrast 1.09. | QA §4s |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process

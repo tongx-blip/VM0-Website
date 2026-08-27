@@ -3287,13 +3287,32 @@ h3{ font-family:var(--fd); }
    this section. */
 .ctrl__frame{
   position:relative; isolation:isolate;
+  /* The index RIDES IN THE BOTTOM PADDING, like a caption on a mat. It
+     used to be a plain sibling after .ctrl__win — but .ctrl__win is
+     scaled with a transform, and a transform does not change a layout
+     box, so the index was placed after the mock's FULL-SIZE box while the
+     frame was only as tall as the scaled one, and it ended up below the
+     frame entirely. Taking it out of flow is what lets the picture be
+     centred in the WHOLE frame rather than in a row above it; the
+     padding band it sits in is already clear of the picture, so it costs
+     the picture no height. */
+  --ctrl-pad:clamp(20px,2.4vw,36px);
+  /* minmax(0,1fr), not an implicit auto row: an auto row grows to the
+     item, so a picture taller than the frame made the ROW taller than the
+     frame and `align-items:center` had nothing left to centre inside —
+     the overflow all went out the bottom and got clipped. A 1fr row is
+     exactly the content box, so an oversized item overflows it equally at
+     both ends and the scale, taken about the item's centre, lands the
+     picture in the middle. */
+  display:grid; grid-template-rows:minmax(0,1fr); align-items:center;
+  overflow:hidden;
   /* the stage is a fixed object, not one that resizes under the reader.
      Beat 5 swaps the permission list for the activity trail and the
      window comes out 106px shorter; without this floor the whole sticky
      stage shrank at the last beat. --ctrl-h is the TALLEST state the
      frame has been measured in — see app.js §13. */
   height:var(--ctrl-h, auto);
-  padding:clamp(20px,2.4vw,36px);
+  padding:var(--ctrl-pad);
   border-radius:var(--r-lg);
   background:color-mix(in srgb, var(--hue-engineering) 7%, var(--tile));
 }
@@ -3304,7 +3323,10 @@ h3{ font-family:var(--fd); }
 .ctrl__win{
   position:relative;
   transform:scale(var(--ctrl-fit, 1));
-  transform-origin:top center;
+  /* centre, not `top center`: the frame centres the layout box, so the
+     scale has to grow and shrink about that same point or the picture
+     drifts up as it gets smaller. */
+  transform-origin:center center;
   transition:transform var(--t-state) var(--e-out),
              filter var(--t-state) var(--e-out);
 }
@@ -3319,13 +3341,19 @@ h3{ font-family:var(--fd); }
    device earns its place. Marks, not a rule: this page does not draw
    lines. */
 .ctrl__index{
-  display:flex; gap:6px; margin:clamp(16px,1.8vw,24px) 0 0; padding:0;
+  position:absolute; left:var(--ctrl-pad); right:var(--ctrl-pad);
+  bottom:calc(var(--ctrl-pad) / 2 - 1.5px);
+  display:flex; gap:6px; margin:0; padding:0;
   list-style:none;
 }
 
 .ctrl__index li{
   height:3px; flex:1; border-radius:var(--r-pill);
-  background:rgb(var(--ink-rgb) / .10);
+  /* --ink, not --ink-rgb. The rgb channel is the SHADOW channel and does
+     not swap with the theme by design (§1) — so used as a visible fill it
+     painted near-black on a near-black ground in dark mode: contrast 1.01,
+     i.e. four of the five marks simply were not there. --ink swaps. */
+  background:color-mix(in srgb, var(--ink) 13%, transparent);
   transition:background var(--t-state) var(--e-out);
 }
 

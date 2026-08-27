@@ -1437,17 +1437,28 @@
          frame's centre. Reserving the same clearance at both ends means
          the frame always fits centred, and the mock pays for it with a
          few per cent of scale. */
-      var avail = window.innerHeight - 2 * top - pad;
-      /* Fitting to the viewport is only meaningful while the stage is
-         PARKED. Once the layout stacks the frame simply flows, and
-         scaling it there shrank the mock inside a full-width frame for no
-         reason — 819px of content in a 904px frame at exactly 1000px
-         wide. Read the layout rather than repeating its breakpoint. */
+      /* THE FRAME'S HEIGHT COMES FROM THE WINDOW, and the picture is
+         centred in whatever that leaves. The frame used to hug the mock,
+         which meant its proportions changed with the mock rather than with
+         the browser, and the leftover air all collected on one side.
+         Fitting is only meaningful while the stage is PARKED — once the
+         layout stacks the frame simply flows, so it hugs its content
+         again. Read the layout rather than repeating its breakpoint. */
       var parked = ctrlStage && getComputedStyle(ctrlStage).position === 'sticky';
+      /* …up to a SHAPE cap. The frame is a picture frame, and at 2560x1440
+         "as tall as the window allows" made it 616 wide by 1236 tall — a
+         narrow grey slab with a card swimming in the middle of it. 1.6x its
+         own width is the point past which it stops reading as a frame. The
+         cap is on the frame's WIDTH, which does not depend on its height,
+         so it cannot feed back. It only bites above about 1250px of window. */
+      var frameW = ctrlStage ? ctrlStage.getBoundingClientRect().width : 0;
+      var frameH = parked ? Math.min(window.innerHeight - 2 * top, frameW * 1.6)
+                          : ctrlMax + pad;
+      var avail = frameH - pad;
       var fit = !parked ? 1
               : Math.max(0.62, Math.min(1, ctrlMax ? avail / ctrlMax : 1));
 
-      var frameH = Math.round(ctrlMax * fit + pad);
+      frameH = Math.round(frameH);
       ctrlGrid.style.setProperty('--ctrl-fit', fit.toFixed(4));
       ctrlGrid.style.setProperty('--ctrl-h', frameH + 'px');
       /* Centre the frame in the window so that "current" — which the
