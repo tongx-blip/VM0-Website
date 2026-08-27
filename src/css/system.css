@@ -5523,11 +5523,11 @@ h3{ font-family:var(--fd); }
   left:clamp(12px, 1.4vw, 22px);
   right:calc(-1 * clamp(8px, .9vw, 14px));
 }
-/* smaller than the panels they replaced: these are things the run touched,
-   floating in front of it, not a third column of equal weight */
-.ocard__ic{ width:clamp(32px, 2.8vw, 40px); height:clamp(32px, 2.8vw, 40px); }
 .ocard .ocard__txt b{ font-size:var(--t-sm); }
 .ocard .ocard__txt i{ margin-top:5px; font-size:var(--t-meta); }
+/* One size, not two. `clamp(32px,2.8vw,40px)` was set here and then set
+   again six lines later to --o-ava, so the first pair never took effect and
+   the comment above it described a size the page does not use. */
 .ocard__ic{
   display:block; width:var(--o-ava); height:var(--o-ava);
   flex:none;
