@@ -514,6 +514,24 @@ window's own edge — five things the NO-RULES audit counted as page
 furniture until `.ochat` was named in its exemption list, which is the
 exception S4 states and the reason `.vs__viz` is already on it.
 
+**Three more places in this section were standing text down with
+opacity**, and axe found all of them once the panel stopped being a
+photograph. None was a once-per-load artifact — the tab reel advances on
+its own, so every one of them re-enters a sub-contrast state every few
+seconds, forever:
+
+* `.ostage.is-live .ocard` at `opacity:.55` — a connector card is a name
+  and a sentence. Stood down by colour now; the 6px offset and the
+  greyscale on the mark are untouched, because a transform and a filter
+  on an image have no contrast floor.
+* `.lead-in.is-swapping` at `opacity:0` — the one sentence that changes
+  with the tab. It wipes behind its own top edge with `clip-path` now,
+  which is the same gesture and never renders a half-opacity glyph.
+
+That makes five instances of RULES N3 found this week. The rule has been
+written down since the parallel figure was built; what was missing was a
+gate step that looks *while things move*, which §1 now has.
+
 Still the Storefront Launch tab only; the other six scenes keep their
 two-party exchange until their conversations are written.
 

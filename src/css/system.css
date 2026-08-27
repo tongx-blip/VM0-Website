@@ -5120,14 +5120,23 @@ h3{ font-family:var(--fd); }
    and it swaps when the tab does. */
 /* a section's claim, folded into the first sentence of its paragraph
    instead of standing as a second headline */
+/* CLIPPED OUT, NOT FADED OUT. This swapped on `opacity:0`, and it is a
+   sentence — the third place in this section standing text down with
+   opacity, and like the others it is not a once-per-load artifact: the
+   tab reel advances on its own, so the swap runs indefinitely and the
+   panel re-enters a sub-contrast state every few seconds. `clip-path` is
+   the fix the page already uses everywhere text has to leave (RULES N3):
+   the line wipes upward behind its own top edge instead of dissolving,
+   which is the same gesture and never renders a half-opacity glyph. */
 .lead-in{
   display:inline-block;
   color:var(--ink);
   font-weight:500;
-  transition:opacity 240ms var(--e-out), transform 240ms var(--e-out);
+  clip-path:inset(-20% 0 -20% 0);
+  transition:clip-path 240ms var(--e-out), transform 240ms var(--e-out);
 }
 .lead-in .inline-ic{ font-size:.85em; }
-.lead-in.is-swapping{ opacity:0; transform:translateY(-.22em); }
+.lead-in.is-swapping{ clip-path:inset(100% 0 -20% 0); transform:translateY(-.22em); }
 
 /* a paragraph that explains the figure above it, not more preamble */
 .figcap{
@@ -5894,16 +5903,34 @@ h3{ font-family:var(--fd); }
    does. Everything below only applies under `.is-live`, so the resting
    page — reduced motion, no JS, before the observer fires — is the
    finished state with every column at full strength. */
+/* BY COLOUR, NOT BY OPACITY. This stood the not-yet-reached card down
+   with `opacity:.55`, and a card is a name and a sentence — text at just
+   over half is text under its contrast ratio (RULES N3). It is also not a
+   once-per-load artifact: the tab reel advances on its own and replays
+   this scene every time, so the panel re-enters that state indefinitely.
+   axe caught it as a wandering node, which is the diagnosis.
+
+   `--ink-mute` is defined as the lightest ink this page allows on any
+   ground it uses, so the card can go as quiet as the beat needs and stay
+   readable. The 6px offset and the greyscale on the mark are untouched —
+   a transform and a filter on an image have no contrast floor — so the
+   state still has three signals, and two of them were never the problem. */
 .ostage.is-live .ocard{
-  opacity:.55;
   transform:translateY(6px);
-  transition:opacity 420ms var(--e-out), transform 520ms var(--e-out);
+  transition:transform 520ms var(--e-out);
 }
+.ostage.is-live .ocard .ocard__txt b,
+.ostage.is-live .ocard .ocard__txt i{
+  color:var(--ink-mute);
+  transition:color 420ms var(--e-out);
+}
+.ostage.is-live .ocard.is-on .ocard__txt b{ color:var(--ink); }
+.ostage.is-live .ocard.is-on .ocard__txt i{ color:var(--ink-soft); }
 .ostage.is-live .ocard__ic{
   filter:grayscale(1);
   transition:filter 520ms var(--e-out);
 }
-.ostage.is-live .ocard.is-on{ opacity:1; transform:none; }
+.ostage.is-live .ocard.is-on{ transform:none; }
 .ostage.is-live .ocard.is-on .ocard__ic{ filter:none; }
 /* the thread of light that says "this one is being read right now" */
 .ocard{ position:relative; overflow:hidden; }
