@@ -1691,3 +1691,24 @@ slug is a separate, deliberate decision.
   behind another panel. On the dark ground `opacity:.3` composites label ink to
   1.8:1. Recede by colour, by focus (`filter:blur`), or by scale, and pair it
   with `aria-hidden` if the thing is genuinely not content at that moment.
+
+- **A custom property set on a child is invisible to its parent.** When a value
+  moves from an element to its container, the value has to move with it.
+- **A balanced-tag scan starts one character in.** Beginning at the opening
+  tag's own index matches that tag and closes the span one level late.
+- **A splice span must balance, not run to the next landmark.** The landmark is
+  only stable until something else moves between the two.
+- **Never re-declare `position` in a rule whose job is to host an `::after`.**
+  An absolutely-positioned element is already a containing block; setting
+  `position:relative` hundreds of lines later silently undoes the placement.
+- **A grid's row track defaults to `auto`.** A product window meant to be a
+  fixed height and clip needs `grid-template-rows:minmax(0,1fr)`, or it grows
+  with its content the first time a transient row appears — and a fault that
+  appears at *every* width is a sizing fault, not arithmetic.
+- **Check specificity against the pinned mock before adding a shared rule.**
+  `.scene[data-scene] .ochat` (0,2,0) beats `.ochat--slack` (0,1,0); a shared
+  `background` will unpin a mock that must not follow the theme.
+- **`getBoundingClientRect` reports the unclipped box.** For a list with
+  `overflow:hidden`, assert the LIST's bottom against the composer, not a row's.
+- **Sample axe on a warm page.** A cold first pass catches unrelated entrance
+  fades at random; re-run before attributing a hit to the change under test.

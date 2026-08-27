@@ -177,6 +177,119 @@ SEND = ('<svg viewBox="0 0 256 256" aria-hidden="true">'
         'l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/></svg>')
 
 
+
+# ── Okou's own window, for the three scenes that are not a channel ─────
+# The Slack panels get Slack's rail; Tong asked whether our own product
+# should simulate a sidebar too, and it should — a conversation floating on
+# a ground is a screenshot of nothing, while a conversation inside an app
+# frame is a screenshot of Okou. Sidebar, thread title, run state, composer.
+#
+# EVERY STRING HERE ALREADY EXISTS ON THE PAGE. The recent-thread list is
+# the other tabs' own labels, the placeholder is the real composer's
+# placeholder from the hero, and the title is the tab's. Chrome may be
+# invented; copy may not.
+OKOU = {
+    'sales': dict(title='Lead Scoring',
+                  recent=('Storefront Launch', 'Team Digest')),
+    'product': dict(title='Spec Writing',
+                    recent=('Incident Triage', 'Board Deck')),
+    'leadership': dict(title='Board Deck',
+                       recent=('Ad Campaign', 'Lead Scoring')),
+}
+
+# the product's own composer icons, 1:1 with the hero's `.pbox`
+CLIP = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+        'aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414'
+        '-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379'
+        '-8.551"/></svg>')
+
+ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+         'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+         'aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>')
+
+AGENT_AVA = ('<span class="ochat__ava ochat__ava--agent">'
+             '<img src="assets/okou-icon.svg" alt="" width="26" height="26">'
+             '</span>')
+
+
+def okou_window(key, rows):
+    """Wrap this scene's existing rows in Okou's own app chrome."""
+    sc = OKOU[key]
+    threads = ''.join('<li>%s</li>' % t for t in sc['recent'])
+    # the two labels are wrapped so the narrow layout can drop the words and
+    # keep the marks — a sidebar that cannot collapse is a sidebar that eats
+    # the message column at 390
+    side = ('\n              <div class="okw__side" aria-hidden="true">'
+            '<span class="okw__brand">'
+            '<img src="assets/okou-icon.svg" alt="" width="18" height="18">'
+            '<em>Okou</em></span>'
+            '<span class="okw__new">%s<em>New chat</em></span>'
+            '<span class="okw__lbl">Recent</span>'
+            '<ul class="okw__threads"><li class="is-here">%s</li>%s</ul>'
+            '</div>' % (ARROW.replace('m5 12 7-7 7 7', 'M12 5v14')
+                             .replace('M12 19V5', 'M5 12h14'),
+                        sc['title'], threads))
+
+    # the reference Tong sent names the run's state in orange mono at the
+    # right of the title — the same idiom the workflow card already uses
+    bar = ('\n              <p class="okw__bar"><b>%s</b>'
+           '<i class="okw__state">DONE</i></p>' % sc['title'])
+
+    composer = ('\n              <p class="okw__composer">'
+                '<i class="okw__clip" aria-hidden="true">%s</i>'
+                '<span>Ask me to automate workflows, manage tasks&hellip;</span>'
+                '<i class="okw__send" aria-hidden="true">%s</i></p>'
+                % (CLIP, ARROW))
+
+    return ('<div class="ochat ochat--okou" role="group"\n'
+            '                 aria-label="The conversation that produced this">' 
+            + side + '\n              <div class="okw__pane">'
+            + bar + '\n              <div class="okw__list">'
+            + ''.join('\n                ' + r for r in rows)
+            + '\n              </div>' + composer
+            + '\n              </div>\n            </div>')
+
+
+def rows_of(seg):
+    """Every top-level `.ochat__row` in a panel, verbatim."""
+    out, i = [], 0
+    while True:
+        m = re.compile(r'<(div|p) class="ochat__row[^"]*"').search(seg, i)
+        if not m:
+            return out
+        a, tag = m.start(), m.group(1)
+        _, b = span_of(seg, a, tag)
+        out.append(seg[a:b])
+        i = b
+
+
+def span_of(s, start, tag):
+    """(start, end) of a balanced `<tag …> … </tag>` beginning at `start`.
+
+    The scan begins one character IN. Starting it at `start` matches the
+    element's own opening tag first, so depth goes to 2 and the span closes
+    one level too late — which pulled a single row out of a four-row panel
+    and left it unbalanced by one."""
+    j, depth = start + 1, 1
+    pat = re.compile(r'<(/?)%s\b' % tag)
+    while depth:
+        m = pat.search(s, j)
+        if not m:
+            raise SystemExit('unbalanced <%s> from %d' % (tag, start))
+        depth += -1 if m.group(1) else 1
+        j = m.end()
+    return start, s.index('>', m.start()) + 1
+
+
+def block(seg, pattern, tag):
+    m = re.compile(pattern).search(seg)
+    if not m:
+        raise SystemExit('no %s' % pattern)
+    a, b = span_of(seg, m.start(), tag)
+    return seg[a:b]
+
+
 def build(key, first):
     sc = SCENES[key]
     bar = ('<p class="slk__bar"><b class="slk__ch"><i>#</i>%s</b>'
@@ -222,7 +335,7 @@ def build(key, first):
             + rail + '\n              <div class="slk__pane">'
             + bar + '\n              <div class="slk__list">'
             + body + '\n              </div>' + composer
-            + '\n              </div>\n            </div>\n\n          ')
+            + '\n              </div>\n            </div>')
 
 
 def balanced(fragment):
@@ -246,13 +359,56 @@ def panel_at(html, key):
 
 
 def scene_span(html, key):
-    """The `.ochat` block inside one scene, and where it ends. Idempotent:
-    matches the block whether it is still Okou's own conversation or has
-    already been rewritten as Slack."""
+    """The `.ochat` block inside one scene. Idempotent: matches the block
+    whether it is still Okou's own conversation or has already been
+    rewritten.
+
+    IT MUST BALANCE, not run to the next landmark. The first version ended
+    at `<figure class="tplwin">`, which was true only while the connector
+    cards sat in a column of their own — once they moved inside the frame,
+    BETWEEN the window and the artifact, that span swallowed them and the
+    next run deleted both cards."""
     s = panel_at(html, key)
     m = re.compile(r'<div class="ochat[^"]*"').search(html, s)
-    e = html.index('<figure class="tplwin">', m.start())
-    return m.start(), e
+    return span_of(html, m.start(), 'div')
+
+
+def restage(html, key):
+    """Recompose one scene's `.ostage` as ONE FRAME plus the artifact window.
+
+    Tong: *"是不是可以把左边的 connector 这两个卡片和右边的这个对话界面放到一个
+    frame 里边 … 那些两个 connector cards 可以比较随机地和这个右侧的那个界面有
+    一些 overlap"* — with the reference being this page's own workflow section:
+    a soft gradient ground with two white cards floating over it at an offset.
+
+    So the three-column row becomes two objects: a frame holding the app
+    window with the connector cards floating over its left edge, and the
+    artifact window beside it. Idempotent — it pulls the three parts out of
+    whatever nesting it finds them in and re-emits them.
+    """
+    s = panel_at(html, key)
+    a = html.index('<div class="ostage">', s)
+    _, b = span_of(html, a, 'div')
+    seg = html[a:b]
+
+    conn = block(seg, r'<aside class="ostage__conn"', 'aside')
+    chat = block(seg, r'<div class="ochat[^"]*"', 'div')
+    win = block(seg, r'<figure class="tplwin"', 'figure')
+    assert win.count('<figure') == 1, 'nested figure inside .tplwin'
+
+    I = '\n            '
+    # THE HUE MOVED OUT WITH THE GROUND. It used to sit on `.ochat`, which
+    # painted the tint; the frame paints it now, and a custom property set on
+    # a child is not visible to its parent — so every frame read grey until
+    # the scene restated it here.
+    new = ('<div class="ostage">'
+           + I + '<div class="ostage__frame" style="--tab:var(--hue-%s)">' % key
+           + I + '  ' + chat
+           + I + '  ' + conn
+           + I + '</div>'
+           + I + win
+           + '\n          </div>')
+    return html[:a] + new + html[b:]
 
 
 def main():
@@ -268,24 +424,34 @@ def main():
         balanced(seg)
         html = html[:a] + seg + html[b:]
 
-    # THE THREE THAT ARE NOT A CHANNEL lose the photograph. The painting was
-    # doing two jobs — separating the panel from the page, and giving each
-    # tab its own colour — and only the second one is worth keeping. A wash
-    # in the scene's own hue keeps it and drops the picture.
-    # The wash needs the scene's hue, and the hue lives on the tab button,
-    # so the panel restates it. This has to happen HERE and not in a one-off
-    # script: the strip below rewrites the same attribute, so anything set
-    # outside this generator is gone on the next run.
-    for key in WASHED:
-        s = panel_at(html, key)
-        m = re.compile(r'<div class="ochat"(?:\s+style="[^"]*")?', re.S).search(html, s)
-        html = (html[:m.start()]
-                + '<div class="ochat" style="--tab:var(--hue-%s)"' % key
-                + html[m.end():])
+    # ── the three that are not a channel get OKOU'S OWN WINDOW ──────────
+    # Same treatment, different application: a sidebar, the thread's name,
+    # the run's state and a composer. The rows themselves are lifted out of
+    # the document and put back untouched — the chrome is new, the copy is
+    # not. Reverse order again, for the same reason.
+    for key in sorted(WASHED, key=lambda k: panel_at(html, k), reverse=True):
+        a, b = scene_span(html, key)
+        rows = rows_of(html[a:b])
+        assert rows, 'no rows in ' + key
+        # OKOU'S REPLIES WERE WEARING A PERSON'S FACE. avatar-1 is one of the
+        # six human portraits — the same face Ravi wears in #team — sitting
+        # on messages signed by the agent. It gets the product's mark, which
+        # is what the Slack panels already do.
+        rows = [re.sub(r'<span class="ochat__ava">.*?</span>', AGENT_AVA, r,
+                       flags=re.S) for r in rows]
+        seg = okou_window(key, rows)
+        balanced(seg)
+        html = html[:a] + seg + html[b:]
+
+    # ── and every scene is restaged into one frame ──────────────────────
+    for key in sorted(set(SCENES) | set(WASHED),
+                      key=lambda k: panel_at(html, k), reverse=True):
+        html = restage(html, key)
 
     open(HTML, 'w', encoding='utf-8').write(html)
     print('slack scenes: %s' % ', '.join(sorted(SCENES)))
-    print('washed scenes: %s' % ', '.join(WASHED))
+    print('okou windows: %s' % ', '.join(WASHED))
+    print('restaged:     %s scenes into one frame' % (len(SCENES) + len(WASHED)))
 
 
 if __name__ == '__main__':

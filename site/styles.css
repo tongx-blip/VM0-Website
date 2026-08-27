@@ -6440,28 +6440,110 @@ h3{ font-family:var(--fd); }
   --o-fill:var(--tile);                    /* the reference's panel grey */
   --o-h:clamp(420px, 40vw, 553px);         /* 553 · the row's height     */
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
+  /* the frame's own measurements */
+  --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
+  --o-cw:clamp(154px, 13.6vw, 196px);      /* a connector card           */
+  /* HOW FAR A CARD SITS ON THE WINDOW. Small on purpose: at 26px it ate
+     the first 26px of whichever sidebar was behind it — Okou's thread
+     names lost their initials, Slack's workspace tile was cut in half. The
+     window answers by insetting its own sidebar by the same amount (see
+     `.okw__side` and `.slk__rail`), so the strip a card covers is empty. */
+  --o-lap:clamp(11px, 1.2vw, 17px);
   margin-top:clamp(28px, 3.2vw, 44px);
   display:grid;
-  grid-template-columns:minmax(0,200fr) minmax(0,437fr) minmax(0,330fr);
+  /* TWO OBJECTS, NOT THREE. 200 + 16 + 437 of the reference's row is now
+     one frame — the app window with the connectors floating over it — and
+     330 is still the page it shipped. Same total, one less thing to read. */
+  grid-template-columns:minmax(0,653fr) minmax(0,330fr);
   gap:var(--o-gap);
   height:var(--o-h);
   align-items:stretch;
 }
 
-/* ── what the run reached into ── 200 wide, two panels, 16 apart ── */
+/* ── the frame ──────────────────────────────────────────────────────
+   Tong: *"是不是可以把左边的 connector 这两个卡片和右边的这个对话界面放到一
+   个 frame 里边 … 可以比较随机地和这个右侧的那个界面有一些 overlap … 加一些
+   这种带 gradient 颜色的背景。看起来就会更加简洁一些"*, with this page's own
+   workflow section as the reference: a soft gradient ground, and two white
+   cards floating over it at an offset.
+
+   THE GROUND MOVED OUT HERE, and that is the whole simplification. It used
+   to be three panels each carrying its own fill — grey card, tinted chat,
+   grey card — which is three grounds in a row saying nothing. Now the frame
+   is the only ground, the app window is the only white, and the cards read
+   as what they are: things the run touched, sitting in front of it.
+
+   The hue is the scene's, not the reference's cream: `--tab` is restated on
+   the panel and mixed into `--paper`, which keeps the per-tab colour the
+   painting used to carry and follows the theme, where a picture could not
+   (docs/design-principles.md §4 — warm off-white is the one ground this
+   page has already rejected). */
+.ostage__frame{
+  position:relative;
+  --oframe-hue:var(--tab, var(--ink));
+  padding:var(--o-fpad);
+  border-radius:var(--r-lg);
+  background:
+    radial-gradient(118% 132% at 4% 0%,
+      color-mix(in srgb, var(--oframe-hue) 20%, var(--paper)) 0%,
+      color-mix(in srgb, var(--oframe-hue) 11%, var(--paper)) 44%,
+      color-mix(in srgb, var(--oframe-hue) 5%, var(--paper)) 100%);
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  /* THE ROW TRACK MUST FILL, NOT FIT. Left as `auto` the window is sized by
+     its own content, so the moment the typing row appeared the whole app
+     grew 62px and its last message crossed the composer — at every width,
+     which is what says it is a sizing fault and not an arithmetic one. The
+     stage sets the height; the window's job is to take it and clip. */
+  grid-template-rows:minmax(0,1fr);
+  align-items:stretch;
+  min-width:0;
+}
+
+/* the app window sits to the right of the cards, less the overlap */
+.ostage__frame > .ochat{
+  margin-left:calc(var(--o-cw) - var(--o-lap));
+  min-width:0; min-height:0;
+}
+
+/* ── what the run reached into ─────────────────────────────────────
+   A COLUMN NO LONGER — two cards placed by hand over the frame's left,
+   staggered the way the reference staggers them. The second one is pushed
+   further right so it laps further onto the window: an even pair of
+   offsets reads as a layout, an uneven pair reads as objects. */
 .ostage__conn{
-  display:grid; grid-template-rows:1fr 1fr;
-  gap:var(--o-gap);
+  position:absolute; z-index:2;
+  left:var(--o-fpad); top:var(--o-fpad); bottom:var(--o-fpad);
+  width:var(--o-cw);
   min-width:0;
 }
 .ocard{
-  display:flex; flex-direction:column; justify-content:space-between;
-  gap:10px;
-  padding:var(--o-pad);
-  border-radius:var(--o-r);
-  background:var(--o-fill);
+  position:absolute; left:0; right:0;
+  display:flex; flex-direction:column; justify-content:flex-start;
+  gap:clamp(8px, .9vw, 11px);
+  padding:clamp(12px, 1.3vw, 16px);
+  border-radius:var(--r-card);
+  background:var(--paper);
   min-width:0;
+  /* a card in front of a window, which is the second thing S3 reserves a
+     shadow for — without one it is a white rectangle on a pale ground */
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
+             0 16px 34px -18px rgb(var(--ink-rgb) / .28);
 }
+/* One hangs from the top and one from the BOTTOM, which is the only way
+   a pair of auto-height cards cannot leave the frame: `top:52%` on the
+   lower one put its last line 40px below the ground it was floating on. */
+.ocard:nth-of-type(1){ top:11%; }
+.ocard:nth-of-type(2){
+  bottom:11%;
+  left:clamp(12px, 1.4vw, 22px);
+  right:calc(-1 * clamp(8px, .9vw, 14px));
+}
+/* smaller than the panels they replaced: these are things the run touched,
+   floating in front of it, not a third column of equal weight */
+.ocard__ic{ width:clamp(32px, 2.8vw, 40px); height:clamp(32px, 2.8vw, 40px); }
+.ocard .ocard__txt b{ font-size:var(--t-sm); }
+.ocard .ocard__txt i{ margin-top:5px; font-size:var(--t-meta); }
 .ocard__ic{
   display:block; width:var(--o-ava); height:var(--o-ava);
   flex:none;
@@ -6499,30 +6581,22 @@ h3{ font-family:var(--fd); }
   min-width:0;
   background:var(--o-fill);
 }
-/* ── the wash, for the scenes that are NOT a channel ─────────────────
-   Lead Scoring, Spec Writing and Board Deck are one person's job, so they
-   keep Okou's own conversation — and they lose the painted photograph
-   behind it. The painting was doing two jobs, separating the panel from
-   the page and giving each tab its own colour, and only the second is
-   worth keeping.
-
-   A SOFT WASH IN THE SCENE'S OWN HUE, not the cream of the reference. The
-   shape is the reference's — a light corner falling away across the panel
-   — but the colour comes from the tab's `--tab` hue at 7%, for two
-   reasons: it keeps the per-scene colour the painting used to carry, and
-   warm off-white is the one ground this page has already rejected
-   ("太 AI", design-principles §4). Say the word and it becomes the cream.
-
-   `--tab` is set on the tab button, so the scene restates it; the
-   fallback keeps the wash neutral if a scene ever forgets. */
-.scene[data-scene] .ochat:not(.ochat--slack){
-  --ochat-hue:var(--tab, var(--ink));
-  background:
-    radial-gradient(140% 150% at 8% 4%,
-      color-mix(in srgb, var(--ochat-hue) 17%, var(--paper)) 0%,
-      color-mix(in srgb, var(--ochat-hue) 11%, var(--paper)) 52%,
-      color-mix(in srgb, var(--ochat-hue) 7%, var(--paper)) 100%);
+/* THE PANEL IS A WINDOW NOW, not a ground. The tint it briefly carried
+   moved out to `.ostage__frame`; what is left is the application itself,
+   in white, sitting on that ground with the shadow S3 reserves for exactly
+   this. Both readings — Slack's chrome and Okou's own — are windows, so
+   this is the shared part and each adds only its own sidebar. */
+.scene[data-scene] .ochat{
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
+             0 18px 40px -20px rgb(var(--ink-rgb) / .30);
 }
+/* THE FILL IS SET PER READING, NOT SHARED. `background:var(--paper)` on
+   this selector out-specifies `.ochat--slack{ background:var(--slk-card) }`
+   (0,2,0 against 0,1,0), which would have unpinned Slack's white and let
+   it follow our dark mode — the exact P1 fault that shipped once already,
+   found here only because the rule was read before the theme was. Okou's
+   own window is ours and DOES follow the theme. */
+.scene[data-scene] .ochat--okou{ background:var(--paper); }
 
 /* the painting and its veil are gone with it */
 .ochat:not(.ochat--slack)::before{ content:none; }
@@ -6775,6 +6849,136 @@ h3{ font-family:var(--fd); }
   font-family:var(--fb);
 }
 
+/* ── OKOU'S OWN WINDOW ───────────────────────────────────────────────
+   Tong: *"我们自己的产品是不是也可以模拟一个侧边栏？"* — yes, and for the
+   same reason Slack's rail earned its place. A conversation floating on a
+   ground is a screenshot of nothing; a conversation inside an app frame is
+   a screenshot of Okou. Sidebar, thread name, run state, composer.
+
+   It mirrors `.ochat--slack` deliberately — sidebar then pane, list then
+   composer — so the two readings sit at the same scale and the tab switch
+   between them is a change of application, not of layout.
+
+   UNLIKE THE SLACK PANEL THIS ONE IS NOT PINNED. Slack's ink is Slack's
+   and cannot follow our theme (P1); this is our own product, and our own
+   product has a dark mode. Every value here is a token. */
+.ochat--okou{
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  padding:0; gap:0;
+  overflow:hidden;
+  font-family:var(--fb);
+}
+.ochat--okou::before,.ochat--okou::after{ content:none; }
+
+/* the sidebar. Named threads, because the product's are named — and the
+   names are the other tabs', so the sidebar says what else Okou is doing
+   without inventing a word of copy. */
+.okw__side{
+  display:flex; flex-direction:column; align-items:stretch;
+  gap:clamp(8px, .9vw, 11px);
+  width:calc(clamp(112px, 10.4vw, 148px) + var(--o-lap));
+  padding:clamp(12px, 1.3vw, 16px) clamp(10px, 1.1vw, 13px);
+  /* the strip a connector card lies across, kept empty */
+  padding-left:calc(clamp(10px, 1.1vw, 13px) + var(--o-lap));
+  background:color-mix(in srgb, var(--ink) 4.5%, var(--paper));
+}
+.okw__brand{
+  display:flex; align-items:center; gap:7px;
+  font-size:var(--t-sm); font-weight:600; letter-spacing:-.01em;
+  color:var(--ink);
+}
+.okw__brand img{ width:18px; height:18px; flex:none; }
+.okw__brand em,.okw__new em{ font-style:normal; }
+.okw__new{
+  display:flex; align-items:center; gap:6px;
+  padding:6px 9px; border-radius:var(--r-pill);
+  background:var(--paper);
+  font-size:var(--t-meta); font-weight:500; color:var(--ink-soft);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06);
+}
+.okw__new svg{ width:12px; height:12px; flex:none; }
+.okw__lbl{
+  margin-top:2px;
+  font-family:var(--fm); font-size:var(--t-mono);
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.okw__threads{ list-style:none; margin:0; padding:0;
+  display:flex; flex-direction:column; gap:1px; }
+.okw__threads li{
+  padding:5px 8px; border-radius:8px;
+  font-size:var(--t-meta); line-height:1.35;
+  color:var(--ink-mute);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+/* the thread we are looking at, said with a fill rather than a rule */
+.okw__threads li.is-here{
+  background:var(--paper); color:var(--ink); font-weight:500;
+}
+
+.okw__pane{ display:flex; flex-direction:column; min-width:0; }
+
+/* the title bar. The reference Tong sent names the run's state in orange
+   mono at the right of the title — the workflow card's own idiom, reused
+   here so the two say the same thing the same way. */
+.okw__bar{
+  display:flex; align-items:center; gap:10px; flex:none;
+  margin:0; padding:13px clamp(14px, 1.4vw, 18px);
+}
+.okw__bar b{
+  font-size:var(--t-body); font-weight:600; letter-spacing:-.012em;
+  color:var(--ink);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.okw__state{
+  margin-left:auto; flex:none;
+  font-family:var(--fm); font-style:normal; font-size:var(--t-mono);
+  letter-spacing:.08em; color:var(--accent-wash);
+}
+
+/* SAME CLIP AND SAME ANCHOR AS THE CHANNEL. A conversation that outgrows
+   its window must lose its oldest line, not paint through the composer —
+   the fault QA already names, and this window is narrower than Slack's at
+   every width, so it would have found it first. */
+.okw__list{
+  flex:1; min-height:0; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  gap:clamp(10px, 1.1vw, 14px);
+  padding:0 clamp(14px, 1.4vw, 18px) 4px;
+}
+
+.okw__composer{
+  display:flex; align-items:center; gap:9px; flex:none;
+  margin:clamp(10px, 1.1vw, 14px) clamp(14px, 1.4vw, 18px);
+  padding:8px 8px 8px 11px;
+  border-radius:var(--r-card);
+  background:color-mix(in srgb, var(--ink) 4.5%, var(--paper));
+}
+.okw__composer span{
+  flex:1; min-width:0;
+  font-size:var(--t-meta); color:var(--ink-mute);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.okw__clip{
+  display:grid; place-items:center; flex:none;
+  width:18px; height:18px; color:var(--ink-mute);
+}
+.okw__clip svg{ width:15px; height:15px; }
+.okw__send{
+  display:grid; place-items:center; flex:none;
+  width:26px; height:26px; border-radius:8px;
+  background:var(--accent-solid); color:var(--paper-ink);
+}
+.okw__send svg{ width:15px; height:15px; }
+
+/* the agent's mark where a person's face used to be */
+.ochat__ava--agent{
+  display:grid; place-items:center;
+  background:color-mix(in srgb, var(--ink) 5%, var(--paper));
+  border-radius:50%;
+}
+.ochat__ava--agent img{ width:58%; height:58%; }
+
 /* ── the rail ────────────────────────────────────────────────────────
    Slack's single most recognisable feature is its dark sidebar, and it
    is also the cheapest possible answer to "the panel blends into the
@@ -6782,7 +6986,11 @@ h3{ font-family:var(--fd); }
    width only, which is what Slack's own collapsed workspace rail is. */
 .slk__rail{
   display:flex; flex-direction:column; align-items:center; gap:9px;
-  width:44px; padding:12px 0;
+  /* 44 of aubergine, PLUS the strip a connector card lies across — the
+     icons centre in the 44 that stays visible rather than in the whole
+     column, where the card cut the workspace tile in half */
+  width:calc(44px + var(--o-lap));
+  padding:12px 0 12px var(--o-lap);
   background:var(--slk-rail);
 }
 
@@ -7107,7 +7315,7 @@ h3{ font-family:var(--fd); }
    the resting DOM, so reduced motion and no-JS show the finished
    exchange rather than an empty panel. */
 .ochat__row{
-  transition:opacity 320ms var(--e-out), transform 460ms var(--e-out);
+  transition:clip-path 320ms var(--e-out), transform 460ms var(--e-out);
 }
 /* ONE spatial origin — every message rises from below. Mixed directions read
    as chaos, and the user's sideways drift was the only thing on this panel
@@ -7116,12 +7324,28 @@ h3{ font-family:var(--fd); }
    in it; the messages that set it up are subtler in every dimension.
    (LottieFiles motion-design: lead with the hero, keep the origin consistent,
    vary start time and not the curve.) */
-.ochat.is-live .ochat__row{ opacity:0; transform:translateY(12px); }
+/* A MESSAGE ARRIVES BY BEING UNCOVERED, NOT BY FADING IN. The entrance was
+   `opacity:0 → 1`, and axe caught it: sampled mid-transition, the muted
+   greys in a message's meta line — the AGENT badge, the timestamp, the
+   typing ghost — composite below 4.5:1 against the panel. It reproduced
+   about one sample in ten, which is exactly how often a 320ms window falls
+   under a probe, and it is text, so N3 already forbade it. A downward wipe
+   paired with the same rise reads as the message dropping into the list.
+
+   `:not(.slk__ghost)` because the ghost runs its own left-to-right wipe;
+   this selector out-specifies it and would have replaced it. */
+.ochat.is-live .ochat__row:not(.slk__ghost){
+  clip-path:inset(0 0 100% 0);
+  transform:translateY(12px);
+}
 .ochat.is-live .ochat__row[data-beat="result"]{
   transform:translateY(22px) scale(.985);
-  transition:opacity 380ms var(--e-out), transform 620ms var(--e-spring);
+  transition:clip-path 380ms var(--e-out), transform 620ms var(--e-spring);
 }
-.ochat.is-live .ochat__row.is-on{ opacity:1; transform:none; }
+.ochat.is-live .ochat__row:not(.slk__ghost).is-on{
+  clip-path:inset(0 0 0 0);
+  transform:none;
+}
 .ochat__row--typing{ display:none; }
 .ochat.is-live .ochat__row--typing{ display:flex; }
 .ochat.is-live .ochat__row--typing:not(.is-on){ display:none; }
@@ -7184,8 +7408,14 @@ h3{ font-family:var(--fd); }
 }
 .ostage.is-live .ocard.is-on{ transform:none; }
 .ostage.is-live .ocard.is-on .ocard__ic{ filter:none; }
-/* the thread of light that says "this one is being read right now" */
-.ocard{ position:relative; overflow:hidden; }
+/* the thread of light that says "this one is being read right now".
+   IT USED TO SET `position:relative` HERE, five hundred lines after the
+   card's own block, and quietly undid the absolute placement the cards
+   now depend on — both of them collapsed back into the flow and stacked
+   on top of each other. A rule that exists only to give an ::after a
+   containing block must not re-declare position when the element already
+   has one; the card is absolute, which is a containing block too. */
+.ocard{ overflow:hidden; }
 .ostage.is-live .ocard::after{
   content:"";
   position:absolute; left:0; right:0; bottom:0;
@@ -7429,16 +7659,53 @@ h3{ font-family:var(--fd); }
     grid-template-columns:minmax(0,1fr);
     height:auto;
     gap:var(--o-gap);
+    /* NOTHING LIES ON ANYTHING HERE. Below the frame's own width the cards
+       go back into the flow underneath the window, and the two sidebars
+       read this to drop the inset they were keeping clear for them — one
+       token, so the offset can never be left behind on one of them. */
+    --o-lap:0px;
   }
 
-  .ostage__conn{
-    order:2;
-    grid-template-rows:none; grid-template-columns:1fr 1fr;
+  .ostage__frame{
+    display:flex; flex-direction:column; gap:var(--o-gap);
+    padding:clamp(12px, 2.4vw, 18px);
   }
+
+  .ostage__frame > .ochat{ margin-left:0; }
+
+  .ostage__conn{
+    position:static; width:auto;
+    order:2;
+    display:grid; grid-template-rows:none; grid-template-columns:1fr 1fr;
+    gap:var(--o-gap);
+  }
+
+  .ocard{ position:static; }
+
+  .ocard:nth-of-type(1),
+  .ocard:nth-of-type(2){ top:auto; bottom:auto; left:auto; right:auto; }
 
   .ochat{ order:1; min-height:clamp(360px, 62vw, 470px); }
 
   .tplwin{ order:3; }
+
+
+  /* THE SIDEBAR COLLAPSES TO A RAIL, which is what the product does and
+     what Slack's own rail already is at this width. Left open it took 110
+     of the 305px window at 390 and the first message wrapped to six lines
+     of three words. The marks stay, the words go. */
+  .okw__side{
+    width:44px; align-items:center;
+    padding:12px 0;
+  }
+
+  .okw__brand em,.okw__new em,.okw__lbl,.okw__threads{ display:none; }
+
+  .okw__new{ width:26px; height:26px; padding:0; justify-content:center; }
+
+  .okw__bar,.okw__list{ padding-inline:13px; }
+
+  .okw__composer{ margin-inline:13px; }
 
   .ocard{ min-height:0; }
 

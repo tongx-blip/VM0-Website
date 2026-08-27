@@ -6,6 +6,115 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the stage becomes one frame, and Okou gets a window of its own
+
+Tong: *"Slack 之外的其他 tab。左侧的那个头像应该用 agent 头像。另外现在 Slack
+界面左边会有一个模拟的 Slack 设计样式。我们自己的产品是不是也可以模拟一个侧边栏？
+然后我在想是不是可以把左边的 connector 这两个卡片和右边的这个对话界面放到一个
+frame 里边 … 那些两个 connector cards 可以比较随机地和这个右侧的那个界面有一些
+overlap。正好就可以，加一些这种带 gradient 颜色的背景。看起来就会更加简洁一些"*
+— with a crop of this page's own workflow section as the reference.
+
+**Okou's replies were wearing a person's face.** `avatar-1` is one of the six
+human portraits, on messages signed by the agent. They take the product's mark
+on a tinted disc, which is what the Slack panels already did.
+
+**Our own product now has a window too.** Sidebar, thread title, run state,
+composer — mirroring `.ochat--slack` deliberately, so switching tabs between the
+two readings is a change of *application*, not of layout. Every string in it
+already existed: the recent-thread list is the other tabs' own labels, the
+placeholder is the hero composer's, the state chip is the workflow card's orange
+mono. Chrome may be invented; copy may not. Unlike Slack's panel this one is
+**not** pinned — it is our product, and our product has a dark mode.
+
+**Three panels became one frame.** The row was a grey card, a tinted chat and a
+grey card: three grounds in a row saying nothing. Now the frame is the only
+ground, the app window is the only white, and the two connector cards float in
+front of it — one hanging from the top, one from the bottom, the lower one
+pushed further right so it laps further onto the window. An even pair of offsets
+reads as a layout; an uneven pair reads as objects.
+
+### Six faults, each of which would have shipped
+
+**A custom property set on a child is invisible to its parent.** The hue lived
+on `.ochat`, which used to paint the tint. The frame paints it now, so every
+frame read grey until the scene restated it there.
+
+**`span_of()` counted its own opening tag.** Starting the scan at `start`
+instead of `start + 1` matched the element's own `<div`, so depth went to 2 and
+the span closed one level late — it pulled a single row out of a four-row panel
+and left it unbalanced by one.
+
+**`scene_span()` ran to a landmark instead of balancing.** It ended at
+`<figure class="tplwin">`, true only while the connector cards sat in a column
+of their own. Once they moved inside the frame, *between* the window and the
+artifact, that span swallowed them and the next run would have deleted both
+cards. It balances now.
+
+**`.ocard{ position:relative }`, five hundred lines later.** A rule that exists
+only to give an `::after` a containing block quietly undid the absolute
+placement the cards now depend on; both collapsed back into the flow and stacked
+on top of each other. An absolutely-positioned element is a containing block
+too — the rule did not need to set position at all.
+
+**A shared `background` unpinned Slack.** `.scene[data-scene] .ochat` is (0,2,0)
+and out-specifies `.ochat--slack{ background:var(--slk-card) }` at (0,1,0), so
+the panel would have followed our dark mode — the exact P1 fault that shipped
+once already. Caught by reading the rule, not by the theme. The fill is set per
+reading now; only the shadow is shared.
+
+**The window was sized by its content.** `.ostage__frame` is a grid, and its row
+track defaulted to `auto`, so the moment the typing row appeared the whole app
+grew 62px and its last message crossed the composer — **at every width**, which
+is the tell that it is a sizing fault rather than an arithmetic one.
+`grid-template-rows:minmax(0,1fr)`; the stage sets the height and the window
+clips.
+
+### And one that axe found
+
+**A message arrived by fading in.** `.ochat.is-live .ochat__row{ opacity:0 }`.
+Sampled mid-transition, the muted greys in a message's meta line — the AGENT
+badge, the timestamp, the typing ghost — composite below 4.5:1. It reproduced
+about one sample in ten, which is exactly how often a 320ms window falls under a
+probe. It is text, so N3 already forbade it; **the seventh instance this week**.
+It is a downward wipe now, paired with the same rise, which reads as the message
+dropping into the list. `:not(.slk__ghost)` because the ghost runs its own
+left-to-right wipe and this selector would have replaced it.
+
+### Two things that were *not* faults, recorded so they are not chased again
+
+**A row overhanging the composer, when the list clips.** `getBoundingClientRect`
+reports the unclipped box, so a bottom-anchored `overflow:hidden` list reads as
+a 16px overlap that cannot paint. The predicate is the list's own bottom against
+the composer's top, not the row's.
+
+**Fast-scroll axe hits on a cold page.** A probe that scrolls the whole document
+at 520px/70ms and fires axe at a random instant caught `.rot .line`, `.arti__url`
+and `#sceneCopy` — different page-wide entrance fades each time — at about 3
+samples in 54, and never twice in the same place. On a warm page it is 0/20, and
+frame timing is identical to HEAD (21ms average both; a one-off 816ms worst was
+first-paint). Not a regression. The page's section-level `.reveal` entrance does
+still animate opacity over text, and that is its own piece of work.
+
+**Gate.** axe 0 violations: 21 light samples and 21 dark across all seven tabs
+taken *mid-animation*, plus the two covered `.perms` beats in both themes, plus
+20 warm fast-scroll passes. Corrected overlap sweep at **13 widths × 7 scenes ×
+5 timestamps through each exchange** — clean, including the containment check
+that no card escapes its frame and no card covers a sidebar's marks. `audit.js`
+§1 and §6 PASS, §5 PASS under reduced motion (1 of 7 rows hidden: the typing
+ghost, which is `aria-hidden` and has no moment without motion). Narrow layout
+returns the cards to the flow and collapses Okou's sidebar to a 44px rail —
+open, it took 110 of the 305px window at 390 and the first message wrapped to
+six lines of three words.
+
+**Still per-scene hue, not the reference's cream.** The reference ground is warm
+off-white; this uses the tab's own `--tab` mixed into `--paper`, so Storefront
+Launch reads warm, Lead Scoring rose, Board Deck lavender. Warm cream is the one
+ground this page has already rejected (design-principles §4). Say the word and
+it becomes the cream everywhere.
+
+---
+
 ## 2026-08-27 · four of the seven scenes are a channel; the other three lost the photograph
 
 Tong: *"你可以看一下哪些场景适合做slack多人协作的，然后把对应tab下中间区域做成
