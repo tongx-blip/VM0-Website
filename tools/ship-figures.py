@@ -53,6 +53,21 @@ def _smooth(pts):
 
 
 def card_b(peak=5):
+    """FEWER THINGS, DRAWN BIGGER.
+
+    This figure had nineteen discrete pieces in a 532×276 band: browser
+    chrome, a title, a live badge, three figures, three deltas, a curve, a
+    peak dot, a peak value, seven day labels and a receipt. The references
+    it is being held to carry four to six, at twice the size, and half of
+    what they do carry is a grey placeholder bar rather than a word.
+
+    So: the live badge goes (it decorated rather than said anything), the
+    third figure goes, the deltas go, the seven day labels go, and the
+    peak's value goes — it read `4.2×`, which is the ROAS figure printed a
+    second time eighty pixels away. Seven pieces left, and the space they
+    give back goes to the curve, which was the one part carrying a reading
+    and the part that was being squeezed into the bottom of its own plot.
+    """
     W, H, lo, hi = 280.0, 60.0, 26.0, 92.0   # the week's own range, +3 either side
     pts = [((W / (len(CHART) - 1)) * i, H - (v - lo) / (hi - lo) * (H - 8) - 4)
            for i, (_, v) in enumerate(CHART)]
@@ -60,18 +75,9 @@ def card_b(peak=5):
     area = line + ' L%.1f %.1f L0 %.1f Z' % (W, H, H)
     px, py = pts[peak]
 
-    stats = ''
-    for value, label, delta, up in (('4.2&#215;', 'ROAS', '0.6', True),
-                                    ('$18.4k', 'SPEND', '4%', False),
-                                    ('1,204', 'LEADS', '112', True)):
-        stats += (
-            '<div class="arti__s"><b>%s</b>'
-            '<em class="arti__d arti__d--%s">'
-            '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" '
-            'stroke-linejoin="round"><path d="%s"/></svg>%s</em>'
-            '<span>%s</span></div>'
-            % (value, 'up' if up else 'down',
-               'm6 15 6-6 6 6' if up else 'm6 9 6 6 6-6', delta, label))
+    stats = ''.join(
+        '<div class="arti__s"><b>%s</b><span>%s</span></div>' % (value, label)
+        for value, label in (('4.2&#215;', 'ROAS'), ('1,204', 'LEADS')))
 
     dock = ''
     for i, (label, dur) in enumerate(STEPS):
@@ -89,8 +95,7 @@ def card_b(peak=5):
         'okou-artifact-weekly.sites.vm0.io</span></p>'
         '<div class="arti__body">'
         '<div class="arti__dash">'
-        '<p class="arti__h">Weekly Ad Operator Dashboard'
-        '<em class="arti__live"><span></span>Live</em></p>'
+        '<p class="arti__h">Weekly Ad Operator Dashboard</p>'
         '<div class="arti__stats">%s</div>'
         '<div class="arti__chart">'
         '<div class="arti__plot">'
@@ -100,25 +105,20 @@ def card_b(peak=5):
         '<path class="arti__line" d="%s" fill="none" vector-effect="non-scaling-stroke"/>'
         '</svg>'
         '<span class="arti__dot" style="--x:%.2f%%;--y:%.2f%%"></span>'
-        '<b class="arti__val" style="--x:%.2f%%;--y:%.2f%%">4.2&#215;</b>'
-        '</div>'
-        '<p class="arti__axis">%s</p></div></div></div>'
+        '</div></div></div></div>'
         '<div class="arti__dock"><span class="arti__k">%s</span>%s</div>'
         '</div></div>'
-        % (stats, area, line,
-           px / W * 100, py / H * 100, px / W * 100, py / H * 100,
-           ''.join('<em>%s</em>' % lab for lab, _ in CHART),
-           TICK, dock))
+        % (stats, area, line, px / W * 100, py / H * 100, TICK, dock))
 
 
 # ── card D ────────────────────────────────────────────────────────────
+# THREE LINES, NOT FIVE. Two file paths said the same thing one says, and
+# a terminal that is a GROUND does not need to be read — it needs to be
+# recognisable. What is left is the shape of a session: a command, what it
+# is doing, what it finished.
 TERM_LINES = [('cmd', 'claude'),
               ('out', 'reading local files…'),
-              ('file', 'src/checkout/session.ts'),
-              ('file', 'src/checkout/refund.ts'),
               ('ok', 'drafted the patch')]
-
-RUNS = [58, 82, 47, 71, 63, 90, 100]
 
 
 def card_d():
@@ -136,11 +136,6 @@ def card_d():
         else:
             body += '<p class="tsh__l">%s</p>' % text
 
-    runs = ''.join(
-        '<span class="tsh__run%s" style="--h:%d%%" data-cue="%d"></span>'
-        % (' tsh__run--now' if n == 6 else '', h, 600 + n * 600)
-        for n, h in enumerate(RUNS))
-
     faces = ''.join(
         '<img class="tsh__face" src="assets/brand/avatar-%d.png" alt="" '
         'width="24" height="24">' % n for n in (1, 2, 3, 4))
@@ -156,10 +151,9 @@ def card_d():
         '<img class="tsh__av" src="assets/brand/avatar-4.png" alt="" width="32" height="32">'
         '<span><b>Weekly team digest</b><em>from Ravi · used by 10 people</em></span>'
         '<i class="tsh__sched">Mon 09:00</i></p>'
-        '<div class="tsh__runs">%s</div>'
         '<p class="tsh__faces">%s<em>running now</em></p>'
         '</div></div>'
-        % (body, runs, faces))
+        % (body, faces))
 
 
 def splice(html, viz_class, figure):

@@ -12,7 +12,19 @@ exists because something slipped past without it. The audit snippets live in
 python3 tools/build-css.py
 cd site && python3 -m http.server 8931 &
 agent-browser set viewport 1440 900
-agent-browser open http://localhost:8931/
+agent-browser open "http://localhost:8931/?cb=$RANDOM"      # note the cache-buster
+```
+
+**The `?cb=` is not optional on a re-test.** `agent-browser open` on a URL it
+has already loaded serves the cached HTML, and the `?r=` hash on the assets
+busts the *stylesheet*, not the page. A round of this gate was run twice against
+a build two edits old — two screenshots showed deleted elements still present,
+and a fix that worked read as "still failing". If a measurement disagrees with
+the source, check the loaded hash before debugging the CSS:
+
+```js
+[...document.querySelectorAll('link[rel=stylesheet]')].map(l => l.href.split('?r=')[1])
+// must match: sha1sum site/styles.css | cut -c1-8
 ```
 
 ---

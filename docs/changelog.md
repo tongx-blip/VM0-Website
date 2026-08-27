@@ -6,6 +6,65 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-26 · half as many things, drawn twice the size
+
+Tong, with three reference screenshots beside ours: *"logo 背景有点亮，除了
+我们自己的logo … 我觉得我们的图的复杂程度有点高，你看图三，图四，图五的复杂
+程度就刚刚好 … 在简化一些"*.
+
+**The two cards were carrying nineteen and twenty discrete pieces.** Card B
+had browser chrome, a title, a live badge, three figures, three deltas, a
+curve, a peak dot, a peak value, seven day labels and a receipt — inside a
+532×276 band. The references it is held to carry four to six, at twice the
+size, and some of what they carry is a grey placeholder bar rather than a
+word. Cut to seven and nine:
+
+* gone from B — the live badge, the third figure, all three deltas, the
+  seven day labels, and the peak's value, which read `4.2×`: the ROAS
+  figure printed a second time eighty pixels away.
+* gone from D — two of five terminal lines (a terminal that is a *ground*
+  does not need to be read, it needs to be recognisable) and the
+  seven-bar run history, which was the busiest and least legible thing in
+  the card.
+* everything left got bigger: the dashboard title 15→17, its figures
+  15→21, the receipt 12→13, the workflow title 14→16, its avatar 32→38,
+  the faces 24→28, the terminal 11→12.
+
+**The bottom of the artifact was crowded because four horizontal things
+were sharing sixty pixels.** Deleting the axis took one of them out and
+gave its 20px of reserved padding back to the curve, which went from 45px
+to 60 at 1440. That is the same complaint as the last round; the last
+round moved air around inside the crowding instead of removing one of the
+things causing it.
+
+**The connector wall was brighter than our own mark on it.** The tiles sat
+at gray-50 and the centre tile — ours — is white, so it was twelve levels
+brighter than the fifty-four around it and had to earn its place on size
+alone. Two steps down the ramp to gray-100: the wall goes quiet, our mark
+is the only lit thing on it, and the wave has somewhere to travel to.
+
+**The workflow panel is centred now, not top-anchored.** It grew when the
+run history came out, and at 1024 — where the band is 178px — a panel
+pinned 22px from the top hung 7px out of the bottom. Centring makes that
+impossible at any band height. It offsets by half the band's own top
+inset, because `.tsh` starts below that padding and centring inside it is
+not centring inside the band.
+
+**`opacity:.4` on a sentence, in the parallel section.** Not mine — it
+came in with that section's rebuild — but it is the third instance of
+RULES N3 this week and the only one that was not transient: the
+reduced-motion query drops the *transition*, not the state, so the ask row
+sat permanently at four tenths and axe failed it on every single run.
+Stood down by colour instead, which is what `--ink-mute` exists for. The
+scale gesture stays; that part is a transform.
+
+**A cache made four measurements lie.** `agent-browser open` on a URL it
+has already loaded serves the cached HTML — the `?r=` hash busts the
+stylesheet, not the page. Two screenshots this round showed a build that
+was two edits old, and the fix above read as "still failing" until the
+page was loaded with a cache-buster on the URL. Any re-test of the same
+URL needs `?cb=<random>`.
+
 ## 2026-08-26 · the connector card gets its ground back
 
 Tong, on three screenshots: *"这个图一底部空间有点拥挤。图三，上边的图和下边字看不出

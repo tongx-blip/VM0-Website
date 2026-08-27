@@ -1808,8 +1808,17 @@ h3{ font-family:var(--fd); }
   text-transform:uppercase; color:var(--ink-mute);
 }
 .par__you img{ border-radius:var(--r-pill); }
-/* the person leaves; the work does not follow them out */
-.par.is-away .par__ask{ opacity:.4; transform:scale(.97); }
+/* The person leaves; the work does not follow them out.
+
+   BY COLOUR, NOT BY OPACITY. This stood the row down with `opacity:.4`,
+   and the row is a sentence — text at four tenths is text under its
+   contrast ratio (RULES N3). Under reduced motion it is not even
+   transient: the media query below drops the *transition*, not the
+   state, so the ask sat permanently at .4 and axe failed it on every
+   run. `--ink-mute` is defined as the lightest ink this page allows on
+   any ground it uses, so the row can go as quiet as the gesture needs
+   and still be read. The scale stays — that part is a transform. */
+.par.is-away .par__ask{ transform:scale(.97); color:var(--ink-mute); }
 
 .par__state{
   align-self:center;
@@ -2921,13 +2930,17 @@ h3{ font-family:var(--fd); }
 
 /* the flex chain has to be unbroken from the window to the plot: one
    non-flex link in the middle and the chart comes out sixteen pixels tall */
-.arti__body{ flex:1; min-height:0; display:flex; flex-direction:column; padding:14px 16px 20px; }
+/* 14 at the bottom, not the 20 that was making room for a day axis this
+   figure no longer has. The chart is the only thing here that flexes, so
+   every pixel not spent on padding is a pixel of curve. */
+.arti__body{ flex:1; min-height:0; display:flex; flex-direction:column; padding:14px 16px 14px; }
 
 .arti__dash{ flex:1; min-height:0; display:flex; flex-direction:column; }
 
 .arti__h{
   display:flex; align-items:center; gap:8px; flex:none;
-  margin:0 0 8px; font-size:15px; font-weight:600; line-height:1.25;
+  margin:0 0 10px; font-size:17px; font-weight:600; line-height:1.25;
+  letter-spacing:-.012em;
 }
 
 /* a live badge is the cheapest thing that says "this is a running page
@@ -2954,11 +2967,11 @@ h3{ font-family:var(--fd); }
    either side of a breakpoint that only existed because the two were
    fighting for the same space. Inline, the row is twenty pixels at every
    width and the chart never has to be rationed. */
-.arti__stats{ display:flex; align-items:baseline; gap:22px; flex:none; margin-bottom:12px; }
+.arti__stats{ display:flex; align-items:baseline; gap:34px; flex:none; margin-bottom:8px; }
 
 .arti__s{ display:flex; align-items:baseline; gap:6px; min-width:0; }
 
-.arti__s b{ font-size:15px; font-weight:600; line-height:1.2; letter-spacing:-.015em; }
+.arti__s b{ font-size:21px; font-weight:600; line-height:1.2; letter-spacing:-.018em; }
 
 /* THE MOVEMENT IS THE POINT. A dashboard figure with a bare number is a
    label; the delta is what makes it a reading. It is also the one place
@@ -2984,7 +2997,7 @@ h3{ font-family:var(--fd); }
 /* the label leads, the way a KPI is read aloud */
 .arti__s span{
   order:-1; flex:none;
-  font-family:var(--fm); font-size:9px; letter-spacing:.06em; color:var(--p-mute);
+  font-family:var(--fm); font-size:10px; letter-spacing:.06em; color:var(--p-mute);
 }
 
 /* AN AREA, NOT SEVEN BARS. Bars need height to say anything, and after
@@ -2992,7 +3005,7 @@ h3{ font-family:var(--fd); }
    left — at which point the tallest day was 32px and the shortest 12,
    which is a texture rather than a reading. A filled curve is legible at
    any height and carries the same seven readings. */
-.arti__chart{ flex:1; min-height:0; display:flex; flex-direction:column; padding-top:12px; }
+.arti__chart{ flex:1; min-height:0; display:flex; flex-direction:column; padding-top:10px; }
 
 .arti__plot{
   /* no min-height here: the floor is set further down, next to the reason
@@ -3018,7 +3031,7 @@ h3{ font-family:var(--fd); }
 
 .arti__dot{
   position:absolute; left:var(--x); top:var(--y);
-  width:7px; height:7px; margin:-3.5px 0 0 -3.5px;
+  width:8px; height:8px; margin:-4px 0 0 -4px;
   border-radius:50%; background:var(--p-run);
   box-shadow:0 0 0 2.5px var(--p-card);
 }
@@ -3064,30 +3077,23 @@ h3{ font-family:var(--fd); }
    does not survive losing its number. 1080 is measured, not chosen: below
    it the three figures and their arrows no longer fit the card's width on
    one line. */
-@media (max-width:1080px){
-  .arti__d{ display:none; }
-
-  /* and the day labels with them. At 390 the band is 214px and the stack
-     wants 223 — the floor under the plot then pushes the axis fourteen
-     pixels under the receipt. The days are the least load-bearing thing
-     in the figure: the curve still reads as a week without them. */
-  .arti__axis{ display:none; }
-}
+/* the deltas and the day axis this used to drop at 1080 are gone from the
+   figure entirely — see docs/changelog.md. Nothing left to hide. */
 
 /* a floor, so no width between breakpoints can squeeze the plot to a line
    the way 1120 once did */
 .arti__plot{ min-height:30px; }
 
 .arti__dock{
-  display:flex; align-items:center; gap:9px; flex:none;
-  padding:11px 16px;
+  display:flex; align-items:center; gap:10px; flex:none;
+  padding:12px 16px;
   background:var(--p-tint); border-top:1px solid var(--p-border);
-  font-family:var(--fb); font-size:12px; color:var(--p-fg);
+  font-family:var(--fb); font-size:13px; color:var(--p-fg);
 }
 
 .arti__k{ display:flex; flex:none; }
 
-.arti__tick{ width:9px; height:9px; stroke:var(--p-run); flex:none; }
+.arti__tick{ width:11px; height:11px; stroke:var(--p-run); flex:none; }
 
 /* the four steps share one slot and take turns, so the strip never
    changes height and the type never moves. Left-grouped with the
@@ -3108,8 +3114,8 @@ h3{ font-family:var(--fd); }
 .arti.is-live .arti__step.is-on{ display:block; }
 
 .arti__step i{
-  margin-left:9px; font-style:normal;
-  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+  margin-left:10px; font-style:normal;
+  font-family:var(--fm); font-size:11px; color:var(--p-mute);
 }
 
 
@@ -3146,7 +3152,7 @@ h3{ font-family:var(--fd); }
   border:1px solid var(--term-rim); border-left:0;
   overflow:hidden;
   background:var(--term-bg);
-  font-family:var(--fm); font-size:11px; line-height:1.85;
+  font-family:var(--fm); font-size:12px; line-height:2;
 }
 
 /* a real title bar: dots at one end, the session's name in the middle */
@@ -3192,33 +3198,43 @@ h3{ font-family:var(--fd); }
 /* NOT bled to the right: `Mon 09:00` sits at this panel's right margin,
    and a crop takes the schedule off a card whose whole point is that it
    runs on one. */
+/* CENTRED, NOT TOP-ANCHORED. The band is `clamp(178px, 17vw, 216px)` and
+   this panel grew when the run-history strip came out and everything left
+   got bigger — at 1024 the band is 178 and a panel pinned 22px from the
+   top hung 7px out of the bottom of it. Centring makes the overflow
+   impossible at any band height, and it gives the terminal underneath
+   equal air above and below, which is what a ground should have. */
 .tsh__wf{
-  position:absolute; right:8px; top:16px; width:58%;
-  padding:13px 15px 11px; border-radius:var(--p-r-card);
+  /* half the band's own top inset back off the centre: `.tsh` starts
+     below that padding, so centring inside it is not centring inside the
+     band — it left 28px above and 7 below at 1024. */
+  position:absolute; right:8px; width:60%;
+  top:calc(50% - clamp(20px,2vw,26px) / 2); transform:translateY(-50%);
+  padding:16px 18px 14px; border-radius:var(--p-r-card);
   border:1px solid var(--p-border); background:var(--p-card);
   box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
              0 18px 36px -18px rgb(var(--ink-rgb) / .38);
   font-family:var(--fb); color:var(--p-fg);
 }
 
-.tsh__wfh{ display:flex; align-items:flex-start; gap:11px; margin:0 0 14px; }
+.tsh__wfh{ display:flex; align-items:flex-start; gap:12px; margin:0 0 16px; }
 
-.tsh__av{ width:32px; height:32px; flex:none; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+.tsh__av{ width:38px; height:38px; flex:none; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
 
 .tsh__wfh span{ flex:1; min-width:0; }
 
-.tsh__wfh b{ display:block; font-size:14px; font-weight:500; line-height:1.3; }
+.tsh__wfh b{ display:block; font-size:16px; font-weight:500; line-height:1.3; letter-spacing:-.01em; }
 
 .tsh__wfh em{
-  display:block; margin-top:2px; font-style:normal;
-  font-size:12px; color:var(--p-mute);
+  display:block; margin-top:3px; font-style:normal;
+  font-size:13px; color:var(--p-mute);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
 .tsh__sched{
-  flex:none; font-style:normal; padding:3px 9px;
+  flex:none; font-style:normal; padding:4px 11px;
   border-radius:var(--r-pill); background:var(--p-tint);
-  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+  font-family:var(--fm); font-size:11px; color:var(--p-mute);
 }
 
 /* every past run of this workflow, and then the one happening now. A
@@ -3244,14 +3260,14 @@ h3{ font-family:var(--fd); }
    no "now" in it at all. Qualified, it wins. */
 .tsh__runs span.tsh__run--now{ opacity:.9; }
 
-.tsh__faces{ display:flex; align-items:center; margin:0 0 2px; padding-left:43px; }
+.tsh__faces{ display:flex; align-items:center; margin:0 0 2px; padding-left:50px; }
 
 .tsh__face{
-  width:24px; height:24px; border-radius:50%; object-fit:cover; object-position:top;
-  margin-right:-7px; box-shadow:0 0 0 2px var(--p-card);
+  width:28px; height:28px; border-radius:50%; object-fit:cover; object-position:top;
+  margin-right:-8px; box-shadow:0 0 0 2px var(--p-card);
 }
 
-.tsh__faces em{ margin-left:16px; font-style:normal; font-size:12px; color:var(--p-mute); }
+.tsh__faces em{ margin-left:18px; font-style:normal; font-size:13px; color:var(--p-mute); }
 
 
 /* ── how the set behaves ─────────────────────────────────────────────
@@ -3428,8 +3444,14 @@ h3{ font-family:var(--fd); }
   /* Pinned light in both modes like every product mock (P1), so these are
      literals on purpose and must NOT follow --ink-rgb: in dark mode that
      channel inverts and the outline would go pale on a pale tile. */
-  --hub-tile:#F3F5F8;   /* the product's gray-50 */
-  --hub-line:#E3E7EC;   /* one step down — the outline           */
+  /* A CHIP, NOT A HIGHLIGHT. At gray-50 these read as white cut-outs on
+     the tinted band, and the one tile that is meant to be white — ours,
+     at the centre — was only twelve levels brighter than the fifty-four
+     around it, so it had to earn its place on size alone. Two steps down
+     the ramp: the wall goes quiet, our mark is the only lit thing on it,
+     and the wave has somewhere to travel to. */
+  --hub-tile:#EDF0F4;   /* the product's gray-100 */
+  --hub-line:#E0E5EB;   /* one step down — the outline           */
   --hub-lit:#FFFFFF;
   --hub-cycle:3.2s;
   --hub-step:.085s;     /* per cell of radius: the wave's speed  */
@@ -4399,7 +4421,7 @@ h3{ font-family:var(--fd); }
      side by side. */
   .tsh__term{ width:calc(100% + clamp(20px,2vw,26px) + 16px); }
 
-  .tsh__wf{ width:96%; right:0; top:auto; bottom:6px; }
+  .tsh__wf{ width:96%; right:0; top:auto; bottom:6px; transform:none; }
   .scene.is-on{ grid-template-columns:1fr; }
   .scene__ui{ grid-column:auto; }
   .scene__side{ flex-direction:row; }
