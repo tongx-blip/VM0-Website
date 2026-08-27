@@ -1385,6 +1385,15 @@
        alters it, a resize always does. */
     var ctrlGrid = doc.querySelector('.ctrl');
     var ctrlStage = doc.querySelector('.ctrl__stage');
+    /* THE CONTENT, NOT THE FRAME. `ctrlWin` is #ctrlframe — the stage — and
+       measuring it here made the stage measure itself: --ctrl-h is written
+       back onto .ctrl__frame as its `height`, so offsetHeight returned the
+       number we had just written, plus the padding, every pass. It ratchets
+       (Math.max only ever goes up) by one `pad` per ResizeObserver callback
+       until `fit` drops under 1 and the arithmetic finds a fixed point —
+       963px of frame around 622px of content, converged and self-consistent
+       and wrong. The band of empty grey under the mock was that gap. */
+    var ctrlContent = doc.querySelector('.ctrl__win');
     var ctrlMax = 0, ctrlW = 0;
 
     /* THE STAGE FITS THE VIEWPORT, and its contents scale to match.
@@ -1403,8 +1412,9 @@
        cropped. Under it the frame simply keeps its height. */
     function ctrlHeight() {
       if (!ctrlGrid) return;
-      if (ctrlWin.offsetWidth !== ctrlW) { ctrlW = ctrlWin.offsetWidth; ctrlMax = 0; }
-      ctrlMax = Math.max(ctrlMax, ctrlWin.offsetHeight);
+      if (!ctrlContent) return;
+      if (ctrlContent.offsetWidth !== ctrlW) { ctrlW = ctrlContent.offsetWidth; ctrlMax = 0; }
+      ctrlMax = Math.max(ctrlMax, ctrlContent.offsetHeight);
 
       var pad = 0;
       var frame = doc.querySelector('.ctrl__frame');
@@ -1412,22 +1422,45 @@
         var fs = getComputedStyle(frame);
         pad = parseFloat(fs.paddingTop) + parseFloat(fs.paddingBottom);
       }
-      var top = ctrlStage ? parseFloat(getComputedStyle(ctrlStage).top) || 0 : 0;
-      /* The bottom air is the stage's own offset MINUS the header, not the
-         whole offset: the top number exists to clear a floating header and
-         there is no header at the bottom. Mirroring it whole threw away
-         60px of usable height and scaled the mock down on viewports that
-         did not need it. */
-      var navH = parseFloat(getComputedStyle(doc.documentElement)
-                   .getPropertyValue('--nav-h')) || 0;
-      var avail = window.innerHeight - top - Math.max(16, top - navH) - pad;
-      var fit = Math.max(0.62, Math.min(1, ctrlMax ? avail / ctrlMax : 1));
+      /* The DESIGN clearance, not the live `top` — we are about to write
+         `top`, and reading it back would close the same loop that made the
+         frame measure itself. --ctrl-clear is registered as a <length>, so
+         this is a number rather than `calc(var(--nav-h) + clamp(…))`. */
+      var top = parseFloat(getComputedStyle(ctrlGrid)
+                  .getPropertyValue('--ctrl-clear')) || 0;
+      /* A SYMMETRIC budget, because the frame is centred. The old version
+         reserved the header's clearance at the top and only 16px at the
+         bottom, which buys a slightly bigger mock and makes centring
+         impossible: at 1280x800 the frame came out 671px in an 800px
+         window, so (innerHeight - frameH) / 2 fell under the header and
+         the offset had to clamp — leaving every statement 31px above the
+         frame's centre. Reserving the same clearance at both ends means
+         the frame always fits centred, and the mock pays for it with a
+         few per cent of scale. */
+      var avail = window.innerHeight - 2 * top - pad;
+      /* Fitting to the viewport is only meaningful while the stage is
+         PARKED. Once the layout stacks the frame simply flows, and
+         scaling it there shrank the mock inside a full-width frame for no
+         reason — 819px of content in a 904px frame at exactly 1000px
+         wide. Read the layout rather than repeating its breakpoint. */
+      var parked = ctrlStage && getComputedStyle(ctrlStage).position === 'sticky';
+      var fit = !parked ? 1
+              : Math.max(0.62, Math.min(1, ctrlMax ? avail / ctrlMax : 1));
 
+      var frameH = Math.round(ctrlMax * fit + pad);
       ctrlGrid.style.setProperty('--ctrl-fit', fit.toFixed(4));
-      ctrlGrid.style.setProperty('--ctrl-h', Math.round(ctrlMax * fit + pad) + 'px');
+      ctrlGrid.style.setProperty('--ctrl-h', frameH + 'px');
+      /* Centre the frame in the window so that "current" — which the
+         observer decides at the middle of the viewport — is the same line
+         the frame is centred on. Falls back to clearance on windows too
+         short to centre in. */
+      /* max() only matters once the 0.62 legibility floor binds and the
+         frame is taller than the window can centre. */
+      ctrlGrid.style.setProperty('--ctrl-top',
+        Math.max(top, Math.round((window.innerHeight - frameH) / 2)) + 'px');
     }
     if ('ResizeObserver' in window) {
-      new ResizeObserver(ctrlHeight).observe(ctrlWin);
+      new ResizeObserver(ctrlHeight).observe(ctrlContent || ctrlWin);
     } else {
       window.addEventListener('resize', ctrlHeight);
       window.addEventListener('load', ctrlHeight);

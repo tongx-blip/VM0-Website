@@ -145,6 +145,10 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F20 | **What recedes recedes on the subject's axis.** | A centred subject with a 44cqw memory drifting off to one side reads as the whole picture having slid. | QA §4n3 |
 | F21 | **People who share a thing are a stack, not a row.** Lap a quarter, ring in the surface's own paper, first on top. | Three separated avatars read as three separate events; the caption underneath says they are one group. | QA §4q6 |
 | F22 | **An `<img>` with no CSS size is a hard pixel size** and will not scale with the figure. | 34px avatars grew and shrank relative to the type beside them at every window size. | QA §4q7 |
+| F23 | **Never read the size you just wrote.** Measure the content, write to the frame; register any value the script both writes and needs to read. | `--ctrl-h` written onto the frame and read back from it ratcheted to 963px around 622px of content. | QA §4q8 |
+| F24 | **A scroll-linked pair aligns on the line the observer uses** — the middle of the viewport, not a fixed sticky offset. | A fixed offset aligns at one window height and drifts by half the difference at every other. | QA §4q9 |
+| F25 | **A symmetric height budget, because the frame is centred.** Reserving clearance at the top only makes centring impossible. | 671px of frame in an 800px window put every statement 31px above the frame's centre. | QA §4q9 |
+| F26 | **Viewport fitting only applies while the stage is parked.** Read the layout, do not repeat its breakpoint. | The stacked layout kept scaling: 819px of content inside a 904px frame. | QA §4q10 |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process

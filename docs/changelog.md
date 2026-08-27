@@ -6,6 +6,71 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the stage was measuring itself
+
+Tong, with two screenshots of #control at 1344x1095 and 1330x801: *"这个区域
+Responsive各种问题，你自己全方位检查一下，修改移动端，小屏幕，大屏幕的适配问题"*.
+
+**The stage measured itself.** `ctrlWin` is named like `.ctrl__win` and holds
+`#ctrlframe`. app.js §13 read *that* element's `offsetHeight` as "the natural
+height of the mock", then wrote the answer straight back onto the same element
+as `--ctrl-h` → `.ctrl__frame{height}`. So each pass read the number it had
+just written, added the frame's own padding, and `Math.max` — which by design
+only ever climbs — kept it. It ratchets one `pad` per ResizeObserver callback
+until `fit` drops under 1 and the arithmetic reaches a fixed point: **963px of
+frame around 622px of content**, converged, self-consistent, and wrong. The
+band of empty grey under the mock was that 341px gap, and the mock was being
+scaled to 0.93 to fit a frame that only needed to be 687.
+
+It measures `.ctrl__win` now. The frame comes out 687–694 around 622–626 of
+content at every window — padding, and nothing else.
+
+**The sticky offset was fixed, so the columns only aligned at one window
+height.** Every step but the first becomes current at the *middle of the
+viewport* — that is what the IntersectionObserver decides — but the frame
+parked at `--nav-h + clamp(20px,2.6vw,40px)`. When those two lines are not the
+same line, the statement sits high by half the difference: 91px at 1095 tall,
+and growing with the window. The offset now centres the frame in the viewport
+and only falls back to bare header clearance when the window is too short to
+centre in. `--ctrl-clear` is registered as a `<length>` so app.js can read the
+clearance as a number instead of the token string `calc(var(--nav-h) + …)` —
+and so that writing `top` cannot be read back as the input to `top`.
+
+**The height budget was asymmetric, which made centring impossible.** It
+reserved the header's clearance at the top and 16px at the bottom, which buys
+a slightly larger mock and guarantees the frame cannot be centred under the
+header: at 1280x800 the frame came out 671px in an 800px window, so
+`(innerHeight - frameH) / 2` fell under the clearance, the offset clamped, and
+every statement sat 31px above the frame's centre. Reserving the same
+clearance at both ends costs about 12% of mock scale at 1280x800 and buys
+alignment at every size. Measured, five steps, eight window sizes: every
+statement's centre is now within 1px of the frame's centre at 1024x768,
+1280x800, 1344x1095, 1366x768, 1440x900, 1512x982, 1600x1200, 1680x1050,
+1920x1080 and 2560x1440.
+
+**Fitting to the viewport was still running in the stacked layout.** Below
+1000px the stage is `position:static` and simply flows, so there is nothing to
+fit — but the scale kept applying, and at exactly 1000px wide it put 819px of
+content inside a 904px frame. It now reads `getComputedStyle(stage).position`
+rather than repeating the breakpoint, and is 1.0 whenever the stage is not
+parked.
+
+Two smaller things the sweep turned up, both real:
+
+* **the five step buttons are 38px tall** — `.btn--sm`, the one place on this
+  page where a genuine tap target falls under the 44px floor. Raised on coarse
+  pointers and in the stacked layout; desktop proportions untouched.
+* **`.state` was 10.5px**, half a pixel under the page's own floor. 11px.
+
+A known limit, recorded rather than fixed: when `fit` drops below 1 the mock
+shrinks but the frame keeps its column width, so a short window leaves more
+air at the sides than at the top — 92px against 48px at 1024x640. Every fix
+for it couples the frame's *width* to the scale, and the content reflows
+inside that width, which is the same feedback loop this entry is about. The
+side air is the price of not reintroducing it.
+
+---
+
 ## 2026-08-27 · the teammates are a stack, and they scale
 
 Tong, on the step-3 figure: *"这里的头像可以变成stack的方式"*.

@@ -1333,6 +1333,56 @@ border in em too.
     avatar 37.5 lap 9.3 (25%)   //  1920x1080
     avatar 26.3 lap 6.5 (25%)   //   390x844
 
+## 4q8. A stage may not measure itself
+
+If a script writes a size onto an element, it may not read that element's size
+as the input. `--ctrl-h` was written onto `.ctrl__frame{height}` and read back
+from the same element, with `Math.max` on the read — so it ratcheted one
+padding per ResizeObserver callback and settled on 963px of frame around 622px
+of content. It converges, which is what makes it invisible: no error, no
+flicker, just a band of empty ground that looks like a design decision.
+
+Measure the CONTENT, write to the FRAME. Then assert they differ only by the
+padding, in every state:
+
+    frame.getBoundingClientRect().height - win.getBoundingClientRect().height
+      === paddingTop + paddingBottom      // ± the deliberate max-state slack
+
+The same rule covers the sticky offset: `--ctrl-top` is written onto the
+stage's `top`, so the height budget must not read the live `top`. Register the
+design clearance as its own `<length>` property and read that.
+
+## 4q9. A scroll-linked pair aligns at the line the observer uses
+
+If an IntersectionObserver makes a step "current" at the middle of the
+viewport, then whatever the step is paired with must be centred on the middle
+of the viewport too. A fixed sticky offset satisfies that at exactly one
+window height and drifts by half the difference everywhere else — 91px at
+1095px tall, invisible at the 900px the design was drawn at.
+
+Verify by scrolling each step's CONTENT centre to `innerHeight/2` and reading
+the pair's centre. Two traps:
+
+* **Scroll the content centre, not the box centre.** A step with asymmetric
+  padding (the first one usually has some) reports a box centre that is
+  nowhere near its text, and the probe invents a defect that is not there.
+* **Converge, don't jump.** The first scroll changes reveal state and re-runs
+  the sizing, which moves the target. Loop until the delta is under a pixel;
+  a single `scrollBy` reported an 18px error that did not exist.
+
+## 4q10. Sweep the section, do not spot-check it
+
+One probe, every viewport, all states, asserting: nothing escapes the frame in
+any state, the page has no horizontal overflow, tap targets clear 44px, and no
+type falls under the floor. Run it at 320, 390, 430, 600, 768, 820, 1000,
+1024, 1280, 1440, 1920 and 2560 — plus at least one short window (1024x640,
+1440x700), which is where a fitted stage misbehaves.
+
+Use `element.checkVisibility({opacityProperty:true, visibilityProperty:true})`
+for the escape test. `getComputedStyle(e).opacity` reads only the element's own
+value, so a child of an `opacity:0` parent looks visible and every hidden
+state reports a false escape.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every

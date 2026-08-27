@@ -2356,7 +2356,17 @@ h3{ font-family:var(--fd); }
   margin-top:clamp(40px,4.4vw,64px);
   align-items:start;
 }
-.ctrl__stage{ position:sticky; top:calc(var(--nav-h) + clamp(20px,2.6vw,40px)); }
+/* The stage's sticky offset CENTRES THE FRAME IN THE VIEWPORT, and only
+   falls back to bare header clearance when the window is too short for
+   that. A fixed offset aligns the two columns at exactly one window
+   height: every step but the first becomes current at the middle of the
+   viewport, so if the frame's centre is not also the middle, the
+   statement sits high by half the difference — 91px at 1095, and growing
+   with the window. Registered as a <length> so app.js can read the
+   clearance as a number instead of the token string `calc(var(--nav-h) …)`. */
+@property --ctrl-clear{ syntax:'<length>'; inherits:true; initial-value:0px; }
+.ctrl{ --ctrl-clear:calc(var(--nav-h) + clamp(20px,2.6vw,40px)); }
+.ctrl__stage{ position:sticky; top:var(--ctrl-top, var(--ctrl-clear)); }
 
 /* A GROUND UNDER THE PRODUCT SURFACE. Without it the window was white on
    the panel's white and had no edge at all — it read as loose content
@@ -4680,7 +4690,8 @@ h3{ font-family:var(--fd); }
 .perms__tabs span.is-on{ border-color:transparent; box-shadow:0 1px 2px rgb(var(--ink-rgb) / .08); }
 
 /* status is carried by a tinted fill, not an outline */
-.state{ border:0; padding:5px calc(11px - .08em) 5px 11px; font-size:10.5px; letter-spacing:.08em; }
+/* 11px, not 10.5: the page has an 11px floor and a mock is still read. */
+.state{ border:0; padding:5px calc(11px - .08em) 5px 11px; font-size:11px; letter-spacing:.08em; }
 .state--ok{   background:rgb(var(--ok-rgb) / .12);  color:var(--ok-ink) !important; }
 .state--wait{ background:rgb(var(--wait-rgb) / .14);   color:var(--wait-ink) !important; }
 .state--off{  background:var(--wash-2);        color:var(--ink-mute) !important; }
@@ -4711,6 +4722,16 @@ h3{ font-family:var(--fd); }
 .btn{ border-radius:var(--r-btn); }
 .btn--lg{ padding:16px calc(28px - .085em) 16px 28px; }
 .btn--sm{ height:38px; padding:0 calc(18px - .085em) 0 18px; }
+/* A finger needs 44px. The five control-section buttons are all .btn--sm,
+   and 38px is the one place on this page where a real tap target falls
+   under the floor. Two arms: coarse pointers wherever they are (a touch
+   laptop at 1440 needs it too), and the stacked layout, which is where
+   these are actually thumbed — and which is also the arm a headless
+   browser can be made to prove, since it reports a fine pointer under
+   device emulation. Desktop proportions are untouched. */
+@media (pointer:coarse), (max-width:1000px){
+  .btn--sm{ height:44px; }
+}
 .scenes__tab{ border-radius:var(--r-pill); }
 .nav__links a,.nav__signin{ border-radius:var(--r-btn); }
 
