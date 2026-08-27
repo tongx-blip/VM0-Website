@@ -6,6 +6,64 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the prompt box types, and three of its four icons were wrong
+
+Tong: *"看看 hero有什么问题，button和prompt box在一起会不会有点奇怪？另外prompt
+box可以active。icon有一个用错了，你去看一下我们的组件 … 展开的小modal是否用了
+design token？怎么感觉stroke这么重？"*
+
+**He found one wrong icon. There were three.** The composer's left group is
+`Paperclip`, `SwatchBook`, `Route`, `Plug` — read out of `chat-composer.tsx`,
+where the template picker renders `<SwatchBook size={18} />` and the workflow
+prompt renders `<Route />`. I had shipped `LayoutTemplate` for the template
+(wrong component entirely) and hand-drawn `Paperclip` and `Plug` from memory,
+both of them older revisions of paths lucide has since redrawn. All four are
+now lifted verbatim from `lucide-static`, and `Route` was added, so the group
+is the app's four rather than my three.
+
+*A path drawn from memory is a guess with the confidence of a fact.* Fetch it.
+
+**The stroke is not heavy — the popover's edge was.** Measured: the icons
+render 18px from a 24 viewBox at `stroke-width:2`, which is 1.5px effective —
+exactly what `lucide-react` does at `size={18}` in the product. What read
+heavy was the unlock note, which carried a 0.7px ring AND `--e-2`'s 54px blur.
+The platform's own Popover is `w-72 rounded-[12px] border-[0.7px]
+border-[hsl(var(--gray-400))] bg-card p-4` — **and no shadow**. Two edge
+treatments on one 288px card is what made the outline shout. It is the
+platform's popover to the pixel now: 288px, 16px padding, border only.
+
+**Tokens, since he asked:** everything in the note comes from one —
+`--paper`, `--r-card`, `--ink`, `--ink-soft`, `--accent-solid`, `--t-meta`,
+`--fb`, and the box's own derived `--pbox-edge`. The two exceptions are the
+16px title and the 34px button, which are the APP's `text-base` and button
+height, not this page's scale, and are commented as such (RULES F31).
+
+**The box types now.** It was a `<p>` pretending to be an input, which is a
+picture of a composer rather than a composer — and the first thing anyone does
+with a box like that is click in it. It is a real textarea: it grows from the
+app's own 96px floor, Enter sends (Shift+Enter is a newline, as in the app),
+and sending opens the same unlock note every other control does. The focus
+state is `.zero-composer:focus-within::after` 1:1 — a second 0.7px edge one
+step darker plus a wide low veil, on its own layer so the state animates
+through opacity instead of repainting the card.
+
+**And yes, the buttons beside it are odd.** Three calls to action inside
+240px — a filled orange button, a secondary beside it, an orange send key
+below — and pressing anything on the box produces a fourth. v0 and Cursor,
+the two heroes built around a prompt box, carry no buttons at all: the box IS
+the entry point. `data-cta="box"` hides the pair; the default stays as it
+shipped, because removing a hero's primary CTA is a funnel decision rather
+than a design one.
+
+A third arrangement — buttons UNDER the box — is not shipped. `.hero__cta`
+and `.showcase` are siblings of `.stack`, so reordering past the figure with
+`order` alone dissolved `.stack` into the panel's 12-column grid and set the
+paragraph one word per line. It needs `.hero__cta` promoted to a direct child
+of `.hero`, which is a markup change worth making only if that is the one
+chosen.
+
+---
+
 ## 2026-08-27 · the type scale had no lint, which is why nobody could answer the question
 
 Tong: *"你是不是改了字体大小，要不要更新一下design tokens，同步到所有section？"*

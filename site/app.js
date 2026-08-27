@@ -1591,6 +1591,23 @@
       lastTrigger = null;
     }
 
+    /* the box types, and Enter sends — which is the same locked door as every
+       control, so it opens the same note. Shift+Enter is a newline, as it is
+       in the app. */
+    var pboxIn = doc.getElementById('pboxIn');
+    if (pboxIn) {
+      pboxIn.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.shiftKey) return;
+        e.preventDefault();
+        unlockOpen(doc.querySelector('.pbox__send'));
+      });
+      /* grow with what is typed, from the app's own 96px floor */
+      pboxIn.addEventListener('input', function () {
+        pboxIn.style.height = 'auto';
+        pboxIn.style.height = Math.max(pboxIn.scrollHeight, 0) + 'px';
+      });
+    }
+
     [].slice.call(pbox.querySelectorAll('[data-unlock]')).forEach(function (btn) {
       btn.setAttribute('aria-controls', 'unlock');
       btn.setAttribute('aria-expanded', 'false');

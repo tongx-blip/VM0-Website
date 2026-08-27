@@ -1949,6 +1949,27 @@ h3{ font-family:var(--fd); }
   padding-bottom:clamp(168px, 12vw, 190px);
 }
 
+/* ── the hero's CTA, next to a box that is also a CTA ─────────────────
+   Three calls to action inside 240px: a filled orange button, a secondary
+   beside it, and an orange send key on the box below — and pressing
+   anything on the box produces a fourth, "Get started for free", in the
+   unlock note. v0 and Cursor, the two heroes built around a prompt box,
+   carry no buttons at all: the box IS the entry point.
+
+   Switched on `data-cta` so the call is one word. Default stays `pair` —
+   removing a hero's primary CTA is a funnel decision, not a design one.
+     (default) — buttons above the box, as it shipped
+     `box`     — no buttons; the box is the way in, and the nav still
+                 carries "Get started" two inches above it
+
+   A third option, buttons UNDER the box, needs .hero__cta to become a
+   direct child of .hero: it and .showcase are siblings of .stack, so
+   reordering it past the figure with `order` alone dissolved .stack into
+   the panel's 12-column grid and set the paragraph one word per line.
+   Not shipped as a broken variant. */
+.hero[data-cta="box"] .hero__cta{ display:none; }
+
+
 /* ── the hero's prompt box ───────────────────────────────────────────
    THE PRODUCT'S OWN COMPOSER, 1:1. Every number here is read out of
    `turbo/apps/platform` rather than eyeballed from a screenshot:
@@ -1971,6 +1992,26 @@ h3{ font-family:var(--fd); }
    the composer's edge is what makes it read as the product's box at all,
    so it is taken from the ink channel at the alpha that lands on the
    app's own gray-400. Derived, not typed. */
+/* The composer's focus layer, 1:1: a second 0.7px edge one step darker and a
+   wide, low veil, both on their own layer so the state animates through
+   opacity instead of repainting the card (`.zero-composer::after`). */
+.pbox::after{
+  content:""; position:absolute; inset:-0.7px;
+  border:0.7px solid var(--pbox-edge-on);
+  border-radius:inherit;
+  box-shadow:0 10px 48px -8px rgb(var(--ink-rgb) / .08);
+  opacity:0; pointer-events:none;
+  transition:opacity 220ms var(--e-out);
+}
+
+.pbox:focus-within::after{ opacity:1; }
+
+@media (prefers-reduced-motion: reduce){
+  .pbox::after{ transition:none; }
+
+}
+
+
 .pbox{
   /* The app's radius scale, not this page's: 24px shell and 8px control are
      what make it the product's box rather than one of ours. Declared here so
@@ -1979,6 +2020,7 @@ h3{ font-family:var(--fd); }
   --pbox-ctrl-r:8px;      /* Button's rounded-lg            */
   --pbox-ctrl-h:32px;     /* size="icon-sm" → h-8           */
   --pbox-edge:color-mix(in srgb, var(--ink) 20%, transparent);
+  --pbox-edge-on:color-mix(in srgb, var(--ink) 32%, transparent);   /* gray-500 */
   position:relative; z-index:1;
   width:min(760px, 100%); margin-inline:auto;
   background:var(--paper);
@@ -1987,14 +2029,26 @@ h3{ font-family:var(--fd); }
   box-shadow:0 2px 12px rgb(var(--ink-rgb) / .04), 0 0 0 .5px rgb(var(--ink-rgb) / .02);
 }
 
-.pbox__ph{
-  margin:0; padding:16px 16px 0;
+/* A REAL INPUT. It was a paragraph pretending to be one, which is a picture
+   of a composer rather than a composer — and the first thing anyone does
+   with a box like this is click in it. It types; Enter or the send key opens
+   the same unlock note every other control does. */
+.pbox__lbl{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip-path:inset(50%); white-space:nowrap;
+}
+
+.pbox__in{
+  display:block; width:100%; margin:0; padding:16px 16px 0;
   /* 96px is the EDITOR's min-height in the app; the 16px inset sits on top
      of it, and box-sizing would otherwise eat it. */
   min-height:calc(96px + 16px);
+  border:0; background:transparent; resize:none; outline:none;
   font-family:var(--fb); font-size:var(--t-sm); line-height:1.55;
-  color:var(--ink-mute);
+  color:var(--ink);
 }
+
+.pbox__in::placeholder{ color:var(--ink-mute); opacity:1; }
 
 .pbox__row{
   display:flex; align-items:center; justify-content:space-between;
@@ -2046,21 +2100,26 @@ h3{ font-family:var(--fd); }
 .unlock{
   position:absolute; z-index:4;
   top:calc(100% - 10px);
-  left:clamp(0px, calc(var(--ux, 50%) - 140px), calc(100% - 280px));
-  width:280px;
-  padding:18px 18px 16px;
+  left:clamp(0px, calc(var(--ux, 50%) - 144px), calc(100% - 288px));
+  /* the platform's Popover, to the pixel: w-72, rounded-[12px], 0.7px on
+     gray-400, bg-card, p-4 — and NO shadow. Ours carried the border AND
+     --e-2's 54px blur, and two edge treatments on one 288px card is what
+     made the outline read heavy. The border alone is the app's answer. */
+  width:288px;
+  padding:16px;
   background:var(--paper);
   border-radius:var(--r-card);
   /* the box's own edge, NOT --ink-rgb: that is the shadow channel and it
      does not swap with the theme, so on a dark ground it drew near-black on
      near-black and the popover had no edge at all (RULES F30). */
-  box-shadow:var(--e-2), 0 0 0 .7px var(--pbox-edge);
+  box-shadow:0 0 0 .7px var(--pbox-edge);
   text-align:left;
 }
 
 .unlock[hidden]{ display:none; }
 
 .unlock__t{
+  /* the app's `text-base`, like the popover it copies — not this page's scale */
   margin:0 0 6px; font-family:var(--fb);
   font-size:16px; font-weight:600; letter-spacing:-.01em; color:var(--ink);
 }
@@ -2102,8 +2161,6 @@ h3{ font-family:var(--fd); }
 
 
 @media (max-width:560px){
-  .pbox__ph{ min-height:68px; }
-
   .unlock{ left:0; width:100%; }
 
   /* The app collapses the model picker to a 32px icon at this width

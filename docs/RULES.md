@@ -155,6 +155,9 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F30 | **A channel token is not a fill token.** `--ink-rgb` is the shadow channel and does not swap with the theme. | Four of five index marks painted near-black on near-black in dark mode: contrast 1.09. | QA §4s |
 | F31 | **A mock keeps the app's type scale; the page keeps its own.** Never sync one into the other. | Pushing `--t-*` into a product drawing stops it looking like the product — the exemption is the point, not a loophole. | QA §5 |
 | F32 | **If a scale is not linted, it is not a scale.** | `tokens.py` caught raw radius and not raw font-size, so 48 raw px sizes collected in the design layer and a new component tokenised its radii but not its type. | QA §5 |
+| F33 | **Never draw an icon from memory — fetch the path.** And read which icon the component actually renders, not which one sounds right. | Three of four composer icons were wrong: `LayoutTemplate` where the app renders `SwatchBook`, plus two outdated hand-drawn paths. | QA §4z |
+| F34 | **One edge treatment per surface.** A border and a wide shadow together is what makes an outline read heavy. | The unlock note carried a 0.7px ring and `--e-2`'s 54px blur; the platform's Popover has the border and no shadow. | QA §4z |
+| F35 | **A control in a mock is a control.** If it looks live, make it live or make it say why it is not. | The prompt box was a `<p>` pretending to be an input — the first thing anyone does is click in it. | QA §4z |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process
