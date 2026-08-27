@@ -33,7 +33,8 @@ PINNED_PREFIXES = (
 # every third-party mock in base.css was reported as a token violation.
 MOCK_SELECTORS = re.compile(
     r'\.(vsui|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
-    r'|perms|okoui|ochat|oresult|appui|tplwin|tpl|step|mock|shot|acard|a2a|wfo)'
+    r'|perms|okoui|ochat|ochip|ostage|oresult|appui|tplwin|tpl|step|mock|shot|slk'
+    r'|acard|a2a|wfo|wfsc|par|pbox|unlock|cbox|cgate|cnet|ctrail|state)'
     r'(?:__|--|\b)'
 )
 
@@ -42,6 +43,11 @@ RGB = re.compile(r'\brgba?\(\s*[\d.]+[\s,]')          # a literal channel, not r
 TIME = re.compile(r'(?<![\w-])\d*\.?\d+m?s\b')
 EASE = re.compile(r'cubic-bezier\(')
 RADIUS = re.compile(r'border-radius\s*:\s*([^;}]+)')
+# An ABSOLUTE type size. `em` and `%` are relative and belong to whatever set
+# them; a bare px is a number somebody typed, and 48 of them had collected in
+# the design layer with nothing to catch them — which is also how a new
+# component came to tokenise its radii and not its type.
+FONTSIZE = re.compile(r'font-size\s*:\s*([^;}]+)')
 
 
 def strip_comments(css: str) -> str:
@@ -78,6 +84,7 @@ def token_block(css: str) -> range:
 
 
 def audit(path: Path):
+    design_layer = path.name == 'system.css'
     raw = path.read_text(encoding='utf-8')
     css = strip_comments(raw)
     lines = css.split('\n')
@@ -135,6 +142,17 @@ def audit(path: Path):
         if m and 'var(--' not in m.group(1) and not in_mock:
             if not re.fullmatch(r'\s*(0|50%|inherit|9999px|999px)\s*', m.group(1)):
                 findings.append((n + 1, 'raw radius', selector, stripped[:88]))
+
+        # A mock draws the app and keeps the APP's type scale (RULES P1), so
+        # this only ever asks about the page's own chrome — and only in the
+        # DESIGN layer. base.css is the mock-internals layer by definition
+        # (CLAUDE.md), and almost every size in it is overridden by
+        # system.css anyway, so linting it would be 49 lines of noise.
+        m = FONTSIZE.search(line) if design_layer else None
+        if m and 'var(--' not in m.group(1) and not in_mock:
+            v = m.group(1).strip()
+            if re.search(r'\d\s*px', v) and not v.startswith(('inherit', 'clamp')):
+                findings.append((n + 1, 'raw type size', selector, stripped[:88]))
 
     return findings
 

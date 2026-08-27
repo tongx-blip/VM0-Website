@@ -58,7 +58,14 @@
 /* ── 2. TYPE-SCALE — page-level type must stay on the scale. Product mocks
       are exempt: they mimic app UI at its own sizes. ───────────────── */
 (() => {
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl,.pbox';
+  /* Every product mock on the page, not the half of them this list used to
+     name. A mock draws the app and keeps the APP's type scale (RULES P1), so
+     counting its internals as page type made the census report 24 sizes and
+     tell nobody anything. Missing before: .arti .tsh .lane .vsui .wfsc .wfo
+     .par .ochat .ochip .ostage .cbox .cgate .cnet .ctrail .vs__viz. */
+  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,'
+    + '.appui,.tplwin,.tpl,.pbox,.arti,.tsh,.lane,.vsui,.wfsc,.wfo,.par,'
+    + '.ochat,.ochip,.ostage,.cbox,.cgate,.cnet,.ctrail,.vs__viz,.mock';
   const sizes = {};
   document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
     if (el.closest(MOCK) || !el.textContent.trim()) return;

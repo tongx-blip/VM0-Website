@@ -1212,6 +1212,8 @@ h3{ font-family:var(--fd); }
 .pbox__ib,.pbox__pick,.pbox__send{
   display:inline-flex; align-items:center; justify-content:center;
   height:var(--pbox-ctrl-h); border:0; border-radius:var(--pbox-ctrl-r);
+  /* 14px is the app's `text-sm`, not this page's --t-sm (15px). A mock keeps
+     the app's type scale — see RULES F31. */
   font-family:var(--fb); font-size:14px; font-weight:500;
   cursor:pointer;
   transition:background var(--t-state) var(--e-out), color var(--t-state) var(--e-out);
@@ -4853,7 +4855,6 @@ h3{ font-family:var(--fd); }
 }
 @media (max-width:620px){
   .ostage__conn{ grid-template-columns:1fr; }
-  .announce{ font-size:10px; letter-spacing:.06em; gap:4px 10px; }
   .scene__side{ flex-direction:column; }
   .step{ grid-template-columns:18px minmax(0,1fr); column-gap:10px; }
   .hero__meta{ gap:8px 18px; }

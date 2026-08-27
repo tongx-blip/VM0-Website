@@ -1421,18 +1421,43 @@ rewritten is a probe that will be rewritten wrong.
 
 ## 5. Type scale
 
-`docs/design-system.md` §2. Count the page's distinct sizes — **11**, and every
-one a token:
+`docs/design-system.md` §2.
+
+**The lint is the check now.** `tools/tokens.py` reports `raw type size` for
+any absolute `px` font-size in the DESIGN layer that is not a mock — which is
+the thing the census below was trying to prove and could not, because it was
+exempting only a third of the mocks and therefore counting the app's type
+scale as the page's. Run `python3 tools/tokens.py`; it must be 0.
+
+The census still has a job the lint cannot do: it sees the COMPUTED value, so
+it catches two rules resolving to sizes 0.5px apart, which reads as sloppiness
+even when both sides are tokens (RULES F15). **14 at 1440x900**, and every one
+accounted for:
+
+- eight of them are `--t-d1/d2/d3` and the section headings, all `clamp()` —
+  one token each, evaluated at this viewport. They move with the window.
+- `17 / 15 / 13.5 / 12` — `--t-body`, `--t-sm`, `--t-meta`, `--t-mono`.
+- `15.5049` — `--q-name`, `calc(16 * var(--qu))`. The testimonial card scales
+  with its container, so this is 16 design units, not a stray value.
+- `11.61` — `.vs__vs` at `.86em`. A fraction of its parent, by design.
 
 ```js
-const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,.appui,.tplwin,.tpl';
+const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,'
+  + '.appui,.tplwin,.tpl,.pbox,.arti,.tsh,.lane,.vsui,.wfsc,.wfo,.par,'
+  + '.ochat,.ochip,.ostage,.cbox,.cgate,.cnet,.ctrail,.vs__viz,.mock';
 const sizes = {};
-document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
+document.querySelectorAll('main *,.footer *,.nav *').forEach(el => {
   if (el.closest(MOCK) || !el.textContent.trim()) return;
   const s = getComputedStyle(el).fontSize; sizes[s] = (sizes[s] || 0) + 1;
 });
-Object.keys(sizes).length   // 11 — anything more is a stray clamp() in a rule
+Object.keys(sizes).length   // 14 — a NEW one is the thing to explain
 ```
+
+**A mock's sizes are the app's and stay raw.** Pushing the page's `--t-*` into
+`.perms` or `.pbox` would make the drawings stop looking like the product,
+which is the whole reason the exemption exists (RULES P1). If a mock's type
+looks wrong, the fix is inside the mock's own scale — three sizes, a name, a
+sentence, a label (RULES F15) — not the page's tokens.
 
 Then the floor:
 

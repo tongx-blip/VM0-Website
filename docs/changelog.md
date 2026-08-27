@@ -6,6 +6,59 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-27 · the type scale had no lint, which is why nobody could answer the question
+
+Tong: *"你是不是改了字体大小，要不要更新一下design tokens，同步到所有section？"*
+
+**No page token changed value**, and syncing would be the wrong move. What
+actually changed in this session was all inside product mocks: the workflow
+scene went from six sizes to three (his own *"字号一大堆"*), `.state` went
+10.5→11px, and the new prompt box brought the app's 14/16px. The hero variants
+*re-assign* existing tokens to the rotator — `--t-body` for `fold`, `--t-sm`
+for `eyebrow` — and introduce no new value.
+
+A mock keeps the APP's type scale on purpose (RULES P1). Pushing `--t-*` into
+`.perms` or `.pbox` would make the drawings stop looking like the product,
+which is the whole reason the exemption exists.
+
+**But the question had nothing to check itself against, and that is a real
+defect.** Two of them:
+
+* **`tokens.py` linted raw radius and not raw font-size.** So 48 raw px sizes
+  had collected in the design layer with nothing to catch them — and it is why
+  the prompt box came out with its radii and heights named (`--pbox-r`,
+  `--pbox-ctrl-r`, `--pbox-ctrl-h`, because the radius lint fired) and its type
+  left as bare numbers (because nothing fired). There is a `raw type size`
+  check now, scoped to the design layer and exempting mocks the same way the
+  colour and radius checks do. Verified by breaking `.hero__body` to 18px and
+  watching it report.
+* **The type census was exempting a third of the mocks.** `.arti .tsh .lane
+  .vsui .wfsc .wfo .par .ochat .ochip .ostage .cbox .cgate .cnet .ctrail
+  .vs__viz` were all missing, so it counted the app's type as the page's,
+  reported 24 sizes, and told nobody anything. The checklist's claim of
+  **11** was measured with that broken list.
+
+The real number, with the mocks properly out, is **14 at 1440x900**, and every
+one is accounted for in `qa-checklist` §5: eight are `clamp()` display and
+heading tokens evaluated at this viewport, four are `--t-body/-sm/-meta/-mono`,
+one is `--q-name` (`calc(16 * var(--qu))` — the testimonial card scales with
+its container), one is `.vs__vs` at `.86em`. Nothing off the scale.
+
+**It earned its keep on the first rebase.** The Slack-channel scene that
+landed while this was being written brought a new mock family, `.slk__*`, and
+the gate immediately reported nine — seven raw radii, two raw durations and
+one raw 9px — because `slk` was not on the mock list. All nine are correct as
+written: the scene draws Slack, so its corners and timings are Slack's. What
+was missing was the declaration that it is a mock, and that is exactly the
+thing a list like this exists to force.
+
+Also removed: `.announce`'s 10px responsive rule. There is no `.announce` in
+the markup — dead CSS for a component that does not exist, same as `.ph` an
+entry ago. And `.state`, which lives only inside `.perms`, joined the mock
+list rather than being dragged onto the page's scale.
+
+---
+
 ## 2026-08-27 · the hero stops being a white slab, and stops arguing with itself
 
 Tong: *"header的三段text设计有点粗糙 … 你也可以去做一些网站hero调研 … hero可以用

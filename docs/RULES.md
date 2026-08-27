@@ -153,6 +153,8 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F28 | **A framed picture is centred in the frame, both axes** — `minmax(0,1fr)` row, `align-items:center`, `transform-origin:center`. | An implicit `auto` row grows to its item, so centring is a no-op and the overflow all leaves from the bottom. | QA §4q12 |
 | F29 | **A stage's height follows the window; its shape has a cap.** | "As tall as the window allows" made a 616x1236 grey slab at 2560x1440. Cap on the width, which cannot feed back. | QA §4q12 |
 | F30 | **A channel token is not a fill token.** `--ink-rgb` is the shadow channel and does not swap with the theme. | Four of five index marks painted near-black on near-black in dark mode: contrast 1.09. | QA §4s |
+| F31 | **A mock keeps the app's type scale; the page keeps its own.** Never sync one into the other. | Pushing `--t-*` into a product drawing stops it looking like the product — the exemption is the point, not a loophole. | QA §5 |
+| F32 | **If a scale is not linted, it is not a scale.** | `tokens.py` caught raw radius and not raw font-size, so 48 raw px sizes collected in the design layer and a new component tokenised its radii but not its type. | QA §5 |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process
