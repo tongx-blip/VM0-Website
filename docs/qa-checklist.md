@@ -994,6 +994,12 @@ So also assert containment, which is the symptom a human notices first:
 **And never regex across nested tags of the same name.** Match on a unique
 attribute, or rebuild the block from its opening tag by counting depth.
 
+**Never string-match an `assets/…` path in `index.html`.** `build-css.py`
+stamps `?v=<hash>` onto every one of them, so a literal match against the
+path you wrote in source silently matches nothing — the script prints its
+success message and changes zero bytes. This has cost two rounds. Match with
+a regex that tolerates the stamp, and assert the replacement count.
+
 ## 4n1. One logo, rendered one way
 
 The wordmark appears in the header and in the footer, and they are authored in
@@ -1064,6 +1070,52 @@ to wander as the browser was resized: the `Save workflow` chip beside it was
 only `opacity:0`, still in flow, and its width came from the canvas — so
 every resize pushed the visible chip sideways. Two states of one slot sit on
 **one anchor**, not side by side.
+
+## 4n2b. Measure every state for overlap — and wait for it to settle
+
+A multi-state figure has N compositions and each one can collide. Assert it
+rather than looking at one of them:
+
+```js
+(async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const cv = document.querySelector('.wfsc__cv').getBoundingClientRect();
+  const sc = document.getElementById('wfScene');
+  const sel = ['.wfo--ask','.wfo--run','.wfo--team','.wfo--perm','.wfo--list'];
+  const out = [];
+  for (const step of ['1','2','3','4']) {
+    sc.dataset.step = step;
+    await wait(900);                       // ← the transitions are 420–640ms
+    const box = sel.map(n => {
+      const el = document.querySelector(n);
+      if (parseFloat(getComputedStyle(el).opacity) < 0.05) return null;
+      const r = el.getBoundingClientRect();
+      return { n, l:r.left, r:r.right, t:r.top, b:r.bottom };
+    }).filter(Boolean);
+    const hit = [];
+    for (let i=0;i<box.length;i++) for (let j=i+1;j<box.length;j++) {
+      const a=box[i], b=box[j];
+      const ox = Math.min(a.r,b.r)-Math.max(a.l,b.l);
+      const oy = Math.min(a.b,b.b)-Math.max(a.t,b.t);
+      if (ox>2 && oy>2) hit.push(a.n+'×'+b.n);
+    }
+    const esc = box.filter(x => x.t<cv.top-2||x.b>cv.bottom+2||
+                                x.l<cv.left-2||x.r>cv.right+2).map(x=>x.n);
+    out.push('s'+step+' ov['+(hit.join(' ')||'ok')+'] out['+(esc.join(' ')||'ok')+']');
+  }
+  return out.join('  ');   // every state: ov[ok] out[ok]
+})()
+```
+
+**The `await` is the check.** Without it the probe sets `data-step` and
+measures in the same frame, so all four states report the geometry that is
+still on screen — four identical lines that look like a pass. The tell is
+that the numbers do not change between steps; if they do not, the probe is
+broken, not the layout.
+
+Run it at 1024×900, 1440×900, 1440×700 and 1920×1080. On a fixed-ratio canvas
+the four should agree; if they do not, something in the figure is still sized
+against the frame rather than the canvas.
 
 ## 4n2. A sticky stage must not resize between its own states
 

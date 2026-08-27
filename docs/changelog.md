@@ -290,6 +290,44 @@ air is leading now, which is height a `0fr` track does collapse.
 every row open, so adding `.is-live` and the transition together played the
 loop's opening state as an animation — nine rows sliding shut in front of
 the reader. `.is-warm` is added on the frame after the first cue pass.
+## 2026-08-27 · the collision the canvas change introduced
+
+Moving the workflow scene onto a fixed-ratio canvas changed the coordinate
+space and I did not re-check the states against it. At **Hand over** the team
+avatars landed on top of the workflow card, covering "Post it to #team", and
+the three per-avatar captions overlapped into `RAN IT RAN IT RAN IT`.
+
+That is F9 — *check the geometry in every state, not only at rest* — broken
+by the person who wrote it down two days ago.
+
+**Measured, not eyeballed.** The card is 53% of the canvas on its own; at
+scale .94 it ran 21→74% while the avatars sat at 58→65%, i.e. inside it.
+Step 3 now lifts and shrinks the card so the team and the permissions line
+have somewhere to be, and every state is asserted clean at 1024×900,
+1440×900, 1440×700 and 1920×1080.
+
+**One caption for the group.** Three `nowrap` labels each centred under a
+34px avatar are wider than the avatars are apart, so they collided the moment
+the canvas got small. A label that cannot fit under the thing it labels goes
+beside the group instead — and it says something better: *three teammates ran
+it this week*.
+
+**The probe was broken before the layout was.** The first version set
+`data-step` and measured in the same frame, so all four states reported the
+geometry still on screen — four identical lines that read as a pass. The tell
+is that the numbers do not change between steps. Now in the checklist as
+§4n2b, with the `await` called out as the check.
+
+**And the `?v=` trap cost a second round.** `build-css.py` stamps every
+`assets/…` path in `index.html`, so a literal string replace against the path
+as written in source matches nothing, prints its success message and changes
+zero bytes. Written into the checklist beside the other regex warning: match
+with a pattern that tolerates the stamp, and assert the replacement count.
+
+Gate: axe 0 violations both themes after a full-page walk, borders 0, bug
+sweep pass, no horizontal overflow at 390 / 768 / 1440×700, tokens 0, scopes 0.
+
+
 ## 2026-08-27 · figures fit the window, and compositions stop drifting
 
 Three responsive faults, reported together, with two root causes.

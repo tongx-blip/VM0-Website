@@ -2866,7 +2866,7 @@ h3{ font-family:var(--fd); }
 
 /* it recedes rather than vanishing — the workflow came from it */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.34; transform:translate(-2cqw, -3cqh) scale(.88) rotate(-1.1deg);
+  opacity:.34; transform:translate(-3cqw, -11cqh) scale(.85) rotate(-1.1deg);
 }
 
 .wfsc[data-step="3"] .wfo--ask,
@@ -2877,7 +2877,7 @@ h3{ font-family:var(--fd); }
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
 .wfo--run{
-  left:26cqw; top:34cqh; width:min(48cqw, 32rem);
+  left:26cqw; top:37cqh; width:min(48cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 
@@ -2889,8 +2889,12 @@ h3{ font-family:var(--fd); }
   opacity:1; transform:translate(0, -10cqh) scale(1.04) rotate(0deg);
 }
 
+/* Step 3 has to hold THREE things — the card, the team and the line —
+   and the card alone is 53% of the canvas. Measured, not eyeballed: at
+   scale .94 it ran 21→74% while the avatars sat at 58→65%, i.e. inside
+   it. It lifts and shrinks so the other two have somewhere to be. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -14cqh) scale(.94) rotate(-.6deg);
+  opacity:1; transform:translate(-9cqw, -21cqh) scale(.8) rotate(-.6deg);
 }
 
 .wfsc[data-step="4"] .wfo--run{
@@ -2996,24 +3000,30 @@ h3{ font-family:var(--fd); }
 
 /* 3 · the workspace it now belongs to ─────────────────────────────── */
 .wfo--team{
-  left:24cqw; top:58cqh; display:flex; gap:.9em;
+  left:24cqw; top:67cqh; display:flex; align-items:center; gap:.75em;
 }
 
-.wfo__who{ position:relative; display:block; opacity:0; transform:translateY(1.2em) scale(.8);
+.wfo__who,.wfo__ran{ position:relative; display:block; opacity:0; transform:translateY(1.2em) scale(.8);
   transition:opacity 480ms var(--e-out), transform 620ms var(--e-spring);
   transition-delay:calc(var(--wi, 0) * 110ms); }
 
 .wfo__who img{ border-radius:var(--r-pill); box-shadow:0 0 0 3px var(--paper); display:block; }
 
-.wfo__who i{
-  position:absolute; left:50%; top:calc(100% + .35em); transform:translateX(-50%);
-  font-style:normal; font-family:var(--fm); font-size:.62em; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--ink-soft); white-space:nowrap;
+/* ONE caption for the group. Three per-avatar labels, each `nowrap` and
+   centred under a 34px avatar, are wider than the avatars are apart —
+   they overlapped into "RAN IT RAN IT RAN IT" the moment the canvas got
+   small. A label that cannot fit under the thing it labels belongs
+   beside the group instead. */
+.wfo__ran{
+  font-style:normal; font-family:var(--fm); font-size:.66em; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-mute); white-space:nowrap;
+  margin-left:.35em;
 }
 
 .wfsc[data-step="3"] .wfo--team{ opacity:1; }
 
-.wfsc[data-step="3"] .wfo__who{ opacity:1; transform:none; }
+.wfsc[data-step="3"] .wfo__who,
+.wfsc[data-step="3"] .wfo__ran{ opacity:1; transform:none; }
 
 /* the team belongs to step 3. Held at .4 over the blue ground it read as
    litter behind the list rather than as a memory of the step before. */
@@ -3021,7 +3031,7 @@ h3{ font-family:var(--fd); }
 
 
 .wfo--perm{
-  left:24cqw; top:73cqh; width:min(42cqw,27rem);
+  left:24cqw; top:83cqh; width:min(44cqw,28rem);
   color:var(--ink-soft); font-size:.9em;
   transform:translateY(.8em);
 }
