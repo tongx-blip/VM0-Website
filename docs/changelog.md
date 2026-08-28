@@ -6,6 +6,78 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · two rules stopped being paragraphs
+
+Tong: *"之前聊到的很多规则性的内容可以加进设计规则文档或者脚本里"*.
+
+The prose side was already full — 133 rules indexed, and `rules.py` keeping
+every `QA §…` pointer honest. The gap was the other half of the sentence: of
+those 133, the ones that had actually drawn blood were still only readable,
+not checkable. Two of them are checks now, and both found live bugs on their
+first run.
+
+**`tokens.py` · channel as fill / channel as ring.** `--ink-rgb` and
+`--paper-rgb` are the shadow-and-scrim channels and do not swap with the
+theme, on purpose. Painted as a shadow that is right; painted as a visible
+surface it is a theme bug in the mode nobody screenshots. Four occurrences of
+one mistake:
+
+| | dark |
+|---|---|
+| `.ctrl__index li` | 1.09 |
+| `.unlock` — no edge at all | — |
+| `.par__bar`, the four parallel tracks | **1.01** |
+| `.quote__bar`, under a comment saying it "holds the same weight against the card on both grounds" | **1.04** |
+
+The last two were live on the page. The comment on `.quote__bar` was exactly
+backwards, which is the argument for a check over a paragraph in one line.
+
+Mocks are skipped (their chrome is pinned, P1) and so are gradients, which are
+scrims — what the channel is *for*. First run also found **a dead `.chip`
+rule**, **`.ocard` missing from the mock list**, and the **mobile nav drawer
+opening 97% white in dark mode** under `--nav-ink` link text: about 2:1, on a
+surface you only see by opening the burger on a phone at night. 8.92:1 now.
+
+**`audit.js` §8 · a state rule must win its property.** A `.is-*` declaration
+that loses the cascade does nothing, and it reads as a broken animation rather
+than as CSS — which is why the avatar lift survived a screenshot review, and
+why the `cut` hero variant rendered identically to the default while its CSS
+read correctly.
+
+The block took three attempts, and the wrong ones are the useful part:
+
+1. `if (r.cssRules)` before `r.selectorText`. With CSS nesting a `CSSStyleRule`
+   also carries a (usually empty) `cssRules`, so every style rule was treated
+   as a group and recursed into. It reported **"0 checked · PASS"** — the same
+   shape of lie as the geometry probe that returned four identical states.
+2. Toggling the class off and looking for a change. The class is not always on
+   the matched element (`.ostage.is-live .ocard` puts it on an ancestor), and
+   a state that returns a property to its *default* — `.ocard.is-on{transform:
+   none}` cancelling the offset `.is-live` gives every card — looks identical
+   either way. Ten correct rules reported dead.
+3. Walking the cascade for real: every author rule matching the element that
+   sets the same property, ordered by specificity then position, and asking
+   whether ours is last. Then one more discrimination, or it is unusable:
+   **losing to another state is ordinary cascade**; only a *resting* rule
+   beating a state rule is a fault.
+
+First run: the Okou window's nav lost its `.is-here` highlight in dark mode —
+the theme rule out-specifies the state, so the current row was the same 60%
+grey as the four inactive ones — and three lines in `base.css` still described
+the rotator's old `display:none/block` machinery, replaced by `#rotator .rot`
+and unable to fire since.
+
+**And one regression of my own, caught on the way out.** The Slack landing
+card added yesterday failed axe on two nodes in two runs of three, while
+measuring 16:1 and 5.6:1 at rest. Every other object in that scene settles
+once per beat; this one replays on a loop, so the odds of being sampled at
+partial alpha are high, and axe composites an inherited opacity. It wipes with
+`clip-path` now instead of fading — which is what QA §1 has said since the
+`.reach__line` fix, and I did not apply it to the one object that needed it
+most. Four clean runs.
+
+---
+
 ## 2026-08-28 · the rules that were only in changelog entries
 
 Tong: *"我们有没有记录网站规则和风格的文档或者脚本？之前聊到的很多可以整理成设计

@@ -287,3 +287,93 @@
 
   return out.length ? out : 'PASS — no ties, no percentage insets over a wrap';
 })()
+
+/* ── 9. STATE RULES THAT LOSE THE CASCADE — a `.is-*` declaration must be
+      the one that wins on the element it is written for. `.wfo__who
+      .is-holding{transform}` sat at lower specificity than `.wfsc[data-step
+      ="3"] .wfo__who{transform:none}` and earlier in the file, so the avatar
+      it was supposed to lift never moved — and that reads as a broken
+      animation rather than as CSS, which is why it survived a screenshot
+      review. `.hero[data-cta="cut"] .display--tail{display:none}` lost the
+      same way to `#rotator{display:block}`.
+
+      TOGGLING THE CLASS IS THE WRONG TEST. A state that returns a property
+      to its default — `.ocard.is-on{transform:none}` cancelling the offset
+      `.is-live` gave every card — looks identical with the class on and off,
+      and the first version of this block reported ten such rules as dead.
+      What matters is not whether the element changes but whether OUR
+      declaration is the last one standing, so this walks the cascade for
+      real: every author rule that matches the element and sets the same
+      property, ordered by specificity then document position. Author origin,
+      no `!important` — both would need the same treatment if this page ever
+      used them. RULES F36. ───────────────────────────────────────────── */
+(() => {
+  const spec = (sel) => {
+    const ids = (sel.match(/#[\w-]+/g) || []).length;
+    const cls = (sel.match(/\.[\w-]+|\[[^\]]+\]|:(?!:)(?!not\b|is\b|where\b)[\w-]+/g) || []).length;
+    const els = (sel.match(/(^|[\s>+~])(?![.#\[:*])[a-zA-Z][\w-]*/g) || []).length;
+    return ids * 10000 + cls * 100 + els;
+  };
+
+  // every author style rule, in document order
+  const all = [];
+  for (const sheet of document.styleSheets) {
+    let rules;
+    try { rules = sheet.cssRules; } catch { continue; }          // cross-origin
+    const walk = (list) => {
+      for (const r of list) {
+        // selectorText FIRST: with CSS nesting a CSSStyleRule also carries a
+        // (usually empty) cssRules, so `if (r.cssRules)` is truthy for every
+        // style rule and recursing on it first finds nothing.
+        if (r.selectorText && r.style) {
+          for (const sel of r.selectorText.split(',')) {
+            const s = sel.trim();
+            if (!s) continue;
+            const props = [];
+            for (let i = 0; i < r.style.length; i++) props.push(r.style[i]);
+            if (props.length) all.push({ sel: s, props, sp: spec(s), i: all.length });
+          }
+        }
+        if (r.cssRules && r.cssRules.length) walk(r.cssRules);
+      }
+    };
+    walk(rules);
+  }
+
+  const lost = [], unseen = [], skipped = [];
+  for (const rule of all) {
+    if (!/\.is-[\w-]/.test(rule.sel)) continue;
+    if (/:not\([^)]*\.is-/.test(rule.sel)) { skipped.push(rule.sel); continue; }
+    let el;
+    try { el = document.querySelector(rule.sel); } catch { continue; }
+    if (!el) { unseen.push(rule.sel); continue; }
+
+    for (const p of rule.props) {
+      if (/^transition|^animation/.test(p)) continue;   // not a visible state
+      let winner = rule;
+      for (const other of all) {
+        if (other === rule || !other.props.includes(p)) continue;
+        let hit = false;
+        try { hit = el.matches(other.sel); } catch { continue; }
+        if (!hit) continue;
+        if (other.sp > winner.sp || (other.sp === winner.sp && other.i > winner.i)) winner = other;
+      }
+      /* Losing to ANOTHER STATE of the same thing is ordinary cascade, not
+         a fault: `.ocard{transform:6px}` under `.is-live` is meant to be
+         cancelled by `.ocard.is-on{transform:none}`. What this is looking
+         for is a RESTING rule beating a state rule — `#rotator .rot` over
+         `.rot.is-on`, a theme rule over `.is-here`. So: only report when
+         the winner carries no state of its own. */
+      if (winner !== rule && !/\.is-[\w-]/.test(winner.sel)) {
+        lost.push(rule.sel + ' {' + p + '} loses to ' + winner.sel);
+        break;                                          // one line per rule
+      }
+    }
+  }
+
+  const body = 'state rules checked: ' + all.filter(r => /\.is-[\w-]/.test(r.sel)).length +
+               '  ·  not on the page right now: ' + unseen.length +
+               '  ·  skipped (:not): ' + skipped.length;
+  return lost.length
+    ? body + '\n\nFAIL — these declarations never win\n  ' + lost.join('\n  ')
+    : body + '\n\nPASS — every state declaration on the page wins its property';})()

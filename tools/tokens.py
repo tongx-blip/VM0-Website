@@ -33,7 +33,7 @@ PINNED_PREFIXES = (
 # every third-party mock in base.css was reported as a token violation.
 MOCK_SELECTORS = re.compile(
     r'\.(vsui|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
-    r'|okoui|ochat|ochip|ostage|oresult|appui|tplwin|tpl|step|mock|shot|slk'
+    r'|okoui|ochat|ochip|ocard|ostage|oresult|appui|tplwin|tpl|step|mock|shot|slk'
     r'|acard|a2a|wfo|wfsc|par|pbox|unlock|pgrant|cbro|state|okw)'
     r'(?:__|--|\b)'
 )
@@ -48,6 +48,20 @@ RADIUS = re.compile(r'border-radius\s*:\s*([^;}]+)')
 # the design layer with nothing to catch them — which is also how a new
 # component came to tokenise its radii and not its type.
 FONTSIZE = re.compile(r'font-size\s*:\s*([^;}]+)')
+# The two channels that do NOT swap with the theme (§1): --ink-rgb is the
+# shadow-and-scrim channel and --paper-rgb its opposite. Used as a shadow they
+# are correct — a shadow is dark in both modes. Used as VISIBLE PAINT they are
+# a theme bug, and one that only shows up in the mode nobody screenshots: the
+# index bar drew 1.09 in dark, the unlock popover had no edge at all, the four
+# parallel bars ran on 1.01, and the testimonial rule sat at 1.04 under a
+# comment claiming it "holds the same weight against the card on both
+# grounds". Four occurrences of one mistake is a check, not a paragraph.
+#
+# --accent-rgb, --ok-rgb and --wait-rgb are semantic colours: green stays
+# green, and they are meant to be painted.
+PIN_CHANNEL = re.compile(r'var\(--(ink|paper)-rgb\)')
+BG_PAINT = re.compile(r'\bbackground(-color)?\s*:\s*([^;}]+)')
+RING = re.compile(r'0\s+0\s+0\s+[^,;}]*var\(--(ink|paper)-rgb\)')
 
 
 def strip_comments(css: str) -> str:
@@ -153,6 +167,16 @@ def audit(path: Path):
             v = m.group(1).strip()
             if re.search(r'\d\s*px', v) and not v.startswith(('inherit', 'clamp')):
                 findings.append((n + 1, 'raw type size', selector, stripped[:88]))
+
+        # A mock's chrome is pinned on purpose (P1), and a gradient over a
+        # painted ground is a scrim, which is what this channel is FOR.
+        if not in_mock:
+            m = BG_PAINT.search(line)
+            if m and PIN_CHANNEL.search(m.group(2)) and 'gradient(' not in m.group(2):
+                findings.append((n + 1, 'channel as fill', selector, stripped[:88]))
+            # a zero-blur box-shadow is a ring, not a shadow
+            if 'box-shadow' in line and RING.search(line):
+                findings.append((n + 1, 'channel as ring', selector, stripped[:88]))
 
     return findings
 

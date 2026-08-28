@@ -1576,6 +1576,74 @@ the gate for #control, they took a session to get right, and twice they were
 written to /tmp and lost when the sandbox reset. A probe that has to be
 rewritten is a probe that will be rewritten wrong.
 
+## 4ad. A channel token is not a fill token — now a lint
+
+`--ink-rgb` and `--paper-rgb` are the shadow-and-scrim channels and they do
+**not** swap with the theme, on purpose (`system.css` §1). Painted as a shadow
+they are right: a shadow is dark in both modes. Painted as a *visible surface*
+they are a theme bug — and one that only appears in the mode nobody
+screenshots.
+
+Four occurrences of the same mistake is what made this a check rather than a
+paragraph:
+
+| | dark-mode contrast |
+|---|---|
+| `.ctrl__index li` — four of five marks | 1.09 |
+| `.unlock` — the popover had no edge at all | — |
+| `.par__bar` — the four parallel tracks | **1.01** |
+| `.quote__bar` — under a comment claiming it held on both grounds | **1.04** |
+
+    python3 tools/tokens.py     # `channel as fill` / `channel as ring`
+
+It flags `--ink-rgb`/`--paper-rgb` in a `background`, or in a **zero-blur**
+`box-shadow` (which is a ring, not a shadow). It skips mocks, whose chrome is
+pinned (P1), and gradients, which are scrims — what the channel is *for*.
+`--accent-rgb`, `--ok-rgb` and `--wait-rgb` are semantic colours meant to be
+painted and are not checked.
+
+The fix is always the same shape: `color-mix(in srgb, var(--ink) N%,
+transparent)`. `--ink` swaps; the channel does not.
+
+**First run found three:** a dead rule for a `.chip` that is not in the markup,
+`.ocard` missing from the mock list, and the mobile nav drawer opening **97%
+white in dark mode** under `--nav-ink` link text — about 2:1, on the one
+surface nobody opens on a phone in the dark. It is 8.92:1 now.
+
+## 4ae. A state rule must win its property — now an audit block
+
+A `.is-*` declaration that loses the cascade does nothing, and the failure
+reads as a broken animation rather than as CSS, which is why it survives a
+screenshot review. Two shipped this month:
+
+* `.wfo__who.is-holding{transform}` under `.wfsc[data-step="3"] .wfo__who{
+  transform:none}` — the avatar that was supposed to lift never moved.
+* `.hero[data-cta="cut"] .display--tail{display:none}` under
+  `#rotator .rot{display:block}` — the variant rendered identically to the
+  default and the CSS read correctly.
+
+`tools/audit.js` §9. **Toggling the class is the wrong test** — the first
+version of this block did that and reported ten correct rules as dead, because
+a state that returns a property to its default (`.ocard.is-on{transform:none}`
+cancelling the offset `.is-live` gave every card) looks identical either way.
+It walks the cascade instead: every author rule that matches the element and
+sets the same property, ordered by specificity then document position, and
+asks whether ours is last.
+
+Two more things it needs to be usable:
+
+* **Losing to another state is ordinary cascade.** `.ocard{transform:6px}`
+  under `.is-live` is *meant* to be cancelled by `.ocard.is-on`. Only a
+  **resting** rule beating a state rule is reported.
+* **`:not(.is-x)` states are skipped and counted**, not quietly passed — the
+  state there is the absence of a class and what to toggle is ambiguous.
+
+**First run found two:** the Okou-window nav lost its `.is-here` highlight in
+dark mode (the theme rule out-specifies the state, so the current row was the
+same 60% grey as the four inactive ones), and three dead lines in `base.css`
+still describing the rotator's old `display:none/block` machinery, replaced by
+`#rotator .rot` and unable to fire since.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2.

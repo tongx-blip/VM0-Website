@@ -1754,17 +1754,13 @@ a.acard .acard__txt i{ color:var(--ink); }
 }
 
 
-/* ── hero: the tail headline cycles through a few short statements ── */
+/* ── hero: the tail headline cycles through a few short statements ──
+   The mechanism lives in system.css: `#rotator .rot` is absolute and the
+   lines cross-fade on opacity and clip-path. The display:none/block pair
+   that used to be here never fired once that landed — an ID selector wins
+   `display` outright — so it was three lines describing a machine that had
+   been replaced. Surfaced by audit.js §8, not by reading. */
 #rotator{ position:relative; }
-.rot{ display:none; }
-.rot.is-on{ display:block; animation:rotIn .5s var(--ease) both; }
-@keyframes rotIn{
-  from{ opacity:0; transform:translateY(9px); }
-  to{ opacity:1; transform:none; }
-}
-@media (prefers-reduced-motion:reduce){
-  .rot.is-on{ animation:none; }
-}
 
 /* ── 03 / at once: one ask, five jobs running side by side ──
       Read left to right: what was asked, what Okou split it into,

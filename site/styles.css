@@ -838,22 +838,13 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 
 
-/* ── hero: the tail headline cycles through a few short statements ── */
+/* ── hero: the tail headline cycles through a few short statements ──
+   The mechanism lives in system.css: `#rotator .rot` is absolute and the
+   lines cross-fade on opacity and clip-path. The display:none/block pair
+   that used to be here never fired once that landed — an ID selector wins
+   `display` outright — so it was three lines describing a machine that had
+   been replaced. Surfaced by audit.js §8, not by reading. */
 #rotator{ position:relative; }
-
-.rot{ display:none; }
-
-.rot.is-on{ display:block; animation:rotIn .5s var(--ease) both; }
-
-@keyframes rotIn{
-  from{ opacity:0; transform:translateY(9px); }
-  to{ opacity:1; transform:none; }
-}
-
-@media (prefers-reduced-motion:reduce){
-  .rot.is-on{ animation:none; }
-
-}
 
 .a2a__dot.is-run{ background:var(--g-200); box-shadow:0 0 0 3px rgba(0,0,0,.07); }
 
@@ -1828,7 +1819,7 @@ h3{ font-family:var(--fd); }
    (taste-skill 9.F: zero decorative status dots by default.) */
 /* one fill for the tag on every ground; the CTA band inverts it */
 .panel--cta > .chip{
-  background:rgb(var(--paper-rgb) / .1);
+  background:color-mix(in srgb, var(--paper) 10%, transparent);
   box-shadow:none;
   color:var(--paper-ink);
 }
@@ -3099,7 +3090,10 @@ h3{ font-family:var(--fd); }
 /* the proof: four of these, moving together, at four speeds */
 .par__bar{
   height:4px; border-radius:var(--r-pill);
-  background:rgb(var(--ink-rgb) / .08);
+  /* --ink, not --ink-rgb. The channel is the SHADOW channel and does not
+     swap with the theme (§1), so the track painted near-black on a dark
+     card: 1.18 in light, 1.01 in dark — the four bars ran on nothing. */
+  background:color-mix(in srgb, var(--ink) 10%, transparent);
   overflow:hidden;
 }
 
@@ -3310,7 +3304,17 @@ h3{ font-family:var(--fd); }
   --slk-mute:#616061;
   --slk-tint:#F8F8F8;
   --slk-card:#FFFFFF;
+  /* IT WIPES, IT DOES NOT FADE. Every other object in this scene settles
+     once per beat; this one replays on a loop, so the odds of catching its
+     text at partial alpha are high — and axe composites an inherited
+     opacity, which is why two nodes here failed contrast on two runs in
+     three while measuring 16:1 and 5.6:1 at rest. Entrances of text use
+     clip-path (QA §1). */
+  opacity:1;
+  clip-path:inset(0 0 100% 0);
   transform:translate(-2cqw, 3cqh) scale(.94);
+  transition:clip-path var(--t-reveal) var(--e-out),
+             transform var(--t-reveal) var(--e-out);
 }
 
 .wfo--post .slk__bar{ padding:9px 13px; }
@@ -3323,8 +3327,11 @@ h3{ font-family:var(--fd); }
    out of the way in the same beat */
 .wfsc[data-step="1"] .wfo--run.is-delivered ~ .wfo--post,
 .wfsc[data-step="1"] .wfo--post.is-in{
-  opacity:1; transform:none;
+  clip-path:inset(0); transform:none;
 }
+
+/* it belongs to beat 1 only; the other three states clip it away outright */
+.wfsc:not([data-step="1"]) .wfo--post{ clip-path:inset(0 0 100% 0); }
 
 .wfsc[data-step="1"] .wfo--ask.is-away{
   opacity:0; transform:translate(-4cqw, -6cqh) rotate(-1.1deg);
@@ -5193,11 +5200,13 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:stretch; gap:var(--q-barpad);
 }
 
-/* #D9D9D9 in the design. As a channel alpha instead of a literal it
-   holds the same weight against the card on both grounds. */
+/* #D9D9D9 in the design. The first version said "as a channel alpha
+   instead of a literal it holds the same weight against the card on both
+   grounds" and that was exactly backwards: --ink-rgb does not swap, so on
+   a dark card the rule measured 1.04. --ink does swap. */
 .quote__bar{
   width:var(--q-bar); flex:none; border-radius:var(--r-pill);
-  background:rgb(var(--ink-rgb) / .15);
+  background:color-mix(in srgb, var(--ink) 15%, transparent);
 }
 
 .quote__who{ display:flex; flex-direction:column; gap:var(--q-namegap); }
@@ -5760,7 +5769,10 @@ h3{ font-family:var(--fd); }
        been positioned by accident. The insets were never the problem. */
     justify-self:stretch;
     margin:0; padding:8px;
-    background:rgb(var(--paper-rgb) / .97);
+    /* --paper, which swaps, not --paper-rgb, which does not. In dark mode
+       this drawer opened 97% WHITE under `--nav-ink` link text — light grey
+       on near-white, about 2:1, on the one surface nobody screenshots. */
+    background:color-mix(in srgb, var(--paper) 97%, transparent);
     -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
     border:0; border-radius:var(--r-lg);
     box-shadow:0 24px 50px -30px rgb(var(--ink-rgb) / .42);
@@ -6890,6 +6902,12 @@ h3{ font-family:var(--fd); }
 
   html:not([data-theme="light"]) .okw__nav em{ color:rgb(232 233 237 / .6); }
 
+  /* the CURRENT item keeps its full strength. The dark rule above carries a
+     theme selector and therefore out-specifies `.okw__nav.is-here em`, so
+     without this line the nav's active row was the same 60% as the four
+     inactive ones and the state simply disappeared in dark mode. */
+  html:not([data-theme="light"]) .okw__nav.is-here em{ color:rgb(232 233 237); }
+
 }
 
 html[data-theme="dark"] .ochat--okou{
@@ -6906,6 +6924,8 @@ html[data-theme="dark"] .ochat--okou{
 }
 
 html[data-theme="dark"] .okw__nav em{ color:rgb(232 233 237 / .6); }
+
+html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
 
 /* ── the rail ────────────────────────────────────────────────────────
