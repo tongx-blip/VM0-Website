@@ -6,6 +6,59 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · four comparison cards become three, and the mocks go
+
+Tong, on feedback 21: *"如果变成三个卡片，那就可以一行了。你看看有什么更好的展示
+方式，21的feedback看看有没有啥需要改的。"*
+
+**The strongest part of 21 was the merge, and the reason is in the copy.**
+Card 1 said *"Codex helps one person with one coding task … your whole team
+can work together in one place"*; card 4 said *"Claude Code lives on one
+engineer's machine … turns one person's know-how into shared capability"*.
+That is one axis argued twice — personal and local against team and shared —
+and a reader who notices gets the impression there are more differences than
+there are. Merged, the set is three genuinely different questions:
+
+| | |
+|---|---|
+| Claude Code · Codex | who it is for |
+| ChatGPT | what you get back |
+| Zapier · n8n | how you tell it |
+
+Three fits one row: 422px a card at 1440, 334 in one column below 900.
+
+**And the mocks go, which is what "不用特别多UI" was pointing at.** Each card
+carried a full animated product mock — parallel lanes, a published artifact, a
+connector hub, a terminal. This section's job is to place the product against
+things the reader has already tried; a working screenshot of *our* product on
+every card is a second product tour inside an argument. One abstract mark
+instead: theirs on the left in the muted ink, ours on the right in the accent,
+and the eye reads the contrast before it reads the headline. Nothing animates
+— four figures on this page already move.
+
+The section went from **1.29 screens to 0.73**, and 762 lines of CSS went with
+the four mocks. Two passes were needed and the second one is the lesson: the
+first prune missed pseudo-element selectors (`.tsh__l--f::before` — the guard
+that skips declaration lines also skips `::`), `@keyframes` named after the
+dead components, and `.vsui` entirely, which left nine `var()` references with
+no declaration. The lint caught all nine.
+
+**What 21 needs, and it is not the card count.** The comparators are
+`Claude Code`, `Codex`, `ChatGPT`, `Zapier`, `n8n`. Three of those five are
+developer tools, and this page's stated audience is non-technical business
+users — founders, operators, marketing and sales. The heading says *"every
+alternative **you have tried**"*, and our reader has almost certainly not tried
+Codex. The merge helps (the developer axis is now one card of three instead of
+two of four) but it does not settle it: the honest question is whether the
+third comparator should be a coding agent at all, or something an operator
+actually weighs Okou against — an assistant, an agency, a hire. That changes
+which logos appear and what the cards say, so it is Tong's call, not mine.
+
+Also noted: n8n ships only a 500x200 logotype, so card three carries the Zapier
+mark and names both.
+
+---
+
 ## 2026-08-28 · two rules stopped being paragraphs
 
 Tong: *"之前聊到的很多规则性的内容可以加进设计规则文档或者脚本里"*.
