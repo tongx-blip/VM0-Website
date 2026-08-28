@@ -422,12 +422,25 @@ def restage(html, key):
     # painted the tint; the frame paints it now, and a custom property set on
     # a child is not visible to its parent — so every frame read grey until
     # the scene restated it here.
+    #
+    # And the artifact moved INSIDE. Tong: *"如果左边把connector和对话流结合
+    # 了，那右边的结果我觉得也应该放进这个渐变色的frame里"* — the frame stopped
+    # halfway across the stage and the payoff sat on the page beside it as a
+    # plain white box, which is the one thing in the row with no ground.
+    #
+    # `.ostage__app` is the connectors and the window as ONE unit, because
+    # the opening beat centres them together and the cards are anchored to
+    # the window's edge, not to the frame's.
     new = ('<div class="ostage">'
            + I + '<div class="ostage__frame" style="--tab:var(--hue-%s)">' % key
-           + I + '  ' + chat
-           + I + '  ' + conn
+           + I + '  <div class="ostage__row">'
+           + I + '    <div class="ostage__app">'
+           + I + '      ' + chat
+           + I + '      ' + conn
+           + I + '    </div>'
+           + I + '    ' + win
+           + I + '  </div>'
            + I + '</div>'
-           + I + win
            + '\n          </div>')
     return html[:a] + new + html[b:]
 

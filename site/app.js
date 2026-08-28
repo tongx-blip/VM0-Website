@@ -544,6 +544,9 @@
     }
     var SIDE = [450, 850];             // the two connectors, as Okou reaches
     var PAGE = 300;                    // the page lands in its window, early
+    // how long after the last message the artifact slides in. Long enough
+    // to read as a consequence of the exchange rather than part of it.
+    var LAND_AFTER = 260;
     var oRaf = 0, oT0 = null, oPane = null;
 
     function playPane(pane) {
@@ -553,7 +556,10 @@
       if (oPane) {
         oPane.classList.remove('is-live');
         var prev = oPane.closest('.ostage');
-        if (prev) prev.classList.remove('is-live');
+        /* `is-landed` goes with `is-live`. Left behind, the next tab opens
+           already landed and never plays its centred beat — and the tab
+           after that inherits it too. */
+        if (prev) prev.classList.remove('is-live', 'is-landed');
       }
       oPane = pane;
       pane.classList.add('is-live');
@@ -597,6 +603,12 @@
       for (var k = 0; k < rows.length; k++) {
         if (rows[k].dataset.cue !== undefined) last = Math.max(last, +rows[k].dataset.cue);
       }
+      /* THE PAGE ARRIVES WHEN THE CONVERSATION IS DONE, not on a clock of
+         its own. `last` is the final message's cue, so the landing is
+         stated against the exchange rather than a number that has to be
+         re-guessed every time a scene gains a row. Until then the row is
+         centred and the artifact is off to the right. */
+      if (stage) stage.classList.toggle('is-landed', t >= last + LAND_AFTER);
       if (t < last + 900) oRaf = requestAnimationFrame(oTick);
     }
 

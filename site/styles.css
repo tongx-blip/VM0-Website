@@ -5348,11 +5348,19 @@ h3{ font-family:var(--fd); }
      `.okw__side` and `.slk__rail`), so the strip a card covers is empty. */
   --o-lap:clamp(11px, 1.2vw, 17px);
   margin-top:clamp(28px, 3.2vw, 44px);
+  /* HOW THE ROW DIVIDES, as a share of the frame's inner width. The app
+     unit leads because it is where the work happens; the artifact is the
+     payoff and needs enough width to be a page rather than a thumbnail —
+     at the old 330/983 it was 33.6% of the STAGE, which inside a padded
+     frame came to less. 38% of the inner width is 41px wider at 1440 and
+     the opening beat's centring arithmetic reads off the same number. */
+  --o-appw:62%;
   display:grid;
-  /* TWO OBJECTS, NOT THREE. 200 + 16 + 437 of the reference's row is now
-     one frame — the app window with the connectors floating over it — and
-     330 is still the page it shipped. Same total, one less thing to read. */
-  grid-template-columns:minmax(0,653fr) minmax(0,330fr);
+  /* ONE OBJECT NOW, not two. Tong: *"右边的结果我觉得也应该放进这个渐变色的
+     frame里"* — the frame used to stop 66% of the way across and the page
+     it shipped sat beside it on white, the only thing in the row without a
+     ground under it. */
+  grid-template-columns:minmax(0,1fr);
   /* ONE HEIGHT FOR ALL SEVEN TABS. `height` on a grid container is not a
      ceiling: the row track was implicit and therefore `auto`, so a scene
      whose artifact happened to be taller pushed the track past the declared
@@ -5411,10 +5419,77 @@ h3{ font-family:var(--fd); }
 }
 
 
+/* ── the row inside the frame ──────────────────────────────────────
+   Two items: the app unit (connectors + window, which move together) and
+   the page it shipped. A flex row rather than a grid, because the opening
+   beat translates the whole row and a percentage translate resolves
+   against the row's own width — the same number `--o-appw` is stated in,
+   so the centring cannot drift from the layout. */
+.ostage__row{
+  display:flex; gap:var(--o-gap);
+  min-width:0; min-height:0;
+  transition:transform 760ms var(--e-spring);
+}
+
+.ostage__app{
+  position:relative;
+  flex:0 0 var(--o-appw);
+  min-width:0; min-height:0;
+  display:grid; grid-template-rows:minmax(0,1fr);
+}
+
 /* the app window sits to the right of the cards, less the overlap */
-.ostage__frame > .ochat{
+.ostage__app > .ochat{
   margin-left:calc(var(--o-cw) - var(--o-lap));
   min-width:0; min-height:0;
+}
+
+/* the artifact takes what is left, and the frame's full inner height —
+   the same height as the window, so the two read as a pair rather than as
+   a window and a thumbnail beside it */
+.ostage__row > .tplwin{
+  flex:1 1 0;
+  min-width:0; min-height:0;
+  transition:transform 760ms var(--e-spring),
+             clip-path 760ms var(--e-out);
+}
+
+
+/* ── the opening beat: centred, then the page arrives ──────────────
+   Tong: *"用户刚切到一个tab上以后，connector和对话窗口居中，当对话结束后，
+   右边的artifacts从右侧滑进渐变frame"*.
+
+   RESTING IS THE FINISHED FRAME (N2). Both objects are in their final
+   places in the DOM with no transform at all, so reduced motion, no-JS and
+   a tab at rest all show the whole row. `.is-live` is added by JS and is
+   what puts the row into its OPENING state; `.is-landed`, added at the cue,
+   takes it out again. Nothing here is a keyframe — the transition on
+   `.ostage__row` and `.tplwin` does the travelling (N11: the movement is
+   the only thing the animation carries).
+
+   The centring is one expression: the app unit is `--o-appw` of the row, so
+   the offset that centres it is half of what is left. Both percentages
+   resolve against the row's own width, which is why they cannot drift. */
+.ostage.is-live:not(.is-landed) .ostage__row{
+  transform:translateX(calc((100% - var(--o-appw)) / 2));
+}
+
+/* SLID OUT AND WIPED, not faded. The frame keeps `overflow:visible` so the
+   connector cards' shadows are not cut at its edge, which means nothing
+   clips the artifact for us — and a fade would put an `opacity` on a
+   window full of text, on a loop, which is the fault N3 exists for and
+   which axe has already caught on this page twice. `clip-path` is the
+   reveal the rule names, and paired with the slide it reads as the page
+   coming in from the frame's right edge. */
+.ostage.is-live:not(.is-landed) .ostage__row > .tplwin{
+  transform:translateX(14%);
+  clip-path:inset(0 0 0 100%);
+}
+
+/* and nothing travels when the choreography is skipped */
+@media (prefers-reduced-motion:reduce){
+  .ostage__row,.ostage__row > .tplwin{ transition:none; }
+
 }
 
 
@@ -5424,8 +5499,12 @@ h3{ font-family:var(--fd); }
    further right so it laps further onto the window: an even pair of
    offsets reads as a layout, an uneven pair reads as objects. */
 .ostage__conn{
+  /* ANCHORED TO THE APP UNIT, not to the frame. They lap the window's left
+     edge, so when the opening beat centres the window they have to travel
+     with it — pinned to the frame they would have stayed put and the lap
+     would have opened into a gap. */
   position:absolute; z-index:2;
-  left:var(--o-fpad); top:var(--o-fpad); bottom:var(--o-fpad);
+  left:0; top:0; bottom:0;
   width:var(--o-cw);
   min-width:0;
 }
@@ -6705,11 +6784,33 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
   }
 
   .ostage__frame{
-    display:flex; flex-direction:column; gap:var(--o-gap);
+    display:block;
     padding:clamp(12px, 2.4vw, 18px);
   }
 
-  .ostage__frame > .ochat{ margin-left:0; }
+  /* THE ROW BECOMES A COLUMN, and with it the whole opening beat stands
+     down: centring a 62% unit inside a full-width column is a translate to
+     nowhere, and sliding the artifact in from the right of a stacked layout
+     would take it off the side of the phone. Everything is in place from
+     the first frame here, which is what the resting state already is. */
+  .ostage__row{
+    display:flex; flex-direction:column; gap:var(--o-gap);
+    transform:none;
+  }
+
+  .ostage__app{
+    flex:0 0 auto;
+    display:flex; flex-direction:column; gap:var(--o-gap);
+  }
+
+  .ostage__app > .ochat{ margin-left:0; }
+
+  .ostage.is-live:not(.is-landed) .ostage__row,
+  .ostage.is-live:not(.is-landed) .ostage__row > .tplwin{
+    transform:none; clip-path:none;
+  }
+
+  .ostage__row > .tplwin{ flex:0 0 auto; }
 
   .ostage__conn{
     position:static; width:auto;

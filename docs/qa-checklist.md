@@ -1939,6 +1939,17 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
   tool printed four scene names. Anything a generator strips, it must also
   write, or a value set anywhere else is gone on the next run.
 
+- **A phase class is cleared where the class that set it is cleared.** A
+  two-phase entrance adds `.is-live` for the *opening* state and a second class
+  to release it. `playPane` removes `is-live` on hand-back; `is-landed` had to
+  be removed in the same line, or the next tab opened already finished.
+
+- **A percentage translate and a percentage flex-basis resolve against the same
+  box.** Stating the app unit as `--o-appw:62%` and centring it with
+  `translateX(calc((100% - var(--o-appw)) / 2))` means the beat cannot drift
+  from the layout — no JS measurement, and nothing to re-derive when the split
+  changes.
+
 ## 10. Publish
 
 ```bash

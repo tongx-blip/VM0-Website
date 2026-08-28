@@ -451,6 +451,101 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · the payoff moves inside the frame, and the row opens centred
+
+Tong: *"如果左边把connector和对话流结合了，那右边的结果我觉得也应该放进这个渐变色
+的frame里 … 用户刚切到一个tab上以后，connector和对话窗口居中，当对话结束后，右边
+的artifacts从右侧滑进渐变frame"*
+
+He is right about the diagnosis: the frame stopped 66% of the way across the
+stage and the page it shipped sat beside it on white — the only object in the
+row with no ground under it, which is exactly what the screenshot shows.
+
+**One frame, one row, two items.** `.ostage__app` is the connectors *and* the
+window as a single unit, because the opening beat moves them together and the
+cards lap the window's left edge rather than the frame's. Pinned to the frame
+they would have stayed put while the window travelled and the lap would have
+opened into a gap.
+
+**The beat is two states of one row.** Resting is the finished frame (N2):
+both objects sit in their final places with no transform at all, so reduced
+motion, no-JS and a tab at rest all show the whole row. `.is-live` puts it into
+the *opening* state; `.is-landed` takes it out again at the cue.
+
+The centring is one expression and needs no JS measurement:
+
+```css
+--o-appw:62%;
+.ostage.is-live:not(.is-landed) .ostage__row{
+  transform:translateX(calc((100% - var(--o-appw)) / 2));
+}
+```
+
+A percentage translate and a percentage flex-basis resolve against the same box,
+so the beat cannot drift from the layout, and changing the split changes both.
+
+**The artifact slides and wipes; it does not fade.** The frame keeps
+`overflow:visible` so the connector cards' shadows are not cut at its edge —
+which means nothing clips the artifact for us. A fade would put an `opacity` on
+a window full of text, on a loop, which is the fault N3 exists for and which axe
+has caught on this page twice. `translateX(14%)` plus
+`clip-path:inset(0 0 0 100%)` reads as the page arriving from the frame's right
+edge, and both are on N1's list.
+
+**It lands when the conversation is done, not on a clock.** The cue is the last
+message's own `data-cue` plus 260ms, so a scene that gains a row does not need
+the number re-guessed.
+
+### Where the artifact ended up
+
+At 1440, inside a frame whose inner box is 1248 × 498:
+
+| | |
+| --- | --- |
+| width | **454px** — 38% of the inner width, the app unit taking 62% |
+| height | **498px**, the frame's full inner height — the same as the window, so the two read as a pair rather than a window with a thumbnail beside it |
+| position | flush to the frame's right padding (27px), settling from `translateX(14%)` |
+
+**The crop is the open question.** The page inside is 880 × 4064 scaled to
+454 × 2096, of which 459px shows — 22%. On Storefront Launch that cut currently
+lands *through* the headline "BUILT FOR THE HOURS", which is the one kind of
+crop the rules single out as reading like a rendering fault. It is not fixable
+by choosing a width: each of the seven scenes has a different page image, so any
+width tuned to one slices another somewhere else. Left as it is and raised
+rather than quietly tuned.
+
+### Two faults on the way
+
+**The narrow layout was written for the old nesting.** `order` on `.ochat`,
+`.ostage__conn` and `.tplwin` only worked while they were siblings of the frame.
+Once they were nested the row stayed horizontal at 390: a 62% app unit and a
+38% artifact side by side on a phone, with the conversation invisible and the
+frame a column of empty gradient. The row is a flex column below 1080 and the
+whole beat stands down there — centring a 62% unit inside a full-width column is
+a translate to nowhere.
+
+**`is-landed` outlived its pane.** `playPane` removes `is-live` on hand-back and
+that was the only class it cleared, so the next tab opened already landed and
+never played its opening beat — and every tab after it inherited the same.
+Now **N20**.
+
+### Two false positives, and what they cost
+
+The sweep reported `artifact-over-window` at every narrow width: stacked, the
+artifact is *below* the window and shares its left edge, so `left < right` is
+trivially true. And it reported the artifact sitting 7px short of the frame at
+5.4s — the 760ms spring had not finished; at 7.5s every scene settles flush at
+exactly the 27px padding. Both checks are now scoped to the side-by-side layout
+and sampled after the spring.
+
+**Gate.** Sweep at **10 widths × 7 scenes × 5 timestamps** — clean, including
+the new assertions that the artifact lands flush inside the frame and never
+crosses the window. axe 0 across 24 samples in both themes (the one hit in each
+is the cold first sample after a walk, already recorded). `audit.js` §1, §6, §8
+and §9 PASS. `tokens.py` 0, `scopes.py` 0, `rules.py` all pointers resolve.
+
+---
+
 ## 2026-08-28 · the rules from this week, moved out of prose and into the tools
 
 Tong: *"之前聊到的很多规则性的内容可以加进设计规则文档或者脚本里。"*
