@@ -2896,7 +2896,12 @@ h3{ font-family:var(--fd); }
 .vs3__side{ display:inline-flex; align-items:center; gap:.42em; white-space:nowrap; }
 .vs3__side img{ width:1.4em; height:1.4em; object-fit:contain; }
 .vs3__side--us{ color:var(--ink); }
-.vs3__vs{ font-size:.86em; opacity:.7; }
+/* C11: no `opacity` on `--ink-mute`. It is already the lightest text the
+   page allows on every ground it uses, so any opacity on top of it is under
+   AA by construction — 3 nodes, every sample. `.vs__vs` shipped this exact
+   fault at .5 and is why the rule exists; the size step is the whole of the
+   quietening. */
+.vs3__vs{ font-size:.86em; }
 
 /* The mark. Left is theirs and recedes; right is ours and carries the one
    colour on the card. Nothing animates — four figures on this page already

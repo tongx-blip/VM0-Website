@@ -529,6 +529,14 @@ that was the only class it cleared, so the next tab opened already landed and
 never played its opening beat — and every tab after it inherited the same.
 Now **N20**.
 
+
+**One fix that came in with a rebase.** `.vs3__vs{ opacity:.7 }` on
+`--ink-mute` — 3 nodes, every axe sample, in both themes. That is exactly
+**C11**, and the rule exists because `.vs__vs` shipped the same thing at `.5`
+in the same component family. `--ink-mute` is already the lightest text the
+page allows on every ground it uses, so any opacity on top of it is under AA
+by construction. The `.86em` size step is the whole of the quietening.
+
 ### Two false positives, and what they cost
 
 The sweep reported `artifact-over-window` at every narrow width: stacked, the
