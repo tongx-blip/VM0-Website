@@ -6,6 +6,83 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · four directions for the control section, and the card was the wrong component
+
+Tong: *"16我不确定你是否使用了真实的场景卡片？… 17.用云端电脑，意思是可以用个插画
+的概念 … 现在主要问题是，设计太平淡了，就是简单的排版。如果你要用简单的排版方式，
+那就对视觉要求非常高。但如果你用一种更新颖的交互方式，那就需要 ui 更加简洁 … 我要
+看到的是高质量。你可以给我4个设计让我来选择"*
+
+Nothing merged. Four directions at
+**https://okou-control-options.sites.vm0.io** — each the real section at real
+size on the real stylesheet, built by `tools/build-control-options.py`.
+
+### 16 · he was right to doubt it
+
+The shipped card was **the wrong component**. There are two permission surfaces
+in the product and I used the one that is not a scenario:
+
+| | shipped | the real one |
+|---|---|---|
+| component | `PermissionAllowPage` — the standalone page you land on from a link | `PermissionActionCard` — the card that appears **in the conversation**, mid-run |
+| shape | 548px dialog, brand mark, greeting, target pill, 8 stacked parts | one `min-h-[88px]` row: icon, title, scope, duration, confirm |
+| confirm | the **brand orange** primary | a **neutral bordered** button — `border-border bg-background hover:bg-state-hover` |
+
+The orange confirm is the tell. A marketing page showing a security dialog with
+the wrong button is claiming something about the product that is not true, and
+"真实的场景卡片" is exactly the right words for what was missing: the shipped
+one was a specimen on a slide, not a run that had stopped to wait for someone.
+All four directions carry the in-chat card, with the product's own strings
+(`"{connector} permissions"` / `"Allow {scope}"`) and the real scope from the
+catalog API.
+
+### 17 · a drawing, not a UI
+
+The cloud browser card was still a rectangle of product chrome. It is now a
+spot illustration in the page's own hand-drawn brand register, generated for
+this: `site/assets/brand/spot-cloud-machine.png`. Six generations across four
+models to get there — the first passes came back with a thick uniform sticker
+outline and a desaturated palette, and the fix was to specify the LINE (thin,
+irregular, ~3px at 1024, "not a marker") and the exact hexes rather than to
+name a style. Image-to-image against the existing spots returns 500 on every
+model, so the reference had to be described instead of shown.
+
+### The four
+
+| | bet | what it is |
+|---|---|---|
+| **A** The ask, in the conversation | simple layout, high craft | One product window cropped at the band edge, the conversation running up out of the frame. 1.09 screens |
+| **B** The drawing carries it | simple layout, illustration-led | The spot at full size with the real card lapping its lower edge. 1.06 screens |
+| **C** One machine, three states | newer interaction, simpler UI | No headings, no captions, no columns. One object, one sentence, three beats: asks → granted for an hour → destroyed. 1.17 screens |
+| **D** The dark interlude | newer form, shortest | The page's one dark moment besides the CTA; the drawing on a lit sheet, the card hanging off it. **0.81 screens** |
+
+### Found while building
+
+**The chat mock's own bubbles were invisible.** `.ochat__bubble` is
+`background:var(--paper)`, which works because the real window sits on
+`--o-fill`. On a white card both bubbles disappeared. The product's actual
+treatment is two different things — a `gray-100` bubble for the user, and
+**transparent, no border** for the assistant — and drawing both as white
+bubbles is most of why a chat mock stops looking like that chat.
+
+**A crop is only a crop if the content is taller than the frame.** A's window
+was 470px around 400px of conversation, so `align-items:flex-end` produced a
+gap at the top rather than a cut. Measured: 542 > 470, `cropped: true`.
+
+**The card had no mobile shape.** The product is `flex-col … sm:flex-row`; I
+kept it a row at every width, and because the title is `nowrap` its min-content
+is ~450px — the review page came out **102px wider than a 390 phone**. It
+stacks now, exactly where the product stacks.
+
+**A guessed `min-height` cut a sentence in half.** C's line box was `3.4em` and
+the longest of its three sentences is four lines. The three now share one grid
+cell, so the block cannot resize between beats either (F9).
+
+**The gate found three a11y violations, all in the review chrome** — `h1` to
+`h3`, no `<main>`, content outside a landmark. 0 violations after, in both
+themes, at 1440 and 390.
+
+Not merged, and `site/` is untouched apart from the new illustration.
 ## 2026-08-28 · four comparison cards become three, and the mocks go
 
 Tong, on feedback 21: *"如果变成三个卡片，那就可以一行了。你看看有什么更好的展示

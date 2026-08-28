@@ -1,0 +1,272 @@
+/* ══════════════════════════════════════════════════════════════════
+   options-control — four directions for #control, on the real
+   stylesheet. Everything here is either the review chrome around the
+   options, or one option's own layer. Nothing in here ships; the
+   direction that wins gets rewritten into src/css.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── review chrome ───────────────────────────────────────────────── */
+body.opts{ background:var(--wash); }
+.opts__head{
+  max-width:64ch; margin:0 auto; padding:clamp(48px,7vw,96px) 24px clamp(24px,3vw,40px);
+  text-align:center;
+}
+.opts__k{
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-mute); margin:0 0 14px;
+}
+.opts__h{ font-family:var(--fd); font-size:clamp(30px,3.4vw,46px); font-weight:500;
+  letter-spacing:-.025em; line-height:1.06; color:var(--ink); margin:0 0 18px; }
+.opts__l{ font-size:var(--t-sm); line-height:1.65; color:var(--ink-soft); margin:0; }
+.opts__l b{ font-weight:600; color:var(--ink); }
+
+.opt{ padding:clamp(28px,4vw,56px) 0 0; }
+.opt__head{ max-width:62ch; margin:0 auto; padding:0 24px clamp(16px,2vw,24px); }
+.opt__k{
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.12em;
+  color:var(--accent-wash); margin:0 0 8px;
+}
+.opt__t{ font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
+  letter-spacing:-.02em; color:var(--ink); margin:0 0 6px; }
+.opt__bet{ font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.05em;
+  color:var(--ink-mute); margin:0 0 12px; }
+.opt__blurb{ font-size:var(--t-sm); line-height:1.62; color:var(--ink-soft); margin:0; }
+/* the option itself sits in the page's own gutter, at the page's own width */
+.opt__frame{ padding:0 var(--card-gap, 12px); }
+.opts__foot{ padding:clamp(48px,6vw,90px) 24px; text-align:center;
+  font-size:var(--t-sm); color:var(--ink-mute); }
+
+/* every option's shell is a real section card */
+.oc{ overflow:hidden; }
+
+/* ══════════════════════════════════════════════════════════════════
+   THE PRODUCT'S REAL IN-CHAT PERMISSION CARD
+   `PermissionActionCard` — chat-body-cards.tsx. Shared by all four, so
+   the thing being decided is the SECTION, not the card.
+   ══════════════════════════════════════════════════════════════════ */
+.pcard{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  min-height:88px; padding:12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--paper);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05);
+  text-align:left;
+}
+.pcard__l{ display:flex; align-items:center; gap:12px; min-width:0; }
+.pcard__ic{
+  width:40px; height:40px; flex:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--hairline); border-radius:8px; background:var(--tile);
+}
+.pcard__ic img{ width:22px; height:22px; object-fit:contain; }
+.pcard__t{ display:flex; flex-direction:column; min-width:0; }
+.pcard__t b{ font-size:15px; font-weight:500; color:var(--ink);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pcard__t i{ margin-top:2px; font-style:normal; font-size:14px; line-height:20px;
+  color:var(--ink-mute); }
+.pcard__c{ display:flex; align-items:center; gap:8px; flex:none; }
+.pcard__sel{
+  display:inline-flex; align-items:center; justify-content:space-between; gap:6px;
+  width:116px; height:32px; padding:0 10px;
+  border:1px solid var(--hairline); border-radius:8px;
+  font-size:12px; color:var(--ink);
+}
+.pcard__sel .ico-chev{ width:14px; height:14px; flex:none; stroke:var(--ink-mute); }
+/* NOT the brand primary. The in-chat confirm is a neutral bordered button —
+   the orange one belongs to the standalone /permission-allow page, and using
+   it is what made the shipped card the wrong component. */
+.pcard__go{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:36px; padding:0 12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--paper); color:var(--ink);
+  font-size:15px; font-weight:500;
+}
+.pcard__done{
+  display:inline-flex; align-items:center; gap:7px;
+  font-size:15px; font-weight:500; color:var(--ok-ink);
+}
+.pcard__done .ico-tick{ width:17px; height:17px; stroke:var(--ok-ink); fill:none; }
+/* The product's own responsive shape: `flex-col … sm:flex-row`. Leaving it a
+   row at every width is what pushed the page 102px wider than the phone —
+   the title is nowrap, so the card's min-content is ~450px and a 390 screen
+   cannot hold it. Below the product's `sm`, it stacks and the controls go
+   full width, exactly as `PermissionActionCard` does. */
+@media (max-width:640px){
+  .pcard{ flex-direction:column; align-items:stretch; }
+  .pcard__c{ width:100%; }
+  .pcard__go{ flex:1; }
+  .pcard__t b{ white-space:normal; }
+}
+
+.spot{ display:block; width:100%; height:auto; }
+
+/* ══════════════════════════════════════════════════════════════════
+   A · the ask, in the conversation
+   ══════════════════════════════════════════════════════════════════ */
+.oa{
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);
+  gap:clamp(28px,4vw,64px); align-items:start;
+  margin-top:clamp(30px,3.4vw,48px);
+}
+/* the window is laid out at the product's size and CROPPED by the band, the
+   way every other product visual on this page is (RULES P6, P9) */
+.oa__win{
+  position:relative; min-width:0;
+  height:clamp(360px, 34vw, 470px);
+  display:flex; align-items:flex-end;
+  border:1px solid var(--hairline); border-radius:var(--r-lg);
+  background:var(--paper); overflow:hidden;
+  box-shadow:0 2px 8px rgb(var(--ink-rgb) / .05), 0 30px 58px -32px rgb(var(--ink-rgb) / .22);
+}
+/* The conversation runs UP out of the frame. A window that fits its content is
+   an illustration of the product; one that is cut is a fragment of it (P6, P9)
+   — and in a chat the newest thing is at the bottom, so the top is what goes.
+   The crop is real: the content is taller than the box and bottom-anchored. */
+.oa__chat{ align-self:flex-end; }
+/* the product's own two message treatments: the user is a gray-100 bubble, the
+   assistant is transparent with no border. Drawing both as white bubbles is
+   most of why a chat mock stops looking like this chat. */
+.oa__chat .ochat__row--user .ochat__bubble{ background:var(--tile); }
+.oa__chat .ochat__row--okou .ochat__bubble{ background:transparent; padding-left:0; padding-right:0; }
+/* the real .ochat needs the variables .ostage declares for it; the window is
+   the product's own, so it gets the product's own numbers rather than a
+   second set invented here */
+.oa__chat{
+  --o-pad:0; --o-r:0; --o-fill:transparent; --o-ava:44px;
+  width:760px; max-width:none; padding:26px 26px 0;
+  gap:16px;
+}
+@media (max-width:900px){ .oa__chat{ width:auto; --o-ava:38px; } }
+.oa__cardwrap{ min-width:0; flex:1; }
+/* the run has stopped: the last row is under the crop, greyed by distance
+   rather than by a fade over text (RULES N3) */
+.oa__cut{ margin-bottom:0 !important; padding-bottom:34px; }
+.oa__ask .ochat__bubble{ display:none; }
+
+.oa__side{ display:flex; flex-direction:column; gap:clamp(22px,2.6vw,34px); padding-top:6px; }
+.oa__claim{ font-size:var(--t-sm); line-height:1.64; color:var(--ink-soft); margin:0; }
+.oa__claim--iso{ display:flow-root; }
+.oa__spot{ float:right; width:112px; margin:-6px -6px 4px 12px; }
+@media (max-width:900px){
+  .oa{ grid-template-columns:1fr; }
+  .oa__spot{ width:92px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   B · the drawing carries it
+   ══════════════════════════════════════════════════════════════════ */
+.ob{
+  display:grid; grid-template-columns:minmax(0,400px) minmax(0,1fr);
+  gap:clamp(30px,4.6vw,86px); align-items:center; justify-content:center;
+  margin-top:clamp(26px,3vw,44px);
+}
+.ob__fig{ position:relative; margin:0; padding:0 0 46px; }
+.ob__fig .spot{ width:100%; }
+/* the card laps the drawing's lower edge, so the claim and the product touch */
+.ob__card{
+  position:absolute; left:4%; right:-30%; bottom:0;
+}
+@media (max-width:1200px){ .ob__card{ right:-16%; } }
+@media (max-width:1000px){
+  .ob{ grid-template-columns:1fr; }
+  .ob__fig{ max-width:420px; margin-inline:auto; padding-bottom:40px; }
+  .ob__card{ left:0; right:0; }
+}
+.ob__txt{ display:flex; flex-direction:column; gap:clamp(18px,2vw,26px); }
+.ob__claim{ font-size:var(--t-sm); line-height:1.66; color:var(--ink-soft); margin:0; }
+.ob__claim b{ display:block; font-family:var(--fd); font-size:var(--t-h);
+  font-weight:500; letter-spacing:-.02em; color:var(--ink); margin-bottom:7px; }
+
+/* ══════════════════════════════════════════════════════════════════
+   C · one machine, three states
+   No headings, no captions. One object, one sentence, three beats.
+   ══════════════════════════════════════════════════════════════════ */
+.occ{ margin-top:clamp(24px,3vw,40px); }
+.occ__stage{
+  position:relative; width:min(560px,100%); margin:0 auto;
+  aspect-ratio:1 / .92;
+}
+.occ__machine{
+  position:absolute; inset:0 0 auto; width:74%; margin-inline:auto;
+  transition:opacity 520ms var(--e-out), translate 620ms var(--e-out), scale 620ms var(--e-out);
+}
+.occ__card{
+  position:absolute; left:0; right:0; bottom:6%;
+  opacity:0; translate:0 10px;
+  transition:opacity 380ms var(--e-out), translate 460ms var(--e-out);
+}
+.occ[data-beat="asks"] .occ__card:not(.occ__card--done){ opacity:1; translate:0 0; }
+.occ[data-beat="granted"] .occ__card--done{ opacity:1; translate:0 0; }
+/* the machine is destroyed: it leaves, it does not fade under its own caption */
+.occ[data-beat="gone"] .occ__machine{ opacity:0; scale:.94; translate:0 -14px; }
+
+/* THE TALLEST LINE SETS THE HEIGHT, and it is not guessed. The three
+   sentences are stacked in the same cell; the two that are not showing are
+   clipped, not removed, so the block cannot resize between beats (F9). A
+   min-height in `em` was 3.4 and the longest line is four. */
+.occ__say{
+  display:grid; max-width:34ch; margin:clamp(16px,2.2vw,26px) auto 0;
+  text-align:center;
+}
+.occ__line{
+  grid-area:1 / 1; margin:0;
+  font-family:var(--fd); font-size:var(--t-h); font-weight:500;
+  letter-spacing:-.02em; line-height:1.42; color:var(--ink);
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path 520ms var(--e-out);
+}
+.occ[data-beat="asks"]    .occ__line[data-beat="asks"],
+.occ[data-beat="granted"] .occ__line[data-beat="granted"],
+.occ[data-beat="gone"]    .occ__line[data-beat="gone"]{ clip-path:inset(0 0 0 0); }
+
+.occ__dots{ display:flex; justify-content:center; gap:8px; margin-top:clamp(20px,2.4vw,30px); }
+.occ__dot{
+  width:34px; height:4px; padding:0; border:0; border-radius:var(--r-pill);
+  background:var(--wash-2); cursor:pointer;
+  transition:background var(--t-hover) var(--e-snap);
+}
+.occ__dot:hover{ background:var(--rule); }
+.occ__dot.is-on{ background:var(--accent-solid); }
+
+@media (prefers-reduced-motion:reduce){
+  .occ__machine,.occ__card,.occ__line{ transition:none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   D · the dark interlude
+   ══════════════════════════════════════════════════════════════════ */
+.od{
+  background:var(--mat); color:var(--paper-ink);
+  border-radius:var(--r-section);
+  padding:clamp(40px,5vw,72px) clamp(24px,4vw,64px);
+}
+.od__in{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,420px);
+  gap:clamp(30px,5vw,120px); align-items:center;
+  max-width:1180px; margin-inline:auto;
+}
+.od__h{
+  font-family:var(--fd); font-size:clamp(30px,3.6vw,52px); font-weight:500;
+  letter-spacing:-.025em; line-height:1.08; color:var(--paper-ink); margin:0 0 20px;
+}
+.od__h .mark--red{ color:var(--accent); background:none; }
+.od__p{ font-size:var(--t-sm); line-height:1.66; color:rgb(var(--paper-rgb) / .78); margin:0 0 16px; }
+.od__p--dim{ color:rgb(var(--paper-rgb) / .58); margin-bottom:0; }
+.od__r{ position:relative; }
+/* the drawing keeps its own white paper — it is a print pinned to a dark wall,
+   not an illustration recoloured for the ground */
+.od__sheet{
+  margin:0; padding:clamp(14px,1.8vw,24px);
+  background:var(--paper); border-radius:var(--r-lg);
+  box-shadow:0 30px 70px -30px rgb(0 0 0 / .6);
+}
+/* the card is wider than the sheet and hangs off its left edge — the drawing
+   is the idea and the card is the product, and they have to touch */
+.od__card{ position:relative; z-index:1; margin:-30px -8px 0 -140px; }
+@media (max-width:1000px){ .od__card{ margin-left:-8px; } }
+.od__note{
+  max-width:62ch; margin:clamp(28px,3.2vw,44px) auto 0; text-align:center;
+  font-size:var(--t-meta); line-height:1.6; color:rgb(var(--paper-rgb) / .5);
+}
+@media (max-width:1000px){ .od__in{ grid-template-columns:1fr; } }
