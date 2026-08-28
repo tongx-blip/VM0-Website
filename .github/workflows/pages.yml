@@ -1,0 +1,62 @@
+# One review URL, published from main.
+#
+# Three chat threads work on this page at once. Each one used to publish its own
+# copy with `okou host`, and an `okou host` slug belongs to the thread that
+# created it — so three threads meant three URLs, each frozen at whatever moment
+# that thread last published. On 2026-08-28 the draft URL was three commits
+# behind main while a second URL was current and production was older than the
+# asset-stamping itself. The code was never the problem: main is one linear
+# branch and every thread's work is on it. Publishing was.
+#
+# So publishing stops being something a session does. Every push to main lands
+# at https://tongx-blip.github.io/VM0-Website/ , which is the same URL tomorrow
+# regardless of which chats are alive. Per-thread `okou host` drafts are still
+# fine for work in progress; acceptance happens here.
+
+name: Publish site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a run finish rather than cancelling it: two threads pushing a minute apart
+# should both get deployed, in order, not have the first one dropped.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # site/styles.css is a build artifact and site/index.html carries the
+      # `?r=<hash>` stamp that points at it. A thread that edits src/css and
+      # forgets `python3 tools/build-css.py` pushes source that nobody is
+      # serving — the exact drift this URL exists to remove. Rebuild, and fail
+      # if the tree moves.
+      - name: The committed build matches the sources
+        run: |
+          python3 tools/build-css.py
+          if ! git diff --quiet; then
+            echo "::error::site/ is stale — run 'python3 tools/build-css.py' and commit the result"
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
