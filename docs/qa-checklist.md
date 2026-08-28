@@ -1783,7 +1783,7 @@ const q = document.querySelector('.quote'), r = q.getBoundingClientRect();
 - **`margin-inline:auto` on a grid item** turns stretch into shrink-to-fit.
   With a `flex:1 1 0%` child that resolves to zero width.
 
-### 4aa. Behaviour, before publishing
+## 4aa. Behaviour, before publishing
 
 `site/app.js` is one IIFE. `var` is function-scoped and a block is not a
 scope, so two `var`s of one name anywhere in it are one variable.
@@ -1805,6 +1805,71 @@ setInterval(() => log(pane.dataset.x, tabs.findIndex(isOn), line.textContent), 2
 - **When behaviour is wrong, instrument the function.** Four wrong
   theories came before one probe on the reel. `markSlot(10) items=6` ended
   it in one run.
+
+## 4ab. State integrity — the checks that came out of a facepile
+
+Two of three avatars looked active at once and the ring meant to mark the
+active one hung below the pile. Both faults were invisible in a still and
+obvious in motion, so **run this with the page moving**, not parked.
+
+```js
+// tools/audit.js §8
+```
+
+- **A per-item z-index and a state z-index must not collide.**
+  `.wfo__who{z-index:calc(9 - var(--wi))}` gave the leftmost face 9, and the
+  rule that lifts the holder also said 9. Equal z-index falls back to DOM
+  order — the exact thing an explicit z-index was added to stop depending on.
+  §8 reports a tie only where the group is a stack (some pair of its boxes
+  overlaps, clipped to the parent) **and** the tied elements share a class.
+  Both narrowings were forced by false positives: six message rows in a
+  bottom-anchored list all sit at z-index 1 and never touch, and `.panel`
+  over `.close__art` is content layered over background art, which is fine.
+
+- **A marker's anchor is the row, not the wrap.** `top:50%` on a container
+  that wraps resolves against the whole padding box, caption row included —
+  the ring hung 14px low, exactly `(65 − 37) / 2`. §8 reports any absolutely
+  positioned child of a `flex-wrap:wrap` offsetParent.
+
+- **A sized grid must state its row track**, or the tallest item pushes the
+  container past the height it declared and `align-items:stretch` carries
+  every sibling with it:
+
+```bash
+python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
+```
+
+  Narrowed to grids with a flexible column template: `display:grid;
+  place-items:center` on a 32px icon tile is every icon on the page and can
+  never over-constrain anything. Unnarrowed it reported 30; narrowed, 2, and
+  both were real.
+
+- **Prove a new check against the bug it was written for.** Inject the
+  regression, confirm the check fires, then confirm it passes on the fix.
+  The z-index check went through three predicates before one worked: the
+  first reported seven pieces of noise, the second was clean *and silently
+  missed the real fault* — the two tied faces were two apart and never
+  touched each other; they each sat over the face between them.
+
+- **A state is read against its neighbours.** Measure the rendered sizes, not
+  the transform values: a `-.3em` lift came to five screen pixels once the
+  scene's fit-to-frame scale applied, and nothing beside it had moved.
+
+- **`getBoundingClientRect` reports the UNCLIPPED box.** For a bottom-anchored
+  `overflow:hidden` list, assert the *list's* bottom against the composer, not
+  a row's — a row overhanging by 16px it cannot paint is not a fault, and
+  chasing it costs a round.
+
+- **Sample axe on a warm page.** The first pass after a load catches unrelated
+  entrance fades at random — 3 hits in 54 cold, 0 in 20 warm, with frame timing
+  identical either way. Re-run before attributing a hit to the change under
+  test.
+
+- **Verify a generator by reading the document back**, never by its own
+  summary. `data-scene` is on the tab buttons *and* the scene panels, and every
+  button sits above every panel, so four builds wrote into one target while the
+  tool printed four scene names. Anything a generator strips, it must also
+  write, or a value set anywhere else is gone on the next run.
 
 ## 10. Publish
 

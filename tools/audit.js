@@ -200,3 +200,90 @@
   return bad.length ? body + '\n\nFAIL\n  ' + bad.join('\n  ')
                     : body + '\n\nPASS — nothing unbudgeted over ' + CAP + ' screens, and only the hero and the band ask';
 })()
+
+/* ── 8. STATE INTEGRITY — the checks that came out of a facepile where two
+      of three avatars looked active at once. Both faults were invisible in
+      a still and obvious in motion, so run this with the page MOVING.
+      ───────────────────────────────────────────────────────────────── */
+(() => {
+  const out = [];
+
+  /* A TIE IN A STACK IS NOT A STACK. `.wfo__who{z-index:calc(9 - --wi)}`
+     gave the leftmost face 9, and the rule meant to lift the active one
+     said 9 as well. With the third avatar holding, the first was still in
+     front of the second and the pile had two visual tops — read as "两个
+     头像被active". Equal z-index falls back to DOM order, which is exactly
+     the thing an explicit z-index was added to stop depending on.
+     Siblings only: z-index is meaningless across stacking contexts. */
+  const groups = new Map();
+  document.querySelectorAll('[class]').forEach(el => {
+    const z = getComputedStyle(el).zIndex;
+    if (z === 'auto' || !el.parentElement) return;
+    if (!groups.has(el.parentElement)) groups.set(el.parentElement, []);
+    groups.get(el.parentElement).push([el, +z]);
+  });
+  /* AND ONLY WHERE THE GROUP IS ACTUALLY A STACK. Six message rows in a
+     list all sit at z-index 1 and never touch, so paint order decides
+     nothing — reporting those was seven findings of noise. But the test is
+     NOT "do the two tied boxes overlap each other": in the fault this was
+     written for, the two faces sharing z-index 9 were two apart and never
+     touched. They each sat over the face BETWEEN them, which is what made
+     the pile read as having two fronts.
+     So: if any pair in the group overlaps, the group is a stack, and a
+     stack's top value has to be held by exactly one element. */
+  const hits = (a, b) => a.right > b.left + 1 && a.left < b.right - 1 &&
+                         a.bottom > b.top + 1 && a.top < b.bottom - 1;
+  groups.forEach((kids, parent) => {
+    if (kids.length < 2) return;
+    /* CLIPPED TO THE PARENT. A bottom-anchored `overflow:hidden` list keeps
+       its older messages in layout above the top edge, where their boxes
+       overlap and nothing is painted. Compare what is on screen. */
+    const pr = parent.getBoundingClientRect();
+    const boxes = kids.map(k => {
+      const r = k[0].getBoundingClientRect();
+      return { left: Math.max(r.left, pr.left), right: Math.min(r.right, pr.right),
+               top: Math.max(r.top, pr.top), bottom: Math.min(r.bottom, pr.bottom) };
+    });
+    let stacked = false;
+    for (let i = 0; i < boxes.length && !stacked; i++)
+      for (let j = i + 1; j < boxes.length && !stacked; j++)
+        if (boxes[i].right > boxes[i].left && boxes[j].right > boxes[j].left &&
+            hits(boxes[i], boxes[j])) stacked = true;
+    if (!stacked) return;
+    const top = Math.max(...kids.map(k => k[1]));
+    const tied = kids.filter(k => k[1] === top).map(k => k[0]);
+    /* PEERS OF THE SAME CLASS. Content layered over background art is two
+       different things at the same level and is fine — `.panel` and
+       `.footer` both sit at 1 over `.close__art` and never compete, because
+       they occupy different regions. The fault shape is narrower and always
+       looks the same: a rule computes a per-item z-index across N identical
+       children, and a state rule for "the active one" collides with the
+       value the first child already had. Same class, same level, in a pile
+       that overlaps. */
+    const kind = e => e.className.split(' ')[0];
+    if (tied.length > 1 && new Set(tied.map(kind)).size === 1)
+      out.push('a stack with ' + tied.length + ' tops at z-index ' + top + ': ' +
+               tied.map(t => '.' + t.className.split(' ')[0]).join(', ') +
+               ' inside .' + (parent.className.split(' ')[0] || parent.tagName.toLowerCase()));
+  });
+
+  /* A MARKER MUST BE ON THE THING IT MARKS. The handover ring centred
+     itself with `top:50%` against a container that WRAPS — avatars on row
+     one, caption on row two — so it hung 14px below the faces, exactly
+     (65 - 37) / 2. A percentage inset resolves against the whole padding
+     box including rows you were not thinking about. */
+  document.querySelectorAll('*').forEach(el => {
+    const cs = getComputedStyle(el);
+    if (cs.position !== 'absolute') return;
+    const p = el.offsetParent;
+    if (!p) return;
+    const ps = getComputedStyle(p);
+    if (ps.display !== 'flex' || ps.flexWrap !== 'wrap') return;
+    out.push('absolute child of a WRAPPING flex container: .' +
+             (el.className.split(' ')[0] || el.tagName.toLowerCase()) +
+             ' in .' + (p.className.split(' ')[0] || p.tagName.toLowerCase()) +
+             ' — a percentage inset here measures the wrap, not the row');
+  });
+
+  return out.length ? out : 'PASS — no ties, no percentage insets over a wrap';
+})()

@@ -249,6 +249,86 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · the rules from this week, moved out of prose and into the tools
+
+Tong: *"之前聊到的很多规则性的内容可以加进设计规则文档或者脚本里。"*
+
+The bias was toward **scripts over prose** — a rule nobody runs is a rule that
+gets re-litigated. Three of this week's faults turned out to have exact
+mechanical preconditions.
+
+### Codified
+
+**`tools/tokens.py` — sized grids with an implicit row track (M5).** `height`
+on a grid container is not a ceiling; the tallest item pushes it and
+`align-items:stretch` carries every sibling along. It shipped twice in one
+afternoon. The first version reported **30 findings**, all of them
+`display:grid; place-items:center` icon tiles that hold one small child and
+can never over-constrain anything. Narrowed to grids with a *flexible column
+template* it reports 2 — and both were real: `.nav` (inert, 62 = 62) and
+`.ladder__view`, whose child measured 558 inside a 495 box mid-fit. Both now
+declare `grid-template-rows:minmax(0,1fr)`; verified inert at 700/800/900/1100.
+
+**`tools/audit.js` §8 — state integrity.** Two checks, both from the facepile:
+
+- *A per-item z-index and a state z-index must not collide.* This took **three
+  predicates**. The first reported seven pieces of noise (message rows in a
+  list all sit at z-index 1 and never touch). The second was clean — and
+  **silently missed the fault it was written for**, because the two tied faces
+  were two apart and never touched *each other*; they each sat over the face
+  between them. The third narrows to peers of the same class inside a group
+  whose boxes overlap: content layered over background art (`.panel` over
+  `.close__art`) is two different things at one level and is fine.
+- *A marker's anchor is the row, not the wrap.* Any absolutely positioned child
+  of a `flex-wrap:wrap` offsetParent, because a percentage inset there measures
+  the wrap including rows you were not thinking about.
+
+Both were proved by injecting the regression and watching the check fire, then
+watching it pass on the fix — which is now **R15**, because the second
+predicate above would otherwise have shipped looking green.
+
+**`tools/rules.py` — a blind spot in the linter itself.** Check 1 only ever
+read `##`, so three gate sections written a level down were invisible: `4aa`,
+which no rule pointed at and which would have failed the moment one did, and
+`4y` / `4z`, which **reuse ids already taken by `##` sections**. Nine rules
+point at those two, so each pointer resolves to one of two different sections
+— the ambiguity this tool's own docstring calls worse than a dangling pointer.
+`4aa` is promoted (nothing pointed at it, zero risk). The other two are
+**reported as warnings, not fixed**: re-pointing nine rules is a judgement
+about what each one meant, and those rows are another thread's work.
+
+### Indexed
+
+New in `RULES.md`, each with a gate pointer that `rules.py` now verifies:
+**F41** (a per-item z-index and a state z-index must not collide), **F42** (a
+marker's anchor is the row, not the wrap), **F43** (before adding a second
+element to mark a state, check whether the first can carry it), **F44** (a
+state is read against its neighbours), **R15** (prove a check against its own
+bug), **R16** (an attribute is only an anchor if one kind of element carries
+it), **R17** (anything a generator strips, it must also write). M5's pointer
+moves to the new gate section; P13 gains the two token-source paths this week
+used.
+
+New gate section **QA §4ab**, which also carries the three measurement traps
+that cost time this week: `getBoundingClientRect` reports the *unclipped* box,
+axe must be sampled on a warm page, and a generator is verified by reading the
+document back rather than by its own summary.
+
+### Already covered, and worth saying
+
+`tokens.py` **already** lints raw durations and easings — which is why the
+520ms I briefly hand-picked for the ring's recolour was wrong to add and right
+to revert. And C1 already says a graphic accent takes `--accent` while accent
+*text* takes `--accent-solid` / `--accent-wash`; that rule did not need
+restating, only following.
+
+**Gate.** `tokens.py` 0, `check-html.py` balanced, `scopes.py` 0, `rules.py`
+140 rules / 66 sections / 8 blocks all resolving. `audit.js` §1, §6 and the new
+§8 PASS; axe 0. The two grid changes verified by screenshot — the header and
+the workflow figure are unchanged.
+
+---
+
 ## 2026-08-28 · one stroke, not two — and an element deleted
 
 Tong: *"现在头像两个stroke 一白，一个橙，没必要呢，你可以直接让白色stroke变成橙

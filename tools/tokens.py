@@ -278,6 +278,55 @@ def dead_declarations(paths):
     return {k: v for k, v in seen.items() if len(v) > 1}
 
 
+def grid_height_without_rows(paths):
+    """A sized grid whose row track is left implicit.
+
+    `height` on a grid container is NOT a ceiling (RULES M5). An implicit row
+    track is `auto`, so the tallest item pushes the container past the height
+    it declared and `align-items:stretch` carries every sibling with it. It
+    shipped twice in one afternoon: seven Outputs tabs came out 545 / 552 /
+    574 as the artifact changed under them, and one level down the same fault
+    put a composer 62px below its own window's bottom edge.
+
+    The precondition is exact and lives in one rule, so it is worth catching
+    here rather than by eye: a block that declares a definite `height` AND
+    behaves as a grid AND never says `grid-template-rows`.
+
+    `auto`, `100%`, `min-content` and friends are not definite — they cannot
+    over-constrain anything. A single-row grid is the whole point of the
+    check, so `grid-template-columns` alone still counts as grid behaviour.
+    """
+    DEFINITE = re.compile(r'^\s*(\d|calc\(|clamp\(|var\(|min\(|max\()')
+    out = []
+    for path in paths:
+        css = strip_comments(path.read_text(encoding='utf-8'))
+        for m in re.finditer(r'([^{}]+)\{([^{}]*)\}', css):
+            sel = ' '.join((m.group(1) or '').split())
+            body = m.group(2) or ''
+            if not sel or sel.startswith('@'):
+                continue
+            decls = {}
+            for d in body.split(';'):
+                if ':' in d:
+                    k, _, v = d.partition(':')
+                    decls[k.strip()] = v.strip()
+            if 'grid-template-rows' in decls:
+                continue
+            # A LAYOUT grid, not a centring one. `display:grid` with
+            # `place-items:center` and a fixed 32px box is every icon tile on
+            # the page — one small child that cannot overflow, and no
+            # `stretch` cascade to carry the mistake sideways. Requiring a
+            # column template with a flexible track cut this from 30
+            # findings to the two that were real.
+            cols = decls.get('grid-template-columns', '') or decls.get('grid-template', '')
+            is_grid = bool(cols) and bool(re.search(r'fr\b|minmax\(|repeat\(', cols))
+            h = decls.get('height', '')
+            if is_grid and h and DEFINITE.match(h):
+                line = css[:m.start()].count('\n') + 1
+                out.append((path.name, line, sel[:44], h[:28]))
+    return out
+
+
 def main():
     total = 0
     for name in ('src/css/system.css', 'src/css/base.css'):
@@ -296,6 +345,12 @@ def main():
     for name, line, sel in wipes:
         print(f'  {name}:{line}  {sel}')
     total += len(wipes)
+
+    grids = grid_height_without_rows(paths)
+    print(f'\n=== sized grids with an implicit row track (RULES M5): {len(grids)}')
+    for name, line, sel, h in grids:
+        print(f'  {name}:{line}  {sel:<44} height:{h}')
+    total += len(grids)
 
     missing = undefined_refs([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
     print(f'\n=== var() references with no declaration: {len(missing)}')

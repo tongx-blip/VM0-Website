@@ -17,6 +17,15 @@ Checks, in order of how badly each one bit:
   2. no heading id is used twice in qa-checklist.md
   3. no rule id is used twice in RULES.md
   4. every audit.js block a gate section names actually exists
+  5. (warning) gate sections written as `###` are invisible to checks 1-2
+
+Check 5 exists because check 1 only ever read `##`. Three sections were
+written a level down: `4aa`, which no rule pointed at and which would have
+failed the moment one did, and `4y` / `4z`, which REUSE ids already taken by
+`##` sections. Nine rules point at those two, so each pointer resolves to one
+of two different sections — the ambiguity this file's own docstring calls
+worse than a dangling pointer. Reported, not failed: re-pointing nine rules is
+a judgement about what each one meant, not a lint fix.
 """
 
 import re
@@ -45,6 +54,8 @@ POINTER = re.compile(r'§\s*([0-9][0-9a-z]*)')
 # check silently passed on every run — a linter that cannot fail is not a linter.
 RULE_ID = re.compile(r'^\|\s*([A-Z][0-9]+)\s*\|', re.M)
 HEADING = re.compile(r'^##\s+([0-9][0-9a-z]*)\.\s', re.M)
+# the same ids one level down, which checks 1-2 cannot see
+SUBHEADING = re.compile(r'^###\s+([0-9][0-9a-z]*)\.\s', re.M)
 BLOCK = re.compile(r'^/\* ──\s*(\d+)\.', re.M)
 
 
@@ -84,7 +95,20 @@ def main() -> int:
         if target not in blocks:
             bad.append('qa-checklist names audit.js §%s, which does not exist' % target)
 
+    # 5. sections a level down are invisible to 1-2 (warning, not a failure)
+    subs = SUBHEADING.findall(gate)
+    warn = []
+    for sid in sorted(set(subs)):
+        if sid in known:
+            warn.append('QA §%s exists as BOTH `##` and `###` — every pointer '
+                        'to it resolves to one of two sections' % sid)
+        else:
+            warn.append('QA §%s is written as `###`, so no rule can point at it'
+                        % sid)
+
     n = len(RULE_ID.findall(rules))
+    for w in warn:
+        print('    warning: ' + w)
     if bad:
         print('=== rule index: %d problem(s)' % len(bad))
         for b in bad:
