@@ -17,7 +17,11 @@ and every rule in it comes from a decision that has already been argued once.
      ships stale CSS to anyone who has visited before.
 3. **Look at it in a browser.** Serve `site/` and take screenshots at 1440 and
    390. A screenshot catches what a diff cannot.
-4. **Run the gate** in `docs/qa-checklist.md`. Not a subset of it.
+4. **Run the gate** in `docs/qa-checklist.md`. Not a subset of it. The cheap
+   half is four commands — `tools/tokens.py`, `tools/check-html.py`,
+   `tools/scopes.py`, `tools/rules.py` — and `tools/audit.js` §1–§7 in the
+   browser. Run §7 (the attention budget) **before** restyling anything
+   anyone has called heavy; "太重了" is a number, not a taste argument.
 5. **Push to `main`. That is what publishes.** Every push deploys `site/` to
    **https://tongx-blip.github.io/VM0-Website/** — the one URL work is accepted
    at. Rebase onto `origin/main` first; several threads work on this page at
@@ -43,6 +47,10 @@ and every rule in it comes from a decision that has already been argued once.
   `okou host clone` if you need to see what is live.
 - **Never rewrite copy** while doing design work. Layout, order, type, colour and
   motion are yours; wording is not.
+- **Adding a rule means adding it to `docs/RULES.md`** — one line, with the
+  pointer to where it is argued and where it is checked. `tools/rules.py`
+  fails if that pointer does not resolve. A rule that is only in a changelog
+  entry gets re-litigated in three rounds' time.
 - **Never add a new theme layer** on top of `system.css`. A new direction
   *replaces* the design layer. Five stacked layers is how the page ended up grey
   with its accent switched off — see `docs/changelog.md`.

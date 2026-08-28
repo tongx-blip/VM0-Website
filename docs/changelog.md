@@ -6,6 +6,91 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · the rules that were only in changelog entries
+
+Tong: *"我们有没有记录网站规则和风格的文档或者脚本？之前聊到的很多可以整理成设计
+规则的地方都整理成文档"*
+
+Yes — `RULES.md` indexes them, `design-principles.md` argues them,
+`design-system.md` holds the values, `motion.md` the timings, `qa-checklist.md`
+is the machine half, and `tools/` is the part that runs. What was missing is
+that **the last week's decisions had only ever landed in changelog prose**. A
+rule in an entry is a story; a rule in the index is a rule. Nineteen of them
+were promoted, and the index itself turned out to be broken in three places.
+
+### The one that needed a script, not a paragraph
+
+*"整体这部分太重了"* was read as a styling note for two rounds. It was a
+**measurement**: 4.05 screens of scroll and 23.6% of the whole page, for a
+reassurance, in a page whose main story took less. Nothing in the gate asked
+that question, so `audit.js` §7 now does — pixels, screens and share per
+section, plus who is asking:
+
+```
+hero          932px  1.04 screens   8.8%  2 CTA
+workflows    2814px  3.13 screens  26.6%
+control      1126px  1.25 screens  10.7%
+```
+
+- 2.2 screens is the cap for anything that is not the hero
+- **the page asks twice**, the hero and the closing band; `a.btn` anywhere else
+  fails, because five in-section CTAs are what made a reassurance read as a
+  second product tour
+- over the cap *on purpose* is fine — in `LONG_ON_PURPOSE`, **with its reason**,
+  the way `.tplwin` and `.vsui` are named in the no-rules audit
+
+It currently reports one: `workflows` at 3.13 screens, the page's subject. That
+is a decision now rather than a section nobody had measured. Argued in
+`design-principles.md` §14, gated at QA §3b, indexed as K7/K8.
+
+### Nineteen rules promoted
+
+S9 (a delimited strip carries no surface of its own) · M5 (`height` on a grid
+container is not a ceiling) · M6 (a column beside a fixed-width object takes
+that object's width) · T8 (a fixed-width chip beside elastic text takes its own
+line) · C12 (a tint inside a mock is `--tile`, never `--wash`) · P11 (a mock's
+dark mode is the product's dark ramp, not its light one inverted) · P12
+(fidelity yields to legibility once, and the deviation is written at the rule) ·
+P13 (product facts have sources — the catalog API, the `.tsx`, the i18n JSON) ·
+K7, K8, K9 (weight is a measurement; the page asks twice; "don't show it" and
+"don't lead with it" are different edits) · F39 (stacking order is part of the
+state) · F40 (an arrival holds longer than a step) · R11–R14 (the review URL
+comes from `main`; an earlier duplicate selector cannot be beaten from above; a
+renamed class leaves its breakpoint rules behind; a brace inside a comment is
+not a brace).
+
+Three gate sections that RULES had been pointing at for weeks **did not exist** —
+§4w, §4y, §4z, between them the machine half of nine rules. Written.
+
+### The index was lying, and now something checks it
+
+`tools/rules.py`. It reads `RULES.md` against `qa-checklist.md` and `audit.js`
+and fails if a pointer does not resolve. First run, four findings:
+
+| | |
+|---|---|
+| `QA §4w`, `§4y`, `§4z` | pointed at nine rules' gates; **no such sections** |
+| `§4o`, `§4p` | each used for **two different** checks — the pointer was ambiguous, which is worse than wrong |
+| `## 6. Grid and breakpoints## 6. Grid and breakpoints` | the heading was in the file twice, on one line |
+| `C4 → §15` | not a gate section at all — it meant `design-system §15`. Cross-doc pointers are named now |
+
+**And the linter shipped broken twice before it shipped.** `RULE_ID` was compiled
+without `re.M`, so `findall` only ever tried position 0 and the duplicate-id
+check passed by matching nothing — it reported "0 rules" and I read past it. Then
+a lookbehind meant to distinguish a bare `§15` from `design-system §15` also
+excluded `QA §4s`, i.e. every real pointer in the file, and it announced "all
+pointers resolve" while looking at none of them. **A linter that cannot fail is
+not a linter**: both are recorded at the regexes, and the fix is verified by
+breaking `RULES.md` on purpose and checking the exit code, in both directions.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 133 rules,
+64 gate sections, 7 audit blocks, all pointers resolve · `audit.js` §1 §3 §6 §7
+PASS, §2 unchanged from HEAD.
+
+---
+
 ## 2026-08-28 · one review URL, published from main
 
 Tong: *"现在我分了三个chat来改网站，但是每次改的网站好像都没有merge到一个main里边，

@@ -10,6 +10,9 @@ exists because something slipped past without it. The audit snippets live in
 
 ```bash
 python3 tools/build-css.py
+python3 tools/tokens.py        # token hygiene + the type scale
+python3 tools/check-html.py    # markup balance
+python3 tools/rules.py         # RULES.md's pointers still resolve
 cd site && python3 -m http.server 8931 &
 agent-browser set viewport 1440 900
 agent-browser open "http://localhost:8931/?cb=$RANDOM"      # note the cache-buster
@@ -131,6 +134,38 @@ separating them. Check with:
 ```
 
 Expect: paper, wash, paper, wash, paper, wash, paper, ink.
+
+## 3b. Attention budget — run this BEFORE restyling anything called heavy
+
+`tools/audit.js` §7. Three numbers per section: pixels, **screens** of scroll,
+and **share of the whole page**. It exists because "整体这部分太重了" was treated
+as a styling note for two rounds, and the actual finding was a measurement — the
+security section at **4.05 screens and 23.6% of the page**, longer than the
+section carrying the product's main story, for a *reassurance*.
+
+```bash
+agent-browser set viewport 1440 900
+agent-browser open "http://localhost:8931/?cb=$RANDOM"
+# then paste tools/audit.js §7
+```
+
+- **2.2 screens is the cap** for anything that is not the hero. Past that a
+  reader is scrolling through one idea for longer than it takes to state it.
+- **The page asks twice — the hero and the closing band.** `a.btn` anywhere else
+  fails. Five in-section CTAs are most of what made a reassurance read as a
+  second product tour, and a reader told to act five times has been told to act
+  zero times.
+- **Over the cap on purpose is fine, in the check, with the reason.**
+  `LONG_ON_PURPOSE` in §7, the same way `.tplwin` and `.vsui` are named in the
+  no-rules audit. Today it holds one entry: `workflows`, the page's subject.
+
+**Measure before, and after.** The number is the argument in both directions —
+it is also how you show the change landed: 4.05 → 1.25 screens, 23.6% → 10.7%.
+
+**Screens, not pixels, and share, not size.** A section is heavy relative to the
+window it is read in and to what sits around it. A short section can still be
+wrong if its neighbours are shorter; a long one can be right if it is the
+subject. Neither is visible in a pixel count.
 
 ## 4. Active states survived the ground flips
 
@@ -990,6 +1025,100 @@ Math.round((hr.left + hr.width / 2) - (wr.left + wr.width / 2))   // 0
 Then check it again with the animation off (`prefers-reduced-motion`), which is
 the state that proves the position does not depend on the loop at all.
 
+## 4w. A product visual on a card is a crop, and a comparison shows both sides
+
+RULES P6, P7, P9. These are read, not computed — but read them every time a
+figure lands on a card.
+
+- **Does it run off the edge?** Lay the surface out at the product's own size
+  and let the band take whatever does not fit. A drawing that fits inside its
+  frame reads as an illustration *of* the product; a fragment that continues
+  past the crop reads as the product.
+- **Is it left-packed?** Meta pushed to the far right is exactly what the crop
+  eats.
+- **Did it get scaled instead of cropped?** Four columns shrunk to 29% of a band
+  with 11px rows is a diagram of the app, not a picture of it.
+- **Does the comparison carry both marks**, theirs and ours, with the word
+  between them? One logo describes; it does not compare.
+- **Prove the crop.** `flex:none` on the children of any flex column holding a
+  list — a flex column shrinks its rows rather than overflowing, so a
+  twelve-step run fits a card sized for eight and the comment claiming it is
+  "cut there" stays true-looking and false (P8).
+
+```js
+// the surface must be wider (or taller) than the box that clips it
+[...document.querySelectorAll('.vs__viz, .acard')].map(el => {
+  const c = el.firstElementChild;
+  return el.className.split(' ')[0] + ' ' +
+    (c ? c.scrollWidth + '/' + el.clientWidth : '—');
+})
+```
+
+## 4y. The picture agrees with the sentence above it, in both themes
+
+RULES K5, K6, R10. **Nothing in the visual gate can catch a picture that is
+merely wrong**, so this one is done by reading.
+
+- **Read the claim, then the figure.** The Codex card claimed *parallelism* —
+  "several AIs get more done at once" — and drew a single sequential column.
+  Ask what shape the claim has before styling anything.
+- **A card set varies inside, not outside.** Four boxes at four widths with the
+  same insides is one template stretched. Vary the arrangement *within* each
+  card (`docs/comparison-card-research.md`).
+- **Measure a mock's colours in BOTH themes.** Mock surfaces are often
+  `aria-hidden`, so axe never looks at them, and a correct-looking light
+  screenshot has hidden three separate defects: mock text at 1.92:1 in dark, a
+  terminal at 1.16:1 against its band, and a mask still 60% opaque where the
+  card cut it.
+
+```js
+document.documentElement.setAttribute('data-theme', 'dark');
+[...document.querySelectorAll('[aria-hidden="true"] *')]
+  .filter(e => e.textContent.trim() && !e.children.length)
+  .map(e => getComputedStyle(e).color + ' on ' + getComputedStyle(e.parentElement).backgroundColor)
+```
+
+## 4z. The mock is the product, and every state actually happens
+
+RULES S9, F33-F40. The checks that exist because a mock looked like the product
+until someone who uses the product looked at it.
+
+- **Every glyph is a real Lucide icon**, at the version the app ships, and it is
+  the icon the component *renders* — not the one whose name sounds right. Three
+  of four composer icons were wrong at once: `LayoutTemplate` where the app
+  renders `SwatchBook`, plus two outdated hand-drawn paths. Fetch the path.
+- **One edge treatment per surface.** A 0.7px ring and a 54px shadow together is
+  what makes an outline read heavy; the platform's Popover has the border and no
+  shadow.
+- **A control that looks live is live**, or it says why it is not. The prompt box
+  shipped as a `<p>` pretending to be an input, and clicking in it is the first
+  thing anyone does.
+- **A delimited strip carries no surface of its own.** A footer with a divider
+  above it and the card's inset either side is already delimited; a
+  ring-and-shadow bar inside it is a card inside a card.
+- **A state class out-specifies the resting rule that sets the same property.**
+  Equal specificity plus later position means the state does nothing, and the
+  symptom looks like broken motion rather than broken CSS:
+
+```js
+// for each state class, does the resting rule win?
+const el = document.querySelector('.wfo__who');
+el.classList.add('is-holding');
+getComputedStyle(el).transform    // must not be 'none'
+```
+
+- **Stacking order is part of the state.** Choosing the forward object by
+  opacity while the pile keeps DOM order leaves the one meant to be in front
+  behind its successor.
+- **A journey arrives, and the arrival holds.** If something travels, something
+  turns up — and it stays for longer than a step, or it did not arrive.
+
+```js
+// the delivered thing exists, and is on top of what produced it
+const a = document.querySelector('.slk'), b = document.querySelector('.wfo--run');
+a && b && (a.getBoundingClientRect().top < b.getBoundingClientRect().bottom)
+```
+
 ## 4x. The markup is still balanced, and nothing escaped its container
 
 **Run the structural check after ANY scripted edit to the markup.** This is not
@@ -1176,7 +1305,7 @@ Two rules that came out of it:
 // identical at every beat, and equal to the frame
 ```
 
-## 4o. A centre-focused rail
+## 4o2. A centre-focused rail
 
 The testimonial rail centres a card and fades the rest. Four things it gets
 wrong the moment any of them is touched:
@@ -1228,7 +1357,7 @@ while looking perfect at rest.
 **`translateX` goes before `scale`.** The other order scales the
 translation too, and every card lands short by its own scale factor.
 
-## 4p. An opacity fade over text is a contrast change
+## 4p2. An opacity fade over text is a contrast change
 
 axe composites an inherited `opacity` **unless** the element also carries a
 `transform`, in which case it downgrades to `incomplete`. So two fades of
@@ -1498,7 +1627,7 @@ Then the floor:
 A stray reads as a token at 1440 and diverges everywhere else, so check the
 count at one width and trust it — the values are what matter, not the viewport.
 
-## 6. Grid and breakpoints## 6. Grid and breakpoints
+## 6. Grid and breakpoints
 
 Check `390 / 768 / 1024 / 1280 / 1920`:
 

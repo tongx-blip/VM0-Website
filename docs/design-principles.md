@@ -311,6 +311,52 @@ all. A figure with N states has N compositions, and each one is looked at.
 
 ---
 
+## 14. A section has an attention budget, and it is a number
+
+Tong, on the security block: *"整体这部分太重了，感觉其实不需要，应该是一个 btw
+的感觉"*. Every instinct says to go and restyle a beat. Measure it first.
+
+It was **4.05 screens of scroll and 23.6% of the whole page** — the longest
+section on the page, longer than the one that carries the product's main story,
+and it was a *reassurance*. That number is the finding. No amount of restyling
+any single beat would have produced it, and with it the fix is obvious rather
+than a matter of taste: the section was built at the scale of a feature tour.
+
+Three things fall out of it, and `audit.js` §7 prints all three.
+
+**Screens, not pixels.** A section is heavy relative to the window it is read
+in, and 2.2 screens is the cap for anything that is not the hero. Past that,
+a reader is scrolling through one idea for longer than it takes to state it.
+
+**Share, not size.** A section can be short and still be wrong, if the thing
+around it is shorter. The comparison is what makes "too heavy" checkable.
+
+**The page asks twice.** The hero and the closing band. That is the whole
+budget. Five in-section CTAs — *Set up an Agent, Try an approval gate, Run your
+first task, Connect a tool, See a run trail* — are what turn a section into a
+second product tour, and the reader who was told to act five times has been
+told to act zero times.
+
+A section over the cap on purpose is fine; it goes in the check's
+`LONG_ON_PURPOSE` list **with its reason**, the way every other exception in
+this repo is written down and scoped by name. Today there is one: the workflow
+scene at 3.13 screens, because it is the page's subject.
+
+### 14.1 "Do not show it" and "do not lead with it" are different edits
+
+Two of the five beats were cut in the same round, from two notes one line apart:
+
+- 「这个也太多了，**不需要表达**」 → the credential-injection card is gone. No
+  trace, no clause, no smaller version of it.
+- 「这个也是，**不需要重点提**」 → the activity trail keeps its sentence, in the
+  closing note, and loses its picture, its heading and its button.
+
+Reading both as "delete" throws away a claim the reader wanted. Reading both as
+"shrink" leaves an implementation detail on the page after being told twice it
+did not belong. The words are different; the edits are different.
+
+---
+
 **On being asked to redesign.** *"重构"* means replacing the **argument** —
 what the picture is trying to prove — not restyling the wireframe. Changing
 type sizes, spacing and easing on a layout that was never re-decided is

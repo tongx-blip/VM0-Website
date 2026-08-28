@@ -153,3 +153,50 @@
 
   return out.length ? out : 'PASS — no obvious visual bugs';
 })()
+
+/* ── 7. ATTENTION BUDGET — what each section costs the reader, and who is
+      asking. "这部分太重了" is a measurement, not a taste argument, and it
+      was never measured until the security section had grown to 4.05
+      screens and 23.6% of the whole page — longer than the section that
+      carries the product's main story, and the only one with a button
+      per item. Run this BEFORE restyling anything anyone calls heavy.
+      RULES K7, K8. ─────────────────────────────────────────────────── */
+(() => {
+  const doc = document.documentElement.scrollHeight;
+  const vh  = window.innerHeight;
+  const CAP = 2.2;                        // screens
+
+  // The page asks in two places and they are deliberate: the hero, and the
+  // closing band. A button anywhere else is a section competing with the
+  // page's own ask — five of them are what turned a reassurance into a
+  // second product tour.
+  const MAY_ASK = new Set(['hero', 'cta']);
+
+  // A section over the cap on purpose. Each entry needs a reason, and the
+  // reason is the point: it is the difference between a decision and a
+  // section nobody has measured.
+  const LONG_ON_PURPOSE = {
+    workflows: 'the product\'s main story — the four-beat scene is the page\'s subject',
+  };
+
+  const rows = [], bad = [], noted = [];
+  [...document.querySelectorAll('main > section[id], body > section[id]')].forEach(s => {
+    const h       = s.getBoundingClientRect().height;
+    const screens = h / vh;
+    const share   = h / doc * 100;
+    const ctas    = s.querySelectorAll('a.btn').length;
+    rows.push(s.id.padEnd(12) + String(Math.round(h)).padStart(5) + 'px  ' +
+              screens.toFixed(2) + ' screens  ' + share.toFixed(1).padStart(4) + '%' +
+              (ctas ? '  ' + ctas + ' CTA' : ''));
+    if (screens > CAP) {
+      const line = s.id + ' is ' + screens.toFixed(2) + ' screens (' + share.toFixed(1) + '%)';
+      (s.id in LONG_ON_PURPOSE ? noted : bad).push(
+        line + (s.id in LONG_ON_PURPOSE ? ' — ' + LONG_ON_PURPOSE[s.id] : ''));
+    }
+    if (ctas && !MAY_ASK.has(s.id)) bad.push(s.id + ' carries ' + ctas + ' CTA' + (ctas > 1 ? 's' : '') + ' of its own');
+  });
+
+  const body = rows.join('\n') + (noted.length ? '\n\nover the cap, on purpose\n  ' + noted.join('\n  ') : '');
+  return bad.length ? body + '\n\nFAIL\n  ' + bad.join('\n  ')
+                    : body + '\n\nPASS — nothing unbudgeted over ' + CAP + ' screens, and only the hero and the band ask';
+})()
