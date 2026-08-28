@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=e6b12f55">
+<link rel="stylesheet" href="styles.css?r=25db21e3">
 </head>
 <body>
 
@@ -624,6 +624,21 @@
             </figure>
 
             <!-- 1→2 · the run, which becomes the workflow -->
+            <!-- Where the chain LANDS. Without it the last step lit like the
+                 four before it and nothing arrived anywhere. It takes the
+                 ask's place once the run is done: you asked, here it is in the
+                 channel. Slack's own vocabulary (.slk__*), not a second one. -->
+            <div class="wfo wfo--post" aria-hidden="true">
+              <p class="slk__bar"><b class="slk__ch"><i>#</i>growth</b></p>
+              <div class="slk__msg">
+                <span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span>
+                <div class="slk__body">
+                  <p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>09:14</time></p>
+                  <p class="slk__say">Six creators worth reaching out to, drafts ready in Gmail.</p>
+                </div>
+              </div>
+            </div>
+
             <article class="wfo wfo--run">
               <p class="wfo__hd">
                 <span class="wfo__ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="13" height="13"></span>
@@ -653,7 +668,7 @@
             <!-- The facepile hands the card over: whoever is holding it lifts out
                  of the stack and takes the header. Public means shared inside the
                  workspace, so this is the object's own behaviour, not decoration. -->
-            <div class="wfo wfo--team" aria-hidden="true">
+            <div class="wfo wfo--team" aria-hidden="true"><span class="wfo__halo"></span>
               <span class="wfo__who" style="--wi:0" data-who="Maya"><img src="assets/brand/avatar-1.png?v=d05bae67" alt="" width="34" height="34"></span>
               <span class="wfo__who" style="--wi:1" data-who="Dan"><img src="assets/brand/avatar-3.png?v=c2b53996" alt="" width="34" height="34"></span>
               <span class="wfo__who" style="--wi:2" data-who="Ines"><img src="assets/brand/avatar-4.png?v=6fa57d60" alt="" width="34" height="34"></span>
@@ -1223,6 +1238,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=a4d3a67b"></script>
+<script src="app.js?r=ce180140"></script>
 </body>
 </html>

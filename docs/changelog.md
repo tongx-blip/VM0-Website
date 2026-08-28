@@ -6,6 +6,55 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · the run lands somewhere, and the handover is one moving thing
+
+Three screenshots. *"图一，这个ui有点问题。图二，每个小人轮换也出bug了，而且我
+觉得可以有更好，更流畅的动画来体现小人的轮换吧？图三，'agent 小人滚动各种
+connector，最终发到了 slack 群里' 这个发到群里的行为不太明显。"*
+
+**图一 · the question was a pill.** Measured first: it was not overflowing —
+18px inset on both sides, 3px above the card's bottom edge. The problem was
+the form. A ring-and-shadow bar filling the whole footer is a card inside a
+card, and it sat three pixels off the edge of the one containing it. The
+footer is already a delimited strip: it has the divider above it and the
+card's own inset. The question just sits in it as a row now — text left,
+answers right, no surface of its own.
+
+**图二 · the lift never happened.** `.wfsc[data-step="3"] .wfo__who{transform:
+none}` is the entrance rule, it carries the same specificity as
+`.wfo__who.is-holding`, and it sits later in the file — so the holding avatar
+was never lifted at all. What Tong saw as the rotation being broken was three
+avatars changing opacity while the pile's stacking order stayed DOM order, so
+the one that was supposed to be forward was still behind the one after it.
+The state class is scoped to the beat now and wins on the attribute.
+
+And the rotation is **one moving thing** rather than three animations arguing.
+A single ring slides between the faces, spring-eased, and the avatar under it
+rises — the same grammar as the runner on beat 1. Nothing changes opacity. The
+first pass filled the ring and scaled it 1.34, which spilled below the pile
+onto the caption and read louder than the three faces it was pointing at;
+spread on a shadow reaches outside the box without taking layout, and the
+avatar's own paper seam masks the inner half, so what is left is one thin
+accent edge. It clears the caption by 2px, measured.
+
+**图三 · the chain had nowhere to land.** The last step lit exactly like the
+four before it and nothing arrived anywhere — the same fault as the save card
+that flew with no landing row, two months of entries ago. A `#growth` message
+turns up when the runner reaches the Slack step: Slack's own vocabulary
+(`.slk__*`, the channel mock another session built this week) rather than a
+second one invented for it, and Slack's own chrome in both themes (RULES P1).
+
+It takes the **ask's** box, and the ask steps aside in the same beat. Three
+cards do not fit in a 760×545 canvas, but one leaving as another arrives does
+— and it is the truer sentence: you asked, here it is in the channel. It
+lands ON TOP of the run card, lapping it by 4cqh, because the newest thing in
+a picture cannot be under the card that produced it; a 1cqh graze was the
+first attempt and that is the worst of both (RULES F9). The landing holds for
+twice a step before the loop restarts: an arrival that leaves as fast as a
+step is not an arrival.
+
+---
+
 ## 2026-08-27 · the four beats tell the product's own story now
 
 Feedback 07–11, taken as one piece of work rather than five patches: 07 and 08

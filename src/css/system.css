@@ -2264,6 +2264,41 @@ h3{ font-family:var(--fd); }
              0 30px 56px -26px rgb(var(--ink-rgb) / .46);
 }
 
+/* ── where the run lands ─────────────────────────────────────────────
+   It takes the ask's place: the question has done its job by the time the
+   chain finishes, and one object leaving as another arrives keeps three
+   cards from fighting over a 760x545 canvas. Slack's own tokens, so the
+   message reads as Slack and not as one of our surfaces (RULES P1). */
+.wfo--post{
+  /* It takes the ask's exact box, and it lands ON TOP: the newest thing in
+     the picture cannot be under the card that produced it. A 1cqh graze
+     against the card's top edge was the worst of both — either lap or
+     clear (RULES F9). */
+  left:15cqw; top:19cqh; width:min(44cqw, 29rem); z-index:3;
+  overflow:hidden;
+  background:var(--slk-card);
+  border-radius:var(--r-card);
+  box-shadow:0 2px 10px rgb(var(--ink-rgb) / .1), 0 26px 50px -26px rgb(var(--ink-rgb) / .42);
+  --slk-line:#E4E6E9;
+  --slk-ink:#1D1C1D;
+  --slk-mute:#616061;
+  --slk-tint:#F8F8F8;
+  --slk-card:#FFFFFF;
+  transform:translate(-2cqw, 3cqh) scale(.94);
+}
+.wfo--post .slk__bar{ padding:9px 13px; }
+.wfo--post .slk__msg{ padding:9px 13px 13px; }
+.wfo--post .slk__say{ color:var(--slk-ink); }
+/* it arrives only when the runner reaches the last step, and the ask gets
+   out of the way in the same beat */
+.wfsc[data-step="1"] .wfo--run.is-delivered ~ .wfo--post,
+.wfsc[data-step="1"] .wfo--post.is-in{
+  opacity:1; transform:none;
+}
+.wfsc[data-step="1"] .wfo--ask.is-away{
+  opacity:0; transform:translate(-4cqw, -6cqh) rotate(-1.1deg);
+}
+
 /* 1 · the ask ─────────────────────────────────────────────────────── */
 .wfo--ask{
   left:12cqw; top:19cqh; width:min(44cqw, 30rem);
@@ -2377,10 +2412,39 @@ h3{ font-family:var(--fd); }
   box-shadow:0 0 0 .12em var(--paper);
 }
 .wfo__tag--by b{ font-weight:500; color:var(--ink); }
-/* whoever is holding the card lifts out of the pile */
-.wfo__who{ transition:opacity 480ms var(--e-out), transform 620ms var(--e-spring); }
-.wfo__who.is-holding{ transform:translateY(-.34em) scale(1.08); z-index:9; }
-.wfo__who:not(.is-holding){ opacity:.55; }
+/* ── the handover, as ONE moving thing ───────────────────────────────
+   Three avatars each popping and fading in turn is three animations
+   arguing, and the pile's stacking order is DOM order — so the one that
+   rose was still UNDER the one after it, which reads as a glitch rather
+   than a lift. A single halo slides between them instead: one element in
+   motion, spring-eased, the same grammar as the runner on beat 1. The
+   avatars themselves only rise, and nothing changes opacity. */
+.wfo__halo{
+  position:absolute; left:0; top:50%; z-index:1;
+  width:2.1em; height:2.1em; margin-top:-1.05em;
+  border-radius:var(--r-pill);
+  /* A RING, not a blob. Filled and scaled to 1.34 it spilled below the pile
+     onto the caption and read louder than the three faces it was pointing
+     at. Spread on a shadow reaches outside the box without taking layout,
+     and the avatar's own paper seam masks the inner half — so what is left
+     is one thin accent edge. It lifts with whoever it is on. */
+  background:none;
+  box-shadow:0 0 0 .3em color-mix(in srgb, var(--accent-solid) 55%, transparent);
+  transform:translate(var(--hx, 0px), -.3em);
+  opacity:0;
+  transition:transform 620ms var(--e-spring), opacity var(--t-state) var(--e-out);
+  pointer-events:none;
+}
+.wfsc[data-step="3"] .wfo__halo{ opacity:1; }
+/* `.wfsc[data-step="3"] .wfo__who{transform:none}` is the entrance rule and
+   it carries the same specificity as `.wfo__who.is-holding` while sitting
+   later in the file — so the lift never happened at all, which is what read
+   as the rotation being broken. Scoped to the same beat, it wins on the
+   attribute. Stacking is already leftmost-on-top further down; the holder
+   goes above all of them. */
+.wfsc[data-step="3"] .wfo__who.is-holding{
+  transform:translateY(-.3em); z-index:9;
+}
 .wfo__tag--wf{ opacity:0; }
 /* --accent-wash, not --accent-solid: the card is --paper and --paper
    flips, so this label needs the token that flips with it. */
@@ -2472,13 +2536,15 @@ h3{ font-family:var(--fd); }
    uses the product's own word for the share: PUBLIC means inside your
    workspace (`visibilityHelp`). */
 .wfo__chip--go{
-  /* the question and its two answers span the footer, so the row can never
-     be wider than the card it sits in */
+  /* NOT A PILL. A ring-and-shadow bar filling the whole footer reads as a
+     card inside the card, three pixels off its bottom edge. The footer is
+     already a delimited strip — it has the divider above it and the card's
+     own inset — so the question just sits in it as a row: text left,
+     answers right, no surface of its own. */
   right:var(--wfo-pad); justify-content:space-between; white-space:nowrap;
-  gap:.7em; padding:.4em .85em .4em .85em;
-  background:var(--paper); color:var(--ink-soft);
-  box-shadow:0 0 0 1px var(--hairline), 0 6px 18px -12px rgb(var(--ink-rgb) / .5);
-  text-transform:none; letter-spacing:0; font-family:var(--fb); font-size:.8em;
+  gap:.7em; padding:0;
+  background:none; box-shadow:none; color:var(--ink-soft);
+  text-transform:none; letter-spacing:0; font-family:var(--fb); font-size:.82em;
 }
 .wfo__chip--go i{ font-style:normal; color:var(--ink); }
 .wfo__chip--go b{

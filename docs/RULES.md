@@ -158,6 +158,9 @@ Argued in `design-principles.md` §13. Every one of these cost a round.
 | F33 | **Never draw an icon from memory — fetch the path.** And read which icon the component actually renders, not which one sounds right. | Three of four composer icons were wrong: `LayoutTemplate` where the app renders `SwatchBook`, plus two outdated hand-drawn paths. | QA §4z |
 | F34 | **One edge treatment per surface.** A border and a wide shadow together is what makes an outline read heavy. | The unlock note carried a 0.7px ring and `--e-2`'s 54px blur; the platform's Popover has the border and no shadow. | QA §4z |
 | F35 | **A control in a mock is a control.** If it looks live, make it live or make it say why it is not. | The prompt box was a `<p>` pretending to be an input — the first thing anyone does is click in it. | QA §4z |
+| F36 | **A state class must out-specify the resting rule that sets the same property.** Equal specificity plus later position means the state does nothing. | `.wfo__who.is-holding{transform}` lost to `.wfsc[data-step="3"] .wfo__who{transform:none}`; the lift never happened and it read as a broken rotation. | QA §4z |
+| F37 | **A rotation is one moving element, not N elements taking turns.** | Three avatars popping and fading is three animations arguing; a single ring sliding between them is smooth by construction. | QA §4z |
+| F38 | **A journey needs an arrival.** If something travels, something must turn up somewhere. | The five-connector chain lit its last step like the other four and nothing was delivered — the same fault as the save card that flew with no landing row. | QA §4z |
 | F10 | **"Redesign" means replacing the argument, not restyling the wireframe.** When the ask is visual, build it and let them look. | Changing type sizes, spacing and easing on a layout that was never re-decided is decorating. Arguing about quality in prose costs a round and settles nothing. | Process |
 
 ## Process

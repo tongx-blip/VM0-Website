@@ -7,7 +7,7 @@
   const wait = ms => new Promise(r=>setTimeout(r,ms));
   const cv = document.querySelector('.wfsc__cv').getBoundingClientRect();
   const sc = document.getElementById('wfScene');
-  const sel = ['.wfo--ask','.wfo--run','.wfo--team','.wfo--perm','.wfo--list'];
+  const sel = ['.wfo--ask','.wfo--post','.wfo--run','.wfo--team','.wfo--perm','.wfo--list'];
   const pc = (v,t) => Math.round(v/t*100);
   const out = [];
   for (const step of ['1','2','3','4']) {

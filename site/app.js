@@ -692,9 +692,17 @@
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var chainAt = 0, chainTimer = null, handAt = 0, handTimer = null;
 
+  var askCard = doc.querySelector('.wfo--ask');
+  var postCard = doc.querySelector('.wfo--post');
+
   function chainTo(i) {
     if (!runner || !runSteps.length) return;
     chainAt = i % runSteps.length;
+    /* the last step is a DELIVERY, not one more row lighting up: the ask
+       steps aside and the message turns up in #growth */
+    var landed = chainAt === runSteps.length - 1;
+    if (postCard) postCard.classList.toggle('is-in', landed);
+    if (askCard) askCard.classList.toggle('is-away', landed);
     runSteps.forEach(function (li, n) {
       li.classList.toggle('is-live', n === chainAt);
       li.classList.toggle('is-done', n < chainAt);
@@ -709,24 +717,38 @@
   }
 
   function chainRun(on) {
-    if (chainTimer) { clearInterval(chainTimer); chainTimer = null; }
+    if (chainTimer) { clearTimeout(chainTimer); chainTimer = null; }
     if (runCard) runCard.classList.toggle('is-running', !!on);
     if (!on) {
       /* clear both classes — `chainTo(0)` would leave row 0 live, and a live
          row hides its own connector mark, so the Gmail step simply vanished
          on every beat after the first. */
       runSteps.forEach(function (li) { li.classList.remove('is-live', 'is-done'); });
+      if (postCard) postCard.classList.remove('is-in');
+      if (askCard) askCard.classList.remove('is-away');
       return;
     }
     if (reduced) { chainTo(runSteps.length - 1); return; }
     chainTo(0);
-    chainTimer = setInterval(function () { chainTo(chainAt + 1); }, 1150);
+    /* the landing holds for two steps' worth before the loop restarts —
+       an arrival that leaves as fast as a step is not an arrival */
+    var tick = function () {
+      var last = chainAt === runSteps.length - 1;
+      chainTo(chainAt + 1);
+      chainTimer = setTimeout(tick, last ? 1150 : (chainAt === runSteps.length - 1 ? 2400 : 1150));
+    };
+    chainTimer = setTimeout(tick, 1150);
   }
+
+  var halo = doc.querySelector('.wfo__halo');
 
   function handTo(i) {
     if (!faces.length) return;
     handAt = i % faces.length;
     faces.forEach(function (f, n) { f.classList.toggle('is-holding', n === handAt); });
+    /* offsetLeft, not a rect: the scene carries a fit-to-frame scale and a
+       rect would fold it into the number */
+    if (halo) halo.style.setProperty('--hx', faces[handAt].offsetLeft + 'px');
     if (byTag) {
       var f = faces[handAt];
       var img = f.querySelector('img');
