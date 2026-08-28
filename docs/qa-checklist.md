@@ -1950,6 +1950,19 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
   from the layout — no JS measurement, and nothing to re-derive when the split
   changes.
 
+- **Every number on the page is traceable to something visible near it.** Read
+  values off the scene rather than choosing plausible ones: its messages, its
+  connector cards, the difference between two timestamps in the thread. A
+  figure that cannot be traced is decoration with a number on it.
+
+- **`data-count` carries the DISPLAY string, separators and all.** `countUp()`
+  parses the digits out for the maths and writes the attribute back as the
+  final text, so stripping the comma to make it parse leaves "1,111" reading
+  "1111" once the animation ends.
+
+- **`<i>` is italic by default.** A numeral wrapped in one renders oblique
+  under an upright picture unless the component says `font-style:normal`.
+
 ## 10. Publish
 
 ```bash

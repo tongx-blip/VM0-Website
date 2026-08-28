@@ -4480,7 +4480,8 @@ h3{ font-family:var(--fd); }
   --o-pad:var(--tile-pad);                 /* 20/32 · inside a panel     */
   --o-r:var(--r-section);                  /* 16 · every panel's corner  */
   --o-fill:var(--tile);                    /* the reference's panel grey */
-  --o-h:clamp(420px, 40vw, 553px);         /* 553 · the row's height     */
+  --o-h:calc(clamp(420px, 40vw, 553px) + var(--o-mh));
+  --o-mh:clamp(52px, 5vw, 74px);           /* the outcome strip          */
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   /* the frame's own measurements */
   --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
@@ -4554,8 +4555,10 @@ h3{ font-family:var(--fd); }
      its own content, so the moment the typing row appeared the whole app
      grew 62px and its last message crossed the composer — at every width,
      which is what says it is a sizing fault and not an arithmetic one. The
-     stage sets the height; the window's job is to take it and clip. */
-  grid-template-rows:minmax(0,1fr);
+     stage sets the height; the window's job is to take it and clip.
+     The second track is the outcome strip and takes only what it needs. */
+  grid-template-rows:minmax(0,1fr) auto;
+  row-gap:clamp(14px, 1.6vw, 22px);
   align-items:stretch;
   min-width:0;
 }
@@ -4591,6 +4594,79 @@ h3{ font-family:var(--fd); }
   transition:transform 760ms var(--e-spring),
              clip-path 760ms var(--e-out);
 }
+
+/* ── what the run produced ─────────────────────────────────────────
+   Tong: *"如果下边的data和每个tab是有联系的，那这几个数据你觉得应该怎么放？"*
+
+   ON THE FRAME, NOT UNDER IT. They were three grey blocks in a row below
+   the stage, which is the reading feedback 05 called 太多层 — and once the
+   numbers belong to a tab, a strip floating on the page under a frame is
+   saying they belong to the page. Standing them on the frame's own ground
+   makes them part of the run, and the tab switch changes them for free:
+   every scene ships its own, so there is no JS to keep in sync.
+
+   AND THEY LAND WITH THE ARTIFACT. These are what the run produced, so
+   they arrive when it is finished, on the same `.is-landed` cue as the page
+   it shipped — not before it, which would be the answer turning up before
+   the work.
+
+   `clip-path`, not opacity: this is text, on a loop, and it is the fault
+   N3 exists for. */
+.ometrics{
+  display:flex; align-items:baseline;
+  flex-wrap:wrap;
+  gap:clamp(14px, 1.8vw, 30px) clamp(20px, 2.6vw, 44px);
+  list-style:none; margin:0; padding:0 clamp(2px, .6vw, 8px);
+  min-width:0;
+}
+.ometrics li{
+  display:flex; flex-direction:column-reverse; gap:4px;
+  min-width:0;
+}
+.ometrics span{
+  font-family:var(--fm); font-size:var(--t-mono);
+  letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-mute);
+  white-space:nowrap;
+}
+.ometrics b{
+  display:flex; align-items:baseline; gap:.18em;
+  /* `<i>` is italic by default and the numeral is in one, so the whole
+     strip rendered oblique — a slanted figure under an upright picture. */
+  font-style:normal;
+  font-family:var(--fd);
+  font-weight:500; line-height:1;
+  letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+  color:var(--ink);
+  font-size:var(--t-h);
+}
+.ometrics i,.ometrics em{ font-style:normal; }
+.ometrics em{
+  font-size:var(--t-sm); font-weight:400; color:var(--ink-soft);
+}
+/* THE FIRST ONE LEADS. Tong: *"你可能得差异化的放一下数据"* — three values at
+   one size under a picture is the same template the old row was, wearing
+   different numbers. The lead is the figure the scene is actually about;
+   the others are what it took to get there. */
+.ometrics li.is-lead b{
+  font-size:var(--t-d3);
+  letter-spacing:-.04em;
+}
+.ometrics li.is-lead span{ color:var(--ink-soft); }
+
+.ostage.is-live .ometrics li{
+  clip-path:inset(0 0 100% 0);
+  transform:translateY(6px);
+  transition:clip-path 460ms var(--e-out), transform 520ms var(--e-out);
+  transition-delay:calc(var(--mi, 0) * 70ms);
+}
+.ostage.is-live.is-landed .ometrics li{
+  clip-path:inset(0 0 0 0);
+  transform:none;
+}
+.ometrics li:nth-child(2){ --mi:1; }
+.ometrics li:nth-child(3){ --mi:2; }
 
 /* ── the opening beat: centred, then the page arrives ──────────────
    Tong: *"用户刚切到一个tab上以后，connector和对话窗口居中，当对话结束后，

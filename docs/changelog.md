@@ -451,6 +451,80 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · the numbers belong to the tab, so they moved onto the frame
+
+Feedback 05 on the board — 「这个太多层了 … 每一个场景下的数字都不一样」 — had its
+layering half done and its data half open. Tong: *"如果下边的data和每个tab是有联系
+的，那这几个数据你觉得应该怎么放？而且你可能得差异化的放一下数据。切换tab后数据也
+需要变"*
+
+### Where they go
+
+**On the frame, not under it.** Three grey blocks in a row below the stage was
+the reading feedback 05 called 太多层 in the first place — and once the numbers
+belong to a tab, a strip floating on the page beneath the frame is saying they
+belong to the *page*. The frame takes a second grid row (`minmax(0,1fr) auto`)
+and the strip stands on its own ground; `--o-h` grows by the strip's height so
+nothing above it shrinks. The old `.metrics` row is gone.
+
+**They land with the artifact.** These are what the run produced, so they arrive
+on the same `.is-landed` cue as the page it shipped, staggered 70ms apart —
+not before it, which would be the answer turning up before the work. Revealed
+with `clip-path`, because this is text on a loop and that is the fault N3 exists
+for.
+
+**And the switch is free.** Every scene ships its own strip, so there is no JS
+keeping data in sync with a tab — the markup that changes is the markup that
+already changes.
+
+### What they say
+
+**Every value is already on screen in its own scene** (K10). Nothing is invented
+and nothing is a plausible-looking round number:
+
+| tab | | | |
+| --- | --- | --- | --- |
+| Storefront Launch | Brief to live **7 min** | Room tiles built **3** | Waiting on you **1 draft** |
+| Ad Campaign | Sessions reviewed **10,220** | Budget moved **$183** | Ask to live **19 min** |
+| Lead Scoring | Leads scored **12** | Tier A queued **4** | |
+| Incident Triage | Events grouped **1,111** | Root causes **8** | Issues opened **2** |
+| Spec Writing | Backlog issues linked **6** | Spec filed **1 page** | |
+| Team Digest | Posted **Mondays 09:00** | In the channel **24** | |
+| Board Deck | Slides rebuilt **8** | Refreshed **nightly** | |
+
+1,111 events and eight root causes are what Okou says in `#incident-checkout`.
+$183 is the figure in the Meta draft *and* on the dashboard beside it. The
+durations are the difference between two timestamps in the thread above them —
+9:24 → 9:31, 11:02 → 11:21.
+
+**The count varies on purpose** (K11). Three scenes have three facts worth
+stating and four have two; padding the short ones to a fixed trio is exactly
+what made the old row read as a template wearing different numbers. And the
+first one leads at display size — *"你可能得差异化的放一下数据"* — because three
+values at one size is the same template again.
+
+The footnote stays. The values are traceable, but they are still illustrative.
+
+### Two on the way
+
+**`data-count` had its separators stripped.** I wrote `data-count="1111"` so it
+would parse, but `countUp()` parses the digits out itself and writes the
+attribute back as the final text — so "1,111" animated up and landed as "1111".
+It carries the display string now, `$` and comma included, which the function
+already handles (`$0 … $183`).
+
+**`<i>` is italic.** The numeral is in one, so the whole strip rendered oblique
+under an upright picture until the component said otherwise.
+
+**Gate.** Sweep at 7 widths × 7 scenes × 5 timestamps with new assertions that
+the strip stays inside the frame, never overlaps a window, and is not collapsed
+once landed — clean. One height across all seven tabs (625). axe 0 across 18
+samples in both themes plus reduced motion, where all three rows are visible and
+unclipped. `audit.js` §1/§5/§6/§8/§9 PASS. `tokens.py` 0, `check-html.py`
+balanced, `rules.py` all pointers resolve.
+
+---
+
 ## 2026-08-28 · the payoff moves inside the frame, and the row opens centred
 
 Tong: *"如果左边把connector和对话流结合了，那右边的结果我觉得也应该放进这个渐变色

@@ -394,6 +394,85 @@ def scene_span(html, key):
     return span_of(html, m.start(), 'div')
 
 
+
+# ── what the run actually produced, per scene ─────────────────────────
+# Tong, on feedback 05: *"每一个场景下的数字都不一样"*, and then *"如果下边的
+# data和每个tab是有联系的，那这几个数据你觉得应该怎么放？… 切换tab后数据也需要变"*.
+#
+# EVERY VALUE HERE IS ALREADY ON SCREEN IN ITS OWN SCENE. Nothing is
+# invented and nothing is a plausible-looking round number: 1,111 events and
+# eight root causes are what Okou says in #incident-checkout, $183 is the
+# figure in the Meta draft, and the durations are the difference between two
+# timestamps in the thread above them. A metric that cannot be traced to the
+# picture beside it is decoration with a number on it.
+#
+# The count varies on purpose. Three scenes have three facts worth stating
+# and four have two; padding the short ones to a fixed trio is what made the
+# old row read as a template — the same three shapes under every tab.
+#
+# (label, value, unit). `num` marks the ones that count up; a cadence is not
+# a quantity and must not be animated as one.
+METRICS = {
+    'marketing': [
+        ('Brief to live', '7', 'min'),        # 9:24 ask -> 9:31 in thread
+        ('Room tiles built', '3', ''),        # "hero, the story, three room tiles"
+        ('Waiting on you', '1', 'draft'),     # "unsent, yours to send"
+    ],
+    'ads': [
+        ('Sessions reviewed', '10,220', ''),
+        ('Budget moved', '$183', ''),
+        ('Ask to live', '19', 'min'),         # 11:02 -> 11:21
+    ],
+    'sales': [
+        ('Leads scored', '12', ''),
+        ('Tier A queued', '4', ''),
+    ],
+    'engineering': [
+        ('Events grouped', '1,111', ''),
+        ('Root causes', '8', ''),
+        ('Issues opened', '2', ''),
+    ],
+    'product': [
+        ('Backlog issues linked', '6', ''),
+        ('Spec filed', '1', 'page'),
+    ],
+    'ops': [
+        ('Posted', 'Mondays', '09:00'),
+        ('In the channel', '24', ''),
+    ],
+    'leadership': [
+        ('Slides rebuilt', '8', ''),
+        ('Refreshed', 'nightly', ''),
+    ],
+}
+
+
+def metrics(key):
+    """The strip that lands with the artifact.
+
+    The first is the LEAD — the number the scene is actually about — and it
+    is set at display size; the rest support it. Three identical boxes is
+    what feedback 05 called 太多层 in the first place, and evening them out
+    again under a per-scene value would have kept the shape that was wrong.
+    """
+    rows = ''
+    for i, (label, value, unit) in enumerate(METRICS[key]):
+        # only a quantity counts up; "Mondays" and "nightly" are not
+        num = value.replace(',', '').replace('$', '').isdigit()
+        # `data-count` carries the DISPLAY string, separators and all.
+        # countUp() parses the digits out of it for the maths and writes
+        # `target` back at the end, so stripping the comma here is what left
+        # "1,111" reading "1111" once the animation finished.
+        rows += ('<li%s><span>%s</span><b><i%s>%s</i>%s</b></li>'
+                 % (' class="is-lead"' if i == 0 else '',
+                    label,
+                    ' data-count="%s"' % value if num else '',
+                    value,
+                    '<em>%s</em>' % unit if unit else ''))
+    return ('<ul class="ometrics" aria-label="What this run produced">%s</ul>'
+            % rows)
+
+
 def restage(html, key):
     """Recompose one scene's `.ostage` as ONE FRAME plus the artifact window.
 
@@ -412,6 +491,7 @@ def restage(html, key):
     _, b = span_of(html, a, 'div')
     seg = html[a:b]
 
+    seg = re.sub(r'\s*<ul class="ometrics".*?</ul>', '', seg, flags=re.S)
     conn = block(seg, r'<aside class="ostage__conn"', 'aside')
     chat = block(seg, r'<div class="ochat[^"]*"', 'div')
     win = block(seg, r'<figure class="tplwin"', 'figure')
@@ -440,6 +520,7 @@ def restage(html, key):
            + I + '    </div>'
            + I + '    ' + win
            + I + '  </div>'
+           + I + '  ' + metrics(key)
            + I + '</div>'
            + '\n          </div>')
     return html[:a] + new + html[b:]
