@@ -6,6 +6,126 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · the security section stops being a second product tour
+
+Tong: *"这个 section 可以不做滚动的五屏的交互。这种交互方式挺重。然后我们就想把它
+缩减成一屏，然后在一屏上可以把这些内容讲完。"* — and feedback 16–20 on the board.
+
+### What it measured
+
+Before touching anything: `#control` was **4.05 screens and 23.6% of the page's
+entire scroll** — the longest section on the page, longer than `#workflows`,
+which carries the product's main story. It was also the only section on the page
+with a CTA per item: five of them, against the one ask in the closing band. That
+is the mechanism behind "太重" — not the styling of any beat, but a reassurance
+built at the scale of a feature tour. It is now **1.25 screens and 10.7%**, and
+the page lost 320px of document height in the process.
+
+### What went, and what that cost
+
+Five beats became two claims and a footnote.
+
+| was | now |
+|---|---|
+| 1 Granular permissions | the dialog, and the first caption |
+| 2 Approval gates | the same dialog — it *is* the approval gate |
+| 3 Isolated execution | the cloud browser card, and the second caption |
+| 4 Credentials stay out of the run | **gone.** "这个也太多了，不需要表达" |
+| 5 Traceable by default | its sentence, as the closing `.note`. "不需要重点提" |
+
+The two deletions are not the same deletion, and the difference is in Tong's own
+words: 18 says *don't express it*, 19 says *don't make a point of it*. So the
+network card is gone without trace and the trail keeps its claim as a clause.
+
+### The grant dialog is the product's, to the pixel
+
+Feedback 16 asked for the real card. `app.vm0.ai` is behind a login, so it was
+read out of `views/permission-allow/permission-allow-page.tsx` instead of
+approximated: 548px shell at `rounded-[20px]`, the 500px column at `px-[26px]`,
+the target pill's `pl-2 pr-8 py-3`, the 40px icon slot at `rounded-[10px]`, the
+`h-8 w-[116px]` duration select and its real default (**1 hour**, not 24), the
+`h-9 rounded-[10px]` confirm. The connector, scope and description are the real
+ones — `google-ads` / `campaign-budgets.write` / "Create and update campaign
+budgets." — pulled from the connector catalog, and the agent avatar is Okou's
+own `svg:r1s0h1c5f4h`, composited from the three layers the app stacks.
+
+Three deliberate deviations, all documented at the rules: the scope description
+**wraps** where the product truncates (a card whose whole job is to be read must
+not end in an ellipsis); the scope chip and the tick take page tokens because
+`sky-700` and `green-600` have no dark sibling here; and every in-card tint is
+**`--tile`, not `--wash`**. That last one is the interesting bug — `--wash` is
+the grey the *page* sits on and it goes DARKER than `--paper` in dark mode, so
+the target pill, the icon slot and the scope chip all rendered as holes punched
+in the card. `--tile` is the token for a surface inside a card and it inverts
+the right way. The comment saying exactly this has been in `system.css` since
+the KPI row learned it.
+
+### 17 is a cloud browser, not a cloud computer
+
+"用云端电脑来表达" has a trap in it: the product's **Computer Use** is the
+user's *own* Mac ("Requires an Apple silicon Mac"), so drawing it as the place
+an isolated run happens would have been a product lie. The real cloud machine is
+the **Cloud browser** — "an isolated cloud browser profile", with a live view the
+user can take over. So the card is `BrowserSessionCard`: its own 400px cap,
+`rounded-lg`, a 40px title row over a 16:10 preview, status as a 6px dot beside
+an 11px label. The preview is a page Okou built, not a stock screenshot of
+somebody else's product.
+
+### Two layout faults found by looking
+
+**The side column was floating in the middle of the dialog.** Centred, its three
+items stopped 100px above the dialog's floor and the section ended on a hole.
+`justify-content:space-between` hangs the first caption off the top edge and the
+last off the bottom, so the two halves read as one block; the gap is the floor,
+not the spacing.
+
+**A 1fr column is not the card's width.** The browser card caps itself at 400px
+the way the product does, so a leftover-track column left it against 200px of
+nothing with the captions running past it on both sides. The column is now the
+card's width and the pair is centred in the section.
+
+**At 390 the scope chip was destroying its own sentence.** The chip is a fixed
+22-character object and the sentence beside it is elastic, so the sentence came
+out as four two-word lines wrapped *around* the chip. The chip takes its own
+line now, at the page's 11px mono floor — at 12px it is 171px wide on a 170px
+line and broke at its own hyphen, and a scope name that wraps is not a scope
+name.
+
+### A latent fault in the build, surfaced
+
+`tools/build-css.py` aborted on `614 /* vs 615 */`. Not this change: `split_rules`
+counted braces inside **comments**, and several notes in these sources quote the
+rule they are about — `` `.wfo__who{transform:none}` ``. One such comment walked
+the depth off by one, the splitter cut a block mid-comment, and the halves came
+back out unbalanced. It only appears when an unrelated edit changes which rules
+survive the prune, so it reads as the edit's fault. The splitter skips comments
+now; at HEAD the fix is a no-op except that it stops mangling those two
+comments, which were being cut and rejoined every build.
+
+### Also gone
+
+`.ctrl__stage/__frame/__win/__steps/__step/__spot/__index/__go`, `.perms*`,
+`.cbox`, `.cgate`, `.cnet`, `.ctrail`, the ten `spot-*.png`, and 173 lines of
+`app.js` — including the `--ctrl-h` self-measuring loop (RULES F23), which was
+the most fragile script on the page. A stray `}` that had been sitting in
+`system.css` since some earlier deletion went with it; the file balances now.
+
+### Gate
+
+NO-RULES pass · TYPE-SCALE identical to HEAD, no new page-level size ·
+composition rule holds · obvious-bug sweep pass · reduced motion pass ·
+token hygiene at parity (`--e-2` was already unused) · axe **0 violations**
+across 14 runs light and 5 dark · 390 and 1440, both modes · no broken images,
+no horizontal overflow.
+
+### Still open
+
+The captions are assembled from the existing beat copy — nothing new was
+written, but two sentences were spliced and the three concept names became
+inline lead-ins. Wording is Tong's, so those want a read.
+
+---
+
 ## 2026-08-28 · the product window is read out of the product, not remembered
 
 Tong: *"1，怎么不同 tab 下边，高度还不一样呢？2. 你做我们自己的产品，怎么差的这么

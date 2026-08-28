@@ -33,8 +33,8 @@
   // unfurl's left bar, a composer field and the panel's own window edge.
   // Every one is another application's chrome, which is the exception S4
   // states and the same reason `.vs__viz` is already on this list.
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.mock,.appui,.tplwin,.tpl,.step,' +
-               '.vs__viz,.wfo,.pbox,.ochat';
+  const MOCK = '.absui,.slackui,.flowui,.okoui,.mock,.appui,.tplwin,.tpl,.step,' +
+               '.vs__viz,.wfo,.pbox,.ochat,.pgrant,.cbro';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
@@ -62,10 +62,10 @@
      name. A mock draws the app and keeps the APP's type scale (RULES P1), so
      counting its internals as page type made the census report 24 sizes and
      tell nobody anything. Missing before: .arti .tsh .lane .vsui .wfsc .wfo
-     .par .ochat .ochip .ostage .cbox .cgate .cnet .ctrail .vs__viz. */
-  const MOCK = '.absui,.slackui,.flowui,.perms,.okoui,.acard,.a2a,.scene__shot,'
+     .par .ochat .ochip .ostage .pgrant .cbro .vs__viz. */
+  const MOCK = '.absui,.slackui,.flowui,.okoui,.acard,.a2a,.scene__shot,'
     + '.appui,.tplwin,.tpl,.pbox,.arti,.tsh,.lane,.vsui,.wfsc,.wfo,.par,'
-    + '.ochat,.ochip,.ostage,.cbox,.cgate,.cnet,.ctrail,.vs__viz,.mock';
+    + '.ochat,.ochip,.ostage,.pgrant,.cbro,.vs__viz,.mock';
   const sizes = {};
   document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
     if (el.closest(MOCK) || !el.textContent.trim()) return;

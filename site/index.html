@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Noto+Sans:wght@400;500;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?r=98a48ff7">
+<link rel="stylesheet" href="styles.css?r=17f2ace0">
 </head>
 <body>
 
@@ -833,134 +833,58 @@
   </p>
 
   <div class="ctrl">
-    <div class="ctrl__stage">
-      <div class="ctrl__frame" id="ctrlframe" data-beat="1">
-      <div class="ctrl__win">
-
-        <span class="cbox" aria-hidden="true"><i>run · microVM</i></span>
-
-<div class="perms reveal">
-        <ul class="perms__list">
-          <li>
-            <img src="assets/connectors/google-drive_marketing.svg?v=714a38f4" alt="" width="24" height="24">
-            <span class="perms__what"><b>Google Drive</b><i>Read files in a shared folder</i></span>
-            <em class="state state--ok">Allowed</em>
-          </li>
-          <li>
-            <img src="assets/connectors/gmail.svg?v=f7d1336c" alt="" width="24" height="24">
-            <span class="perms__what"><b>Gmail</b><i>Save a draft</i></span>
-            <em class="state state--ok">Allowed</em>
-          </li>
-          <li>
-            <img src="assets/connectors/gmail.svg?v=f7d1336c" alt="" width="24" height="24">
-            <span class="perms__what"><b>Gmail</b><i>Send mail</i></span>
-            <em class="state state--wait">Denied</em>
-          </li>
-          <li>
-            <img src="assets/connectors/notion.svg?v=a6ffb7a4" alt="" width="24" height="24">
-            <span class="perms__what"><b>Notion</b><i>Add content to a page</i></span>
-            <em class="state state--ok">Allowed</em>
-          </li>
-          <li>
-            <img src="assets/connectors/slack.svg?v=55532dd8" alt="" width="24" height="24">
-            <span class="perms__what"><b>Slack</b><i>Post to a channel</i></span>
-            <em class="state state--ok">Allowed</em>
-          </li>
-          <li>
-            <img src="assets/connectors/github_marketing.svg?v=9cedfc6c" alt="" width="24" height="24">
-            <span class="perms__what"><b>GitHub</b><i>Open a pull request</i></span>
-            <em class="state state--off">Not granted</em>
-          </li>
-        </ul>
-        <div class="ctrail" aria-hidden="true">
-          <p class="ctrail__r"><span></span><b>Run started — weekly summary</b><em>3m</em></p>
-          <p class="ctrail__r"><span></span><b>Sandbox created · microVM</b><em>3m</em></p>
-          <p class="ctrail__r"><span></span><b>Opened the shared Drive folder</b><em>2m</em></p>
-          <p class="ctrail__r"><span></span><b>Read 14 files</b><em>2m</em></p>
-          <p class="ctrail__r"><span></span><b>Summarised the week</b><em>1m</em></p>
-          <p class="ctrail__r"><span></span><b>Checked the permission list</b><em>50s</em></p>
-          <p class="ctrail__r"><span></span><b>Drafted the reply</b><em>40s</em></p>
-          <p class="ctrail__r ctrail__r--wait"><span></span><b>Send mail — approved by Maya</b><em>12s</em></p>
-          <p class="ctrail__r"><span></span><b>Posted the summary to #ops</b><em>8s</em></p>
-          <p class="ctrail__r"><span></span><b>Credentials released</b><em>1s</em></p>
-          <p class="ctrail__r"><span></span><b>Sandbox destroyed</b><em>0s</em></p>
+    <div class="ctrl__dialog reveal">
+      <div class="pgrant">
+        <p class="pgrant__brand">Okou</p>
+        <div class="pgrant__col">
+          <p class="pgrant__hi">Hey Maya, you’re updating your permissions for Okou.</p>
+          <p class="pgrant__who">
+            <img src="assets/brand/agent-okou.svg?v=435cf1b5" alt="" width="40" height="40">Okou
+          </p>
+          <p class="pgrant__lbl">Would like to</p>
+          <div class="pgrant__perm">
+            <p class="pgrant__conn">
+              <span class="pgrant__mark"><img src="assets/connectors/google-ads.svg?v=687a9327" alt="" width="20" height="20"></span>Google Ads
+            </p>
+            <p class="pgrant__act">
+              <svg class="pgrant__tick" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              <span>Create and update campaign budgets.</span>
+              <code>campaign-budgets.write</code>
+            </p>
+          </div>
+          <p class="pgrant__dur"><span>Duration</span><em>1 hour<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></em></p>
         </div>
-        <p class="perms__note">Every action a run takes is checked against this agent’s list before it leaves the
-          sandbox. Okou can draft the mail, but it cannot send it.</p>
-      </div>
-
-        <div class="cgate" aria-hidden="true">
-          <p class="cgate__t">Okou is asking to <b>send mail</b> as you</p>
-          <p class="cgate__pill"><img src="assets/brand/avatar-2.png?v=22fa90af" alt="" width="30" height="30">Maya Chen</p>
-          <p class="cgate__row"><span>Gmail · Send mail</span><em>For this run</em></p>
-          <p class="cgate__btns"><span class="cgate__deny">Deny</span><span class="cgate__allow">Allow</span></p>
-        </div>
-
-        <div class="cnet" aria-hidden="true">
-          <p class="cnet__h">Network · this run</p>
-          <p class="cnet__r"><i>GET</i><b>drive.googleapis.com</b><em class="state state--ok">token attached</em></p>
-          <p class="cnet__r"><i>POST</i><b>gmail.googleapis.com</b><em class="state state--ok">token attached</em></p>
-          <p class="cnet__r"><i>POST</i><b>api.unknown-host.dev</b><em class="state state--off">blocked</em></p>
-          <p class="cnet__f">The run never sees a token. It is attached here, on the way out.</p>
-        </div>
-
-        
-
-      </div>
-        <ol class="ctrl__index" aria-hidden="true">
-          <li></li><li></li><li></li><li></li><li></li>
-        </ol>
+        <p class="pgrant__go"><span>Confirm</span></p>
       </div>
     </div>
 
-    <div class="ctrl__steps">
-      <article class="ctrl__step" data-beat="1">
-        <span class="ctrl__spot" aria-hidden="true"></span>
-        <h3>Granular permissions</h3>
-        <p>Grant access one connector and one action at a time, per Agent. Reading a shared
-          Drive folder and saving a Gmail draft are two separate grants, so the Agent that
-          writes your weekly summary never quietly gains the ability to send it. Nothing is
-          reachable because something else already had it.</p>
-        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Set up an Agent</a></p>
-      </article>
-      <article class="ctrl__step" data-beat="2">
-        <span class="ctrl__spot" aria-hidden="true"></span>
-        <h3>Approval gates</h3>
-        <p>Sensitive writes wait for an explicit approval instead of running on their own. The
-          request names the connector, the action and how long the grant lasts, and it is a
-          person who answers it — not a rule buried in a settings page six months ago. Deny
-          once and the run carries on without that step.</p>
-        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Try an approval gate</a></p>
-      </article>
-      <article class="ctrl__step" data-beat="3">
-        <span class="ctrl__spot" aria-hidden="true"></span>
-        <h3>Isolated execution</h3>
-        <p>Each run gets its own microVM: a fresh machine with nothing left over from the last
-          task and no route to another run’s files. When the work finishes the machine is
-          destroyed, so there is no long-lived box sitting somewhere accumulating your data
-          between jobs.</p>
-        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Run your first task</a></p>
-      </article>
-      <article class="ctrl__step" data-beat="4">
-        <span class="ctrl__spot" aria-hidden="true"></span>
-        <h3>Credentials stay out of the run</h3>
-        <p>Tokens are attached at the network layer on the way out, so the Agent never reads
-          them and cannot copy one into a file, a log or a message. Calls to hosts you have not
-          connected do not get a token — they do not leave the sandbox at all.</p>
-        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">Connect a tool</a></p>
-      </article>
-      <article class="ctrl__step" data-beat="5">
-        <span class="ctrl__spot" aria-hidden="true"></span>
-        <h3>Traceable by default</h3>
-        <p>Every run keeps an activity trail: what was read, what was written, who approved it
-          and when. You can replay any run after the fact instead of taking its word for it —
-          and the engine underneath is open source, so the behaviour can be checked rather than
-          believed.</p>
-        <p class="ctrl__go"><a class="btn btn--ghost btn--sm" href="#cta">See a run trail</a></p>
-      </article>
+    <div class="ctrl__side">
+      <p class="ctrl__cap reveal">
+        <b>Granular permissions.</b> Grant access one connector and one action at a time, per
+        Agent. Sensitive writes wait for an explicit approval instead of running on their own —
+        and it is a person who answers it, not a rule buried in a settings page six months ago.
+      </p>
+
+      <div class="cbro reveal">
+        <p class="cbro__bar"><b>Cloud browser</b><em><i></i>Live</em></p>
+        <span class="cbro__view">
+          <img src="assets/artifact/ads-v1-card.jpg?v=78b91d4e" alt="" width="760" height="487" loading="lazy">
+        </span>
+      </div>
+
+      <p class="ctrl__cap reveal">
+        <b>Isolated execution.</b> Each run gets its own microVM: a fresh machine with nothing
+        left over from the last task and no route to another run’s files. When the work
+        finishes the machine is destroyed.
+      </p>
     </div>
   </div>
 
+  <p class="note reveal">
+    Every run keeps an activity trail: what was read, what was written, who approved it and
+    when — and the engine underneath is open source, so the behaviour can be checked rather
+    than believed.
+  </p>
 </section>
 
 <!-- ═══════════════ 04 / POSITIONING ═══════════════ -->
@@ -1238,6 +1162,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=ce180140"></script>
+<script src="app.js?r=1aec62dc"></script>
 </body>
 </html>

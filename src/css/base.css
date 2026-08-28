@@ -39,13 +39,12 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --r-pill:  999px;
 }
 .panel{ border-radius:var(--r-panel); }
-.mock,.card,.stage-card,.feat,.vs,.quote,.artifact,.mock__input,
-.perms{ border-radius:var(--r-card); }
+.mock,.card,.stage-card,.feat,.vs,.quote,.artifact,.mock__input{ border-radius:var(--r-card); }
 .btn,.nav__signin,.nav__burger{ border-radius:var(--r-btn); }
 /* left square on purpose: rules, dividers, underlined links and the
    bare eyebrow are not surfaces, so a radius would only blur them */
 .nav__logo,.nav__links,.nav__auth,.chip,
-.metrics li,.perms__list li{ border-radius:0; }
+.metrics li{ border-radius:0; }
 .tag,.pill-mini,.ws__badge{ border-radius:var(--r-pill); }   /* .state's radius belongs to the design layer */
 .character img,.msg__av,.quote__av{ border-radius:50%; }
 
@@ -759,50 +758,187 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .control__stage .shot img{ max-width:420px; margin-inline:auto; }
 .control__stage .shot figcaption{ text-align:center; }
 
-/* ─────────────── connector permissions ───────────────
-   Hand-built, not a screenshot: one row per connector, the scope it was
-   granted, and the state that scope is in. */
-.perms{
+/* ─────────────── the grant dialog, 1:1 from the product ───────────────
+   This is `PermissionAllowPage` in `turbo/apps/platform`, the page a
+   person actually lands on when Okou asks for a scope — not an
+   illustration of one. Read out of the component rather than a
+   screenshot, because app.vm0.ai is behind a login:
+
+     shell        548px = w-[500px] + px-6, rounded-[20px], py-12, gap-10
+     greeting     text-lg / leading-7 / font-medium, centred
+     target pill  rounded-lg, bg-muted/30, pl-2 pr-8 py-3, 40px avatar
+     grant card   rounded-lg, px-4 py-3, 40px icon slot at rounded-[10px]
+     duration     h-8 w-[116px] select, default value 1h
+     confirm      h-9, rounded-[10px], full width
+
+   The connector, the scope name and its description are the real ones —
+   `google-ads` / `campaign-budgets.write` / "Create and update campaign
+   budgets." — read from the connector catalog, not invented. The avatar
+   is Okou's own (`svg:r1s0h1c5f4h`), composited from the three layers the
+   app stacks. Two colours deviate on purpose: the product paints the
+   scope chip sky-700 and the tick green-600, and neither has a dark
+   sibling on this page, so both take page tokens that do. */
+/* Every tint inside these two mocks is --tile, not --wash. The product
+   paints them `bg-muted/30`, a tint that goes LIGHTER on a dark ground;
+   --wash is the grey the PAGE sits on and in dark mode it is DARKER than
+   --paper, so the target pill, the icon slot and the scope chip all came
+   out as holes punched in the card. --tile is the token for a surface
+   inside a card and it inverts the right way. */
+.pgrant{
+  width:min(548px,100%);
+  display:flex; flex-direction:column; align-items:center; gap:40px;
+  padding:48px 24px;
   border:1px solid var(--hairline);
+  border-radius:20px;
+  background:var(--paper);
+}
+.pgrant__brand{
+  font-size:20px; line-height:24px; font-weight:600;
+  letter-spacing:-.02em; color:var(--ink);
+}
+.pgrant__col{
+  width:min(500px,100%); padding:0 26px;
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+}
+.pgrant__hi{
+  text-align:center;
+  font-size:18px; line-height:28px; font-weight:500; color:var(--ink);
+}
+.pgrant__who{
+  width:100%; display:flex; align-items:center; gap:8px;
+  padding:12px 32px 12px 8px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--tile);
+  font-size:14px; font-weight:500; color:var(--ink);
+}
+.pgrant__who img{
+  width:40px; height:40px; flex:none;
+  border-radius:50%; object-fit:cover; object-position:top;
+}
+.pgrant__lbl{ width:100%; font-size:14px; font-weight:500; color:var(--ink); }
+.pgrant__perm{
+  width:100%; padding:12px 16px;
+  border:1px solid var(--hairline); border-radius:8px;
+}
+.pgrant__conn{
+  display:flex; align-items:center; gap:8px;
+  padding:4px 0 16px;
+  border-bottom:1px solid var(--hairline);
+  font-size:14px; font-weight:500; color:var(--ink);
+}
+.pgrant__mark{
+  width:40px; height:40px; flex:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:10px; background:var(--tile);
+}
+.pgrant__mark img{ width:20px; height:20px; object-fit:contain; }
+.pgrant__act{
+  display:flex; align-items:center; gap:8px;
+  padding:8px 0 0;
+  font-size:14px; color:var(--ink);
+}
+/* The product truncates this line; we let it wrap. `campaign-budgets.write`
+   is a real scope and its sentence is 240px wide in a 210px slot, so the
+   faithful render is "Create and update campaign b…" — a card whose whole
+   job here is to be READ, ending in an ellipsis. Wrapping is the one place
+   this mock leaves the component. */
+.pgrant__act span{ flex:1; min-width:0; }
+.pgrant__tick{
+  width:20px; height:20px; flex:none;
+  stroke:var(--ok-ink); fill:none;
+}
+.pgrant__act code{
+  flex:none; white-space:nowrap;
+  font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:12px;
+  padding:2px 6px;
+  border:1px solid var(--hairline); border-radius:4px;
+  background:var(--tile); color:var(--ink-soft);
+}
+.pgrant__dur{
+  width:100%;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:8px 12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  font-size:14px; font-weight:500; color:var(--ink);
+}
+.pgrant__dur em{
+  flex:none;
+  display:inline-flex; align-items:center; justify-content:space-between;
+  gap:6px; width:116px; height:32px; padding:0 10px;
+  border:1px solid var(--hairline); border-radius:8px;
+  font-style:normal; font-size:12px; font-weight:400; color:var(--ink);
+}
+.pgrant__dur em svg{
+  width:14px; height:14px; flex:none;
+  stroke:var(--ink-mute); fill:none;
+}
+/* Narrow: the scope chip is a fixed 22-character object and the sentence
+   beside it is elastic, so on a 390 screen the sentence was being wrapped
+   into four two-word lines AROUND the chip — "Create / and / u▮ / campaign
+   / budgets." The chip takes its own line under the sentence instead, and
+   the tick moves to the first line of text rather than the middle of it. */
+@media (max-width:560px){
+  .pgrant__act{ flex-wrap:wrap; align-items:flex-start; }
+  .pgrant__tick{ margin-top:1px; }
+  /* 11px, the page's mono floor: at 12px the scope is 171px wide and the
+     line it now has to itself is 170px, so it broke at its own hyphen —
+     `campaign-` over `budgets.write`. A scope name that wraps is not a
+     scope name. */
+  .pgrant__act code{
+    flex:0 0 auto; width:auto; font-size:11px;
+    margin:8px 0 0 28px;
+  }
+}
+.pgrant__go{ width:min(500px,100%); padding:0 26px; }
+.pgrant__go span{
+  display:flex; align-items:center; justify-content:center;
+  height:36px; border-radius:10px;
+  background:var(--accent-solid); color:var(--paper-ink);
+  font-size:14px; font-weight:500;
+}
+
+/* ─────────────── the cloud browser card ───────────────
+   `BrowserSessionCard`: the thing the product puts in the thread when a
+   run is working in a machine of ours rather than on your computer. Its
+   own numbers — w-[min(100%,400px)], rounded-lg, a 40px title row over a
+   16:10 preview, and the status as a 6px dot beside an 11px label.
+
+   The preview is a page Okou built and is looking at, so the window has
+   something true in it rather than a stock screenshot of somebody else's
+   product. */
+.cbro{
+  width:min(400px,100%);
+  border:1px solid var(--hairline); border-radius:8px;
   background:var(--paper);
   overflow:hidden;
 }
-.perms__title{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px;
-  padding:15px 20px;
+.cbro__bar{
+  display:flex; align-items:center; gap:8px;
+  min-height:40px; padding:8px 12px;
   border-bottom:1px solid var(--hairline);
-  background:#FAFAF8;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:11px; letter-spacing:.10em; text-transform:uppercase;
-  color:var(--ink-soft);
 }
-.perms__title span{ color:var(--ink-mute); letter-spacing:.06em; }
-.perms__list li{
-  display:grid;
-  align-items:center; gap:14px;
-  padding:15px 20px;
-  border-bottom:1px solid var(--hairline);   /* a rule, so no radius */
-  transition:background var(--t-hover);
+.cbro__bar b{
+  flex:1; min-width:0;
+  font-size:14px; font-weight:500; color:var(--ink);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-.perms__list li:last-child{ border-bottom:0; }
-.perms__list li:hover{ background:#FAFAF8; }
-.perms__list img{ object-fit:contain; }
-.perms__what{ display:flex; flex-direction:column; line-height:1.35; min-width:0; }
-.perms__what b{ font-size:14px; font-weight:600; letter-spacing:-.01em; }
-.perms__what i{ font-style:normal; font-size:12.5px; color:var(--ink-mute); }
-.perms__list code{
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
-  font-size:11px; color:var(--ink-soft);
-  padding:4px 9px;
-  border:1px solid var(--hairline);
-  background:#FAFAF8;
-  white-space:nowrap;
+.cbro__bar em{
+  flex:none; display:inline-flex; align-items:center; gap:6px;
+  font-style:normal; font-size:11px; font-weight:500; color:var(--ok-ink);
 }
-.state--off{ color:var(--ink-mute); border-color:var(--hairline); }
-@media (max-width:520px){
-  .perms__list li{ }
-  .perms__list code{ display:none; }
+.cbro__bar em i{
+  width:6px; height:6px; flex:none;
+  border-radius:50%; background:var(--ok-ink);
+}
+.cbro__view{
+  position:relative; display:block;
+  width:100%; aspect-ratio:16 / 10;
+  overflow:hidden; background:var(--tile);
+}
+.cbro__view img{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:top;
 }
 
 /* ─────────────── Slack, rebuilt to spec ───────────────
@@ -1112,15 +1248,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .slackui__msg:nth-child(3){ animation-delay:.12s; }
 @keyframes slackIn{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
 
-/* every connector mark in this list sits in the same box; the SVGs are
-   cropped to their own ink, so nothing here needs a per-brand correction */
-.perms__list img{ width:26px; height:26px; }
-.perms__note{
-  padding:14px 20px;
-  border-top:1px solid var(--hairline);
-  background:var(--paper-2);
-  font-size:12.5px; line-height:1.6; color:var(--ink-soft);
-}
 
 /* ─────────── Slack: three different message shapes ─────────── */
 .slackui__av--l{ background:#E01E5A; }
@@ -1172,7 +1299,7 @@ a.acard .acard__txt i{ color:var(--ink); }
 .acard--conn .acard__ic{ background:#fff; }
 .acard--conn .acard__txt i{ white-space:normal; line-height:1.4; }
 /* connector marks: percentage-sized SVGs need a fixed box to paint into */
-.acard__ic img,.perms__list img,.tag img,.vs__label img{ width:100%; height:100%; }
+.acard__ic img,.tag img,.vs__label img{ width:100%; height:100%; }
 .acard__ic img{ width:22px; height:22px; }
 .tag img{ width:17px; height:17px; }
 .vs__label img{ width:20px; height:20px; }
@@ -1591,10 +1718,6 @@ a.acard .acard__txt i{ color:var(--ink); }
   text-transform:none; letter-spacing:-.005em; font-size:13px;
 }
 
-/* ── connector authorization, drawn from the real per-agent
-      Authorization tab: breadcrumb, agent header, three tabs,
-      then the rows the firewall actually decides on ── */
-.perms__list{ border-top:1px solid var(--hairline); }
 .slackui,.slackui__main{ color:var(--ink); }
 .nav__burger span{ background:var(--g-300); }
 
@@ -1611,20 +1734,8 @@ a.acard .acard__txt i{ color:var(--ink); }
 .scenes__tab:hover{ background:var(--g-700); border-color:transparent; color:var(--ink); }
 .scenes__tab.is-on{ background:var(--g-200); border-color:var(--g-200); color:var(--paper-ink); }
 
-/* the permission chips and state badges were left square — soften them
-   to match every other control on the page */
-.perms__list code{ border-radius:8px; }
-
 /* the model and connector marquees carry no rules */
 .marquee,.marquee:first-of-type{ border-top:0; border-bottom:0; }
-
-/* the endpoint line stays on one line — a wrapped path reads as broken */
-.perms__what i{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-/* the rows carry no API vocabulary now: connector, the action in plain
-   words, and the decision — three columns, not four */
-.perms__list li{ grid-template-columns:26px minmax(0,1fr) auto; }
-@media (max-width:520px){ .perms__list li{ grid-template-columns:22px minmax(0,1fr) auto; } }
 
 /* ── hero: both buttons sit on one row ── */
 .hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }

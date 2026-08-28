@@ -61,10 +61,24 @@ def markup_classes():
 
 
 def split_rules(css):
-    """Yield (selector, body, whole) for each top-level block."""
+    """Yield (selector, body, whole) for each top-level block.
+
+    Braces inside a COMMENT are not braces. Several notes in these sources
+    quote the rule they are about — `.wfo__who{transform:none}` — and counting
+    those as structure walks the depth off by one for the rest of the file: the
+    splitter then cuts a block in the middle of a comment, and the halves come
+    back out as `/*` without its `*/`. That is exactly the failure the build's
+    own comment-balance assert catches, and it only appears when an unrelated
+    edit changes which rules survive the prune, so it looks like the edit's
+    fault. Skipping comments here is the fix; the assert stays as the net.
+    """
     out, i, depth, start, sel_end = [], 0, 0, 0, 0
     while i < len(css):
         ch = css[i]
+        if ch == '/' and css.startswith('/*', i):
+            end = css.find('*/', i + 2)
+            i = len(css) if end == -1 else end + 2
+            continue
         if ch == '{':
             if depth == 0:
                 sel_end = i

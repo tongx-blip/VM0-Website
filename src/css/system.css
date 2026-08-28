@@ -420,7 +420,7 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 
 /* radius policy, restated in one place */
 .panel{ border-radius:0; }
-.mock,.card,.stage-card,.feat,.vs,.quote,.artifact,.perms,.slackui,
+.mock,.card,.stage-card,.feat,.vs,.quote,.artifact,.slackui,
 .absui,.okoui,.acard,.scene__shot,.shot img,.a2a__card,.a2a__ask{
   border-radius:var(--r-card);
 }
@@ -433,8 +433,7 @@ img{ filter:none; }                 /* the wireframe greyscale is gone */
 .hero__body,.section-body,.section-body--tight,.note,.footnote,
 .quote figcaption,.footer__disclaimer,.footer__links,
 .footer__copy,.acard--thumb .acard__txt,.acard__chrome,.metrics,
-.metrics li,.scenes__tabs,.step,.nav,.panel,
-.perms__list,.a2a__ask{
+.metrics li,.scenes__tabs,.step,.nav,.panel,.a2a__ask{
   border:0;
 }
 .hero__body,.section-body--tight,.note,.quote figcaption,
@@ -498,7 +497,7 @@ h3{ font-family:var(--fd); }
   font-feature-settings:"tnum" 1;
 }
 .section-body,.note,.hero__body,.step p,.feat p,.vs p,
-.quote blockquote,.perms__note{ font-family:var(--fb); }
+.quote blockquote{ font-family:var(--fb); }
 
 .section-body{
   max-width:62ch;
@@ -2715,404 +2714,58 @@ h3{ font-family:var(--fd); }
 .ladder__frame .absui__body--chat{ justify-content:center; }
 
 /* ─────────────── 14. control, versus, proof: one card language ─────── */
-/* ── control: one run, told once ─────────────────────────────────────
-   The five claims are five moments in the life of ONE run, in order: what
-   it may do, what it must ask for, where it runs, how its credentials are
-   attached, what it leaves behind. So the stage does not swap between five
-   screens the way the workflow ladder above does — it is one window that
-   PROGRESSES, and each beat adds a layer to the same surface. That is the
-   whole reason this is not a second ladder: the ladder swaps panels, this
-   accumulates on one.
+/* ── control: one screen, said once ──────────────────────────────────
+   This was five sticky beats, and it measured 4.05 screens — 23.6% of the
+   page's entire scroll, longer than the section that carries the product's
+   main story. Five headings and five buttons turn a reassurance into a
+   second product tour, and a reassurance that takes four screens has
+   stopped being an aside. It is one screen now, with no button in it: the
+   page asks once, in the band at the end, and this section must not
+   compete with that ask.
 
-   THE BOLDNESS IS SPENT IN ONE PLACE — beat 3. Four of the five claims
-   have a real product screen behind them; isolated execution has none,
-   because a microVM has no UI. So that is the beat that gets the section's
-   one big gesture: the window pulls back and an accent boundary closes
-   around it. Everything else stays quiet, which is what makes it land. */
-/* The gap is deliberately large. At 64px the two columns read as one
-   crowded block — the window's right edge and the statement's first
-   character were close enough that the eye grouped them, and a sticky
-   stage needs to be legible as a separate object the text is talking
-   ABOUT. 104px at 1440 gives it that separation without a divider. */
+   Two of the five claims are gone rather than shrunk. Credential
+   injection was a picture of an implementation detail nobody asked to
+   see. The activity trail keeps its sentence — as the closing note — and
+   loses its picture. What is left is the two things a person actually
+   wants before they connect an account: the real card the product shows
+   them when it asks, and the machine the run happens on.
+
+   The right column is a text column with a card set into it, not a second
+   equal picture. The grant dialog is a 548px object and the browser card
+   a 400px one; standing them side by side as peers left the small one
+   marooned in a tall empty cell. */
+/* The right column is the browser card's own width, not the leftover
+   track. The card caps itself at 400px the way the product does, so a
+   1fr column left it sitting against 200px of nothing with the captions
+   running past it on both sides; matching the column to the card makes
+   the three things in it one aligned block. The pair is then centred in
+   the section rather than stretched across it. */
 .ctrl{
-  display:grid; grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
-  gap:clamp(32px,7.2vw,112px);
-  margin-top:clamp(40px,4.4vw,64px);
-  align-items:start;
+  display:grid; grid-template-columns:auto minmax(0,400px);
+  justify-content:center;
+  gap:clamp(28px,4.2vw,72px);
+  margin-top:clamp(34px,3.8vw,56px);
 }
-/* The stage's sticky offset CENTRES THE FRAME IN THE VIEWPORT, and only
-   falls back to bare header clearance when the window is too short for
-   that. A fixed offset aligns the two columns at exactly one window
-   height: every step but the first becomes current at the middle of the
-   viewport, so if the frame's centre is not also the middle, the
-   statement sits high by half the difference — 91px at 1095, and growing
-   with the window. Registered as a <length> so app.js can read the
-   clearance as a number instead of the token string `calc(var(--nav-h) …)`. */
-@property --ctrl-clear{ syntax:'<length>'; inherits:true; initial-value:0px; }
-.ctrl{ --ctrl-clear:calc(var(--nav-h) + clamp(20px,2.6vw,40px)); }
-.ctrl__stage{ position:sticky; top:var(--ctrl-top, var(--ctrl-clear)); }
+.ctrl__dialog{ min-width:0; }
+/* The column spans the dialog rather than floating in the middle of it.
+   Centred, the three things in it stopped 100px above the dialog's floor
+   and the section ended on a hole; space-between hangs the first caption
+   off the top edge and the last off the bottom, so the two halves read as
+   one block. The gap is the FLOOR, not the spacing. */
+.ctrl__side{
+  min-width:0;
+  display:flex; flex-direction:column; justify-content:space-between;
+  gap:clamp(20px,2.4vw,30px);
+}
+.ctrl__cap{
+  font-size:var(--t-sm); line-height:1.62; color:var(--ink-soft);
+}
+.ctrl__cap b{ font-weight:600; color:var(--ink); }
 
-/* A GROUND UNDER THE PRODUCT SURFACE. Without it the window was white on
-   the panel's white and had no edge at all — it read as loose content
-   rather than a screen. Same device every other mock on this page uses
-   (.vs__viz and its --vs-tint), so it belongs to the page rather than to
-   this section. */
-.ctrl__frame{
-  position:relative; isolation:isolate;
-  /* The index RIDES IN THE BOTTOM PADDING, like a caption on a mat. It
-     used to be a plain sibling after .ctrl__win — but .ctrl__win is
-     scaled with a transform, and a transform does not change a layout
-     box, so the index was placed after the mock's FULL-SIZE box while the
-     frame was only as tall as the scaled one, and it ended up below the
-     frame entirely. Taking it out of flow is what lets the picture be
-     centred in the WHOLE frame rather than in a row above it; the
-     padding band it sits in is already clear of the picture, so it costs
-     the picture no height. */
-  --ctrl-pad:clamp(20px,2.4vw,36px);
-  /* minmax(0,1fr), not an implicit auto row: an auto row grows to the
-     item, so a picture taller than the frame made the ROW taller than the
-     frame and `align-items:center` had nothing left to centre inside —
-     the overflow all went out the bottom and got clipped. A 1fr row is
-     exactly the content box, so an oversized item overflows it equally at
-     both ends and the scale, taken about the item's centre, lands the
-     picture in the middle. */
-  display:grid; grid-template-rows:minmax(0,1fr); align-items:center;
-  overflow:hidden;
-  /* the stage is a fixed object, not one that resizes under the reader.
-     Beat 5 swaps the permission list for the activity trail and the
-     window comes out 106px shorter; without this floor the whole sticky
-     stage shrank at the last beat. --ctrl-h is the TALLEST state the
-     frame has been measured in — see app.js §13. */
-  height:var(--ctrl-h, auto);
-  padding:var(--ctrl-pad);
-  border-radius:var(--r-lg);
-  background:color-mix(in srgb, var(--hue-engineering) 7%, var(--tile));
-}
-/* the mock lays out at its own design size and the stage scales it into
-   whatever height the browser leaves — see app.js §13. Anchored at the
-   top so a scaled screen still starts where the frame's padding does. */
-.ctrl__win{
-  position:relative;
-  transform:scale(var(--ctrl-fit, 1));
-  /* centre, not `top center`: the frame centres the layout box, so the
-     scale has to grow and shrink about that same point or the picture
-     drifts up as it gets smaller. */
-  transform-origin:center center;
-  transition:transform var(--t-state) var(--e-out),
-             filter var(--t-state) var(--e-out);
-}
-/* beat 3 pulls the window back, on top of the fit rather than instead of
-   it — writing scale(.94) alone would throw the viewport fit away */
-.ctrl__frame[data-beat="3"] .ctrl__win{ transform:scale(calc(var(--ctrl-fit, 1) * .94)); }
-
-/* the five marks. They encode something true — which of five moments this
-   is, and that there are five — which is the only reason a structural
-   device earns its place. Marks, not a rule: this page does not draw
-   lines. */
-.ctrl__index{
-  position:absolute; left:var(--ctrl-pad); right:var(--ctrl-pad);
-  bottom:calc(var(--ctrl-pad) / 2 - 1.5px);
-  display:flex; gap:6px; margin:0; padding:0;
-  list-style:none;
-}
-.ctrl__index li{
-  height:3px; flex:1; border-radius:var(--r-pill);
-  /* --ink, not --ink-rgb. The rgb channel is the SHADOW channel and does
-     not swap with the theme by design (§1) — so used as a visible fill it
-     painted near-black on a near-black ground in dark mode: contrast 1.01,
-     i.e. four of the five marks simply were not there. --ink swaps. */
-  background:color-mix(in srgb, var(--ink) 13%, transparent);
-  transition:background var(--t-state) var(--e-out);
-}
-.ctrl__frame[data-beat="1"] .ctrl__index li:nth-child(-n+1),
-.ctrl__frame[data-beat="2"] .ctrl__index li:nth-child(-n+2),
-.ctrl__frame[data-beat="3"] .ctrl__index li:nth-child(-n+3),
-.ctrl__frame[data-beat="4"] .ctrl__index li:nth-child(-n+4),
-.ctrl__frame[data-beat="5"] .ctrl__index li:nth-child(-n+5){
-  background:var(--accent-solid);
-}
-
-/* ── the steps ──────────────────────────────────────────────────────
-   ONE BEAT, ONE HEIGHT — and that height is SHORTER THAN A SCREEN. It
-   was 54vh, which put two beats on a screen and changed the stage twice
-   per scroll; then a full 100vh, which fixed that and cost the thing the
-   fade exists for: with a screen between them you never see the next
-   statement arrive, only the one you are on and then, later, another
-   one. At 68vh two steps share the screen at the handoff, so the fade
-   is a thing you watch rather than a state you find.
-
-   THE FLOOR IS THE FRAME. The first step centres on the stage rather
-   than on its own box, which it can only do if it is at least as tall as
-   the frame — so the beat is `max(68vh, --ctrl-h)` and every step takes
-   that same value. At 1440×900 the frame measures 718px, so the beat is
-   718 and the first step needs no correction at all; on a taller
-   viewport 68vh wins and the first step's content box is cut back to the
-   frame's height so it still centres on it. One expression, and the two
-   requirements stop fighting.
-
-   --ctrl-h is measured, not guessed: the frame's height is whatever the
-   product mock inside it comes out at, and app.js §13 writes it. Two
-   wrong versions of this alignment came before: a 12vh indent, which hit
-   the stage's centre by luck and left the window's top edge floating
-   against nothing, and a top alignment, which started both columns on
-   one line but hung the statement off the top of a 700px screen. */
-.ctrl{ --ctrl-beat:max(68vh, var(--ctrl-h, 68vh)); }
-.ctrl__steps{ display:flex; flex-direction:column; }
-.ctrl__step{
-  min-height:var(--ctrl-beat); display:flex; flex-direction:column; justify-content:center;
-  padding:clamp(10px,1.4vw,20px) 0;
-}
-/* padding-block, not padding-top: with the shared 20px bottom padding
-   left on it the content centres in a box 20px short and lands 10px
-   high — exactly the near-miss that reads as "not quite aligned" and
-   cannot be seen in the CSS. */
-.ctrl__step:first-child{
-  padding-block:0 max(0px, calc(var(--ctrl-beat) - var(--ctrl-h, var(--ctrl-beat))));
-}
-
-/* ── one dimension for the whole beat ────────────────────────────────
-   The step that is not the current one stands down as a BLOCK — spot,
-   statement, paragraph and button together, on opacity, at the moment
-   the next step reaches the middle of the viewport. Before this the
-   drawing faded on its own curve and the type changed colour on
-   another, which is two mechanics narrating one state.
-
-   This is a deliberate reversal. The earlier note here read "NOT
-   opacity — axe was right to fail it", and the reasoning was that all
-   five statements are read on the way past so none may drop under the
-   contrast floor. Asked for directly, and the fade IS the thing that
-   makes the column read as one run rather than as five paragraphs.
-
-   0.6, AND THE TYPE DARKENED TO PAY FOR IT. The first attempt rested at
-   0.34 with the old colours and axe returned a real **violation**, 15
-   nodes — not the `incomplete` the testimonial cards get. The rail's
-   cards carry a `transform` so axe declines to composite them; these do
-   not, so it composites and it is right. The floor is arithmetic: the
-   resting text has to clear 4.5:1 on paper AFTER the fade, and
-   --ink-soft at any usable opacity cannot. Moving the paragraph to
-   --ink buys the headroom — #0C0F12 at 0.6 over white composites to
-   #6D6D6D, which passes — and 0.6 is a fade you can plainly see. A
-   paragraph in full ink is a small deviation from the page's prose
-   colour, and it is the price of the fade rather than a preference. */
-.ctrl__step{
-  opacity:.6;
-  transition:opacity var(--t-state) var(--e-out);
-}
-.ctrl__step.is-on{ opacity:1; }
-
-/* ── the spot illustration ──────────────────────────────────────────
-   One hand-drawn spot per beat, from the brand's own illustration set —
-   the same register as the avatars, the stickers and the landscape,
-   not a sixth visual language. Each one shows a pair of hands doing the
-   thing the beat claims, which is the point: this section is about who
-   is holding the controls.
-
-   THEY ARE BACKGROUNDS, NOT <img>. The five drawings have five aspect
-   ratios; a fixed box with `contain` lands all of them on one baseline
-   and one left edge without five aspect-ratio rules, they are decorative
-   so they want no alt text, and the browser fetches only the theme whose
-   declaration actually applies.
-
-   THE DARK ASSET IS A SECOND FILE, NOT A FILTER. `invert(1)` — the fix
-   that was right for the monochrome connector marks — would flip the
-   skin tones of the people drawn in these. Each spot was re-inked
-   instead: the white paper keyed to transparent, the achromatic ink
-   inverted so the drawing reads as white pen on a dark ground, and every
-   chromatic pixel left exactly as it was painted.
-
-   The spot carries NO opacity of its own. The step fades as one block
-   now, and a drawing on its own curve inside a block on another curve
-   is two mechanics narrating one state. */
-.ctrl__spot{
-  display:block;
-  height:clamp(64px,6.4vw,88px);
-  margin-bottom:clamp(12px,1.3vw,18px);
-  background-repeat:no-repeat;
-  background-position:left bottom;
-  background-size:contain;
-}
-.ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1.png); }
-.ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2.png); }
-.ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3.png); }
-.ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4.png); }
-.ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5.png); }
-
-/* the way out of each beat. A soft fill, not an outline (§1), at the
-   page's small secondary size — five of these run down the column and
-   any louder treatment would out-shout the statement above them. */
-.ctrl__go{ margin:clamp(18px,2vw,26px) 0 0; }
-/* A STATEMENT, not a card title. At --t-h these read as body copy adrift
-   in a half-empty column. Nothing about the type changes between states:
-   the block's opacity carries that, and a size change on scroll would
-   reflow the text under the reader's eye. */
-.ctrl__step h3{
-  font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
-  letter-spacing:-.028em; line-height:1.14;
-  margin-bottom:14px; color:var(--ink);
-}
-/* --t-sm, NOT --t-body. This is secondary prose — it supports a
-   statement and sits beside a product screen whose own body text is
-   13.5px — and at the page's full 17px prose size it out-weighed both,
-   which is what made the column read heavy. --t-sm is the token that
-   already means this, so the page's eleven sizes stay eleven. */
-.ctrl__step p{
-  font-size:var(--t-sm); line-height:1.66; color:var(--ink); max-width:44ch;
-}
-
-/* ── the layers ─────────────────────────────────────────────────────
-   All four sit over the same window, keyed off one attribute, so the
-   stage has exactly one source of truth for what it is showing. */
-.cbox,.cgate,.cnet{
-  position:absolute; z-index:2;
-  opacity:0; pointer-events:none;
-  transition:opacity var(--t-state) var(--e-out),
-             translate var(--t-state) var(--e-out),
-             scale var(--t-state) var(--e-out);
-}
-.perms{ transition:filter var(--t-state) var(--e-out),
-                    scale var(--t-state) var(--e-out); }
-/* whichever layer is up, the list behind it stands down rather than
-   disappearing — every beat happens TO the list.
-
-   IT STANDS DOWN BY FOCUS, NOT BY OPACITY. `opacity:.3` composited the
-   label ink to 1.8:1 against the dark ground and axe called it. A list
-   that is genuinely behind a modal is out of focus, and a blur says that
-   without claiming the text underneath is still readable — app.js pairs
-   this with aria-hidden so it leaves the tree at the same moment. */
-.ctrl__frame[data-beat="2"] .perms,
-.ctrl__frame[data-beat="4"] .perms{ filter:blur(3px) saturate(.6); scale:.985; }
-
-
-/* 3 · the boundary. The section's one big gesture. */
-.cbox{
-  inset:calc(-1 * clamp(11px,1.3vw,20px));
-  border-radius:calc(var(--r-lg) + clamp(11px,1.3vw,20px));
-  box-shadow:inset 0 0 0 2px rgb(var(--accent-rgb) / .5);
-  scale:1.03;
-}
-.cbox i{
-  position:absolute; top:calc(-1 * clamp(9px,1vw,12px)); left:clamp(16px,2vw,28px);
-  padding:3px calc(10px - .06em) 3px 10px; border-radius:var(--r-pill);
-  background:var(--accent-solid); color:var(--paper-ink);
-  font-family:var(--fm); font-style:normal; font-size:var(--t-mono); letter-spacing:.09em;
-}
-.ctrl__frame[data-beat="3"] .cbox{ opacity:1; scale:1; }
-
-/* 2 · the approval gate, read out of views/permission-allow */
-.cgate{
-  left:50%; top:50%; translate:-50% -44%;
-  width:min(92%, 372px);
-  padding:clamp(18px,2vw,26px);
-  border-radius:var(--r-card);
-  background:var(--paper); color:var(--ink);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
-}
-.ctrl__frame[data-beat="2"] .cgate{ opacity:1; translate:-50% -50%; }
-.cgate__t{ font-size:var(--t-lead); line-height:1.32; margin:0 0 16px; }
-.cgate__t b{ font-weight:600; }
-.cgate__pill{
-  display:flex; align-items:center; gap:10px; margin:0 0 12px;
-  padding:8px 12px; border-radius:var(--r-btn);
-  background:var(--tile); font-size:var(--t-meta); color:var(--ink);
-}
-.cgate__pill img{ border-radius:50%; }
-.cgate__row{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  margin:0 0 18px; font-size:var(--t-meta); color:var(--ink-mute);
-}
-.cgate__row em{ font-style:normal; color:var(--ink-soft); }
-.cgate__btns{ display:flex; gap:8px; margin:0; }
-.cgate__btns span{
-  flex:1; text-align:center; padding:9px 0; border-radius:var(--r-btn);
-  font-size:var(--t-meta);
-}
-.cgate__deny{ background:var(--wash-2); color:var(--ink-soft); }
-.cgate__allow{ background:var(--accent-solid); color:var(--paper-ink); }
-
-/* 4 · the network log, read out of okou-page/components/network-content */
-.cnet{
-  left:clamp(12px,1.6vw,22px); right:clamp(12px,1.6vw,22px); bottom:clamp(12px,1.6vw,22px);
-  translate:0 14px;
-  padding:clamp(14px,1.6vw,20px);
-  border-radius:var(--r-card);
-  background:var(--paper);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .08), 0 26px 50px -22px rgb(var(--ink-rgb) / .40);
-}
-.ctrl__frame[data-beat="4"] .cnet{ opacity:1; translate:0 0; }
-.cnet__h,.ctrail__h{
-  margin:0 0 12px; font-family:var(--fm); font-size:var(--t-mono);
-  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-mute);
-}
-.cnet__r{
-  display:flex; align-items:center; gap:10px; margin:0; padding:6px 0;
-  font-size:var(--t-meta);
-}
-.cnet__r i{
-  font-style:normal; font-family:var(--fm); font-size:var(--t-mono);
-  color:var(--ink-mute); width:38px; flex:none;
-}
-.cnet__r b{ font-weight:400; color:var(--ink); flex:1; min-width:0;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.cnet__f{ margin:12px 0 0; font-size:var(--t-meta); color:var(--ink-mute); }
-
-/* 5 · what the run left behind.
-   NOT a card floating over an empty frame — that is what it was, and it
-   read as a small panel adrift with no relationship to the beat before
-   it. The trail is the same window with a different body — the window's
-   own chrome (breadcrumb, agent identity, tab strip) is gone: it was
-   settings UI in a picture that is not about settings. */
-.ctrail{ display:none; }
-.ctrl__frame[data-beat="5"] .ctrail{ display:block; }
-.ctrl__frame[data-beat="5"] .perms__list,
-.ctrl__frame[data-beat="5"] .perms__note{ display:none; }
-
-.ctrail__r{
-  display:flex; align-items:center; gap:12px;
-  margin:0 20px; padding:11px 0;
-  font-size:var(--t-meta); color:var(--ink);
-}
-.ctrail__r span{
-  width:8px; height:8px; flex:none; border-radius:50%;
-  background:rgb(var(--ok-rgb) / .55);
-}
-.ctrail__r--wait span{ background:rgb(var(--wait-rgb) / .6); }
-.ctrail__r b{ font-weight:400; flex:1; }
-.ctrail__r em{ font-style:normal; font-family:var(--fm); font-size:var(--t-mono); color:var(--ink-mute); }
-
-@media (prefers-reduced-motion:reduce){
-  .cbox,.cgate,.cnet,.perms,.ctrl__win,.ctrl__step{ transition:none; }
-}
-/* The stated-preference route, exactly as on the testimonial rail: the
-   fade comes out and the column goes back to standing down by COLOUR,
-   between two values that both clear AA on this ground. Nothing is lost
-   but the softness. */
-@media (prefers-reduced-transparency:reduce), (prefers-contrast:more){
-  .ctrl__step{ opacity:1; }
-  .ctrl__step:not(.is-on) h3,
-  .ctrl__step:not(.is-on) p{ color:var(--ink-mute); }
-}
-/* One column: the stage no longer sits beside the step it belongs to, so
-   the whole beat choreography is switched off rather than left running
-   against nothing. */
+/* Narrow: one column. Neither mock scales — both already cap themselves
+   against the measure they are given, exactly as they do in the app. */
 @media (max-width:1000px){
-  .ctrl{ grid-template-columns:1fr; gap:clamp(20px,3vw,32px); }
-  .ctrl__stage{ position:static; }
-  /* min-height carried the spacing between beats on the wide layout; with
-     it gone the button of one step landed almost on the spot of the next,
-     so the padding takes the job over. */
-  .ctrl__step{ min-height:0; padding:clamp(20px,4.4vw,30px) 0; opacity:1; }
-  /* padding-block, not padding-top: the wide layout's bottom value is
-     `100vh - --ctrl-h`, and setting only the top left that in place — the
-     first step came out 100px taller than its four siblings in a stack
-     where they are all supposed to be the same. */
-  .ctrl__step:first-child{
-    min-height:0;
-    padding-block:clamp(20px,3vw,32px) clamp(20px,4.4vw,30px);
-  }
-  /* the wide layout sizes the spot against a half-width column; in one
-     column the same 6.4vw is a third of the measure it sits above */
-  .ctrl__spot{ height:clamp(72px,10vw,96px); }
-}
+  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(24px,4.4vw,34px); }
 }
 .feat,.vs,.quote{
   border:0;
@@ -5039,23 +4692,6 @@ h3{ font-family:var(--fd); }
   img[src*="connectors/notion_marketing.svg"]
 ){ filter:invert(1); }
 
-/* ── the control spots, re-inked for a dark ground ───────────────────
-   A second asset rather than the invert() above, for the reason written
-   at .ctrl__spot: these drawings contain people, and inverting them
-   changes their skin. Only the ink flips. */
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1-dark.png); }
-  :root:not([data-theme="light"]) .ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2-dark.png); }
-  :root:not([data-theme="light"]) .ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3-dark.png); }
-  :root:not([data-theme="light"]) .ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4-dark.png); }
-  :root:not([data-theme="light"]) .ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5-dark.png); }
-}
-:root[data-theme="dark"] .ctrl__step[data-beat="1"] .ctrl__spot{ background-image:url(assets/brand/spot-1-dark.png); }
-:root[data-theme="dark"] .ctrl__step[data-beat="2"] .ctrl__spot{ background-image:url(assets/brand/spot-2-dark.png); }
-:root[data-theme="dark"] .ctrl__step[data-beat="3"] .ctrl__spot{ background-image:url(assets/brand/spot-3-dark.png); }
-:root[data-theme="dark"] .ctrl__step[data-beat="4"] .ctrl__spot{ background-image:url(assets/brand/spot-4-dark.png); }
-:root[data-theme="dark"] .ctrl__step[data-beat="5"] .ctrl__spot{ background-image:url(assets/brand/spot-5-dark.png); }
-
 /* ─────────────── 20. reduced motion ─────────────── */
 @media (prefers-reduced-motion:reduce){
   *{
@@ -5082,14 +4718,9 @@ h3{ font-family:var(--fd); }
    this page a surface is defined by its ground and its shadow, so the
    outlines come off here in one place. Borders INSIDE a product window
    stay: there they are the product's own UI, not our page furniture. */
-.perms,.slackui,.absui,.flowui,.mock,.card,.stage-card{ border:0; }
+.slackui,.absui,.flowui,.mock,.card,.stage-card{ border:0; }
 .slackui{ box-shadow:var(--e-3); }
 .absui{ box-shadow:0 2px 8px rgb(var(--ink-rgb) / .05), 0 30px 58px -32px rgb(var(--ink-rgb) / .28); }
-.perms{ box-shadow:0 1px 3px rgb(var(--ink-rgb) / .04), 0 20px 40px -26px rgb(var(--ink-rgb) / .24); }
-.perms__list{ border-top:0; }
-.perms__list li{ border-bottom-color:rgb(var(--ink-rgb) / .06); }
-.perms__list li:hover{ background:var(--wash); }
-.perms__note{ border-top:0; background:var(--wash); color:var(--ink-soft); }
 
 /* status is carried by a tinted fill, not an outline */
 /* 11px, not 10.5: the page has an 11px floor and a mock is still read. */
@@ -5465,11 +5096,10 @@ h3{ font-family:var(--fd); }
 /* ── brand marks never stretch ─────────────────────────────────────
    Several connector SVGs are not square (Gmail is 4:3). Anywhere we
    put one in a fixed box it has to letterbox, not squash. */
-.acard__ic img,.perms__list img,.vs__label img,.logo img,.cat__logo img,
+.acard__ic img,.vs__label img,.logo img,.cat__logo img,
 .tag img,.btn img{
   object-fit:contain;
 }
-.perms__list img{ align-self:center; }
 
 /* ================================================================
    24. THE STOREFRONT-LAUNCH STAGE — drawn in code, not a screenshot

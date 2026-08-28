@@ -927,6 +927,16 @@ document.documentElement.setAttribute('data-theme', 'dark');   // or 'light'
 - **Ground separation survives.** Card vs page, header vs card, tile vs card,
   band vs page: each pair ≥ 1.05 in both modes. Compute it, do not squint.
 - **The mocks did not invert.** They should still look like the product.
+- **A tint INSIDE a mock is `--tile`, never `--wash`.** `--wash` is the grey the
+  *page* sits on: in dark it goes **darker** than `--paper`, so every
+  `bg-muted/30` the product paints as a raised surface comes out as a hole
+  punched in the card. The grant dialog shipped its target pill, icon slot and
+  scope chip that way and it only shows in dark. Grep any new mock:
+
+```bash
+awk '/^\.<mock>\{/,/^\/\* ─/' src/css/base.css | grep -n 'var(--wash)'
+# must be empty — a surface inside a card is --tile
+```
 
 ## 4t. Pills are optically centred, and you are not looking at a cache
 
