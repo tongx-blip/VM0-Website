@@ -6610,7 +6610,7 @@ h3{ font-family:var(--fd); }
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   /* the frame's own measurements */
   --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
-  --o-cw:clamp(154px, 13.6vw, 196px);      /* a connector card           */
+  --o-cw:clamp(176px, 16.4vw, 236px);      /* a connector card           */
   /* HOW FAR A CARD SITS ON THE WINDOW. Small on purpose: at 26px it ate
      the first 26px of whichever sidebar was behind it — Okou's thread
      names lost their initials, Slack's workspace tile was cut in half. The
@@ -6623,10 +6623,20 @@ h3{ font-family:var(--fd); }
      one frame — the app window with the connectors floating over it — and
      330 is still the page it shipped. Same total, one less thing to read. */
   grid-template-columns:minmax(0,653fr) minmax(0,330fr);
+  /* ONE HEIGHT FOR ALL SEVEN TABS. `height` on a grid container is not a
+     ceiling: the row track was implicit and therefore `auto`, so a scene
+     whose artifact happened to be taller pushed the track past the declared
+     545 and took the frame with it — 545 on three tabs, 552 on three, 574
+     on Ad Campaign, and the whole section jumped as you moved along the
+     strip. The track is told to fill and the items are told they may be
+     smaller than their content; the stage sets the height and the two
+     windows clip inside it. */
+  grid-template-rows:minmax(0,1fr);
   gap:var(--o-gap);
   height:var(--o-h);
   align-items:stretch;
 }
+.ostage > *{ min-height:0; min-width:0; }
 
 /* ── the frame ──────────────────────────────────────────────────────
    Tong: *"是不是可以把左边的 connector 这两个卡片和右边的这个对话界面放到一
@@ -6685,38 +6695,58 @@ h3{ font-family:var(--fd); }
   width:var(--o-cw);
   min-width:0;
 }
+/* Tong: *"connector card 可以活泼一点，像我给你发的图一样。而且我感觉 logo
+   有点大"* — the reference's cards are SHALLOW AND WIDE, and its marks are
+   small things inside a bordered tile, not the card's subject. Ours were
+   portrait blocks led by a 40px logo, which is a tile, not a card that
+   happens to be floating.
+
+   So: a row, not a column. A 34px tile carrying an 18px mark, then the
+   name, then the line under it — the same [tile · label] shape the
+   reference's own list rows use. And a degree and a bit of rotation, in
+   opposite directions, because two cards lying perfectly square on a ground
+   read as a layout no matter how far apart you push them. `rotate` rather
+   than `transform`, since the entrance animation owns `transform`. */
 .ocard{
   position:absolute; left:0; right:0;
-  display:flex; flex-direction:column; justify-content:flex-start;
-  gap:clamp(8px, .9vw, 11px);
-  padding:clamp(12px, 1.3vw, 16px);
-  border-radius:var(--r-card);
+  display:flex; flex-direction:row; align-items:flex-start;
+  gap:11px;
+  padding:13px 15px;
+  border-radius:18px;
   background:var(--paper);
   min-width:0;
-  /* a card in front of a window, which is the second thing S3 reserves a
-     shadow for — without one it is a white rectangle on a pale ground */
   box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 16px 34px -18px rgb(var(--ink-rgb) / .28);
+             0 18px 38px -20px rgb(var(--ink-rgb) / .30);
 }
 /* One hangs from the top and one from the BOTTOM, which is the only way
    a pair of auto-height cards cannot leave the frame: `top:52%` on the
    lower one put its last line 40px below the ground it was floating on. */
-.ocard:nth-of-type(1){ top:11%; }
+/* One hangs from the top and one from the BOTTOM, which is the only way a
+   pair of auto-height cards cannot leave the frame. */
+.ocard:nth-of-type(1){ top:13%; rotate:-1.3deg; }
 .ocard:nth-of-type(2){
-  bottom:11%;
-  left:clamp(12px, 1.4vw, 22px);
-  right:calc(-1 * clamp(8px, .9vw, 14px));
+  bottom:13%;
+  left:clamp(14px, 1.7vw, 26px);
+  right:calc(-1 * clamp(10px, 1.1vw, 18px));
+  rotate:1.1deg;
 }
-.ocard .ocard__txt b{ font-size:var(--t-sm); }
-.ocard .ocard__txt i{ margin-top:5px; font-size:var(--t-meta); }
-/* One size, not two. `clamp(32px,2.8vw,40px)` was set here and then set
-   again six lines later to --o-ava, so the first pair never took effect and
-   the comment above it described a size the page does not use. */
+.ocard .ocard__txt{ padding-top:1px; }
+.ocard .ocard__txt b{ font-size:var(--t-sm); line-height:1.3; }
+.ocard .ocard__txt i{ margin-top:3px; font-size:var(--t-meta); line-height:1.4; }
+/* THE MARK IN A TILE, at the size the reference draws it. It used to be a
+   bare `--o-ava` logo — 48px, the size of an avatar — which made the mark
+   the card's subject instead of its label. Edited here rather than
+   overridden from above: an earlier duplicate of this selector loses to
+   this one no matter what it says. */
 .ocard__ic{
-  display:block; width:var(--o-ava); height:var(--o-ava);
+  display:grid; place-items:center;
+  width:34px; height:34px;
   flex:none;
+  border-radius:10px;
+  background:var(--paper);
+  box-shadow:inset 0 0 0 .7px rgb(var(--ink-rgb) / .09);
 }
-.ocard__ic img{ width:100%; height:100%; object-fit:contain; display:block; }
+.ocard__ic img{ width:20px; height:20px; object-fit:contain; display:block; }
 .ocard__txt{ display:block; min-width:0; }
 .ocard__txt b{
   display:block;
@@ -6999,6 +7029,7 @@ h3{ font-family:var(--fd); }
   --slk-card:#FFFFFF;
   --slk-rail:#3F0E40;     /* Slack's aubergine */
   display:grid; grid-template-columns:auto 1fr;
+  grid-template-rows:minmax(0,1fr);
   padding:0; gap:0;
   background:var(--slk-card);
   /* A WINDOW'S OWN EDGE, which is the exception S4 already names for
@@ -7018,134 +7049,267 @@ h3{ font-family:var(--fd); }
 }
 
 /* ── OKOU'S OWN WINDOW ───────────────────────────────────────────────
-   Tong: *"我们自己的产品是不是也可以模拟一个侧边栏？"* — yes, and for the
-   same reason Slack's rail earned its place. A conversation floating on a
-   ground is a screenshot of nothing; a conversation inside an app frame is
-   a screenshot of Okou. Sidebar, thread name, run state, composer.
+   Tong: *"你做我们自己的产品，怎么差的这么远呢，你不借鉴一下我们的 design
+   token & Components 吗？"* — fair, and the first pass did not. It used this
+   marketing page's own tokens (Instrument Sans, 12px radii, mixed greys) for
+   a window that is supposed to BE the product.
 
-   It mirrors `.ochat--slack` deliberately — sidebar then pane, list then
-   composer — so the two readings sit at the same scale and the tab switch
-   between them is a change of application, not of layout.
+   Every value below is transcribed from vm0-ai/vm0, not approximated:
 
-   UNLIKE THE SLACK PANEL THIS ONE IS NOT PINNED. Slack's ink is Slack's
-   and cannot follow our theme (P1); this is our own product, and our own
-   product has a dark mode. Every value here is a token. */
+     turbo/packages/ui/src/styles/globals.css      the token scales
+     turbo/apps/platform/src/views/css/index.css   .zero-card / .zero-composer
+     .../views/okou-page/sidebar.tsx               the 68px labelled nav rail
+     .../views/okou-page/chat-thread-page.tsx      the message bubbles
+
+   Namespaced `--vm-*` so nothing leaks into the page, and so the next person
+   can diff this block against globals.css and see whether it has drifted.
+
+   THE GREYS ARE A COOL RAMP, not neutral: gray-50 is #F3F5F8 at hue 216 and
+   the whole scale keeps that cast. Mixing black into white — which is what
+   the first pass did — produces a warm grey that reads as a different
+   product. Same for the shadow: `--zero-card-shadow` is tinted 220/12%, and
+   the note in the product's own source says why (a hard black tint "reads
+   muddy on white"). */
 .ochat--okou{
+  /* type — Noto Sans is already one of the page's loaded families */
+  --vm-font:"Noto Sans", "Instrument Sans", system-ui, sans-serif;
+
+  /* primary scale · globals.css @layer base :root */
+  --vm-primary:#ED4E01;                    /* --primary-700 */
+
+  /* cool-neutral grey scale */
+  --vm-gray-0:#FAFBFC;   --vm-gray-50:#F3F5F8;  --vm-gray-100:#E7EBF0;
+  --vm-gray-200:#DCE1E8; --vm-gray-400:#C5CCD7; --vm-gray-800:#525B68;
+  --vm-gray-950:#14171D;
+
+  /* semantic, light */
+  --vm-card:#FFFFFF;
+  --vm-fg:var(--vm-gray-950);
+  --vm-muted-fg:var(--vm-gray-800);
+  --vm-border:var(--vm-gray-200);          /* --border */
+  --vm-hairline:var(--vm-gray-400);        /* the 0.7px card border */
+  --vm-sidebar:var(--vm-gray-50);          /* --sidebar */
+  --vm-bubble:var(--vm-gray-100);          /* .zero-chat-bubble-user */
+
+  /* the interaction ladder — translucent, so one token reads the same
+     weight on any surface. hsl(215 100% 19%) over white IS gray-50. */
+  --vm-state-hover:hsl(215 100% 19% / .05);
+  --vm-state-selected:hsl(215 100% 19% / .085);
+
+  --vm-r-card:20px;                        /* --zero-card-radius   1.25rem */
+  --vm-r-composer:24px;                    /* --zero-composer-radius 1.5rem */
+  --vm-r-lg:8px;                           /* --radius             0.5rem  */
+  --vm-shadow:0 2px 12px hsl(220 12% 50% / .04),
+              0 0 0 .5px hsl(220 12% 50% / .02);   /* --zero-card-shadow */
+
   display:grid; grid-template-columns:auto minmax(0,1fr);
+  /* and the same implicit-row fault as the stage, one level down: the pane
+     was sized by its content, so the list ran 4px past the window and the
+     composer 62px past it, off the bottom entirely */
+  grid-template-rows:minmax(0,1fr);
   padding:0; gap:0;
   overflow:hidden;
-  font-family:var(--fb);
+  font-family:var(--vm-font);
+  color:var(--vm-fg);
+  background:var(--vm-card);
 }
 .ochat--okou::before,.ochat--okou::after{ content:none; }
 
-/* the sidebar. Named threads, because the product's are named — and the
-   names are the other tabs', so the sidebar says what else Okou is doing
-   without inventing a word of copy. */
-.okw__side{
-  display:flex; flex-direction:column; align-items:stretch;
-  gap:clamp(8px, .9vw, 11px);
-  width:calc(clamp(112px, 10.4vw, 148px) + var(--o-lap));
-  padding:clamp(12px, 1.3vw, 16px) clamp(10px, 1.1vw, 13px);
-  /* the strip a connector card lies across, kept empty */
-  padding-left:calc(clamp(10px, 1.1vw, 13px) + var(--o-lap));
-  background:color-mix(in srgb, var(--ink) 4.5%, var(--paper));
+/* ── the rail, 1:1 with sidebar.tsx's `labeled-nav-rail` ────────────
+   `w-[68px] … border-r-[0.7px] border-sidebar-border bg-gray-50 px-1.5
+   pb-2 pt-3`, items `gap-3`. The first pass invented a 148px thread list
+   instead, which is not a thing the product has at this width — when the
+   chat list is hidden the product shows exactly this rail. It is also 80px
+   narrower, which the conversation gets back. */
+.okw__rail{
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  width:calc(68px + var(--o-lap));
+  padding:12px 6px 8px;
+  padding-left:calc(6px + var(--o-lap));   /* the strip a card lies across */
+  background:var(--vm-sidebar);
+  border-right:.7px solid var(--vm-border);
 }
-.okw__brand{
-  display:flex; align-items:center; gap:7px;
-  font-size:var(--t-sm); font-weight:600; letter-spacing:-.01em;
-  color:var(--ink);
+/* the org switcher above the nav */
+.okw__org{
+  display:grid; place-items:center; flex:none;
+  width:32px; height:32px; border-radius:var(--vm-r-lg);
+  background:var(--vm-card);
+  box-shadow:var(--vm-shadow);
+  margin-bottom:0;
 }
-.okw__brand img{ width:18px; height:18px; flex:none; }
-.okw__brand em,.okw__new em{ font-style:normal; }
-.okw__new{
-  display:flex; align-items:center; gap:6px;
-  padding:6px 9px; border-radius:var(--r-pill);
-  background:var(--paper);
-  font-size:var(--t-meta); font-weight:500; color:var(--ink-soft);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06);
-}
-.okw__new svg{ width:12px; height:12px; flex:none; }
-.okw__lbl{
-  margin-top:2px;
-  font-family:var(--fm); font-size:var(--t-mono);
-  letter-spacing:.08em; text-transform:uppercase;
-  color:var(--ink-mute);
-}
-.okw__threads{ list-style:none; margin:0; padding:0;
-  display:flex; flex-direction:column; gap:1px; }
-.okw__threads li{
-  padding:5px 8px; border-radius:8px;
-  font-size:var(--t-meta); line-height:1.35;
-  color:var(--ink-mute);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-/* the thread we are looking at, said with a fill rather than a rule */
-.okw__threads li.is-here{
-  background:var(--paper); color:var(--ink); font-weight:500;
-}
+.okw__org img{ width:18px; height:18px; }
 
-.okw__pane{ display:flex; flex-direction:column; min-width:0; }
+/* one nav item: a 32×36 rounded-lg tile, then a 9px caption */
+.okw__nav{
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  width:100%; flex:none;
+}
+.okw__nav i{
+  display:grid; place-items:center;
+  width:36px; height:32px; border-radius:var(--vm-r-lg);
+  color:var(--vm-gray-950);
+}
+.okw__nav i svg{ width:19px; height:19px; opacity:.7; }
+.okw__nav em{
+  font-style:normal;
+  font-size:9px; font-weight:500; line-height:14px;
+  color:rgb(20 23 29 / .6);
+  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+/* selected uses the ladder's own step, not a hand-picked grey */
+.okw__nav.is-here i{ background:var(--vm-state-selected); }
+.okw__nav.is-here em{ color:var(--vm-gray-950); }
 
-/* the title bar. The reference Tong sent names the run's state in orange
-   mono at the right of the title — the workflow card's own idiom, reused
-   here so the two say the same thing the same way. */
+.okw__pane{ display:flex; flex-direction:column; min-width:0; min-height:0; }
+
+/* the thread's title bar */
 .okw__bar{
   display:flex; align-items:center; gap:10px; flex:none;
-  margin:0; padding:13px clamp(14px, 1.4vw, 18px);
+  margin:0; padding:12px 18px 8px;
 }
 .okw__bar b{
-  font-size:var(--t-body); font-weight:600; letter-spacing:-.012em;
-  color:var(--ink);
+  font-size:15px; font-weight:600; line-height:20px;
+  letter-spacing:-.005em;
+  color:var(--vm-fg);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
+/* the run's state, in the product's muted pill rather than orange caps —
+   the reference's `RUNNING` is this site's workflow-card idiom, and the
+   product's own labels are sentence case with no all-caps */
 .okw__state{
   margin-left:auto; flex:none;
-  font-family:var(--fm); font-style:normal; font-size:var(--t-mono);
-  letter-spacing:.08em; color:var(--accent-wash);
+  display:inline-flex; align-items:center; height:22px; padding:0 8px;
+  border-radius:var(--vm-r-lg);
+  background:var(--vm-gray-100);
+  font-style:normal; font-size:12px; font-weight:500; line-height:16px;
+  color:var(--vm-muted-fg);
 }
 
 /* SAME CLIP AND SAME ANCHOR AS THE CHANNEL. A conversation that outgrows
-   its window must lose its oldest line, not paint through the composer —
-   the fault QA already names, and this window is narrower than Slack's at
-   every width, so it would have found it first. */
+   its window loses its oldest line rather than painting through the
+   composer — the fault QA already names. */
 .okw__list{
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
-  gap:clamp(10px, 1.1vw, 14px);
-  padding:0 clamp(14px, 1.4vw, 18px) 4px;
+  gap:14px;
+  padding:0 18px 4px;
 }
 
+/* ── the composer, 1:1 with `.zero-composer` ───────────────────────
+   white, a 0.7px gray-400 hairline, 1.5rem, and the cool card shadow. */
 .okw__composer{
-  display:flex; align-items:center; gap:9px; flex:none;
-  margin:clamp(10px, 1.1vw, 14px) clamp(14px, 1.4vw, 18px);
-  padding:8px 8px 8px 11px;
-  border-radius:var(--r-card);
-  background:color-mix(in srgb, var(--ink) 4.5%, var(--paper));
+  display:flex; align-items:center; gap:8px; flex:none;
+  margin:10px 18px 12px;
+  padding:6px 6px 6px 10px;
+  border-radius:var(--vm-r-composer);
+  background:var(--vm-card);
+  border:.7px solid var(--vm-hairline);
+  box-shadow:var(--vm-shadow);
 }
 .okw__composer span{
   flex:1; min-width:0;
-  font-size:var(--t-meta); color:var(--ink-mute);
+  font-size:14px; line-height:20px; color:var(--vm-muted-fg);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
+/* the `quiet` button variant: muted ink, no fill until hover */
 .okw__clip{
   display:grid; place-items:center; flex:none;
-  width:18px; height:18px; color:var(--ink-mute);
+  width:32px; height:32px; border-radius:var(--vm-r-lg);
+  color:var(--vm-muted-fg);
 }
-.okw__clip svg{ width:15px; height:15px; }
+.okw__clip svg{ width:18px; height:18px; }
+/* and the default variant: bg-primary, rounded-lg, a 16px glyph */
 .okw__send{
   display:grid; place-items:center; flex:none;
-  width:26px; height:26px; border-radius:8px;
-  background:var(--accent-solid); color:var(--paper-ink);
+  width:32px; height:32px; border-radius:var(--vm-r-lg);
+  background:var(--vm-primary); color:#FFFFFF;
 }
-.okw__send svg{ width:15px; height:15px; }
+.okw__send svg{ width:16px; height:16px; }
 
-/* the agent's mark where a person's face used to be */
+/* ── the messages ──────────────────────────────────────────────────
+   `.zero-chat-bubble-user` is gray-100 at rounded-xl, 15px/1.7, px-4 py-3,
+   max-w-85%. `.zero-chat-bubble-assistant` is *transparent with no border* —
+   the assistant does not speak in a bubble, and drawing it in one was the
+   single biggest reason the mock did not look like the product. */
+.ochat--okou .ochat__bubble{
+  font-family:var(--vm-font);
+  font-size:15px; line-height:1.7;
+  color:var(--vm-fg);
+}
+.ochat--okou .ochat__row--user .ochat__bubble{
+  max-width:85%;
+  padding:12px 16px;
+  border-radius:14px;
+  background:var(--vm-bubble);
+  box-shadow:none;
+}
+.ochat--okou .ochat__row--okou .ochat__bubble{
+  background:none; border:0; box-shadow:none; padding:0;
+}
+.ochat--okou .oresult figcaption{
+  font-family:var(--vm-font);
+  font-size:13px; line-height:18px; color:var(--vm-muted-fg);
+}
+.ochat--okou .oresult{
+  border-radius:var(--vm-r-card);
+  border:.7px solid var(--vm-hairline);
+  box-shadow:var(--vm-shadow);
+  overflow:hidden; background:var(--vm-card);
+}
+/* THE ASK HAS TO SURVIVE. The list hangs from the bottom and clips, so an
+   artifact at its natural height (300px in a 373px list) pushed the user's
+   own message up under the title bar and left a sliver of grey — which
+   reads as a rendering fault, not as scrollback. Capped and cropped from
+   the TOP, so what is lost is the tail of the page rather than its
+   headline (the crop-through-the-headline fault from the tab windows). */
+.ochat--okou .oresult img{
+  max-height:clamp(92px, 10vw, 144px);
+  object-fit:cover; object-position:top center;
+}
+
+/* the assistant's mark, in the rail's own tile shape */
 .ochat__ava--agent{
   display:grid; place-items:center;
-  background:color-mix(in srgb, var(--ink) 5%, var(--paper));
-  border-radius:50%;
+  width:28px; height:28px; flex:none;
+  border-radius:var(--vm-r-lg);
+  background:var(--vm-gray-50);
+  overflow:hidden;
 }
-.ochat__ava--agent img{ width:58%; height:58%; }
+.ochat__ava--agent img{ width:16px; height:16px; }
+
+/* ── dark, from globals.css's own dark block ───────────────────────
+   Not an inversion: the dark ramp is a different scale (240 3%), and the
+   card sits BETWEEN gray-50 and gray-100 rather than on either. */
+@media (prefers-color-scheme:dark){
+  html:not([data-theme="light"]) .ochat--okou{
+    --vm-gray-0:#111113;   --vm-gray-50:#19191B;  --vm-gray-100:#252527;
+    --vm-gray-200:#2F2F32; --vm-gray-400:#434550; --vm-gray-800:#8C8E9A;
+    --vm-gray-950:#E8E9ED;
+    --vm-card:#232326;
+    --vm-sidebar:var(--vm-gray-100);
+    --vm-bubble:var(--vm-gray-200);
+    --vm-state-hover:hsl(0 0% 100% / .06);
+    --vm-state-selected:hsl(0 0% 100% / .10);
+    --vm-shadow:0 2px 12px hsl(215 100% 19% / .035),
+                0 0 0 .5px hsl(215 100% 19% / .018);
+  }
+
+  html:not([data-theme="light"]) .okw__nav em{ color:rgb(232 233 237 / .6); }
+
+}
+html[data-theme="dark"] .ochat--okou{
+  --vm-gray-0:#111113;   --vm-gray-50:#19191B;  --vm-gray-100:#252527;
+  --vm-gray-200:#2F2F32; --vm-gray-400:#434550; --vm-gray-800:#8C8E9A;
+  --vm-gray-950:#E8E9ED;
+  --vm-card:#232326;
+  --vm-sidebar:var(--vm-gray-100);
+  --vm-bubble:var(--vm-gray-200);
+  --vm-state-hover:hsl(0 0% 100% / .06);
+  --vm-state-selected:hsl(0 0% 100% / .10);
+  --vm-shadow:0 2px 12px hsl(215 100% 19% / .035),
+              0 0 0 .5px hsl(215 100% 19% / .018);
+}
+html[data-theme="dark"] .okw__nav em{ color:rgb(232 233 237 / .6); }
 
 /* ── the rail ────────────────────────────────────────────────────────
    Slack's single most recognisable feature is its dark sidebar, and it
@@ -7178,7 +7342,7 @@ h3{ font-family:var(--fd); }
 .slk__rail i.is-here{ background:rgb(255 255 255 / .30); }
 
 /* everything that was the panel is now the panel's second column */
-.slk__pane{ display:flex; flex-direction:column; min-width:0; }
+.slk__pane{ display:flex; flex-direction:column; min-width:0; min-height:0; }
 
 /* the painting, and the veil that went with it, are gone */
 .ochat--slack::before,.ochat--slack::after{ content:none; }
@@ -7844,32 +8008,43 @@ h3{ font-family:var(--fd); }
   .ostage__conn{
     position:static; width:auto;
     order:2;
-    display:grid; grid-template-rows:none; grid-template-columns:1fr 1fr;
+    display:grid; grid-template-rows:none;
+    /* AUTO-FIT, not a hard 1fr 1fr. This block is declared after the 620px
+       rule that used to drop these to one column, so it was overriding it:
+       at 390 each card had ~100px left for text after the mark's tile, and
+       "Google Sheets" broke over two lines with its detail over four. */
+    grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
     gap:var(--o-gap);
   }
 
   .ocard{ position:static; }
 
+  /* and square again. The tilt reads as a floating object only while the
+     cards are floating; sitting in a grid row, two cards leaning different
+     ways read as a rendering fault. */
   .ocard:nth-of-type(1),
-  .ocard:nth-of-type(2){ top:auto; bottom:auto; left:auto; right:auto; }
+  .ocard:nth-of-type(2){
+    top:auto; bottom:auto; left:auto; right:auto; rotate:0deg;
+  }
 
   .ochat{ order:1; min-height:clamp(360px, 62vw, 470px); }
 
   .tplwin{ order:3; }
 
 
-  /* THE SIDEBAR COLLAPSES TO A RAIL, which is what the product does and
-     what Slack's own rail already is at this width. Left open it took 110
-     of the 305px window at 390 and the first message wrapped to six lines
-     of three words. The marks stay, the words go. */
-  .okw__side{
-    width:44px; align-items:center;
-    padding:12px 0;
+  /* THE RAIL DROPS ITS CAPTIONS, which is what the product's own collapsed
+     rail does (`w-16`, icons only). At 390 the labelled rail is 68 of a 305px
+     window and the captions truncate to three letters each, which is worse
+     than not having them. */
+  .okw__rail{
+    width:48px;
+    padding:10px 6px 8px;
+    gap:8px;
   }
 
-  .okw__brand em,.okw__new em,.okw__lbl,.okw__threads{ display:none; }
+  .okw__nav em{ display:none; }
 
-  .okw__new{ width:26px; height:26px; padding:0; justify-content:center; }
+  .okw__nav i{ width:34px; height:30px; }
 
   .okw__bar,.okw__list{ padding-inline:13px; }
 

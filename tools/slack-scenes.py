@@ -179,62 +179,83 @@ SEND = ('<svg viewBox="0 0 256 256" aria-hidden="true">'
 
 
 # ── Okou's own window, for the three scenes that are not a channel ─────
-# The Slack panels get Slack's rail; Tong asked whether our own product
-# should simulate a sidebar too, and it should — a conversation floating on
-# a ground is a screenshot of nothing, while a conversation inside an app
-# frame is a screenshot of Okou. Sidebar, thread title, run state, composer.
+# Tong: *"你做我们自己的产品，怎么差的这么远呢，你不借鉴一下我们的 design token
+# & Components 吗？"* — so this is no longer drawn from memory. Every value is
+# read out of vm0-ai/vm0:
 #
-# EVERY STRING HERE ALREADY EXISTS ON THE PAGE. The recent-thread list is
-# the other tabs' own labels, the placeholder is the real composer's
-# placeholder from the hero, and the title is the tab's. Chrome may be
-# invented; copy may not.
+#   turbo/packages/ui/src/styles/globals.css   the token scales
+#   turbo/apps/platform/src/views/css/index.css  .zero-card / .zero-composer
+#   .../views/okou-page/sidebar.tsx            the 68px labelled nav rail
+#   .../views/okou-page/chat-thread-page.tsx   the user / assistant bubbles
+#
+# What that changed, concretely: the sidebar is the product's own 68px rail
+# with 9px captions rather than a 148px list I invented; the type is Noto
+# Sans, not the page's Instrument Sans; radii are 20/24px, not 12; borders
+# are 0.7px #C5CCD7, not a mixed grey; the assistant's reply has no bubble at
+# all, and the user's is gray-100 at 15px/1.7.
 OKOU = {
-    'sales': dict(title='Lead Scoring',
-                  recent=('Storefront Launch', 'Team Digest')),
-    'product': dict(title='Spec Writing',
-                    recent=('Incident Triage', 'Board Deck')),
-    'leadership': dict(title='Board Deck',
-                       recent=('Ad Campaign', 'Lead Scoring')),
+    'sales': dict(title='Lead scoring'),
+    'product': dict(title='Spec writing'),
+    'leadership': dict(title='Board deck'),
 }
 
-# the product's own composer icons, 1:1 with the hero's `.pbox`
-CLIP = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
-        'aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414'
-        '-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379'
-        '-8.551"/></svg>')
 
-ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-         'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
-         'aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>')
+def lucide(*paths):
+    """A lucide glyph at the product's own stroke width (--icon-stroke-width)."""
+    return ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" '
+            'aria-hidden="true">%s</svg>' % ''.join(paths))
 
+
+# MANAGE_NAV + FOOTER_NAV from sidebar.tsx, in the product's order.
+RAIL = [
+    ('New', lucide('<path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>',
+                   '<path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505'
+                   'l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>')),
+    ('Agents', lucide('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>',
+                      '<circle cx="9" cy="7" r="4"/>',
+                      '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
+                      '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>')),
+    ('Workflows', lucide('<circle cx="6" cy="19" r="3"/>',
+                         '<path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/>',
+                         '<circle cx="18" cy="5" r="3"/>')),
+    ('Connectors', lucide('<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/>',
+                          '<path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9'
+                          'a1 1 0 0 1 1-1z"/>')),
+    ('Artifacts', lucide('<path d="m7.5 4.27 9 5.15"/>',
+                         '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8'
+                         'v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>',
+                         '<path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>')),
+]
+
+CLIP = lucide('<path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0'
+              '-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>')
+
+ARROW = lucide('<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>')
+
+# The assistant's mark sits in the same rounded-lg tile the rail uses for a
+# nav icon — the product's one container shape at this size.
 AGENT_AVA = ('<span class="ochat__ava ochat__ava--agent">'
-             '<img src="assets/okou-icon.svg" alt="" width="26" height="26">'
+             '<img src="assets/okou-icon.svg" alt="" width="16" height="16">'
              '</span>')
 
 
 def okou_window(key, rows):
     """Wrap this scene's existing rows in Okou's own app chrome."""
     sc = OKOU[key]
-    threads = ''.join('<li>%s</li>' % t for t in sc['recent'])
-    # the two labels are wrapped so the narrow layout can drop the words and
-    # keep the marks — a sidebar that cannot collapse is a sidebar that eats
-    # the message column at 390
-    side = ('\n              <div class="okw__side" aria-hidden="true">'
-            '<span class="okw__brand">'
-            '<img src="assets/okou-icon.svg" alt="" width="18" height="18">'
-            '<em>Okou</em></span>'
-            '<span class="okw__new">%s<em>New chat</em></span>'
-            '<span class="okw__lbl">Recent</span>'
-            '<ul class="okw__threads"><li class="is-here">%s</li>%s</ul>'
-            '</div>' % (ARROW.replace('m5 12 7-7 7 7', 'M12 5v14')
-                             .replace('M12 19V5', 'M5 12h14'),
-                        sc['title'], threads))
 
-    # the reference Tong sent names the run's state in orange mono at the
-    # right of the title — the same idiom the workflow card already uses
+    items = ''
+    for i, (label, glyph) in enumerate(RAIL):
+        items += ('<span class="okw__nav%s"><i>%s</i><em>%s</em></span>'
+                  % (' is-here' if i == 0 else '', glyph, label))
+    # the org switcher, which is what sits above the nav in the real rail
+    rail = ('\n              <div class="okw__rail" aria-hidden="true">'
+            '<span class="okw__org">'
+            '<img src="assets/okou-icon.svg" alt="" width="18" height="18">'
+            '</span>%s</div>' % items)
+
     bar = ('\n              <p class="okw__bar"><b>%s</b>'
-           '<i class="okw__state">DONE</i></p>' % sc['title'])
+           '<i class="okw__state">Done</i></p>' % sc['title'])
 
     composer = ('\n              <p class="okw__composer">'
                 '<i class="okw__clip" aria-hidden="true">%s</i>'
@@ -243,8 +264,8 @@ def okou_window(key, rows):
                 % (CLIP, ARROW))
 
     return ('<div class="ochat ochat--okou" role="group"\n'
-            '                 aria-label="The conversation that produced this">' 
-            + side + '\n              <div class="okw__pane">'
+            '                 aria-label="The conversation that produced this">'
+            + rail + '\n              <div class="okw__pane">'
             + bar + '\n              <div class="okw__list">'
             + ''.join('\n                ' + r for r in rows)
             + '\n              </div>' + composer

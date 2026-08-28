@@ -1712,3 +1712,23 @@ slug is a separate, deliberate decision.
   `overflow:hidden`, assert the LIST's bottom against the composer, not a row's.
 - **Sample axe on a warm page.** A cold first pass catches unrelated entrance
   fades at random; re-run before attributing a hit to the change under test.
+
+- **`height` on a grid container is not a ceiling.** Without an explicit
+  `grid-template-rows:minmax(0,1fr)` the row track is `auto` and the tallest
+  item wins — which is how seven tabs ended up at three different heights.
+  Check EVERY tab, not the one you are looking at.
+- **A product mock is transcribed, not remembered.** Open the real token file
+  and the real component and copy the values, naming the source path in a
+  comment so the next person can diff it. vm0's live in
+  `turbo/packages/ui/src/styles/globals.css`,
+  `turbo/apps/platform/src/views/css/index.css`, and the `okou-page` views.
+- **The product's greys are a COOL ramp** (gray-50 `#F3F5F8`, hue 216).
+  `color-mix(black, white)` gives a warm grey that reads as a different
+  product. Same for shadows: the product's is tinted 220/12%.
+- **An earlier duplicate of a selector cannot be beaten from above.** Edit the
+  existing block; do not add a competing one before it.
+- **A later media block silently overrides an earlier one at every width it
+  covers.** A `@media (max-width:1080px)` rule declared after a
+  `@media (max-width:620px)` rule wins at 390 too.
+- **When you rename a class, grep the media queries.** Narrow-width rules are
+  the easiest place for a dead selector to hide.

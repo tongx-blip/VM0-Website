@@ -6,6 +6,101 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · the product window is read out of the product, not remembered
+
+Tong: *"1，怎么不同 tab 下边，高度还不一样呢？2. 你做我们自己的产品，怎么差的这么
+远呢，你不借鉴一下我们的 design token & Components 吗？… connector card 可以活泼
+一点，像我给你发的图一样。而且我感觉 logo 有点大"*
+
+### The heights
+
+Three tabs at 545, three at 552, Ad Campaign at 574 — the section jumped as
+you moved along the strip. **`height` on a grid container is not a ceiling.**
+`.ostage` declared `height:var(--o-h)` but its row track was implicit and
+therefore `auto`, so whichever scene had the tallest artifact pushed the track
+past the declared height and `align-items:stretch` took the frame with it. Now
+`grid-template-rows:minmax(0,1fr)` and `.ostage > *{ min-height:0 }`. The same
+fault existed one level down inside `.ochat--okou`, where it put the composer
+62px below the window's own bottom edge. Verified at five widths: every tab,
+every one of the three boxes, one number.
+
+### The design system
+
+The window was drawn from memory, and it showed. It used **this marketing
+page's** tokens for something that is supposed to *be* the product: Instrument
+Sans, 12px radii, greys mixed from black into white. Every value is now
+transcribed from the repo, with the source named in the CSS:
+
+| | was (invented) | is (vm0-ai/vm0) |
+| --- | --- | --- |
+| type | Instrument Sans | **Noto Sans** — already one of the page's loaded families, so no new dependency |
+| sidebar | a 148px thread list I made up | the product's **68px labelled nav rail** (`sidebar.tsx`), 9px captions, `bg-gray-50`, `border-r-[0.7px]` |
+| greys | `color-mix(ink 4.5%, paper)` — warm | the **cool ramp**: gray-50 `#F3F5F8` at hue 216, and the whole scale keeps that cast |
+| radii | 12px | **20px** card / **24px** composer / **8px** controls |
+| borders | none | **0.7px `#C5CCD7`**, the `.zero-card` hairline |
+| shadow | `rgb(ink / .05)` | `--zero-card-shadow`, tinted 220/12% — the product's own source says a hard black tint "reads muddy on white" |
+| user message | white bubble | **gray-100, `rounded-xl`, 15px/1.7, `px-4 py-3`, `max-w-85%`** |
+| assistant message | white bubble | **transparent, no border** — the single biggest reason it did not look like the product |
+| selected nav | a hand-picked grey | `--state-selected`, the ladder's own step (`hsl(215 100% 19% / .085)`) |
+| icons | mixed | lucide at **`--icon-stroke-width: 1.5`** |
+| run state | orange all-caps `DONE` | a muted **"Done"** pill — the product's labels are sentence case with no all-caps |
+
+The rail is also **80px narrower** than the list it replaced, and the
+conversation gets all of it back.
+
+Dark is not an inversion: the product's dark ramp is a different scale
+(240 3%) and `--card` sits *between* gray-50 and gray-100 rather than on
+either. Both blocks are transcribed separately.
+
+### The connector cards
+
+*"活泼一点 … logo 有点大"*. The reference's cards are **shallow and wide**, and
+its marks are small things inside a bordered tile — not the card's subject.
+Ours were portrait blocks led by a 48px logo, which is a tile, not a card that
+happens to be floating. Now: a row rather than a column, a 34px tile carrying
+a **20px** mark, then the name, then the line under it. And a degree and a bit
+of rotation in opposite directions, because two cards lying perfectly square
+read as a layout no matter how far apart you push them — `rotate` rather than
+`transform`, since the entrance animation owns `transform`, and squared off
+again below 1080 where they sit in a grid row and the tilt would read as a
+fault.
+
+### Three more, found while building
+
+**An earlier duplicate of a selector cannot be beaten from above.** The new
+`.ocard__ic` was inserted before the original block, so the 48px logo survived
+every attempt to shrink it. Edited in place instead.
+
+**The ask was being clipped.** The artifact at its natural height was 300px in
+a 373px list, so the bottom-anchored list pushed the user's own message up
+under the title bar and left a sliver of grey — which reads as a rendering
+fault, not as scrollback. Capped and cropped from the **top**, so what is lost
+is the tail of the page rather than its headline. All three scenes measured,
+not eyeballed: 356/382, 382/382, 382/382.
+
+**The narrow rules still named the old classes.** Renaming `.okw__side` to
+`.okw__rail` left the ≤1080 block styling elements that no longer exist. And
+that block is declared after the 620px rule that used to drop the cards to one
+column, so it was silently overriding it — at 390 each card had ~100px left
+for text and "Google Sheets" broke over two lines with its detail over four.
+`repeat(auto-fit, minmax(190px, 1fr))` decides for itself.
+
+**Gate.** axe 0 violations across 28 warm mid-animation samples (14 light, 14
+dark) on all seven tabs; the one hit in each theme was the first sample after
+a cold walk, on `.wfo__*` / `.cgate__allow` — the page-wide entrance-fade
+artifact already recorded on 2026-08-27. Sweep at 13 widths × 7 scenes × 5
+timestamps, now also asserting frame height == stage height and that no card
+covers a rail mark. `audit.js` §1 and §6 PASS, §5 PASS under reduced motion.
+Height equality checked at 1120/1280/1440/1600/1920.
+
+**Not done, and worth saying:** the `/ui-design` skill asks for a before/after
+plus nine variant mockups before any code. This went straight to the
+implementation because the ask was to correct an established design against a
+known source, not to choose a direction — but the exploration was skipped, not
+forgotten.
+
+---
+
 ## 2026-08-28 · the run lands somewhere, and the handover is one moving thing
 
 Three screenshots. *"图一，这个ui有点问题。图二，每个小人轮换也出bug了，而且我
