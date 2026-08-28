@@ -83,58 +83,44 @@ cell, so the block cannot resize between beats either (F9).
 themes, at 1440 and 390.
 
 Not merged, and `site/` is untouched apart from the new illustration.
-## 2026-08-28 · four comparison cards become three, and the mocks go
+## 2026-08-28 · four comparison cards become three — in the cards' own style
 
-Tong, on feedback 21: *"如果变成三个卡片，那就可以一行了。你看看有什么更好的展示
-方式，21的feedback看看有没有啥需要改的。"*
+Feedback 21. The first attempt at this replaced the four cards with three flat
+ones: a grey rounded rectangle, a thin line mark, a heading, a paragraph. Tong,
+on seeing it: *"我之前那些设计 你全给改成啥了啊 风格差的也太大了吧？"* — and he
+was right. It was generic B2B, it belonged to no page in particular, and it
+cost 762 lines of working animated mocks to get there. Reverted, then rebuilt
+inside the card language that was already here.
 
-**The strongest part of 21 was the merge, and the reason is in the copy.**
-Card 1 said *"Codex helps one person with one coding task … your whole team
-can work together in one place"*; card 4 said *"Claude Code lives on one
-engineer's machine … turns one person's know-how into shared capability"*.
-That is one axis argued twice — personal and local against team and shared —
-and a reader who notices gets the impression there are more differences than
-there are. Merged, the set is three genuinely different questions:
+**What 21 actually asked for, and what it did not.** It asked for three cards
+on one line and for less UI. It did not ask for a different design language,
+and "更抽象" is not the same instruction as "make it look like everything
+else". The card here — a live product window on top, the `X vs Okou` lockup,
+the headline, the paragraph — is the page's own idiom, and a comparison card
+without the product on it is a claim without the receipt.
 
-| | |
-|---|---|
-| Claude Code · Codex | who it is for |
-| ChatGPT | what you get back |
-| Zapier · n8n | how you tell it |
+**The merge is the part of 21 that was right, and the reason is in the copy.**
+Card 1 said *"Codex helps one person with one coding task … your whole team can
+work together in one place"*; card 4 said *"Claude Code lives on one engineer's
+machine … turns one person's know-how into shared capability"*. One axis argued
+twice. Merged onto the parallel-lanes window — which is that argument, drawn —
+the set becomes three different questions: who it is for, what you get back,
+how you tell it. Zapier's card names n8n and carries 21's natural-language
+point; ChatGPT's is untouched.
 
-Three fits one row: 422px a card at 1440, 334 in one column below 900.
+Three at `span 4` fit the measure: 422px a card at 1440, 334 in one column
+below 900, and the section goes 1.29 screens → 0.89.
 
-**And the mocks go, which is what "不用特别多UI" was pointing at.** Each card
-carried a full animated product mock — parallel lanes, a published artifact, a
-connector hub, a terminal. This section's job is to place the product against
-things the reader has already tried; a working screenshot of *our* product on
-every card is a second product tour inside an argument. One abstract mark
-instead: theirs on the left in the muted ink, ours on the right in the accent,
-and the eye reads the contrast before it reads the headline. Nothing animates
-— four figures on this page already move.
-
-The section went from **1.29 screens to 0.73**, and 762 lines of CSS went with
-the four mocks. Two passes were needed and the second one is the lesson: the
-first prune missed pseudo-element selectors (`.tsh__l--f::before` — the guard
-that skips declaration lines also skips `::`), `@keyframes` named after the
-dead components, and `.vsui` entirely, which left nine `var()` references with
-no declaration. The lint caught all nine.
-
-**What 21 needs, and it is not the card count.** The comparators are
-`Claude Code`, `Codex`, `ChatGPT`, `Zapier`, `n8n`. Three of those five are
-developer tools, and this page's stated audience is non-technical business
-users — founders, operators, marketing and sales. The heading says *"every
-alternative **you have tried**"*, and our reader has almost certainly not tried
-Codex. The merge helps (the developer axis is now one card of three instead of
-two of four) but it does not settle it: the honest question is whether the
-third comparator should be a coding agent at all, or something an operator
-actually weighs Okou against — an assistant, an agency, a hire. That changes
-which logos appear and what the cards say, so it is Tong's call, not mine.
-
-Also noted: n8n ships only a 500x200 logotype, so card three carries the Zapier
-mark and names both.
+**One rule got in the way and had to go.** `.versus > :nth-child(n+3)
+.vs__viz{height:…216px}` existed to make the second row shallower than the
+first. With everything on one line there is no second row, and the rule
+out-specified the three-up override while sitting later in the file — so the
+third window stayed 60px shallow and left a hole under its paragraph. That is
+exactly the shape `audit.js` §9 was built for two entries ago; this time it was
+found by measuring, which is faster.
 
 ---
+
 
 ## 2026-08-28 · two rules stopped being paragraphs
 

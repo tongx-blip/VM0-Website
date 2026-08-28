@@ -48,7 +48,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 .panel{ border-radius:var(--r-panel); }
-.quote{ border-radius:var(--r-card); }
+.vs,.quote{ border-radius:var(--r-card); }
 
 .btn,.nav__signin,.nav__burger{ border-radius:var(--r-btn); }
 
@@ -265,6 +265,21 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   gap:clamp(12px,1.4vw,18px);
   margin-top:clamp(52px,6vw,84px);
 }
+
+.vs{ padding:0; border:0; background:var(--paper); }
+
+.vs__txt h3{
+  font-family:inherit; font-weight:700;
+  font-size:clamp(20px,2.1vw,27px);
+  line-height:1.1; letter-spacing:-.032em;
+  margin-bottom:14px;
+}
+
+/* .vs__txt, not .vs — as `.vs p` this reached every <p> inside the media
+   band's product mocks and handed them the page's prose colour, which
+   flips with the theme. The design layer had the same rule and fixing
+   only that one left this copy still winning. */
+.vs__txt p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
 
 
 /* ─────────────── proof ─────────────── */
@@ -1245,7 +1260,7 @@ img{ filter:none; }
 
 /* radius policy, restated in one place */
 .panel{ border-radius:0; }
-.quote,.slackui{
+.vs,.quote,.slackui{
   border-radius:var(--r-card);
 }
 .btn{ border-radius:var(--r-btn); }
@@ -1301,7 +1316,7 @@ h3{ font-family:var(--fd); }
   letter-spacing:.075em;
   font-feature-settings:"tnum" 1;
 }
-.section-body,.note,.hero__body,.step p,.quote blockquote{ font-family:var(--fb); }
+.section-body,.note,.hero__body,.step p,.vs p,.quote blockquote{ font-family:var(--fb); }
 
 
 .section-body{
@@ -3843,7 +3858,7 @@ h3{ font-family:var(--fd); }
   .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(24px,4.4vw,34px); }
 
 }
-.quote{
+.vs,.quote{
   border:0;
   background:var(--paper);
 }
@@ -3877,117 +3892,880 @@ h3{ font-family:var(--fd); }
 }
 
 
+/* THREE, ON ONE LINE. Two of the four cards were arguing one axis twice —
+   "Codex helps one person with one coding task … your whole team can work
+   together" and "Claude Code lives on one engineer's machine … shared
+   capability" are the same sentence — so they merge, and three equal
+   columns fit the measure. The card itself is unchanged: same mock on top,
+   same lockup, same type. A comparison card without the product on it is a
+   claim without the receipt. */
+.versus--three .vs{ grid-column:span 4; }
 
-
-/* ── the comparison, as three cards on one line ──────────────────────
-   Four cards in a 2x2, each carrying a full animated product mock, were
-   making the same argument twice: "Codex helps one person with one coding
-   task … your whole team can work together" and "Claude Code lives on one
-   engineer's machine … shared capability" are one axis, not two. Merged,
-   the set is three genuinely different questions — who it is for, what you
-   get back, and how you tell it — and three fits one row at 422px a card.
-
-   And the mocks go. This section's job is to place the product against
-   things the reader has tried; a working screenshot of OUR product on each
-   card is a second product tour, which is what "不用特别多UI" was pointing
-   at. One abstract mark instead: the thing they have on the left in the
-   muted ink, ours on the right in the accent, and the eye reads the
-   contrast before it reads the headline. */
-.versus--three{
-  grid-template-columns:repeat(3, minmax(0,1fr));
-}
-
-.versus--three .vs3{ grid-column:auto; }
-
-.vs3{
-  display:flex; flex-direction:column;
-  padding:clamp(20px,2vw,28px);
-  border-radius:var(--r-card);
-  background:var(--tile);
-}
-
-.vs3__pair{
-  display:flex; align-items:center; gap:.5em;
-  margin:0 0 clamp(16px,1.8vw,24px);
-  font-family:var(--fm); font-size:var(--t-mono);
-  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-mute);
-}
-
-.vs3__side{ display:inline-flex; align-items:center; gap:.42em; white-space:nowrap; }
-
-.vs3__side img{ width:1.4em; height:1.4em; object-fit:contain; }
-
-.vs3__side--us{ color:var(--ink); }
-
-/* C11: no `opacity` on `--ink-mute`. It is already the lightest text the
-   page allows on every ground it uses, so any opacity on top of it is under
-   AA by construction — 3 nodes, every sample. `.vs__vs` shipped this exact
-   fault at .5 and is why the rule exists; the size step is the whole of the
-   quietening. */
-.vs3__vs{ font-size:.86em; }
-
-
-/* The mark. Left is theirs and recedes; right is ours and carries the one
-   colour on the card. Nothing animates — four figures on this page already
-   move, and a fifth competing with them is what makes a page feel busy
-   rather than alive. */
-.vs3__mark{
-  display:block; width:100%; height:auto; max-width:210px;
-  margin:0 0 clamp(18px,2vw,26px);
-}
-
-.vs3__was{ stroke:var(--ink-mute); stroke-width:2.4; opacity:.55; fill:none; }
-
-.vs3__was circle{ fill:var(--ink-mute); stroke:none; opacity:.85; }
-
-/* the ring keeps its stroke — a bare `fill="none"` attribute loses to the
-   rule above it, which is why the lone dot had nothing around it */
-.vs3__was circle.vs3__ring{ fill:none; stroke:var(--ink-mute); opacity:.4; }
-
-.vs3__arrow{ stroke:var(--ink-mute); stroke-width:2.4; opacity:.45; stroke-linecap:round; }
-
-.vs3__now{ stroke:var(--accent-solid); stroke-width:2.4; fill:none;
-           stroke-linecap:round; stroke-linejoin:round; }
-
-.vs3__now circle{ fill:var(--accent-solid); stroke:none; }
-
-.vs3 h3{
-  margin:0 0 .5em;
-  font-family:var(--fd); font-weight:500;
-  font-size:var(--t-h); line-height:1.14; letter-spacing:-.022em;
-  color:var(--ink); text-wrap:balance;
-}
-
-.vs3 > p:last-child{
-  margin:0; font-size:var(--t-sm); line-height:1.6; color:var(--ink-soft);
-}
+/* ONE height for the three windows. The old set had two rows and the rule
+   that shortened the second one still applies here — with everything on one
+   line it made the third card's mock 60px shallower than its neighbours and
+   left a hole under its paragraph. Inside a row the windows are the same
+   depth; that was already the rule, the row just changed shape. */
+.versus--three .vs__viz{ height:clamp(214px, 21vw, 276px); }
 
 @media (max-width:900px){
-  .versus--three{ grid-template-columns:1fr; }
+  .versus--three .vs{ grid-column:1 / -1; }
+
+}
+
+
+/* ── the comparison cards ────────────────────────────────────────────
+   Each card compares Okou with one alternative, so BOTH marks are on it.
+   A card that shows only the competitor's logo is describing them, not
+   comparing; the pair row is the claim in miniature.
+
+   NO SHADOW AND NO LIFT. `--e-1` put a 30px blur under every card, which
+   is the largest shadow on a page whose own rule is that a surface is a
+   FILL (S3). And these cards are not links — a lift on hover promises a
+   click that does not exist. They separate from the section by tone now:
+   the card is --tile against the section's white, and the media band is
+   one solid step further, tinted per card so four surfaces read as four
+   subjects rather than one repeated template. Solid, not gradient. */
+.vs{
+  display:flex; flex-direction:column;
+  padding:0; overflow:hidden;
+  background:var(--tile);
+  border-radius:var(--r-lg);
+  box-shadow:none;
+}
+
+
+
+/* the media band: an oversized crop of a real product surface */
+.vs__viz{
+  position:relative;
+  padding:clamp(20px,2vw,26px) 0 0 clamp(20px,2vw,26px);
+  height:clamp(214px, 21vw, 276px);
+  overflow:hidden;
+  background:var(--vs-tint);
+  --vs-tint:color-mix(in srgb, var(--vs-hue) 9%, var(--tile));
+  --vs-hue:var(--hue-engineering);
+
+  /* the product's own values, hoisted here from .vsui now that four
+     different devices draw on them. Declared --p-* so it stays obvious
+     that this block is NOT part of the page token system — it is what
+     turbo/packages/ui actually ships. */
+  --p-card:#FFFFFF;
+  --p-border:#DCE1E8;   /* gray-200  */
+  --p-fg:#1A1E26;       /* gray-950  */
+  /* gray-800, NOT the gray-700 (#788192) the product uses. P1 pins a mock
+     to the product's own values, and that is still the rule — but the
+     product spends this grey on 14px+ rows and this page draws the same
+     mocks at 9–12px, where #788192 measures 3.9:1 on white and axe fails
+     it in 28 nodes. A pinned value does not outrank the contrast floor,
+     so it steps one stop down its own ramp: 5.1:1 on --p-card, 4.6:1 on
+     --p-tint, same hue line. */
+  --p-mute:#666F7E;     /* gray-800  */
+  --p-run:#0284C7;      /* sky-600   */
+  --p-tint:#F3F5F8;     /* gray-50   */
+  --p-line:#E7EBF0;     /* gray-100  */
+  --p-r-card:14px;      /* radius-xl */
+  --p-r-item:8px;       /* radius    */
+
+  /* A TERMINAL, not our product and not our page — the one surface in this
+     section that belongs to the alternative being compared. Kept in its
+     own named group so it is never mistaken for a theme token and never
+     reused anywhere else. */
+  --t-shell:#12171C;
+  --t-dim:#79838D;
+  --t-lit:#A8B2BB;
+  --t-caret:#4A545E;
+}
+
+
+.vs__viz--parallel{ --vs-hue:var(--hue-engineering); }
+
+
+.vs__viz--artifact{ --vs-hue:var(--hue-product); }
+
+
+/* The "second row sits shorter" rule is gone with the second row: three
+   cards are one line. It also OUT-SPECIFIED the three-up override while
+   sitting later in the file, so the third window stayed 60px shallow and
+   left a hole under its paragraph — the exact shape audit.js §9 looks for. */
+
+
+/* ── the four devices ────────────────────────────────────────────────
+   One per claim, and each one has to be a DIFFERENT KIND OF PICTURE,
+   because the previous version drew three of the four with the same
+   component — a vertical list of avatar + label + right-aligned time —
+   and only the connector hub stood apart. Worse than repetitive: the
+   Codex card claims PARALLELISM and its picture was a single sequential
+   column, so the image argued against the sentence over it.
+
+   Every one of them bleeds off an edge. That is the one thing all six
+   surveyed pages do and we did not: their panels are cut mid-component
+   so they read as a fragment of a running interface, while ours floated
+   whole inside padding and read as a diagram. */
+
+/* A — Codex: "Several AIs get more done at once."
+   Parallelism has to be visible as WIDTH — and at the PRODUCT'S OWN
+   SIZE. The card spent two rounds drawing four agents shrunk to 29% of
+   the band with 11px rows, which is not a crop of the app, it is a
+   diagram of it: forty-eight lines of 11px type in a 276px band, all of
+   it too small to read and too much to skim. Tong, on that version:
+   "内容太多了 … 我说加更多细节，不是加更多的 text".
+ 
+   So the board is drawn at the app's size and the band crops it. Two
+   agents and a bit fit, five of their steps are above the cut, and every
+   value below comes from the component `.vsui__r` was pinned to. A third
+   of the words for twice the craft.
+ 
+   ── the track ───────────────────────────────────────────────────────
+   The board is laid down TWICE and travels left forever (`app.js` §3b2).
+   Two copies are what make the wrap invisible: the reset moves the track
+   back by exactly one copy's width, onto a frame identical to the one it
+   left. */
+.lanes{
+  display:flex; align-items:stretch; gap:14px;
+  width:max-content; height:100%;
+  transform:translate3d(var(--pan,0px),0,0);
+}
+
+
+.lane{
+  /* 320 is the product's column. It also sets the composition: two lanes
+     and 14 of gap leave a 72px peek of the third — an avatar, a name and
+     the first word of a task, which is unmistakably a third agent. At the
+     336 a first pass used, the peek was 40px and read as a clipping bug. */
+  flex:0 0 320px;
+  display:flex; flex-direction:column;
+  padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
+  border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
+  font-family:var(--fb); color:var(--p-fg);
+}
+
+
+/* THE RUN IS LONGER THAN THE CARD, and that is the whole picture: a lane
+   cut at the bottom edge is a task list that keeps going, which is what
+   the section's other three devices do too. Without this the column is a
+   flex container and its rows are flex items, so a twelve-step run does
+   not overflow — every row silently shrinks by four pixels until the run
+   fits, and the card reads as four short lists that happen to have ended. */
+.lane > *{ flex:none; }
+
+
+.lane__h{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+
+
+.lane__h img{ width:32px; height:32px; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+
+
+/* THE AGENT IS NAMED. Four lanes headed by an avatar and the word "now"
+   are four instances of one anonymous thing; the sentence over them says
+   "several AIs", and several implies each one is a different somebody.
+   The name is the cheapest way to say that, and it is the name a person
+   would @-mention, so it also says these are addressable. */
+.lane__h b{
+  font-weight:500; font-size:14px; color:var(--p-fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+
+/* the timestamp moves to the right edge, which is where the product puts
+   a row's meta — and it gives the name the whole left side */
+.lane__h span{
+  margin-left:auto; padding-left:8px;
+  font-family:var(--fm); font-size:12px; letter-spacing:.02em;
+  color:var(--p-mute); white-space:nowrap;
+}
+
+
+.lane__t{ font-size:17px; line-height:1.3; margin:0 0 12px; }
+
+
+/* ── a step row ──────────────────────────────────────────────────────
+   A SHUTTER, not a fader. The row is a 1-track grid that the loop opens
+   from `0fr`, so an arriving step is clipped into view rather than faded
+   in — text at partial opacity is text under its contrast ratio, and a
+   figure that loops re-enters that state forever (`docs/motion.md`).
+
+   THE ROW HAS NO PADDING ANYWHERE — its air is leading. A `0fr` track is
+   floored at the padding box of the item inside it, so the 3px above and
+   below that used to separate these rows kept a closed row 6px tall and
+   its label overlapped its neighbour's for the whole transition. This is
+   the trap `docs/qa-checklist.md` §4k names, met from the item's side
+   rather than the track's. Line-height is height a `0fr` track does
+   collapse.
+
+   THE INSET AND THE CORNER LIVE ON THIS ELEMENT, not on the row inside
+   it. They were on `.lane__r`, as a negative inline margin — which put
+   the live row's tinted panel 8px WIDER than the element that clips it,
+   so `overflow:hidden` sliced both rounded corners off and the highlight
+   shipped as a full-bleed rectangle. `getComputedStyle` reported the 8px
+   radius the whole time; it was never painted. Anything that has to be
+   visible outside the text column has to be on the clipper. */
+.lane__s{
+  display:grid; grid-template-rows:1fr; overflow:hidden;
+  margin:0 calc(-1 * var(--lane-inset)); padding-inline:var(--lane-inset);
+  border-radius:var(--p-r-item);
+  font-size:14px; color:var(--p-mute);
+  transition:background-color var(--t-state) var(--e-out);
+  /* the inset is a variable because the figure is drawn at two sizes and
+     the highlight has to keep the same relationship to the ink at both.
+     12px is measured against the row's OPTICAL height, not its box: a
+     14px label in a 34px row has about twelve pixels of clear space above
+     and below its ink. At the 8px this started on, the highlight was
+     tighter horizontally than vertically and read as a band clamped onto
+     the text rather than as a selected row. */
+  --lane-inset:12px;
+}
+
+
+/* 34px is the product's row: a 14px label on a 1.3 line box inside 8px of
+   padding, stated as leading because a `0fr` track is floored at the
+   padding box of the item inside it (RULES N13). */
+.lane__r{ display:flex; align-items:center; gap:14px; min-height:0; line-height:34px; }
+
+
+/* one slot, two glyphs, stacked — so the swap from running to finished is
+   a scale exchange in place and the label never shifts sideways. 12px, not
+   the .86rem the product's own rows use: the run indicator's ripple grows
+   to 1.56× and a wider one would be cut by the row's own clip. */
+.lane__k{
+  display:grid; place-items:center;
+  width:16px; height:16px; flex:none;
+}
+
+
+.lane__k > *{ grid-area:1/1; }
+
+
+.lane__k .vsui__ind{
+  width:100%; height:100%;
+  transform:scale(0); transition:transform var(--t-state) var(--e-spring);
+}
+
+
+/* GREY, not the run blue. Ten finished ticks per lane in --p-run would
+   put forty blue marks on the card and the one step that is actually
+   live would stop being the thing the eye finds. Colour marks the
+   running row and nothing else. */
+.lane__tick{
+  width:13px; height:13px; stroke:var(--p-mute);
+  transition:transform var(--t-state) var(--e-spring);
+}
+
+
+.lane__s em{ font-style:normal; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+
+/* how long the step took — the second column that makes a list of labels
+   read as a log. Wiped in with clip-path when the step finishes, because
+   it is text (see the shutter note above). */
+.lane__s i{
+  margin-left:auto; padding-left:12px;
+  font-family:var(--fm); font-style:normal; font-size:12px;
+  color:var(--p-mute); white-space:nowrap;
+  transition:clip-path var(--t-state) var(--e-out);
+}
+
+
+/* WHICH ROW IS LIVE IS ASKED TWICE, because the two states have different
+   sources of truth. Playing, it is whichever step app.js has most recently
+   opened. At rest — no JS, reduced motion, or the loop parked by hand for
+   an axe run — it is the newest step in the markup, and it has to be that
+   whatever class the loop happened to leave behind when it stopped. */
+.lanes:not(.is-live) .lane__s--now,
+.lanes.is-live .lane__s.is-run{ color:var(--p-fg); }
+
+
+/* the step being worked on is a selected row, which is what the product
+   draws and what gives each lane one place for the eye to land */
+.lanes:not(.is-live) .lane__s--now,
+.lanes.is-live .lane__s.is-run{ background:var(--p-tint); }
+
+
+.lanes:not(.is-live) .lane__s--now .vsui__ind,
+.lanes.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
+
+
+.lanes:not(.is-live) .lane__s--now .lane__tick,
+.lanes.is-live .lane__s.is-run .lane__tick{ transform:scale(0); }
+
+
+.lanes:not(.is-live) .lane__s--now i,
+.lanes.is-live .lane__s.is-run i{ clip-path:inset(0 100% 0 0); }
+
+
+/* only the live row's ring animates. Three rows per lane carry an
+   indicator because three of them take a turn at being live; leaving all
+   twelve of those keyframes running would be eight animations painting a
+   glyph scaled to nothing. */
+.lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-c,
+.lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-r,
+.lanes.is-live .lane__s:not(.is-run) .vsui__ind-c,
+.lanes.is-live .lane__s:not(.is-run) .vsui__ind-r{ animation:none; }
+
+
+/* ── the loop ────────────────────────────────────────────────────────
+   `.is-live` is added by app.js §3b2 and by nothing else, so the resting
+   frame — no JS, reduced motion, the moments before the observer fires —
+   is the whole run, every step present, exactly as it was before this
+   was a loop at all. */
+.lanes.is-live .lane__s{ grid-template-rows:0fr; }
+
+
+.lanes.is-live .lane__s.is-on{ grid-template-rows:1fr; }
+
+
+/* one painted frame later — see app.js §3b2. The opening state has nine of
+   eleven rows already open, and arming the transition in the same frame
+   plays the other two sliding shut in front of the reader. */
+.lanes.is-warm .lane__s{ transition:grid-template-rows var(--t-reveal) var(--e-out); }
+
+
+
+/* B — ChatGPT: "Does the work, not just the thinking."
+   THE ARTIFACT IS A PUBLISHED SITE, so the frame around it is a browser
+   and a browser's toolbar is a FIELD. The old mock drew three dots and
+   let the URL float beside them as bare text, which is most of why the
+   picture read as a diagram rather than as something on the internet.
+
+   And the receipt is DOCKED. It used to be a rounded white sticker
+   parked across the chart — over the numbers it was vouching for,
+   reading as a notification rather than as part of the page. As the
+   window's own last row it is what it actually is: the strip that says
+   what produced this, advancing one step at a time.
+
+   THE CHART TAKES WHATEVER IS LEFT, and the layout works it out rather
+   than a comment does. Two rounds went on hand-solving this height —
+   276px of band, minus a receipt, minus chrome, minus a title, minus
+   three tiles — and both times the plot ended up short enough that its
+   own baseline and day labels finished up behind the dock. Arithmetic in
+   a comment is a value that stops being true the moment a font loads. */
+.arti{ position:relative; width:calc(100% + 70px); height:100%; }
+
+
+.arti__win{
+  height:100%; display:flex; flex-direction:column;
+  border-radius:var(--p-r-card); overflow:hidden;
+  border:1px solid var(--p-border); background:var(--p-card);
+  font-family:var(--fb); color:var(--p-fg);
+}
+
+
+.arti__bar{
+  display:flex; align-items:center; gap:6px; flex:none;
+  margin:0; padding:9px 12px;
+  background:var(--p-tint); border-bottom:1px solid var(--p-border);
+}
+
+
+.arti__bar i{ width:8px; height:8px; border-radius:50%; background:var(--p-border); flex:none; }
+
+
+.arti__url{
+  display:flex; align-items:center; gap:6px;
+  flex:1; min-width:0; margin-left:6px; padding:3px 10px;
+  border-radius:var(--r-pill); background:var(--p-card);
+  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+
+.arti__url svg{ width:9px; height:9px; stroke:var(--p-mute); flex:none; }
+
+
+/* the flex chain has to be unbroken from the window to the plot: one
+   non-flex link in the middle and the chart comes out sixteen pixels tall */
+/* 14 at the bottom, not the 20 that was making room for a day axis this
+   figure no longer has. The chart is the only thing here that flexes, so
+   every pixel not spent on padding is a pixel of curve. */
+.arti__body{ flex:1; min-height:0; display:flex; flex-direction:column; padding:14px 16px 14px; }
+
+
+.arti__dash{ flex:1; min-height:0; display:flex; flex-direction:column; }
+
+
+.arti__h{
+  display:flex; align-items:center; gap:8px; flex:none;
+  margin:0 0 10px; font-size:17px; font-weight:600; line-height:1.25;
+  letter-spacing:-.012em;
+}
+
+
+@keyframes artiLive{ 0%,100%{ opacity:.45 } 50%{ opacity:1 } }
+
+
+/* ONE LINE, NOT THREE TILES AND NOT A STACK. Tiles cost about thirty of
+   the two hundred and forty pixels this band has and spent them on a
+   fill. Stacking label under value then cost fifty-three, which is the
+   whole chart: the plot came out 30px at 1440 and 75px at 1260, a cliff
+   either side of a breakpoint that only existed because the two were
+   fighting for the same space. Inline, the row is twenty pixels at every
+   width and the chart never has to be rationed. */
+.arti__stats{ display:flex; align-items:baseline; gap:34px; flex:none; margin-bottom:8px; }
+
+
+.arti__s{ display:flex; align-items:baseline; gap:6px; min-width:0; }
+
+
+.arti__s b{ font-size:21px; font-weight:600; line-height:1.2; letter-spacing:-.018em; }
+
+
+/* the label leads, the way a KPI is read aloud */
+.arti__s span{
+  order:-1; flex:none;
+  font-family:var(--fm); font-size:10px; letter-spacing:.06em; color:var(--p-mute);
+}
+
+
+/* AN AREA, NOT SEVEN BARS. Bars need height to say anything, and after
+   the chrome, the title and the figures this band has about forty pixels
+   left — at which point the tallest day was 32px and the shortest 12,
+   which is a texture rather than a reading. A filled curve is legible at
+   any height and carries the same seven readings. */
+.arti__chart{ flex:1; min-height:0; display:flex; flex-direction:column; padding-top:10px; }
+
+
+.arti__plot{
+  /* no min-height here: the floor is set further down, next to the reason
+     it exists. Declaring 0 as well left a dead declaration that reads as
+     intent to the next person to open the file. */
+  position:relative; flex:1;
+  border-bottom:1px solid var(--p-line);
+}
+
+
+.arti__svg{
+  display:block; width:100%; height:100%;
+  /* the wipe. A graphic may be revealed; the AXIS below it may not, which
+     is why the day labels live outside this element (RULES N3). */
+  clip-path:inset(0 0 0 0);
+  transition:clip-path .9s var(--e-out);
+}
+
+
+.arti.is-live .arti__svg:not(.is-on){ clip-path:inset(0 100% 0 0); }
+
+
+.arti__area{ fill:var(--p-run); opacity:.17; }
+
+
+.arti__line{ stroke:var(--p-run); stroke-width:2.2; stroke-linejoin:round; opacity:.9; }
+
+
+.arti__dot{
+  position:absolute; left:var(--x); top:var(--y);
+  width:8px; height:8px; margin:-4px 0 0 -4px;
+  border-radius:50%; background:var(--p-run);
+  box-shadow:0 0 0 2.5px var(--p-card);
+}
+
+
+/* THE DOT MAY FADE; THE LABEL MAY NOT. `4.2×` is text, and text at part
+   opacity is text under its contrast ratio — axe caught this one at about
+   two runs in twenty, which is what a 400ms fade inside a nine-second
+   loop looks like from the outside. The rule is already written down
+   (RULES N3) and I broke it on the one element in this figure it applies
+   to. The dot is a graphic and keeps its fade. */
+.arti__dot{ transition:opacity .4s var(--e-out); }
+
+
+.arti.is-live .arti__svg:not(.is-on) ~ .arti__dot{ opacity:0; }
+
+
+.arti.is-live .arti__svg:not(.is-on) ~ .arti__val{ clip-path:inset(0 100% 0 0); }
+
+
+/* BELOW 1080 THE FIGURES GO. The band is `clamp(214px, 21vw, 276px)`, so
+   on a phone it is 214 — and chrome, title, three figures, a chart and a
+   receipt do not fit in it. Measured rather than eyeballed: the plot came
+   out ONE pixel tall and its axis sat nine pixels under the dock. The
+   deltas are what give way — a reading survives losing its change; it
+   does not survive losing its number. 1080 is measured, not chosen: below
+   it the three figures and their arrows no longer fit the card's width on
+   one line. */
+/* the deltas and the day axis this used to drop at 1080 are gone from the
+   figure entirely — see docs/changelog.md. Nothing left to hide. */
+
+/* a floor, so no width between breakpoints can squeeze the plot to a line
+   the way 1120 once did */
+.arti__plot{ min-height:30px; }
+
+
+.arti__dock{
+  display:flex; align-items:center; gap:10px; flex:none;
+  padding:12px 16px;
+  background:var(--p-tint); border-top:1px solid var(--p-border);
+  font-family:var(--fb); font-size:13px; color:var(--p-fg);
+}
+
+
+.arti__k{ display:flex; flex:none; }
+
+
+.arti__tick{ width:11px; height:11px; stroke:var(--p-run); flex:none; }
+
+
+/* the four steps share one slot and take turns, so the strip never
+   changes height and the type never moves. Left-grouped with the
+   duration right behind the name: a counter pushed to the far right is
+   the first thing this window's 70px of right bleed removes.
+
+   THE RESTING FRAME IS THE FINISHED ONE. Without `.is-live` all four were
+   `display:block` in a row built for one line. */
+.arti__step{
+  display:none; flex:1; min-width:0; font-weight:400;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+
+.arti__step:last-of-type{ display:block; }
+
+
+.arti.is-live .arti__step:last-of-type{ display:none; }
+
+
+.arti.is-live .arti__step.is-on{ display:block; }
+
+
+.arti__step i{
+  margin-left:10px; font-style:normal;
+  font-family:var(--fm); font-size:11px; color:var(--p-mute);
+}
+
+
+/* every "not yet" is scoped under `.is-live`, without exception: with the
+   squashed transform on the base rule, no-JS and reduced motion got a row
+   of two-pixel slivers instead of a run history (RULES N2). */
+.tsh.is-live .tsh__runs span:not(.is-on){ transform:scaleY(.14); }
+
+
+
+/* ── how the set behaves ─────────────────────────────────────────────
+   The interaction complaint and the sameness complaint are the same
+   complaint: four identical things that all just sit there. Warp
+   auto-advances its rail, Attio drives its index off scroll. We cannot
+   take either without repeating the tab reel, and hover is out — these
+   cards are not links and a hover affordance would promise a click that
+   does not exist.
+
+   So the scroll position IS the interaction. Each card plays its own
+   sequence once as it arrives, and because the pinwheel puts them at
+   four different heights they fire one after another rather than all at
+   once. Each is a single state change, not a loop: an entrance is
+   allowed to be a performance, an idle is not. */
+/* Cards B and D no longer play a one-shot entrance: both now run the
+   cue loop in app.js §3b3, which is gated the same way and whose resting
+   frame is the finished figure. What is left here is the pinwheel note
+   above, which still describes cards A and C. */
+
+
+/* the three lanes are meant to read as SIMULTANEOUS, so they stay close
+   together — just far enough apart not to look like one clock */
+.lane:nth-child(2) .vsui__ind-c,
+.lane:nth-child(2) .vsui__ind-r{ animation-delay:-.32s }
+
+
+.lane:nth-child(3) .vsui__ind-c,
+.lane:nth-child(3) .vsui__ind-r{ animation-delay:-.64s }
+
+
+
+.vsui__ind{
+  position:relative; display:inline-flex;
+  width:.86rem; height:.86rem; border-radius:9999px;
+  color:var(--p-run);
+}
+
+
+.vsui__ind-c,.vsui__ind-r{
+  position:absolute; top:50%; left:50%;
+  border-radius:inherit; transform-origin:center;
+}
+
+
+.vsui__ind-c{
+  width:calc(100% - 5px); height:calc(100% - 5px);
+  background:currentColor;
+  transform:translate(-50%,-50%) scale(.64); opacity:.34;
+  animation:vsRunCentre 2400ms cubic-bezier(.33,0,.66,1) infinite;
+}
+
+
+.vsui__ind-r{
+  width:calc(100% - 3px); height:calc(100% - 3px);
+  border:1px solid currentColor;
+  transform:translate(-50%,-50%) scale(.8); opacity:0;
+  animation:vsRunRipple 2400ms ease-out infinite;
+}
+
+
+@keyframes vsRunCentre{
+  0%,100%{ transform:translate(-50%,-50%) scale(.64); opacity:.34 }
+  52%    { transform:translate(-50%,-50%) scale(.88); opacity:.52 }
+}
+
+
+@keyframes vsRunRipple{
+  0%,45% { transform:translate(-50%,-50%) scale(.8);   opacity:0 }
+  52%    { transform:translate(-50%,-50%) scale(.8);   opacity:.34 }
+  100%   { transform:translate(-50%,-50%) scale(1.56); opacity:0 }
+}
+
+
+@media (prefers-reduced-motion:reduce){
+  .vsui__ind-c,.vsui__ind-r{ animation:none; }
+
 
 }
 
 
 
+/* ── the connector hub ──────────────────────────────────────────────
+   The Zapier card's claim is "reads the goal, picks the tools", so the
+   picture is the reach itself: every connector laid out on one regular
+   grid with Okou at the exact centre, and the rim masked away so a
+   9 x 5 crop reads as "and the rest of the thousand".
+
+   LIGHT, deliberately. The reference for this was a dark grid; a dark
+   panel here would be the only inverted surface on a light page and would
+   fight the Page Theme Lock. The tiles use the product's own gray-50
+   (#F3F5F8) and its 8px item radius, so they are the same chip the app
+   puts a connector mark in.
+
+   MULTI-STEP. Three tiles next to the centre light in sequence — read,
+   draft, post — and the ring leaves the centre on the same cycle. One
+   pass every 4.2s, so it reads as a run rather than as decoration. */
+/* NEUTRAL GROUND, no hue. An amber tint over --tile is a warm cream, and
+   C2 is "cool neutrals, never warm" — I introduced the one warm surface on
+   the page. It was also the wrong call independently: this band carries 55
+   brand marks, so the ground's job is to stay out of their way. The other
+   three tints are cool and stay. */
+/* THE MASK LIVES ON THE BAND, not on the grid. On .hub its percentages
+   were relative to the 682px grid, so the fade only finished 171px from
+   centre while the band edge is at 108px — the tiles were still ~60%
+   opaque where the card sliced them, and the rim read as a straight cut
+   rather than a fade. It was invisible while this card was six columns
+   wide and obvious as soon as it became five, worst in dark mode where
+   the tiles are the bright thing.
+
+   Inscribed in the band (50%/50%, transparent at 100%) it reaches zero
+   exactly at the edge at every card width instead of at one. */
+/* THE MASK BELONGS TO THE HUB, NOT TO THE BAND. Masking the band masked
+   its own fill, so this card could not carry a tint — it was pinned to
+   `--tile`, the same value as the card body under it, and the figure and
+   the sentence ran into each other with no edge between them. Its three
+   siblings have had a hue-tinted band since they were built; this one
+   lost it to the vignette. `--hue-ops` because green sits between the
+   engineering blue above it and the leadership violet beside it, and
+   because the warm hues are out on a cool page (design-principles §4). */
+.vs__viz--context{
+  position:relative; padding:0;
+  --vs-hue:var(--hue-ops);
+
+  /* 15%, NOT THE SHARED 9%, and the reason is coverage rather than taste.
+     The band's tint is what separates the figure from the sentence, and
+     how much separation 9% buys depends entirely on how dark the hue is:
+     the product teal lands 21 levels off `--tile`, the ops green only 12.
+     This card also has the least tint showing of the four — a wall of
+     near-white tiles covers most of it — so it starts with less area to
+     make the point with. 15% puts its edge at the same 21 levels the
+     other three get for free. */
+  --vs-tint:color-mix(in srgb, var(--vs-hue) 15%, var(--tile));
+}
+
+
+.hub{
+  /* Pinned light in both modes like every product mock (P1), so these are
+     literals on purpose and must NOT follow --ink-rgb: in dark mode that
+     channel inverts and the outline would go pale on a pale tile. */
+  /* A CHIP, NOT A HIGHLIGHT. At gray-50 these read as white cut-outs on
+     the tinted band, and the one tile that is meant to be white — ours,
+     at the centre — was only twelve levels brighter than the fifty-four
+     around it, so it had to earn its place on size alone. Two steps down
+     the ramp: the wall goes quiet, our mark is the only lit thing on it,
+     and the wave has somewhere to travel to. */
+  --hub-tile:#EDF0F4;   /* the product's gray-100 */
+  --hub-line:#E0E5EB;   /* one step down — the outline           */
+  --hub-lit:#FFFFFF;
+  --hub-cycle:3.2s;
+  --hub-step:.085s;     /* per cell of radius: the wave's speed  */
+
+  /* CENTRED EXPLICITLY, not by alignment. The grid is deliberately WIDER and
+     TALLER than its band, and both `place-items:center` and flex centring
+     fall back to start-alignment once a child overflows — that is the spec's
+     safe-alignment behaviour, and it left the hub sitting left of centre.
+     An absolute 50% + translate has no such fallback. */
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  display:grid;
+  width:max-content;
+  grid-template-columns:repeat(11, 52px);
+  gap:11px;
+
+  /* THE FADE HAS TO FINISH BEFORE THE CUT. Two things were wrong and
+     they were the same thing: `#000 45%, transparent 100%` is a straight
+     line in alpha, and it still had the edge tiles at about 40% when the
+     band's `overflow:hidden` sliced them — so a half-painted tile was
+     chopped in half, which is what read as abrupt. Widening the ellipse
+     only made it worse: the tiles then arrived at the edge at 0.9 and
+     were cut at full strength.
+
+     Ten stops on an ease-out curve, sized so alpha is ~0.03 by the time
+     a tile reaches the band's edge — 266 of the hub's 355px horizontal
+     radius, 108 of its 140px vertical one, both about 76%. Nothing is
+     ever cut while it is still visible, and no tile is more than about a
+     fifth lighter than its neighbour.
+
+     It also gives the card its boundary back: with the outer tiles gone
+     rather than faint, the band's own tint shows as a clean strip under
+     them, which is the edge the figure and the sentence were missing. */
+  -webkit-mask-image:radial-gradient(ellipse 54% 48% at 50% 50%,
+    #000 0%, #000 22%,
+    rgb(0 0 0 / .95) 34%, rgb(0 0 0 / .84) 44%,
+    rgb(0 0 0 / .66) 53%, rgb(0 0 0 / .45) 62%,
+    rgb(0 0 0 / .25) 70%, rgb(0 0 0 / .10) 78%,
+    rgb(0 0 0 / .03) 86%, transparent 94%);
+          mask-image:radial-gradient(ellipse 54% 48% at 50% 50%,
+    #000 0%, #000 22%,
+    rgb(0 0 0 / .95) 34%, rgb(0 0 0 / .84) 44%,
+    rgb(0 0 0 / .66) 53%, rgb(0 0 0 / .45) 62%,
+    rgb(0 0 0 / .25) 70%, rgb(0 0 0 / .10) 78%,
+    rgb(0 0 0 / .03) 86%, transparent 94%);
+}
+
+
+.hub__t{
+  display:grid; place-items:center;
+  width:52px; height:52px;
+  border-radius:8px;                      /* the product's item radius */
+  background-color:var(--hub-tile);
+  /* the outline is an INSET shadow, not a border: the tiles are on a fixed
+     52px pitch and a border would grow every one of them by 2px */
+  box-shadow:inset 0 0 0 1px var(--hub-line);
+  /* Pinned light in BOTH modes, like every other product mock on this
+     page (P1). The first dark pass followed --paper and inverted only the
+     centre tile, so the hub became the darkest thing on its own grid — the
+     exact opposite of what it is for. */
+}
+
+
+.hub__t img{ width:22px; height:22px; object-fit:contain; }
 
 
 
+/* Okou at the centre, and the only tile with the accent on it */
+/* The hub reads as the hub by SIZE and a soft lift, not by glow. A heavy
+   accent halo under one tile was the loudest thing in the card and the
+   craft floor is explicit that a shadow carries an offset and a soft blur
+   while a coloured halo is decoration. */
+.hub__t--me{
+  position:relative;
+  width:62px; height:62px;
+  margin:-5px;
+  border-radius:14px;                     /* the product's card radius */
+  background-color:var(--hub-lit);
+  /* no lift. It reads as the centre by being bigger, whiter and more
+     rounded than everything around it; the shadow was a fourth signal
+     saying what three already said. */
+  box-shadow:inset 0 0 0 1px var(--hub-line);
+}
 
 
-/* second row sits shorter than the first — the height difference is
-   between rows, never inside one */
-.versus > :nth-child(n+3) .vs__viz{ height:clamp(178px, 17vw, 216px); }
+.hub__t--me img{ width:30px; height:30px; }
 
 
 
+/* ── the wave ────────────────────────────────────────────────────────
+   Every tile runs the SAME animation and the only thing that differs is
+   when it starts: --d is the tile's distance from the centre in grid
+   cells, written onto each one, so the delay grows with the radius and
+   the whitening reads as a ring travelling outward. Three hand-picked
+   tiles lighting in sequence could never do that — it needs all 55.
+
+   Background only. The previous pass lifted each tile with a shadow as it
+   lit; a shadow on a chip inside a flat grid is a second material idea
+   doing the same job the colour already does. */
+.hub__t{
+  animation:hubWave var(--hub-cycle) var(--e-inout) infinite;
+  animation-delay:calc(var(--d, 0) * var(--hub-step));
+  animation-play-state:paused;
+}
+
+/* the centre is the source of the wave, so it never joins it */
+.hub__t--me{ animation:none; }
+
+
+@keyframes hubWave{
+  0%, 4%    { background-color:var(--hub-tile); }
+  12%, 20%  { background-color:var(--hub-lit); }
+  34%, 100% { background-color:var(--hub-tile); }
+}
+
+
+.vs.is-in .hub__t{ animation-play-state:running; }
+
+
+@media (prefers-reduced-motion:reduce){
+  .hub__t{ animation:none; }
+
+}
 
 
 
+/* ── the text half ───────────────────────────────────────────────── */
+.vs__txt{ padding:clamp(20px,2vw,26px); }
 
 
 
+/* both marks, and the word between them */
+.vs__pair{
+  display:flex; align-items:center; gap:9px;
+  margin:0 0 12px;
+  font-family:var(--fm);
+  font-size:var(--t-mono); letter-spacing:.06em;
+  color:var(--ink-mute);
+}
 
 
+.vs__side{ display:inline-flex; align-items:center; gap:7px; }
+
+
+.vs__side img{ width:18px; height:18px; object-fit:contain; }
+
+
+.vs__side--us{ color:var(--ink); }
+
+
+/* --ink-mute is already the lightest ink the page allows, so an opacity on
+   top of it is under AA by construction. The word is made quieter by SIZE
+   instead — one dimension, and it still reads as the connector between the
+   two names rather than a third name. */
+.vs__vs{ font-size:.86em; }
+
+
+
+.vs__txt h3{
+  /* base.css sets `font-family:inherit` here, which lands on the body face —
+     a section heading in the prose face is the one type role that must not
+     drift */
+  font-family:var(--fd);
+  /* --t-d3 (up to 30px) made four card headings compete with the section
+     headline above them. --t-h is one step down and lets the section keep
+     its own voice. */
+  font-size:var(--t-h); font-weight:500;
+  line-height:1.18; letter-spacing:-.025em;
+  margin-bottom:10px; color:var(--ink);
+}
+
+
+/* SCOPED TO .vs__txt, not to .vs. As `.vs p` this was (0,1,1) and beat
+   every mock class inside the media band, so each <p> in a product mock
+   took the PAGE prose colour and size — including --ink-soft, which flips
+   with the theme. In dark that put light-grey text on the mocks' white
+   cards at 1.92:1. Light mode hid it: --ink-soft is dark there, so it
+   merely looked a little soft instead of broken. Exactly the failure P1
+   exists to prevent, arriving through the cascade rather than through a
+   token. */
+.vs__txt p{ font-size:var(--t-meta); line-height:1.6; color:var(--ink-soft); }
 
 
 /* ── the testimonial cards ───────────────────────────────────────────
@@ -4813,8 +5591,12 @@ h3{ font-family:var(--fd); }
 
   .versus{ grid-template-columns:1fr; }
 
-  .versus > :nth-child(n+3) .vs__viz{ height:clamp(196px,19vw,244px); }
-
+  /* 76vw, not the 320px the wide layout uses: at 390 the band is 342
+     wide, so a 320px lane leaves an eight-pixel sliver of the next one —
+     the same non-peek the desktop width was fixed for. 76vw keeps a 68px
+     peek at every phone size, and the track's arithmetic is measured
+     rather than assumed, so it follows the narrower lane on its own. */
+  .lane{ flex:0 0 min(320px,76vw); }
 
   .scene.is-on{ grid-template-columns:1fr; }
 
