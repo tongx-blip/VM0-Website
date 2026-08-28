@@ -249,6 +249,51 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · one stroke, not two — and an element deleted
+
+Tong: *"现在头像两个stroke 一白，一个橙，没必要呢，你可以直接让白色stroke变成橙
+色。就可以"*
+
+Right, and it deletes a whole element. The active face carried two concentric
+rings: its own `--paper` seam, plus a separate `.wfo__halo` that slid between
+the avatars behind them. **The seam is the state now** — one stroke that changes
+colour, `var(--wfo-seam, var(--paper))` swapping to `var(--accent)` on the
+holder.
+
+What went with it: the `.wfo__halo` element, its CSS block, the `--hx`
+`offsetLeft` bookkeeping in `app.js`, and the z-index reasoning about sitting at
+8 so it could be above the faces it was not on and below the one it was. Net
+−32 lines.
+
+**It also ends the class of bug I fixed an hour ago.** A ring drawn by the
+avatar's own `box-shadow` cannot be centred on the wrong box, cannot land behind
+the face it is marking, and cannot fall out of register with a lift declared
+somewhere else. Those were three separate faults in the same eight pixels, and
+none of them is reachable any more.
+
+**`--accent`, not `--accent-solid`.** This is a graphic, so its floor is 3:1
+rather than 4.5:1, and `--accent` clears that on every ground the page has in
+both themes. `--accent-solid` is tuned for text on paper and reads as a muddy
+rust at a 0.17em width.
+
+**One thing I changed and changed back.** I retimed the recolour to 520ms on the
+theory that `--t-state` was firing far ahead of the 620ms lift. `--t-state` is
+420ms — the gap was 200ms, not the four-fifths I had assumed, and a number
+picked to close it would have been a duration outside the token scale for no
+gain. It reads `var(--t-state)`.
+
+**Gate.** Rings sampled through ten cycles: exactly one orange at a time, never
+two (the occasional zero is a frame caught mid-recolour, when the interpolated
+colour matches neither end). axe 0 across 18 samples on the live rotation, light
+and dark, plus reduced motion. `audit.js` §1/§6 PASS, §5 PASS, `tools/tokens.py`
+0.
+
+> **Before adding a second element to mark a state, check whether the first one
+> can carry it.** A marker that is part of the thing it marks cannot drift from
+> it.
+
+---
+
 ## 2026-08-28 · the handover ring was never on the face it was pointing at
 
 Tong: *"头像切换有bug，头像active的动画能不能更明显一些，而且现在第三个头像active

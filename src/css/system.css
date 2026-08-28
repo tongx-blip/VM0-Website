@@ -2416,45 +2416,18 @@ h3{ font-family:var(--fd); }
   box-shadow:0 0 0 .12em var(--paper);
 }
 .wfo__tag--by b{ font-weight:500; color:var(--ink); }
-/* ── the handover, as ONE moving thing ───────────────────────────────
-   Three avatars each popping and fading in turn is three animations
-   arguing, and the pile's stacking order is DOM order — so the one that
-   rose was still UNDER the one after it, which reads as a glitch rather
-   than a lift. A single halo slides between them instead: one element in
-   motion, spring-eased, the same grammar as the runner on beat 1. The
-   avatars themselves only rise, and nothing changes opacity. */
-.wfo__halo{
-  /* TOP 0, NOT 50%. `.wfo--team` wraps — the avatars are row one and the
-     caption is row two — so half of it is 14px below the middle of the
-     faces, and the ring hung under the pile as a stray orange crescent.
-     Row one begins at the container's own top, and the container has no
-     padding, so `top:0` IS the avatar row and stays right whatever the
-     caption does. Measured before and after: halo centre 566 against a
-     holder centre of 552, now equal. */
-  position:absolute; left:0; top:0;
-  /* ABOVE THE FACES IT IS NOT ON, BELOW THE ONE IT IS. At z-index 1 it sat
-     behind all three, so only the part sticking out was ever visible — the
-     ring never read as a ring. The holder goes above it, which is what
-     masks the ring's inner half against the avatar's own paper seam. */
-  z-index:8;
-  width:2.1em; height:2.1em;
-  border-radius:var(--r-pill);
-  /* A RING, not a blob. Filled and scaled to 1.34 it spilled below the pile
-     onto the caption and read louder than the three faces it was pointing
-     at. Spread on a shadow reaches outside the box without taking layout,
-     and the avatar's own paper seam masks the inner half — so what is left
-     is one thin accent edge. It lifts with whoever it is on. */
-  background:none;
-  box-shadow:0 0 0 .26em color-mix(in srgb, var(--accent-solid) 78%, transparent);
-  /* ONE LIFT, ONE SCALE, both read from the group so the ring and the face
-     it is on cannot drift apart again — the two used to state `-.3em`
-     independently. */
-  transform:translate(var(--hx, 0px), var(--wfo-lift)) scale(var(--wfo-pop));
-  opacity:0;
-  transition:transform 620ms var(--e-spring), opacity var(--t-state) var(--e-out);
-  pointer-events:none;
-}
-.wfsc[data-step="3"] .wfo__halo{ opacity:1; }
+/* ── the ring ────────────────────────────────────────────────────────
+   Tong: *"现在头像两个stroke 一白，一个橙，没必要呢，你可以直接让白色stroke变成
+   橙色。就可以"* — right, and it deletes a whole element. The active face used
+   to carry two concentric rings: its own `--paper` seam, plus a separate
+   `.wfo__halo` that slid between the avatars behind them.
+
+   The seam is now the state. One stroke that changes colour, which is both
+   what he asked for and the end of an entire class of bug: a ring drawn by
+   the avatar's own box-shadow cannot be centred on the wrong box, cannot
+   land behind the face it is marking, and cannot drift out of register with
+   a lift declared somewhere else. `--hx`, the halo's z-index, and the
+   comment explaining why it had to sit at 8 all went with it. */
 /* `.wfsc[data-step="3"] .wfo__who{transform:none}` is the entrance rule and
    it carries the same specificity as `.wfo__who.is-holding` while sitting
    later in the file — so the lift never happened at all, which is what read
@@ -2627,8 +2600,20 @@ h3{ font-family:var(--fd); }
    shrank relative to the type it sits under at every window size. */
 .wfo__who img{
   width:2.1em; height:2.1em; display:block;
-  border-radius:var(--r-pill); box-shadow:0 0 0 .17em var(--paper);
+  border-radius:var(--r-pill);
+  /* the seam that lets a face read against the one it laps — and, on the
+     holder, the only thing marking it */
+  box-shadow:0 0 0 .17em var(--wfo-seam, var(--paper));
+  /* --t-state is 420ms against the transform's 620ms, so the recolour lands
+     just inside the lift — close enough to read as one gesture, and a
+     duration token rather than a number picked to close a 200ms gap. */
+  transition:box-shadow var(--t-state) var(--e-out);
 }
+/* `--accent`, the brand FILL, not `--accent-solid`: this is a graphic and
+   its floor is 3:1, which --accent clears on every ground the page has in
+   both themes. --accent-solid is tuned for TEXT on paper and reads as a
+   muddy rust at this width. */
+.wfsc[data-step="3"] .wfo__who.is-holding{ --wfo-seam:var(--accent); }
 /* ONE caption for the group. Three per-avatar labels, each `nowrap` and
    centred under a 34px avatar, are wider than the avatars are apart —
    they overlapped into "RAN IT RAN IT RAN IT" the moment the canvas got

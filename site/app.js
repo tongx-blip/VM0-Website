@@ -740,15 +740,13 @@
     chainTimer = setTimeout(tick, 1150);
   }
 
-  var halo = doc.querySelector('.wfo__halo');
-
   function handTo(i) {
     if (!faces.length) return;
     handAt = i % faces.length;
+    /* The ring is the holder's own seam now, so there is nothing to move:
+       the class IS the state. The halo this used to position — and the
+       `--hx` offsetLeft it needed — are gone. */
     faces.forEach(function (f, n) { f.classList.toggle('is-holding', n === handAt); });
-    /* offsetLeft, not a rect: the scene carries a fit-to-frame scale and a
-       rect would fold it into the number */
-    if (halo) halo.style.setProperty('--hx', faces[handAt].offsetLeft + 'px');
     if (byTag) {
       var f = faces[handAt];
       var img = f.querySelector('img');

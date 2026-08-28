@@ -1886,3 +1886,10 @@ slug is a separate, deliberate decision.
   sizes (41 vs 35) rather than trusting the transform values.
 - **Sample axe while the thing is moving.** Parking on a settled frame tests a
   state the visitor may never see.
+- **Before adding a second element to mark a state, check whether the first one
+  can carry it.** A ring drawn as the avatar's own `box-shadow` cannot be
+  mis-centred, mis-stacked, or fall out of register with a lift — three faults a
+  separate marker element had all at once.
+- **A graphic accent uses `--accent` (3:1 floor); accent TEXT uses
+  `--accent-solid` / `--accent-wash` (4.5:1).** The text token reads muddy as a
+  thin stroke.
