@@ -1801,7 +1801,7 @@ cached stylesheet from before a block was renamed, so that whole region rendered
 with **no CSS at all** while everything else looked fine. Hard-reload proves
 nothing here — check the query string.
 
-### 4y. Card sets and product mocks
+### 4y2. Card sets and product mocks
 
 Run this on any section built from repeated cards, and after any change to a
 mock's markup.
@@ -1825,7 +1825,7 @@ mock's markup.
   overflows its container, the fade finishes outside the visible box and the
   crop is a hard cut. Put the mask on the box that does the clipping.
 
-### 4z. A component built to a supplied design
+### 4z2. A component built to a supplied design
 
 - **Read the frame through the API, do not eyeball it.** Sizes, fills,
   radii, letter spacing and auto-layout gaps are all in the node JSON.
