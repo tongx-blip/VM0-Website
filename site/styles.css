@@ -3468,8 +3468,20 @@ h3{ font-family:var(--fd); }
    motion, spring-eased, the same grammar as the runner on beat 1. The
    avatars themselves only rise, and nothing changes opacity. */
 .wfo__halo{
-  position:absolute; left:0; top:50%; z-index:1;
-  width:2.1em; height:2.1em; margin-top:-1.05em;
+  /* TOP 0, NOT 50%. `.wfo--team` wraps — the avatars are row one and the
+     caption is row two — so half of it is 14px below the middle of the
+     faces, and the ring hung under the pile as a stray orange crescent.
+     Row one begins at the container's own top, and the container has no
+     padding, so `top:0` IS the avatar row and stays right whatever the
+     caption does. Measured before and after: halo centre 566 against a
+     holder centre of 552, now equal. */
+  position:absolute; left:0; top:0;
+  /* ABOVE THE FACES IT IS NOT ON, BELOW THE ONE IT IS. At z-index 1 it sat
+     behind all three, so only the part sticking out was ever visible — the
+     ring never read as a ring. The holder goes above it, which is what
+     masks the ring's inner half against the avatar's own paper seam. */
+  z-index:8;
+  width:2.1em; height:2.1em;
   border-radius:var(--r-pill);
   /* A RING, not a blob. Filled and scaled to 1.34 it spilled below the pile
      onto the caption and read louder than the three faces it was pointing
@@ -3477,8 +3489,11 @@ h3{ font-family:var(--fd); }
      and the avatar's own paper seam masks the inner half — so what is left
      is one thin accent edge. It lifts with whoever it is on. */
   background:none;
-  box-shadow:0 0 0 .3em color-mix(in srgb, var(--accent-solid) 55%, transparent);
-  transform:translate(var(--hx, 0px), -.3em);
+  box-shadow:0 0 0 .26em color-mix(in srgb, var(--accent-solid) 78%, transparent);
+  /* ONE LIFT, ONE SCALE, both read from the group so the ring and the face
+     it is on cannot drift apart again — the two used to state `-.3em`
+     independently. */
+  transform:translate(var(--hx, 0px), var(--wfo-lift)) scale(var(--wfo-pop));
   opacity:0;
   transition:transform 620ms var(--e-spring), opacity var(--t-state) var(--e-out);
   pointer-events:none;
@@ -3493,7 +3508,12 @@ h3{ font-family:var(--fd); }
    attribute. Stacking is already leftmost-on-top further down; the holder
    goes above all of them. */
 .wfsc[data-step="3"] .wfo__who.is-holding{
-  transform:translateY(-.3em); z-index:9;
+  transform:translateY(var(--wfo-lift)) scale(var(--wfo-pop));
+  /* 9 TIED WITH THE LEFTMOST FACE, whose resting z is also 9 — so with
+     the third avatar holding, the first was still sitting in front of the
+     second and the pile read as two active people. The holder now clears
+     the whole stack by a mile. */
+  z-index:20;
 }
 
 .wfo__tag--wf{ opacity:0; }
@@ -3665,6 +3685,11 @@ h3{ font-family:var(--fd); }
      absorbed. Here the avatars are a plain row and the caption takes a
      100% basis, which can only land on the next line. */
   display:flex; flex-wrap:wrap; align-items:center; row-gap:.6em;
+  /* The handover's whole vocabulary, in two numbers. Tong: *"头像 active 的
+     动画能不能更明显一些"* — the lift was .3em and the scale did not exist,
+     which at this scene's fit-to-frame scale came to five screen pixels. */
+  --wfo-lift:-.62em;
+  --wfo-pop:1.12;
 }
 
 /* A STACK, not a row. Three separated avatars are three people who each
@@ -3674,7 +3699,9 @@ h3{ font-family:var(--fd); }
    and the leftmost sits on top so the group is read left to right. */
 .wfo__who + .wfo__who{ margin-left:-.52em; }
 
-.wfo__who{ z-index:calc(9 - var(--wi, 0)); }
+/* Leftmost still on top at rest, but low enough that the halo can sit over
+   the faces it is not on and the holder can clear all of them. */
+.wfo__who{ z-index:calc(4 - var(--wi, 0)); }
 
 .wfo__who,.wfo__ran{ position:relative; display:block; opacity:0; transform:translateY(1.2em) scale(.8);
   transition:opacity 480ms var(--e-out), transform 620ms var(--e-spring);
@@ -3701,8 +3728,13 @@ h3{ font-family:var(--fd); }
 
 .wfsc[data-step="3"] .wfo--team{ opacity:1; }
 
-.wfsc[data-step="3"] .wfo__who,
 .wfsc[data-step="3"] .wfo__ran{ opacity:1; transform:none; }
+
+/* SETTLED MEANS STOOD DOWN. A lift alone has to be read against the two
+   faces beside it; a lift against two faces that have themselves stepped
+   back is unmistakable, and it costs nothing but the difference between
+   .94 and 1.12. */
+.wfsc[data-step="3"] .wfo__who{ opacity:1; transform:scale(.94); }
 
 /* the team belongs to step 3. Held at .4 over the blue ground it read as
    litter behind the list rather than as a memory of the step before. */
@@ -3811,6 +3843,12 @@ h3{ font-family:var(--fd); }
 @media (prefers-reduced-motion:reduce){
   .wfsc__g,.wfo,.wfo__who,.wfo__chip,.wfo__steps li,.wfo__foot,
   .wfo__tag--run,.wfo__tag--wf{ transition:none; }
+
+  /* Nothing lifts, so nothing may be drawn as if it had: the ring reads
+     the same token and stays on the face rather than floating above it.
+     The holder is still marked — by the ring and by standing at full size
+     among two that have stepped back. */
+  .wfo--team{ --wfo-lift:0em; }
 
 }
 

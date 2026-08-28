@@ -1871,3 +1871,18 @@ slug is a separate, deliberate decision.
   `@media (max-width:620px)` rule wins at 390 too.
 - **When you rename a class, grep the media queries.** Narrow-width rules are
   the easiest place for a dead selector to hide.
+
+- **`top:50%` on a WRAPPING flex container centres on the wrap, not on the row.**
+  If a caption shares the box, half of it is below the thing you meant to centre
+  on. Anchor to `top:0` and the row, or measure in JS.
+- **An indicator drawn behind everything is not an indicator.** Check its
+  z-index against the stack it is marking: above the items it is not on, below
+  the one it is.
+- **Two elements must never state the same offset independently.** A lift used
+  by both a marker and the thing it marks belongs in one custom property on
+  their shared parent, or they will drift.
+- **A state has to be readable against its neighbours, not just against
+  itself.** Lift the active one AND stand the others down; measure the rendered
+  sizes (41 vs 35) rather than trusting the transform values.
+- **Sample axe while the thing is moving.** Parking on a settled frame tests a
+  state the visitor may never see.

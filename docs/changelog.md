@@ -249,6 +249,61 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · the handover ring was never on the face it was pointing at
+
+Tong: *"头像切换有bug，头像active的动画能不能更明显一些，而且现在第三个头像active
+的时候，第一个头像也在前边，看起来像两个头像被active，很奇怪。还有outline Stroke
+也bug了"* — three separate faults in the same eight pixels, all measured rather
+than guessed.
+
+**The ring hung below the pile.** `.wfo__halo` centred itself with
+`top:50%` — but `.wfo--team` **wraps**: the avatars are row one and the caption
+is row two, so half of that box is well below the middle of the faces. Measured:
+halo centre 566 against a holder centre of 552. Fourteen pixels, which is
+exactly `(65 − 37) / 2`. The fix is `top:0`, because row one begins at the
+container's own top and the container has no padding — so the ring is anchored
+to the avatar row and cannot be moved again by whatever the caption does.
+
+**And it was behind all three faces.** `z-index:1` against avatars at 7–9, so
+the only part of the ring ever visible was the bit sticking out — which, being
+14px low, was a stray orange crescent under the pile. That is the "outline
+stroke bug": not a broken stroke, a stroke drawn behind everything. It now sits
+at 8: **above the faces it is not on, below the one it is**, which is what lets
+the holder's own paper seam mask the ring's inner half.
+
+**Two faces looked active.** `.wfo__who{ z-index:calc(9 - var(--wi)) }` puts the
+leftmost at 9, and the holder rule *also* said 9 — a tie. So with the third
+avatar holding, the first was still sitting in front of the second, and the pile
+had two visual tops. The resting stack drops to 4/3/2 (leftmost still on top,
+which is the facepile convention) and the holder clears everything at 20.
+
+**The lift was five screen pixels.** `-.3em` at this scene's fit-to-frame scale.
+It is `-.62em` now and the holder also scales to 1.12 — and, more usefully, the
+two faces beside it stand *down* to .94. A lift has to be read against its
+neighbours; a lift against two neighbours that have stepped back does not.
+
+**One lift, one scale, stated once.** The ring and the face it rides used to
+declare `-.3em` independently, which is how they were free to drift apart in the
+first place. Both now read `--wfo-lift` and `--wfo-pop` off `.wfo--team`, so
+they cannot disagree — including under reduced motion, where the lift becomes
+`0em` and the ring stays *on* the face instead of floating above a face that
+never moved. The holder is still marked there, by the ring and by standing at
+full size among two that have not.
+
+**Gate.** Halo-to-holder offset measured at every one of the three positions in
+light, dark and reduced motion: **dx 0, dy 0** in all nine. z-indices: holder 20,
+halo 8, others 4/3/2 — no ties anywhere in the cycle. Holder 41px against 35px
+for its neighbours. axe **0 violations across 24 samples taken on the live
+rotation** (12 light, 12 dark), sampled while the handover was actually moving
+rather than parked. `audit.js` §1 and §6 PASS, §5 PASS under reduced motion,
+`tools/tokens.py` 0.
+
+> **A percentage offset is measured against the whole box, including rows you
+> forgot were in it.** `top:50%` on a wrapping flex container centres on the
+> wrap, not on the row you were thinking of.
+
+---
+
 ## 2026-08-28 · the product window is read out of the product, not remembered
 
 Tong: *"1，怎么不同 tab 下边，高度还不一样呢？2. 你做我们自己的产品，怎么差的这么
