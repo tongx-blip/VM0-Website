@@ -5322,8 +5322,12 @@ h3{ font-family:var(--fd); }
    N3 exists for. */
 .ometrics{
   display:flex; align-items:baseline;
+  /* CENTRED ON THE FRAME, not parked under the left column. The strip
+     summarises the whole run, so it belongs to the whole frame — Tong:
+     *"data是不是可以在整个frame中间"*. */
+  justify-content:center;
   flex-wrap:wrap;
-  gap:clamp(14px, 1.8vw, 30px) clamp(20px, 2.6vw, 44px);
+  gap:clamp(14px, 1.8vw, 30px) clamp(24px, 3.2vw, 54px);
   list-style:none; margin:0; padding:0 clamp(2px, .6vw, 8px);
   min-width:0;
 }
@@ -5353,14 +5357,12 @@ h3{ font-family:var(--fd); }
 .ometrics em{
   font-size:var(--t-sm); font-weight:400; color:var(--ink-soft);
 }
-/* THE FIRST ONE LEADS. Tong: *"你可能得差异化的放一下数据"* — three values at
-   one size under a picture is the same template the old row was, wearing
-   different numbers. The lead is the figure the scene is actually about;
-   the others are what it took to get there. */
-.ometrics li.is-lead b{
-  font-size:var(--t-d3);
-  letter-spacing:-.04em;
-}
+/* ONE SIZE. The lead used to be set at display size, and with only two
+   metrics under a tab that reads as two different type sizes rather than as
+   a hierarchy — *"date字号不一样大？"*. The differentiation the numbers
+   needed is already carried by every tab having its own labels and its own
+   count; doing it in the type as well was one signal too many. The lead
+   keeps a darker label, which is enough to say which one to read first. */
 .ometrics li.is-lead span{ color:var(--ink-soft); }
 
 .ostage.is-live .ometrics li{
@@ -5439,7 +5441,11 @@ h3{ font-family:var(--fd); }
    than `transform`, since the entrance animation owns `transform`. */
 .ocard{
   position:absolute; left:0; right:0;
-  display:flex; flex-direction:row; align-items:flex-start;
+  /* CENTRED, NOT TOP-ALIGNED. Flush tops put the tile's edge level with the
+     title's line box, and a 34px tile against a 19px line reads as sitting
+     low against the name and high against the sentence under it — neither
+     aligned to anything. Centred on the block, the mark labels the card. */
+  display:flex; flex-direction:row; align-items:center;
   gap:11px;
   padding:13px 15px;
   border-radius:var(--r-float);
@@ -5453,14 +5459,22 @@ h3{ font-family:var(--fd); }
    lower one put its last line 40px below the ground it was floating on. */
 /* One hangs from the top and one from the BOTTOM, which is the only way a
    pair of auto-height cards cannot leave the frame. */
-.ocard:nth-of-type(1){ top:13%; rotate:-1.3deg; }
+/* CLUSTERED. At 13% from each end they left 187px of empty gradient between
+   them in a 496px column — the void Tong pointed at. Brought together they
+   read as a pair of objects the run touched, with the air around the pair
+   instead of inside it. */
+.ocard:nth-of-type(1){ top:19%; rotate:-1.3deg; }
 .ocard:nth-of-type(2){
-  bottom:13%;
-  left:clamp(14px, 1.7vw, 26px);
-  right:calc(-1 * clamp(10px, 1.1vw, 18px));
+  bottom:33%;
+  /* SHIFTED, NOT WIDENED. It used to reach `right:-18px`, which laps the
+     window by `--o-lap` PLUS eighteen — and the rail only keeps `--o-lap`
+     clear, so the deeper card sat on "Connectors" and ate its first letter.
+     Both cards now share a right edge and stagger on the left instead, so
+     the lap is one number and the rail's inset is that number. */
+  left:clamp(16px, 2vw, 30px);
+  right:0;
   rotate:1.1deg;
 }
-.ocard .ocard__txt{ padding-top:1px; }
 .ocard .ocard__txt b{ font-size:var(--t-sm); line-height:1.3; }
 .ocard .ocard__txt i{ margin-top:3px; font-size:var(--t-meta); line-height:1.4; }
 /* THE MARK IN A TILE, at the size the reference draws it. It used to be a
@@ -5931,7 +5945,14 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:center; gap:8px; flex:none;
   margin:10px 18px 12px;
   padding:6px 6px 6px 10px;
-  border-radius:var(--vm-r-composer);
+  /* NOT THE PRODUCT'S 24px HERE, and the deviation is written at the rule
+     (P12). `--zero-composer-radius` is 1.5rem on a composer that is ~120px
+     tall, where it reads as a rounded rectangle; this mock compresses that
+     control to a single 46px row, and at 46px the same corner is a lozenge
+     with a square 8px button sitting inside it — *"输入框圆的，但是里边的
+     button方的，非常不严谨"*, and S1's own complaint about a page holding two
+     ideas of what a control is. The corner follows the box it is on. */
+  border-radius:14px;
   background:var(--vm-card);
   border:.7px solid var(--vm-hairline);
   box-shadow:var(--vm-shadow);
@@ -5976,9 +5997,16 @@ h3{ font-family:var(--fd); }
 .ochat--okou .ochat__row--okou .ochat__bubble{
   background:none; border:0; box-shadow:none; padding:0;
 }
+/* A HEADER, NOT A FIRST LINE. On white above a white page the caption ran
+   straight into the document under it — *"artifacts的标题和下边内容融为一体
+   了"*. The product's own `CardHeader` is a band on the card, so this takes
+   the same shape: gray-50 with the card's 0.7px rule under it. */
 .ochat--okou .oresult figcaption{
   font-family:var(--vm-font);
   font-size:13px; line-height:18px; color:var(--vm-muted-fg);
+  padding:9px 12px;
+  background:var(--vm-gray-50);
+  border-bottom:.7px solid var(--vm-border);
 }
 .ochat--okou .oresult{
   border-radius:var(--vm-r-card);
@@ -5993,7 +6021,10 @@ h3{ font-family:var(--fd); }
    the TOP, so what is lost is the tail of the page rather than its
    headline (the crop-through-the-headline fault from the tab windows). */
 .ochat--okou .oresult img{
-  max-height:clamp(92px, 10vw, 144px);
+  /* 144 left the Spec Writing thread one pixel over its list, so the user's
+     own prompt was sliced through its first line by the title bar. Sized for
+     HEADROOM rather than for a fit: ~34px of slack, checked on all three. */
+  max-height:clamp(76px, 8vw, 110px);
   object-fit:cover; object-position:top center;
 }
 

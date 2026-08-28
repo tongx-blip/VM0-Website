@@ -93,7 +93,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 
 
-/* ─────────────── monospace metadata ─────────────── */.footnote,.footer__copy{
+/* ─────────────── monospace metadata ─────────────── */.footer__copy{
   font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
@@ -237,13 +237,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 .inline-ic{ font-size:.74em; vertical-align:.04em; }
-
-
-.footnote{
-  margin-top:16px; text-align:left;
-  font-size:11px; letter-spacing:.05em; text-transform:uppercase;
-  color:var(--ink-mute);
-}
 
 .note{
   max-width:60ch; margin:clamp(44px,5vw,68px) 0 0;
@@ -1269,7 +1262,7 @@ img{ filter:none; }
 
 
 /* every page-level rule inherited from the component layer comes off:
-   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.footnote,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.step,.nav,.panel{
+   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.step,.nav,.panel{
   border:0;
 }
 .hero__body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
@@ -1309,7 +1302,7 @@ h3{ font-family:var(--fd); }
    string is metadata and not prose */
 /* .metrics span is NOT here: a stat tile's label is the first line you read
    in that tile, and uppercase mono above a 54px numeral competes with it for
-   the top of the box instead of introducing it. It is set as prose. */.footnote,.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
+   the top of the box instead of introducing it. It is set as prose. */.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
   font-family:var(--fm);
   font-weight:500;
   text-transform:uppercase;
@@ -1331,19 +1324,6 @@ h3{ font-family:var(--fd); }
   max-width:64ch;
   margin:clamp(40px,4.5vw,64px) 0 0;
   font-size:var(--t-sm);
-  color:var(--ink-mute);
-}
-
-/* A caveat under a KPI row must not be dressed as a fourth label. In the
-   utility face, uppercase and letter-spaced it read as another stat; in prose
-   at caption size it reads as what it is — a note about the numbers above.
-   (dataviz: the stat-tile contract is label + value, and nothing else in the
-   row may borrow the label's clothes.) */
-.footnote{
-  margin-top:clamp(18px, 2vw, 26px);
-  font-family:var(--fb);
-  font-size:var(--t-meta);
-  letter-spacing:0; text-transform:none;
   color:var(--ink-mute);
 }
 
@@ -5827,81 +5807,7 @@ h3{ font-family:var(--fd); }
 #sceneCopy{ min-height:calc(2 * 1.55em); }
 
 
-/* the three figures and their note read as one object on the page */
-/* NO CARD OF ITS OWN. Three grey tiles inside a white card inside a white
-   section card is three grounds to say one thing, and the middle one says
-   nothing the section card had not already said — same colour, one shadow
-   apart. The tiles stay (they are what keeps three figures on a shared
-   vertical, RULES §4q); the card they were sitting on goes. */
-.figures{
-  grid-column:1 / 13;
-  margin-top:clamp(44px, 5vw, 72px);
-  padding:0;
-  background:transparent;
-  border-radius:0;
-  box-shadow:none;
-}
-
-/* ── the KPI row: three tiles, label over figure ───────────────────
-   Each figure sits on the same surface as the panels above it — same grey,
-   same corner, same inner padding — so the row reads as part of the section
-   rather than as three numbers floating on the white card.
-
-   LABEL FIRST. A stat tile is read label-then-value: what it is, then how
-   much. Value-first made three display numerals the first thing on the row
-   and turned the labels into a caption underneath, which is a scoreboard.
-   (dataviz: the stat-tile contract is label + value, in that order.)
-
-   Content is left-aligned and the air is all on the right. Centring three
-   short figures inside wide tiles gives each one a different left edge, and
-   the row loses the vertical the eye reads down. */
-.figures .metrics{
-  /* `margin:0` overrode the row's own `margin-inline:auto`, so the measure
-     was being kept but hung off the LEFT of a 1300px card. */
-  margin:0 auto;
-  grid-column:auto;
-  max-width:1000px;
-  gap:var(--tile-gap);
-}
-
-.figures .metrics li{
-  display:flex; flex-direction:column;
-  align-items:stretch; text-align:left;
-  gap:clamp(4px, .5vw, 7px);
-  /* Top and bottom are SHORTER than the sides on purpose: the label's leading
-     and the numeral's descent space are already inside their line boxes, so
-     equal padding on all four sides puts more air above and below the ink
-     than beside it. Padding is the box; the gap you see is the ink. */
-  padding:clamp(11px, 1.3vw, 16px) var(--tile-pad);
-  background:var(--tile);
-  border-radius:var(--r-section);
-}
-
-
-/* The row stacked at 960 because three BARE figures needed the width to stay
-   apart. Once each one is a tile, the tile keeps them apart and three columns
-   hold much further down — 640 is where the longest label ("Brief to first
-   draft") stops fitting on one line inside a third of the row. */
-@media (max-width:640px){
-  .figures .metrics{ grid-template-columns:1fr; }
-
-}
-
-
-/* The note belongs to the figures, so it sits with them — but as PROSE. Set
-   at label size and letter-spaced it read as a fourth stat in the row, which
-   is the one thing §the utility-face rule says a caveat must not do. It keeps
-   .footnote's own size and tracking; only the placement is local. */
-.figures .footnote{
-  margin:clamp(20px, 2.4vw, 32px) auto 0;
-  max-width:52ch;
-  text-align:center;
-}
-
-
 @media (max-width:720px){
-  .figures .metrics{ gap:clamp(18px, 5vw, 28px); }
-
   #sceneCopy{ min-height:0; }
 
 }
@@ -6153,8 +6059,12 @@ h3{ font-family:var(--fd); }
    N3 exists for. */
 .ometrics{
   display:flex; align-items:baseline;
+  /* CENTRED ON THE FRAME, not parked under the left column. The strip
+     summarises the whole run, so it belongs to the whole frame — Tong:
+     *"data是不是可以在整个frame中间"*. */
+  justify-content:center;
   flex-wrap:wrap;
-  gap:clamp(14px, 1.8vw, 30px) clamp(20px, 2.6vw, 44px);
+  gap:clamp(14px, 1.8vw, 30px) clamp(24px, 3.2vw, 54px);
   list-style:none; margin:0; padding:0 clamp(2px, .6vw, 8px);
   min-width:0;
 }
@@ -6190,15 +6100,12 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-sm); font-weight:400; color:var(--ink-soft);
 }
 
-/* THE FIRST ONE LEADS. Tong: *"你可能得差异化的放一下数据"* — three values at
-   one size under a picture is the same template the old row was, wearing
-   different numbers. The lead is the figure the scene is actually about;
-   the others are what it took to get there. */
-.ometrics li.is-lead b{
-  font-size:var(--t-d3);
-  letter-spacing:-.04em;
-}
-
+/* ONE SIZE. The lead used to be set at display size, and with only two
+   metrics under a tab that reads as two different type sizes rather than as
+   a hierarchy — *"date字号不一样大？"*. The differentiation the numbers
+   needed is already carried by every tab having its own labels and its own
+   count; doing it in the type as well was one signal too many. The lead
+   keeps a darker label, which is enough to say which one to read first. */
 .ometrics li.is-lead span{ color:var(--ink-soft); }
 
 
@@ -6287,7 +6194,11 @@ h3{ font-family:var(--fd); }
    than `transform`, since the entrance animation owns `transform`. */
 .ocard{
   position:absolute; left:0; right:0;
-  display:flex; flex-direction:row; align-items:flex-start;
+  /* CENTRED, NOT TOP-ALIGNED. Flush tops put the tile's edge level with the
+     title's line box, and a 34px tile against a 19px line reads as sitting
+     low against the name and high against the sentence under it — neither
+     aligned to anything. Centred on the block, the mark labels the card. */
+  display:flex; flex-direction:row; align-items:center;
   gap:11px;
   padding:13px 15px;
   border-radius:var(--r-float);
@@ -6302,16 +6213,23 @@ h3{ font-family:var(--fd); }
    lower one put its last line 40px below the ground it was floating on. */
 /* One hangs from the top and one from the BOTTOM, which is the only way a
    pair of auto-height cards cannot leave the frame. */
-.ocard:nth-of-type(1){ top:13%; rotate:-1.3deg; }
+/* CLUSTERED. At 13% from each end they left 187px of empty gradient between
+   them in a 496px column — the void Tong pointed at. Brought together they
+   read as a pair of objects the run touched, with the air around the pair
+   instead of inside it. */
+.ocard:nth-of-type(1){ top:19%; rotate:-1.3deg; }
 
 .ocard:nth-of-type(2){
-  bottom:13%;
-  left:clamp(14px, 1.7vw, 26px);
-  right:calc(-1 * clamp(10px, 1.1vw, 18px));
+  bottom:33%;
+  /* SHIFTED, NOT WIDENED. It used to reach `right:-18px`, which laps the
+     window by `--o-lap` PLUS eighteen — and the rail only keeps `--o-lap`
+     clear, so the deeper card sat on "Connectors" and ate its first letter.
+     Both cards now share a right edge and stagger on the left instead, so
+     the lap is one number and the rail's inset is that number. */
+  left:clamp(16px, 2vw, 30px);
+  right:0;
   rotate:1.1deg;
 }
-
-.ocard .ocard__txt{ padding-top:1px; }
 
 .ocard .ocard__txt b{ font-size:var(--t-sm); line-height:1.3; }
 
@@ -6695,7 +6613,14 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:center; gap:8px; flex:none;
   margin:10px 18px 12px;
   padding:6px 6px 6px 10px;
-  border-radius:var(--vm-r-composer);
+  /* NOT THE PRODUCT'S 24px HERE, and the deviation is written at the rule
+     (P12). `--zero-composer-radius` is 1.5rem on a composer that is ~120px
+     tall, where it reads as a rounded rectangle; this mock compresses that
+     control to a single 46px row, and at 46px the same corner is a lozenge
+     with a square 8px button sitting inside it — *"输入框圆的，但是里边的
+     button方的，非常不严谨"*, and S1's own complaint about a page holding two
+     ideas of what a control is. The corner follows the box it is on. */
+  border-radius:14px;
   background:var(--vm-card);
   border:.7px solid var(--vm-hairline);
   box-shadow:var(--vm-shadow);
@@ -6749,9 +6674,16 @@ h3{ font-family:var(--fd); }
   background:none; border:0; box-shadow:none; padding:0;
 }
 
+/* A HEADER, NOT A FIRST LINE. On white above a white page the caption ran
+   straight into the document under it — *"artifacts的标题和下边内容融为一体
+   了"*. The product's own `CardHeader` is a band on the card, so this takes
+   the same shape: gray-50 with the card's 0.7px rule under it. */
 .ochat--okou .oresult figcaption{
   font-family:var(--vm-font);
   font-size:13px; line-height:18px; color:var(--vm-muted-fg);
+  padding:9px 12px;
+  background:var(--vm-gray-50);
+  border-bottom:.7px solid var(--vm-border);
 }
 
 .ochat--okou .oresult{
@@ -6768,7 +6700,10 @@ h3{ font-family:var(--fd); }
    the TOP, so what is lost is the tail of the page rather than its
    headline (the crop-through-the-headline fault from the tab windows). */
 .ochat--okou .oresult img{
-  max-height:clamp(92px, 10vw, 144px);
+  /* 144 left the Spec Writing thread one pixel over its list, so the user's
+     own prompt was sliced through its first line by the title bar. Sized for
+     HEADROOM rather than for a fit: ~34px of slack, checked on all three. */
+  max-height:clamp(76px, 8vw, 110px);
   object-fit:cover; object-position:top center;
 }
 

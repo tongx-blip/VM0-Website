@@ -437,6 +437,72 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · seven from one pass over the stage
+
+Six screenshots and a deletion. Each one measured before it was changed.
+
+**The mark and the text share an axis.** *"connector card的icon和text都上下对齐"*
+— they were flush at the top, which puts a 34px tile level with a 19px line
+box: the mark reads low against the name and high against the sentence under
+it, aligned to neither. Centred on the text block, it labels the card.
+
+**The two cards are a pair, not two ends.** *"左边感觉有点空荡荡"* — measured,
+**187px** of empty gradient between them in a 496px column. At 19% from the top
+and 33% from the bottom the gap is 64px and the air is around the pair instead
+of inside it.
+
+**One type size for the data.** *"date字号不一样大？"* — the lead was set at
+display size, and under a tab with only two metrics that reads as two type
+sizes rather than as a hierarchy. The differentiation the numbers needed is
+already carried by every tab having its own labels and its own count; doing it
+in the type as well was one signal too many. The lead keeps a darker label.
+
+**And the strip is centred on the frame.** *"data是不是可以在整个frame中间"* —
+yes, and it was the right question: it summarises the whole run, so parking it
+under the left column was saying it belonged to the window.
+
+**A pill with a square button in it.** *"输入框圆的，但是里边的button方的，非常
+不严谨"*. `--zero-composer-radius` is 1.5rem on a composer ~120px tall, where it
+is a rounded rectangle; this mock compresses that control to a single 46px row,
+and at 46px the same corner is a lozenge with an 8px button inside — which is
+S1's own complaint about a page holding two ideas of what a control is. 14px
+here, and the deviation from the product is written at the rule (P12).
+
+**The ask has to survive the clip.** *"图五，第一段prompt就被盖住了"* — the Spec
+Writing thread measured **387px of content in a 386px list**, so the user's own
+prompt was sliced through its first line by the title bar. The artifact preview
+was capped at 144px for a *fit*; it is 110px now, sized for **headroom** —
+39–64px of slack on all three, checked rather than eyeballed.
+
+**A header, not a first line.** *"artifacts的标题和下边内容融为一体了"* — white
+caption on a white page running straight into the document. The product's own
+`CardHeader` is a band on the card, so this takes the same shape: gray-50 with
+the card's 0.7px rule under it.
+
+**And the footnote is gone**, as asked.
+
+### One the fix caused
+
+Moving the cards inward put card two on the rail's "Connectors" caption, eating
+its first letter. It reached `right:-18px` — `--o-lap` **plus eighteen** — while
+the rail only keeps `--o-lap` clear, so the deeper card was always going to land
+on chrome as soon as it sat at a label's height. Both cards share a right edge
+now and stagger on the left, so the lap is one number and the rail's inset is
+that number.
+
+**And there was no check for it.** The rule that a card's lap must equal the
+inset the chrome under it reserves was enforced only by a throwaway sweep
+script in `/tmp`, never by anything in the repo — which is why the gate was
+green while the screenshot plainly showed the fault. `audit.js` §8 tests it
+now, against labels as well as icon tiles: a version that read only the tiles
+would still have passed.
+
+**Gate.** Sweep at 6 widths × 7 scenes × 5 timestamps, with the caption check
+added — clean. axe 0 across 18 samples in both themes. `audit.js` §1/§6/§8/§9
+PASS, `tokens.py` 0, `rules.py` all pointers resolve.
+
+---
+
 ## 2026-08-28 · the numbers belong to the tab, so they moved onto the frame
 
 Feedback 05 on the board — 「这个太多层了 … 每一个场景下的数字都不一样」 — had its

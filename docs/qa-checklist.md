@@ -1963,6 +1963,19 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
 - **`<i>` is italic by default.** A numeral wrapped in one renders oblique
   under an upright picture unless the component says `font-style:normal`.
 
+- **A floating card's deepest lap is the inset the chrome under it reserves.**
+  One card at `--o-lap` and another at `--o-lap + 18` means the rail keeps the
+  wrong strip clear, and the deeper one lands on a label as soon as it sits at
+  that height. Stagger on the far edge, not on the lapping one.
+
+- **Check chrome coverage against LABELS, not just icons.** §8's rail check
+  tested the icon tiles and passed while a card was eating the first letter of
+  "Connectors".
+
+- **Size a clipped list for headroom, not for a fit.** 387px of content in a
+  386px list is not "fits" — it is one reflow away from slicing the first line
+  of the thing the picture exists to show.
+
 ## 10. Publish
 
 ```bash

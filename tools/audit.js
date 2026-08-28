@@ -285,7 +285,33 @@
              ' — a percentage inset here measures the wrap, not the row');
   });
 
-  return out.length ? out : 'PASS — no ties, no percentage insets over a wrap';
+  /* A FLOATING CARD MAY NOT COVER CHROME. The connector cards lap the app
+     window's left edge on purpose, and the window answers by insetting its
+     own sidebar by exactly that lap — so the strip a card lies across is
+     empty. That holds only while every card laps by the SAME amount: one of
+     them reached `--o-lap + 18`, and the moment it was moved to a label's
+     height it ate the first letter of "Connectors".
+     Labels as well as icons: a check that tested only the icon tiles passed
+     while the screenshot plainly showed the fault. */
+  const chrome = [...document.querySelectorAll(
+    '.okw__org, .okw__nav i, .okw__nav em, .slk__ws, .slk__rail i')];
+  const cards = [...document.querySelectorAll('.ocard')];
+  chrome.forEach(n => {
+    const r = n.getBoundingClientRect();
+    if (!r.width) return;
+    cards.forEach(c => {
+      const q = c.getBoundingClientRect();
+      if (!q.width) return;
+      const ox = Math.min(q.right, r.right) - Math.max(q.left, r.left);
+      const oy = Math.min(q.bottom, r.bottom) - Math.max(q.top, r.top);
+      if (ox > 1 && oy > 1)
+        out.push('a connector card covers "' +
+                 ((n.textContent || '').trim() || n.className.split(' ')[0]) +
+                 '" by ' + Math.round(ox) + '×' + Math.round(oy) + 'px');
+    });
+  });
+
+  return out.length ? out : 'PASS — no ties, no insets over a wrap, no covered chrome';
 })()
 
 /* ── 9. STATE RULES THAT LOSE THE CASCADE — a `.is-*` declaration must be
