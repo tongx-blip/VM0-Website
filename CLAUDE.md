@@ -18,8 +18,10 @@ and every rule in it comes from a decision that has already been argued once.
 3. **Look at it in a browser.** Serve `site/` and take screenshots at 1440 and
    390. A screenshot catches what a diff cannot.
 4. **Run the gate** in `docs/qa-checklist.md`. Not a subset of it.
-5. **Publish to the draft slug only**:
-   `okou host ./site --site okou-ai-teammate-swiss-draft`
+5. **Push to `main`. That is what publishes.** Every push deploys `site/` to
+   **https://tongx-blip.github.io/VM0-Website/** — the one URL work is accepted
+   at. Rebase onto `origin/main` first; several threads work on this page at
+   once and the branch is kept linear.
 6. **Write it down.** Add a **dated** entry to `docs/changelog.md` — what changed
    and what was wrong. No version numbers anywhere: this page is revised
    continuously and a counter would only ever climb. If a mistake could
@@ -27,6 +29,15 @@ and every rule in it comes from a decision that has already been argued once.
    warning to prose.
 
 ## Hard rules
+
+- **Never hand someone an `okou host` URL as the thing to review.** A host slug
+  belongs to the chat thread that created it, so a second thread asking for the
+  same `--site` gets a *different* URL with a suffix. Three threads once meant
+  three review links, each frozen at that thread's last publish — one of them
+  three commits behind `main`, and production older than the asset stamping
+  itself. `okou host ./site --site okou-ai-teammate-swiss-draft` is still fine
+  for showing work mid-session; the acceptance link is the Pages URL above, and
+  it is only current if you **pushed**.
 
 - **Never edit the production slug** (`okou-ai-teammate-swiss`). Clone it with
   `okou host clone` if you need to see what is live.

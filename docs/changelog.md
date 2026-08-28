@@ -6,6 +6,44 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-28 · one review URL, published from main
+
+Tong: *"现在我分了三个chat来改网站，但是每次改的网站好像都没有merge到一个main里边，
+所有不同的link在验收的时候都是分散的。"*
+
+**The code was never forked.** `main` is one linear branch, no merge commits, and
+every thread's work is on it — the prompt-box hero, the Slack scenes, the
+workflow four-beat, the control rewrite. What was fragmented was *publishing*.
+
+An `okou host` slug belongs to the **chat thread that created it**. A second
+thread asking for the same `--site` does not republish it; it gets a new URL with
+a suffix. So three threads meant three links, and each one was frozen at whatever
+moment its own thread last published. Measured by the `?r=` stamp each URL was
+serving:
+
+| URL | commit | |
+|---|---|---|
+| `…-draft` | `461abc5` | **3 commits behind main** |
+| `…-draft-bay3` | `8bb893d` | current |
+| `okou-ai-teammate-swiss` (production) | `r=42` | predates asset stamping |
+
+Two failure modes stacked: a URL per thread, and a publish per session rather
+than per commit. One fix answers both — **publishing stops being something a
+session does.** Every push to `main` now deploys `site/` to
+`https://tongx-blip.github.io/VM0-Website/`, which is the same URL tomorrow no
+matter which chats are alive. Per-thread `okou host` drafts stay useful for
+showing work mid-session; acceptance moved to the Pages URL, and `CLAUDE.md`
+step 5 now says so.
+
+The job also runs `build-css.py` and fails if the tree moves. `site/styles.css`
+is generated and `index.html` carries the `?r=` stamp pointing at it, so a thread
+that edits `src/css` and forgets to rebuild pushes source that nobody is serving
+— which is the other half of how the drift happened.
+
+Not fixed here, and worth a decision: **production is far behind everything.**
+
+---
+
 ## 2026-08-28 · the security section stops being a second product tour
 
 Tong: *"这个 section 可以不做滚动的五屏的交互。这种交互方式挺重。然后我们就想把它
