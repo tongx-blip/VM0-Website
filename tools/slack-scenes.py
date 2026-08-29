@@ -463,12 +463,14 @@ def metrics(key):
         # countUp() parses the digits out of it for the maths and writes
         # `target` back at the end, so stripping the comma here is what left
         # "1,111" reading "1111" once the animation finished.
-        rows += ('<li%s><span>%s</span><b><i%s>%s</i>%s</b></li>'
+        # VALUE FIRST, then the label. Inline, the DOM order IS the reading
+        # order — "6 backlog issues linked", not "backlog issues linked 6".
+        rows += ('<li%s><b><i%s>%s</i>%s</b><span>%s</span></li>'
                  % (' class="is-lead"' if i == 0 else '',
-                    label,
                     ' data-count="%s"' % value if num else '',
                     value,
-                    '<em>%s</em>' % unit if unit else ''))
+                    '<em>%s</em>' % unit if unit else '',
+                    label))
     return ('<ul class="ometrics" aria-label="What this run produced">%s</ul>'
             % rows)
 

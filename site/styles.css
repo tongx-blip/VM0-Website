@@ -5919,7 +5919,7 @@ h3{ font-family:var(--fd); }
   --o-r:var(--r-section);                  /* 16 · every panel's corner  */
   --o-fill:var(--tile);                    /* the reference's panel grey */
   --o-h:calc(clamp(420px, 40vw, 553px) + var(--o-mh));
-  --o-mh:clamp(52px, 5vw, 74px);           /* the outcome strip          */
+  --o-mh:clamp(30px, 2.9vw, 42px);         /* the outcome strip          */
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   /* the frame's own measurements */
   --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
@@ -5982,7 +5982,14 @@ h3{ font-family:var(--fd); }
 .ostage__frame{
   position:relative;
   --oframe-hue:var(--tab, var(--ink));
-  padding:var(--o-fpad);
+  /* NO BOTTOM PADDING — the strip supplies its own. *"整个frame下方因为在一开始
+     要给data预留空间，所以看起来有点空"*: the band was 68px of reserved height
+     sitting empty for the five seconds the run takes, above a further 27px of
+     frame padding. Handing the padding to the windows makes the strip read as
+     a footer on the frame rather than a row floating in a gap, and gives the
+     conversation 35px it can use for the whole cycle rather than only at the
+     end. */
+  padding:var(--o-fpad) var(--o-fpad) 0;
   border-radius:var(--r-lg);
   background:
     radial-gradient(118% 132% at 4% 0%,
@@ -5998,7 +6005,7 @@ h3{ font-family:var(--fd); }
      stage sets the height; the window's job is to take it and clip.
      The second track is the outcome strip and takes only what it needs. */
   grid-template-rows:minmax(0,1fr) auto;
-  row-gap:clamp(14px, 1.6vw, 22px);
+  row-gap:clamp(10px, 1.2vw, 15px);
   align-items:stretch;
   min-width:0;
 }
@@ -6065,12 +6072,20 @@ h3{ font-family:var(--fd); }
   justify-content:center;
   flex-wrap:wrap;
   gap:clamp(14px, 1.8vw, 30px) clamp(24px, 3.2vw, 54px);
-  list-style:none; margin:0; padding:0 clamp(2px, .6vw, 8px);
+  list-style:none; margin:0;
+  /* its own floor, since the frame no longer keeps one */
+  padding:0 clamp(2px, .6vw, 8px) var(--o-fpad);
   min-width:0;
 }
 
+/* ONE LINE, NOT A STACKED BLOCK. Number then label, on a shared baseline.
+   The stacked form was 46px tall and the band under the windows could not
+   get smaller than it — and that band sits empty for the five seconds the
+   run takes, which is the *"看起来有点空"*. Inline it is 24px, so the frame
+   loses 22px it was holding for nothing and the strip reads as a footer
+   line under the picture rather than a row parked in a gap. */
 .ometrics li{
-  display:flex; flex-direction:column-reverse; gap:4px;
+  display:flex; flex-direction:row; align-items:baseline; gap:7px;
   min-width:0;
 }
 
@@ -6178,6 +6193,15 @@ h3{ font-family:var(--fd); }
   left:0; top:0; bottom:0;
   width:var(--o-cw);
   min-width:0;
+  /* THE PAIR IS CENTRED AS A GROUP, with a fixed gap. Percentage offsets
+     from each end do not survive a column that changes height: at 1440 they
+     left 134px between two content-height cards, and at 1120 — where the
+     column is 403px and the cards total 272 — the same percentages
+     overlapped them by five. Centring holds the gap constant and splits
+     whatever is left equally above and below, which is the shape the void
+     complaint was asking for either way. */
+  display:flex; flex-direction:column; justify-content:center;
+  gap:clamp(16px, 2vw, 30px);
 }
 
 /* Tong: *"connector card 可以活泼一点，像我给你发的图一样。而且我感觉 logo
@@ -6193,13 +6217,14 @@ h3{ font-family:var(--fd); }
    read as a layout no matter how far apart you push them. `rotate` rather
    than `transform`, since the entrance animation owns `transform`. */
 .ocard{
-  position:absolute; left:0; right:0;
-  /* CENTRED, NOT TOP-ALIGNED. Flush tops put the tile's edge level with the
-     title's line box, and a 34px tile against a 19px line reads as sitting
-     low against the name and high against the sentence under it — neither
-     aligned to anything. Centred on the block, the mark labels the card. */
-  display:flex; flex-direction:row; align-items:center;
-  gap:11px;
+  /* in flow, so the column can centre the pair; `relative` for the ::after */
+  position:relative;
+  /* STACKED, FLUSH LEFT: the mark on top, the text under it. Tong asked
+     for this twice — 「icon和text都上下对齐」 and then 「我都说了icon和text纵向
+     左对齐，icon在text上边」 — and I read the first as "share a vertical axis"
+     and built a row. 上下 was the arrangement, not the alignment. */
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:clamp(9px, 1vw, 13px);
   padding:13px 15px;
   border-radius:var(--r-float);
   background:var(--paper);
@@ -6217,19 +6242,14 @@ h3{ font-family:var(--fd); }
    them in a 496px column — the void Tong pointed at. Brought together they
    read as a pair of objects the run touched, with the air around the pair
    instead of inside it. */
-.ocard:nth-of-type(1){ top:19%; rotate:-1.3deg; }
+/* ONE WIDTH, TWO HEIGHTS. *"connector的card宽度应该是固定的，高度可以根据
+   content变高"* — the horizontal stagger made card two narrower than card one,
+   which reads as two card sizes rather than as two cards. Both take the
+   column's width; the stagger is vertical and the tilt does the rest, and
+   the lap is now one number for both, which is what the rail insets by. */
+.ocard:nth-of-type(1){ rotate:-1.3deg; }
 
-.ocard:nth-of-type(2){
-  bottom:33%;
-  /* SHIFTED, NOT WIDENED. It used to reach `right:-18px`, which laps the
-     window by `--o-lap` PLUS eighteen — and the rail only keeps `--o-lap`
-     clear, so the deeper card sat on "Connectors" and ate its first letter.
-     Both cards now share a right edge and stagger on the left instead, so
-     the lap is one number and the rail's inset is that number. */
-  left:clamp(16px, 2vw, 30px);
-  right:0;
-  rotate:1.1deg;
-}
+.ocard:nth-of-type(2){ rotate:1.1deg; }
 
 .ocard .ocard__txt b{ font-size:var(--t-sm); line-height:1.3; }
 

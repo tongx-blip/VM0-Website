@@ -1212,7 +1212,12 @@
     // The exchange inside a pane runs ~4.3s; a dwell of 7.2 left it barely
     // three seconds at rest before the reel moved on. Nine gives the finished
     // state time to be looked at, which is the point of showing it.
-    var DWELL = 9000;                 // ms per tab
+    /* MS PER TAB, and it has to cover assembly AND reading. The exchange's
+       last message is cued at ~4.1s, the artifact lands at ~4.4s and its
+       spring settles by ~5.2s — so 9000 left under four seconds with the
+       finished frame on screen, and *"用户还没看完内容就切tab了"*. 13s gives
+       the settled frame about 7.8s, which is the part anyone actually reads. */
+    var DWELL = 13000;                // ms per tab
     var reelT0 = null, tRaf = 0, onScreen = false, held = false, kbd = false;
 
     function tick(now) {

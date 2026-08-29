@@ -1976,6 +1976,15 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
   386px list is not "fits" — it is one reflow away from slicing the first line
   of the thing the picture exists to show.
 
+- **Percentage offsets from each end do not survive a column that changes
+  height.** Two content-height cards at `top:12%` / `bottom:23%` sat 134px
+  apart at 1440 and overlapped by 5px at 1120. Centre the pair with a fixed
+  gap instead, and assert both the equal width and the non-collision.
+
+- **A tab's dwell has to cover assembly AND reading.** Time the last cue, the
+  landing and the spring, then add reading time — 9s looked generous and left
+  under four seconds with the finished frame on screen.
+
 ## 10. Publish
 
 ```bash

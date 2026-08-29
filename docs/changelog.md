@@ -437,6 +437,62 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-28 · 上下 was the arrangement, not the alignment
+
+*"我都说了icon和text纵向左对齐，icon在text上边"* — and he had. I read 「icon和text
+都上下对齐」 as "share a vertical axis" and built a horizontal row with the mark
+centred beside the text. He meant stacked: **mark on top, text under it, both
+flush left**. Two rounds on one sentence.
+
+**One width, two heights.** *"connector的card宽度应该是固定的，高度可以根据content
+变高"*. The horizontal stagger made card two narrower than card one, which reads
+as two card sizes rather than as two cards. Both take the column's width now;
+the stagger is vertical and the tilt carries the rest — and as a side effect the
+lap is one number for both, which is what the rail insets by.
+
+**The pair is centred as a group.** Percentage offsets from each end do not
+survive a column that changes height: at 1440 they left 134px between two
+content-height cards, and at 1120 — where the column is 403px and the cards
+total 272 — the *same* percentages overlapped them by five. A flex column with
+`justify-content:center` and a fixed gap holds the gap constant and splits
+whatever is left equally above and below, which is the shape the earlier
+「空荡荡」 complaint was asking for anyway. Caught by a new sweep assertion, not
+by eye.
+
+**A tab holds for 13s, not 9.** *"用户还没看完内容就切tab了"* — the exchange's
+last message is cued at ~4.1s, the artifact lands at ~4.4s and its spring
+settles by ~5.2s, so 9000 left under four seconds with the finished frame on
+screen. 13000 gives the settled frame about 7.8s, which is the part anyone
+actually reads.
+
+**The bottom band, rebalanced.** *"整个frame下方因为在一开始要给data预留空间，所以
+看起来有点空"*. Three things, measured at each step: the frame gave its bottom
+padding to the windows and the strip supplies its own floor; the row-gap came
+down from 22 to 15; and the strip itself went from a stacked block (46px, number
+over label) to **one line** (24px, number then label). The band is 67px on a
+595px frame, down from 95px on 625 — the frame is 30px shorter and the strip
+reads as a footer under the picture rather than a row parked in a gap.
+
+It is still empty for the five seconds the run takes, because that is what a
+two-phase entrance is. If that is the part that bothers you, the other lever is
+to move the strip into the left column under the connector cards — the frame
+loses the band entirely and the column's air gets used — but it stops being
+centred, which was the earlier ask.
+
+**And the value comes before the label.** Inline, the DOM order is the reading
+order: "6 backlog issues linked", not "backlog issues linked 6".
+
+**Gate.** Sweep at 8 widths × 7 scenes × 5 timestamps, with two new assertions —
+the two cards must be the same width, and they may not collide — clean. axe 0
+across 18 samples in both themes. `audit.js` §1/§6/§8/§9 PASS. `tokens.py` 0,
+`scopes.py` 0, `rules.py` all pointers resolve.
+
+**Sandbox note.** The workspace was wiped twice mid-round. Everything was
+already pushed, so the first was a `git clone`; the second took `/tmp` and the
+local server but left the working tree, so nothing was rebuilt from memory.
+
+---
+
 ## 2026-08-28 · seven from one pass over the stage
 
 Six screenshots and a deletion. Each one measured before it was changed.
