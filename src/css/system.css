@@ -4476,6 +4476,15 @@ h3{ font-family:var(--fd); }
 }
 .pref__btn:hover,.pref__lang:hover{ background:var(--wash-2); color:var(--ink); }
 .pref__btn svg,.pref__globe svg{ width:16px; height:16px; }
+/* THE WRAPPER, NOT THE SVG. An `<svg>` is inline by default, so a span that
+   holds one is a LINE BOX: 16px of glyph plus 5.6px of descender space below
+   it. `align-items:center` then centres that 21.6px box and the visible
+   globe rides 2.8px high — measured — while the label and the chevron, which
+   are flex items in their own right and have no line box, sit dead centre.
+   Fixed on the span rather than with `.pref__btn svg{display:block}`, which
+   is (0,1,1) and would out-specify `.pref__moon{display:none}` (0,1,0) and
+   show the sun and the moon at once. */
+.pref__globe{ display:inline-flex; align-items:center; }
 .pref__moon{ display:none; }
 :root[data-theme="dark"] .pref__sun{ display:none; }
 :root[data-theme="dark"] .pref__moon{ display:block; }

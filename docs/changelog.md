@@ -622,6 +622,54 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-29 · the globe rode 2.8px high, and the check for it was wrong twice
+
+Tong: *"这个语言选择 icon 和文字没有对齐。"*
+
+**Measured before touching it.** The button is `inline-flex; align-items:center`
+and the label and the chevron are dead centre — all three at the same middle to
+0.1px. The globe's *span* is centred too. Its **svg** is 2.8px high.
+
+An `<svg>` is inline by default, so a bare span holding one is a **line box**:
+16px of glyph plus 5.6px of the font's descender space below it. Centring that
+21.6px box puts the visible glyph above centre. The label and the chevron are
+flex items in their own right and have no line box, which is why only the globe
+drifted.
+
+**Fixed on the wrapper, not the svg.** `.pref__globe{ display:inline-flex }`.
+The obvious `.pref__btn svg{ display:block }` is (0,1,1) and would out-specify
+`.pref__moon{ display:none }` at (0,1,0) — the theme toggle would show the sun
+and the moon at once. Verified: exactly one glyph in both themes, and all four
+centres now agree to 0px. Now **S11**.
+
+### The check took three goes
+
+Worth writing down because two of the three looked like they worked:
+
+1. *"wrapper taller than its svg"* — reported five padded buttons (`.pbox__ib`,
+   `.slk__send`, `.railnav__b` …) which are **meant** to be bigger than their
+   icons, and are fine.
+2. Guarded with `height !== 'auto'` to exclude sized controls — **computed
+   height is never `auto`** on a rendered element, so the guard fired every
+   time and the check skipped precisely the case it existed for. It printed
+   PASS with the fault reintroduced, which is the worst outcome available.
+3. The signature is **off-centre**, not taller: a padded control centres its
+   icon, a line box does not. `|svgMid − wrapperMid| > 1px`.
+
+Version 3 is in `audit.js` §6 and self-tested per R15 — PASS on the fix, and
+with `display:block` put back it names the element and the offset: *"svg off
+its wrapper centre by -2.8px: .pref__globe"*, the same 2.8 measured by hand.
+
+**Gate.** axe 0 across 6 samples; `audit.js` §1, §6, §8, §9, §10, §11 PASS;
+`tokens.py` 0; `rules.py` 148 rules resolving.
+
+**Noted, not changed:** the footer still carries the old cube-plus-OKOU lockup,
+which is now inconsistent with the header's new logotype. Left alone because
+the ask was the header, and swapping a second brand lockup is a decision rather
+than a fix.
+
+---
+
 ## 2026-08-29 · the figure shadows come off a scale again
 
 Tong: *"这阴影还是被截断了。嗯，是不是阴影太重了？那整体把这些配图的阴影都减一减"*

@@ -146,6 +146,27 @@
       out.push('squashed: ' + (i.getAttribute('src') || '').split('/').pop());
   });
 
+  /* AN `<svg>` IS INLINE, so a bare span holding one is a LINE BOX: the
+     glyph at the top and the font's descender space below it. Centre that
+     box and the glyph rides high — the language control's globe sat 2.8px
+     above its own label and chevron, which were flex items with no line box
+     of their own.
+     The signature is OFF-CENTRE, not "taller than its glyph": a padded or
+     explicitly sized control is meant to be bigger and centres its icon. A
+     first version tested the height difference and reported five padded
+     buttons while missing the fault it was written for. */
+  document.querySelectorAll('span,i,em,div,a,button,figure,p').forEach(w => {
+    const kids = [...w.children];
+    if (kids.length !== 1 || kids[0].tagName.toLowerCase() !== 'svg') return;
+    if (w.textContent.trim()) return;
+    const wr = w.getBoundingClientRect(), sr = kids[0].getBoundingClientRect();
+    if (!wr.height || !sr.height) return;
+    const off = (sr.top + sr.height / 2) - (wr.top + wr.height / 2);
+    if (Math.abs(off) > 1)
+      out.push('svg off its wrapper centre by ' + off.toFixed(1) + 'px: .' +
+               ((w.getAttribute('class') || '').split(' ')[0] || w.tagName));
+  });
+
   // a mark with heavy internal padding reads smaller than its neighbours
   const inks = [...document.querySelectorAll('.logo img')].map(i => i.getBoundingClientRect().width);
   if (inks.length && Math.max(...inks) / Math.min(...inks) > 1.6)

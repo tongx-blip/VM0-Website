@@ -2063,6 +2063,14 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
 el.style.transition='none'; el.style.clipPath='inset(-10px -10px calc(45% - 20px))';
 ```
 
+- **The signature of a line-box gap is OFF-CENTRE, not "taller than the
+  glyph".** A padded or explicitly sized control is meant to be bigger and
+  centres its icon; a line box puts the glyph at the top with descender space
+  below. `audit.js` §6 tests the offset. A first version tested the height
+  difference and reported five padded buttons while missing the fault it was
+  written for — and a guard on `height !== 'auto'` skipped it entirely, because
+  computed height is never `auto` on a rendered element.
+
 ## 10. Publish
 
 ```bash
