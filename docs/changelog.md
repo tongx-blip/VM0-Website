@@ -622,6 +622,55 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-29 · the new logo, and it gathers into the mark
+
+Tong sent the new OKOU logotype as an SVG and its standalone mark, and asked
+for the header to open on all four shapes and then collapse the last three to
+the left until only the first is left.
+
+**Inlined, not `<img>`.** Four paths cannot be animated separately through an
+`<img>`, so the svg is in the markup with each glyph classed. Its DOM order is
+not its visual order — U, O, O, K in the file — so the generator reorders to
+left-to-right and records each glyph's own distance home: K −162, O −303,
+U −448, in the svg's user units.
+
+**The box is the finished state.** The `viewBox` is `0 0 138 140` — the first
+glyph alone — and the other three live *outside* it, drawn only because
+`overflow` is visible. So the header is laid out for the mark from the first
+frame: measured at 390, 768 and 1440, the box is 26px in both frames and the
+nav's centred links do not move by a pixel. The alternative, transitioning the
+element's width, is a layout property on a timer (N1) and would reflow the bar
+every frame for the whole gather. Now **N21**.
+
+**Resting is the gathered mark (N2),** so no-JS, a slow connection and reduced
+motion all show the finished logo rather than a wordmark that never resolves.
+That means the opening state has to be switched ON before the first paint and
+off again after the hold — and `is-armed` has to go on one painted frame later
+(N12), or the three glyphs fly *out* from behind the mark on load, which is
+the reverse of what this says.
+
+**`opacity` here is deliberate.** N3 forbids fading text on a loop — "once per
+load is an artifact; every twelve seconds forever is a defect" — and this is
+four graphic paths in an `aria-hidden` svg playing once. The link carries its
+own name in `aria-label`, since the wordmark it used to sit beside is now part
+of the logo.
+
+**`.mark` was taken.** The first pass called the component `.mark`, which is
+already the highlight class in the reach section; `tokens.py`'s
+duplicate-declaration check caught the collision on `color` and `transition`
+before it reached a browser. It is `.wm`.
+
+**Two dead rules** in `base.css` for the `<img>` and `<span>` that no longer
+exist, removed — the R6 grep after replacing a block.
+
+**Gate.** axe 0 across 8 samples; both frames checked in light and dark, in the
+resting and stuck header, and under reduced motion (class `wm`, one glyph
+visible, box 26). No collision at 390, where the opening logotype ends at 99px
+and the next control starts at 187. `audit.js` §1/§6/§8/§9 PASS; `tokens.py` 0,
+`scopes.py` 0, `rules.py` all pointers resolve.
+
+---
+
 ## 2026-08-28 · 上下 was the arrangement, not the alignment
 
 *"我都说了icon和text纵向左对齐，icon在text上边"* — and he had. I read 「icon和text

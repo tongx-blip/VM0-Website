@@ -680,14 +680,50 @@ h3{ font-family:var(--fd); }
   color:var(--nav-ink-hi);
   transition:color var(--t-state) var(--e-out);
 }
-.nav__logo img{
-  width:20px; height:20px;
+/* ── the mark, and the four shapes it opens with ────────────────────
+   The logotype is OKOU: a scalloped O, a K, a ring O and a U. The page
+   opens showing all four and then gathers the last three in behind the
+   first, which is the standalone mark.
+
+   THE BOX IS THE FINISHED STATE. The `viewBox` is `0 0 138 140` — the first
+   glyph alone — and the other three live outside it, drawn only because
+   `overflow` is visible. So the header is laid out for the mark from the
+   very first frame: nothing reflows when the three leave, and the nav's
+   centred links never move. The alternative, animating the element's width,
+   is a layout property on a timer (N1) and would reflow the bar every frame
+   for the whole of the gather.
+
+   `opacity` here is deliberate and allowed. N3 forbids fading TEXT on a
+   LOOP — "once per load is an artifact; every twelve seconds forever is a
+   defect" — and this is four graphic paths inside an `aria-hidden` svg,
+   playing once. The link carries its own name in `aria-label`. */
+.wm{
+  height:26px; width:auto;
+  overflow:visible;                 /* the three that start outside the box */
+  color:var(--nav-ink-hi);
   transition:transform var(--t-state) var(--e-spring);
 }
-.nav__logo:hover img{ transform:rotate(-12deg) scale(1.08); }
-.nav__logo span{
-  font-family:var(--fd); font-weight:600;
-  font-size:var(--t-wordmark); letter-spacing:.22em;
+.wm__g{ fill:currentColor; }
+.nav__logo:hover .wm{ transform:rotate(-8deg) scale(1.06); }
+
+/* RESTING IS THE GATHERED MARK (N2). No JS, no `.is-intro`, reduced motion
+   and a slow connection all show the finished logo rather than a wordmark
+   that never resolves. `--tuck` is each glyph's own distance home, in the
+   svg's user units, so the three land exactly on the first. */
+.wm__g[style]{
+  opacity:0;
+  transform:translateX(calc(var(--tuck) * 1px));
+}
+/* armed one painted frame after the intro state, so the opening frame is a
+   state and not an animation played backwards (N12) */
+.wm.is-armed .wm__g[style]{
+  transition:opacity 380ms var(--e-out),
+             transform 620ms var(--e-out);
+  transition-delay:var(--gd, 0ms);
+}
+.wm.is-intro .wm__g[style]{ opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){
+  .wm.is-armed .wm__g[style]{ transition:none; }
 }
 .nav__links{
   justify-self:center;

@@ -16,6 +16,33 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var doc = document;
 
+  /* ── 0a. the wordmark gathers into the mark ──────────────────
+     The page opens on the whole logotype — O K O U — and a beat later the
+     last three tuck in behind the first, which is the standalone mark.
+
+     THE RESTING DOM IS THE GATHERED MARK (N2), so the opening state has to
+     be switched ON before the first paint and switched off again after the
+     hold. That ordering matters: adding `is-intro` and `is-armed` together
+     would play the opening state as an animation — the three glyphs would
+     fly OUT from behind the mark on load, which is the reverse of what this
+     says. `is-armed` goes on one painted frame later (N12), so the arrival
+     is a state and only the departure is a transition.
+
+     Nothing here runs under reduced motion: the CSS kills the transition
+     and the resting state is already the finished one, so the mark simply
+     is the mark. */
+  var wm = doc.querySelector('.wm');
+  if (wm && !reduce) {
+    wm.classList.add('is-intro');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        wm.classList.add('is-armed');
+        // long enough to read OKOU, short enough not to be a splash screen
+        setTimeout(function () { wm.classList.remove('is-intro'); }, 1150);
+      });
+    });
+  }
+
   /* ── 0. index children so CSS can stagger them ─────────────── */
   doc.querySelectorAll('[data-reveal="mask"]').forEach(function (el) {
     el.querySelectorAll('.line').forEach(function (l, i) {

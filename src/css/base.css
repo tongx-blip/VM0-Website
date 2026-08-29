@@ -125,10 +125,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   background:transparent; color:var(--ink);
   box-shadow:none;
 }
-.nav__logo img{ width:17px; height:17px; }
-.nav__logo span{
-  font-weight:700; font-size:15px; letter-spacing:.20em;
-}
 .nav__links{
   display:flex; align-items:stretch;
   background:transparent; border:0; padding:0; box-shadow:none;

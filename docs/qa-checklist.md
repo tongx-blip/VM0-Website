@@ -2042,6 +2042,16 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
   landing and the spring, then add reading time — 9s looked generous and left
   under four seconds with the finished frame on screen.
 
+- **An element that ends smaller than it starts is laid out at its END size.**
+  Draw the departing parts outside the box on `overflow:visible` rather than
+  transitioning `width`. Check the neighbours' positions in both frames — if
+  anything moved, the box is being animated.
+
+- **A one-shot `opacity` on a graphic is not the N3 fault.** N3 forbids fading
+  TEXT on a LOOP; four `aria-hidden` paths playing once per load are what its
+  own "once per load is an artifact" clause allows. Confirm the element is not
+  text and not on a timer before reaching for it.
+
 ## 10. Publish
 
 ```bash
