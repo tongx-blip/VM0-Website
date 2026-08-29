@@ -685,6 +685,116 @@
     checkOverflow();
   });
 
+  /* ── 3b. slk lift: the first message is readable before it is pushed ──
+     A Slack channel hangs from the bottom, so the list opened with its own
+     first message already cut by the channel bar. It starts top-anchored
+     now and is lifted afterwards by EXACTLY its overflow, which is the same
+     end state and a different arrival: the ask is read, then the replies
+     land on top of it and push it up.
+
+     Measured off the rows, written to the first row (RULES F23) — a margin
+     on the first row changes no row's own height, so re-measuring cannot
+     chase the value it just wrote. Re-run whenever a scene is shown, since
+     a `display:none` pane measures zero for everything. */
+  var SLK_HOLD = 1500;   // long enough to read the ask before it moves
+  [].slice.call(doc.querySelectorAll('.slk__list')).forEach(function (list) {
+    var timer = null;
+    function overflow() {
+      // Summing row heights misses the gaps between them (12px short), and
+      // scrollHeight misses this box's own bottom padding (6px short). Ask
+      // the thing the answer is about: with the lift at zero, how far is the
+      // last row past the floor the composer starts at.
+      list.style.setProperty('--slk-lift', '0px');
+      void list.offsetHeight;
+      var last = list.lastElementChild;
+      if (!last) return 0;
+      var pad = parseFloat(getComputedStyle(list).paddingBottom) || 0;
+      var floor = list.getBoundingClientRect().bottom - pad;
+      return Math.max(0, Math.round(last.getBoundingClientRect().bottom - floor));
+    }
+    function settle() {
+      if (timer) { clearTimeout(timer); timer = null; }
+      if (!list.clientHeight) return;          // its pane is not shown
+      // Measure TWICE, and the second one is the one that counts. The first
+      // reading happens while the rows are still arriving, so it came out
+      // 14px short and left the last message under the floor. This one only
+      // zeroes the lift for the hold; the amount is read at the moment it is
+      // applied, when nothing is moving any more.
+      if (!overflow()) return;        // leaves the lift at 0
+      timer = setTimeout(function () {
+        var over = overflow();
+        if (over) list.style.setProperty('--slk-lift', '-' + over + 'px');
+      }, SLK_HOLD);
+    }
+    // THE HOLD STARTS WHEN YOU ARRIVE, NOT WHEN THE PAGE LOADS. Run at load,
+    // the 1.5s was spent long before anyone scrolled this far and the channel
+    // was already lifted by the time it was looked at — which is the bug,
+    // restored. It waits for the section to be on screen.
+    doc.addEventListener('okou:scene', settle);
+    window.addEventListener('resize', settle, { passive: true });
+    if ('IntersectionObserver' in window) {
+      var seen = false;
+      new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) { if (timer) clearTimeout(timer); return; }
+        if (seen) return;
+        seen = true;
+        settle();
+      }, { threshold: 0.3 }).observe(list);
+    } else {
+      window.addEventListener('load', settle);
+    }
+  });
+
+  /* ── 3c. the floating header is as wide as what it carries ─────
+     `.nav.is-stuck` insets by `50% - --nav-w-stuck/2` on both sides, so the
+     number this writes is the only thing standing between a full-width bar
+     and an object. Measure the three GROUPS and write to the BAR — never
+     read the bar's own width back, which is the fault F23 is about: the
+     stuck bar is already the size of the last answer, so measuring it would
+     ratchet.
+
+     `scrollWidth` on each group is its content width and does not change
+     when the grid's 1fr columns collapse around it, which is what makes
+     this stable across the two states. */
+  (function () {
+    var bar = doc.getElementById('nav');
+    if (!bar) return;
+    var groups = ['.nav__logo', '.nav__links', '.nav__auth']
+      .map(function (sel) { return bar.querySelector(sel); })
+      .filter(Boolean);
+    if (groups.length < 2) return;
+
+    function measure() {
+      // display:none at narrow widths measures 0; leave the last good value
+      var links = bar.querySelector('.nav__links');
+      if (links && !links.getClientRects().length) return;
+      // MEASURE IT UNSTUCK. Stuck, the bar is already the width of the last
+      // answer and the groups inside it are squeezed to fit, so measuring
+      // there ratchets the number DOWN a little every time — the first run
+      // came back 826px and wrapped "GET STARTED" onto two lines. The class
+      // comes off for the read and goes straight back on, in one frame.
+      var was = bar.classList.contains('is-stuck');
+      if (was) bar.classList.remove('is-stuck');
+      var cs = getComputedStyle(bar);
+      var gap = parseFloat(cs.columnGap) || 0;
+      var padX = parseFloat(cs.paddingLeft) || 0;
+      // rects, not scrollWidth: scrollWidth is an integer and these three
+      // groups are all fractional, so the floors added up to a bar ~4px too
+      // narrow — which is a wrapped button, not a rounding error
+      var w = groups.reduce(function (a, el) {
+        return a + el.getBoundingClientRect().width;
+      }, 0);
+      w += gap * (groups.length - 1) + padX * 2;
+      if (was) bar.classList.add('is-stuck');
+      bar.style.setProperty('--nav-w-stuck', Math.ceil(w) + 1 + 'px');
+    }
+
+    window.addEventListener('resize', measure, { passive: true });
+    window.addEventListener('load', measure);
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(measure);
+    measure();
+  })();
+
   /* ── 4. one scroll loop: header state + step ladder ───────────
      The ladder is a pinned section taller than its own viewport, and how
      far you have scrolled through that pin IS which step is open — one
@@ -916,8 +1026,16 @@
     }).observe(sentinel);
 
     /* The header's midline, as a viewport inset: everything above it is
-       "behind the bar". --nav-top + half the stuck height. */
-    var mid = 12 + 54 / 2;
+       "behind the bar". --nav-top + half the stuck height — READ, not
+       retyped. The two literals here were 12 and 54, and 54 stopped being
+       the stuck height the day it became 58; a constant copied out of a
+       token is a token that no longer has one consumer. */
+    function navPx(name, fallback) {
+      var v = parseFloat(getComputedStyle(doc.documentElement)
+        .getPropertyValue(name));
+      return v === v ? v : fallback;
+    }
+    var mid = navPx('--nav-top', 12) + navPx('--nav-h-stuck', 58) / 2;
     var darkObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { e.target.__overNav = e.isIntersecting; });
       if (!nav) return;

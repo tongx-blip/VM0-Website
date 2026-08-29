@@ -157,9 +157,16 @@
   );
   --pad:    var(--edge);
   --gutter: clamp(18px, 2vw, 30px);
-  --nav-h:  62px;                            /* 38px control + 2 × --nav-pad */
+  --nav-h:  68px;                            /* 38px control + 2 × --nav-pad */
   --nav-top:12px;
-  --nav-h-stuck:54px;                        /* the header once you scroll  */
+  --nav-h-stuck:58px;                        /* the header once you scroll  */
+  /* THE HEADER'S OWN INSET, AND IT IS A NUMBER. It used to be derived from
+     the measure — `max(--nav-pad, --edge - --card-gap)` — so the distance
+     from the wordmark to the window edge changed at every width and was
+     ~250px at 2560. A frame's inset is a constant; the thing that tracks
+     the measure is the content, and once the floating bar shrinks to its
+     own content (see .nav.is-stuck) it tracks it by construction. */
+  --nav-pad-x:28px;
   /* anything that measures itself against the header while the page is
      scrolled must use the STUCK height — the header is never its resting
      size at the moment a pinned section is on screen */
@@ -606,6 +613,13 @@ h3{ font-family:var(--fd); }
   --nav-ink-hi:var(--ink);
   --nav-accent:var(--accent-wash);
   --nav-chip:var(--wash-2);
+  /* Sign in is the one control in here with no ground of its own. On the
+     stuck bar's --wash-2 a --wash-2 fill is invisible, which is why it has
+     been plain text — and plain text next to a filled button does not read
+     as the second half of a pair. A hairline is the exception S3 does not
+     make, so it is written down here: an inset ring at 14% ink, one token,
+     no layout, and it swaps with the ground like everything else in here. */
+  --nav-stroke:rgb(var(--ink-rgb) / .14);
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -613,7 +627,12 @@ h3{ font-family:var(--fd); }
   grid-template-rows:minmax(0,1fr);  /* M5 */
   grid-template-columns:1fr auto 1fr;
   align-items:center;
-  gap:16px;
+  /* At rest this only trims the two 1fr columns and is invisible. Once the
+     bar shrinks to its content it becomes the ONLY space between the three
+     groups, and at 16 the mark, the links and the buttons read as one dense
+     run. It is the spacing of the floating state, set where the floating
+     state can inherit it. */
+  gap:clamp(18px, 2.2vw, 32px);
   margin:0;
   /* THE HEADER OBEYS THE MEASURE — but sits one --card-gap OUTSIDE it.
      Left to --nav-pad the header was the only thing on the page ignoring the
@@ -628,7 +647,7 @@ h3{ font-family:var(--fd); }
      exactly one --card-gap outside the section column at every width.
      Bounded, related, and deliberately not flush. */
   padding-block:0;
-  padding-inline:max(var(--nav-pad), calc(var(--edge) - var(--card-gap)));
+  padding-inline:var(--nav-pad-x);
   background:var(--nav-ground);
   color:var(--nav-ink);
   border:0; border-radius:0;
@@ -650,16 +669,25 @@ h3{ font-family:var(--fd); }
    corner. The old --r-nav derived the corner from the CONTROL inside plus
    its padding, which at 22px made a 54px bar read as a lozenge; the header
    is the width of a card, so it is a card. */
+/* IT SHRINKS TO WHAT IT IS CARRYING. Inset to the section cards' width it
+   was a second full-width band with a lot of air in the middle of it; the
+   pull-in read as "the page moved" but not as "this is now an object". Now
+   it goes to exactly the width of its own content and centres — so the
+   ground stops being a bar and becomes a thing.
+
+   --nav-w-stuck is measured in app.js off the three groups inside, and it is
+   an inset on BOTH sides rather than a width, because `left` and `right`
+   interpolate and `width:auto → fit-content` does not — the pull-in has to
+   stay a transition, not a jump. The `max()` is the floor: on a window
+   narrower than the content the bar stops at the page gutter instead of
+   growing past the screen. */
 .nav.is-stuck{
   --nav-ground:var(--nav-fill);
   top:var(--nav-top);
-  left:var(--card-gap); right:var(--card-gap);
+  left:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
+  right:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
   height:var(--nav-h-stuck);
   border-radius:var(--r-section);
-  /* The bar has just pulled in by --card-gap, so its padding gives the same
-     amount back and the CONTENT does not move between the two states. Only
-     the ground travels — which is the whole point of the transition. */
-  padding-inline:max(var(--nav-pad), calc(var(--edge) - 2 * var(--card-gap)));
 }
 
 /* ── the header over a dark ground ──────────────────────────────────
@@ -682,6 +710,7 @@ h3{ font-family:var(--fd); }
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
   --nav-chip:rgb(var(--paper-rgb) / .1);
+  --nav-stroke:rgb(var(--paper-rgb) / .18);
 }
 .nav.is-dark.is-stuck{ --nav-ground:var(--nav-fill-dark); }
 
@@ -751,6 +780,9 @@ h3{ font-family:var(--fd); }
              background var(--t-hover) var(--e-snap);
 }
 .nav__links a:hover{ color:var(--nav-ink-hi); background:transparent; }
+/* a control's label never wraps. The bar is sized to its content now, so a
+   label that can break makes the measurement and the render disagree. */
+.nav__links a,.nav__signin,.nav__auth .btn{ white-space:nowrap; }
 .nav__auth{
   justify-self:end;
   display:flex; align-items:center; gap:6px;
@@ -761,9 +793,17 @@ h3{ font-family:var(--fd); }
   height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
   color:var(--nav-ink);
-  transition:color var(--t-hover) var(--e-snap), background var(--t-hover) var(--e-snap);
+  /* an INSET ring, not a border: a border would add 2px to a control whose
+     height has to match the one beside it to the pixel */
+  box-shadow:inset 0 0 0 1px var(--nav-stroke);
+  transition:color var(--t-hover) var(--e-snap),
+             box-shadow var(--t-hover) var(--e-snap),
+             background var(--t-hover) var(--e-snap);
 }
-.nav__signin:hover{ color:var(--nav-ink-hi); background:transparent; }
+.nav__signin:hover{
+  color:var(--nav-ink-hi); background:transparent;
+  box-shadow:inset 0 0 0 1px var(--nav-ink-hi);
+}
 
 /* ── the theme control ──────────────────────────────────────────────
    38px, the same height as every other control in the bar, and it reads
@@ -4720,9 +4760,13 @@ h3{ font-family:var(--fd); }
     --card-gap:12px;
     --pad-section:clamp(16px, 2.8vw, 24px);
     --nav-pad:8px;
-    --nav-h:56px;
-    --nav-h-stuck:50px;
+    --nav-pad-x:16px;
+    --nav-h:60px;
+    --nav-h-stuck:54px;
   }
+  /* narrow is a flex bar with a burger, so there is no content width to
+     shrink to — it keeps the gutter inset it always had */
+  .nav.is-stuck{ left:var(--card-gap); right:var(--card-gap); }
   .nav{
     display:flex; align-items:center; justify-content:space-between;
     /* the shorthand here used to reset the measure the wide layout sets —
@@ -6224,10 +6268,35 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
    names: a width expression that agrees with you at the one width you
    looked at. Clipped and bottom-anchored it cannot overlap at any width,
    and the newest message is the one kept — which is what Slack does. */
+/* IT HANGS FROM THE TOP UNTIL IT HAS TO HANG FROM THE BOTTOM. Anchored to
+   the end, the channel opened with its FIRST message already cut in half by
+   the channel bar — at 1120 the ask was 47px above its own box before
+   anything had happened. Tong, twice: 用户刚进到对应的 tab 的时候，中间的
+   对话 chat bubble 不要直接就被截断，第一个 chat bubble 要显示出来，但是在
+   对话的过程中，可以被下面的 bubble 推上去.
+   A message clipped on ARRIVAL reads as a rendering fault; the same message
+   clipped after three more have landed on top of it reads as scrollback,
+   which is the thing the crop was for. So the list starts at flex-start and
+   is lifted afterwards by exactly its own overflow — see `slk lift` in
+   app.js. The clip stays on this box, so the composer can still never be
+   painted through (the 98px overlap at 1120 that put the crop here). */
 .slk__list{
   flex:1; min-height:0; overflow:hidden;
-  display:flex; flex-direction:column; justify-content:flex-end;
+  display:flex; flex-direction:column; justify-content:flex-start;
   padding-bottom:6px;
+}
+.slk__list > *{ flex:none; }
+/* The lift is a margin on the first row rather than a transform on the list,
+   because the list is the element whose `overflow` does the clipping and
+   moving it would move the crop with it. Measured off the ROWS and written
+   to the ROW — a negative margin here does not change any row's own height,
+   so the measurement cannot chase the value it just wrote (RULES F23). */
+.slk__list > :first-child{
+  margin-top:var(--slk-lift, 0px);
+  transition:margin-top 820ms var(--e-out);
+}
+@media (prefers-reduced-motion:reduce){
+  .slk__list > :first-child{ transition:none; }
 }
 
 .slk__bar{

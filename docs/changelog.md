@@ -76,6 +76,104 @@ known `.wfo--list` fade on the first post-walk sample (QA §4af, still open).
 
 ---
 
+## 2026-08-29 · the header becomes an object, and a channel opens on its first message
+
+Two notes, and a third thing found under one of them.
+
+### The header
+
+Tong: *"Header 的左右 padding 应该是固定的。然后我觉得 header 的高度可以稍微再高
+一点点。然后我在往下滚动的时候，这 header 会收缩起来，让它的宽度直接缩减到我可以
+承载下这个 header 里面这些 content 的宽度。Login 的 button 要不要加一条非常浅的
+stroke？"*
+
+| | was | is |
+|---|---|---|
+| inset | `max(--nav-pad, --edge − --card-gap)` — derived from the measure, so the wordmark sat a different distance from the window edge at every width and ~250px in at 2560 | `--nav-pad-x: 28px`. A frame's inset is a constant |
+| height | 62 / 54 | **68 / 58** |
+| floating | inset to the section cards — a second full-width band with air in the middle | **as wide as its own content**, centred |
+| Sign in | plain text | a 14%-ink inset ring |
+
+**The pull-in had to stay a transition.** `width: auto → fit-content` does not
+interpolate, so the bar is not given a width — it is given an inset on both
+sides, `50% − --nav-w-stuck/2`, and `left`/`right` were already the two things
+the header animates. `--nav-w-stuck` is measured in `app.js` off the three
+groups and written to the bar, never read back from it: stuck, the bar is
+already the size of the last answer, so measuring it there ratchets (RULES
+F23). It also measures **unstuck** — the class comes off for the read — and
+uses rects rather than `scrollWidth`, whose integer floor over three
+fractional groups came out 4px short and broke "GET STARTED" onto two lines.
+
+The group `gap` went 16 → `clamp(18px, 2.2vw, 32px)`. At rest it only trims
+the two `1fr` columns and is invisible; once the bar hugs its content it is
+the only space between the mark, the links and the buttons, and at 16 they
+read as one dense run.
+
+**The stroke is an exception to S3 and it is written down as one.** A surface
+on this page is a fill, never an outline — but Sign in is the one control in
+the bar with no ground of its own, and on the stuck bar's `--wash-2` a
+`--wash-2` fill is invisible, which is why it had been plain text next to a
+filled button. It is an inset ring, so it adds nothing to a 38px control that
+has to match its neighbour to the pixel, and it is a token, so it crosses into
+the dark band with everything else. **Say if you would rather have the fill —
+this is the one thing here that argues with a rule.**
+
+### The channel opened on a cut-off message
+
+Tong, for the second time: *"用户刚进到对应的 tab 的时候，中间的对话 chat bubble
+不要直接就被截断。第一个 chat bubble 要显示出来，但是在对话的过程中，可以被下面的
+bubble 推上去。"*
+
+`.slk__list` was `justify-content:flex-end`, because a Slack channel hangs
+from the bottom and because bottom-anchoring is what stopped the last message
+painting through the composer (98px of overlap at 1120). The overflow is real
+— 0 at 1000 and 1080, **97px at 1120**, 75 at 1180, 26 at 1440 — so
+top-anchoring alone would just move the clip to the other end.
+
+It starts at `flex-start` and is **lifted afterwards by exactly its own
+overflow**, as a margin on the first row. Same end state, different arrival:
+the ask is read, then the replies land on top of it and push it up. Three
+things that took a try each:
+
+- **The lift is a margin on the first row, not a transform on the list.** The
+  list is the element whose `overflow` does the clipping; moving it moves the
+  crop with it. A negative margin there changes no row's own height, so the
+  measurement cannot chase the value it just wrote (F23).
+- **Measure at the moment you apply it.** Read up front, during the hold, the
+  rows were still arriving and the number came out 14px short — the last
+  message stayed under the floor.
+- **The hold starts on intersection, not at load.** Run at load, the 1.5s was
+  spent long before anyone scrolled that far, so the channel was already
+  lifted when it was looked at. That is the original bug, restored by its own
+  fix.
+
+Arrival is now `0` on all seven tabs at 1120, 1240 and 1440; settled, the last
+message ends exactly on the floor.
+
+### `.nav.is-dark` had never once run
+
+Found while checking the header over the closing band. A whole second copy of
+the header — five tokens, an IntersectionObserver, a computed `rootMargin` —
+and **nothing in the markup carried `data-ground="dark"`**, so `darkGrounds`
+was empty and the class could not be set. Confirmed against the live build
+before touching anything: dead there too.
+
+Two lines: the attribute on `#cta` and `.footer`. And the observer's midline
+was `12 + 54/2` as literals — 54 stopped being the stuck height the moment it
+became 58, so it reads the tokens now.
+
+**No gate looks for a class that is absent**, which is why this survived. New
+rule S13; the check is to grep for the attribute the observer looks for.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 151
+rules, all pointers resolve · `audit.js` §1 §3 §6 §7 PASS · axe **0
+violations** across 6 light and 4 dark samples · 390 and 1440, no horizontal
+overflow, header verified at rest, floating, narrow and over the dark band.
+
+---
+
 ## 2026-08-29 · the workflow scene's beat 1 was a layout bug, not an animation bug
 
 > **Partly reverted the same day** — see the entry above. The margin fault and
