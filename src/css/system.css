@@ -193,6 +193,18 @@
   --e-1: 0 1px 2px rgba(12,15,18,.03), 0 14px 30px -24px rgba(12,15,18,.2);
   --e-2: 0 1px 2px rgba(12,15,18,.04), 0 22px 54px -40px rgba(12,15,18,.26);
   --e-3: 0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
+  /* FIGURES GET THEIR OWN PAIR, and it is lighter than what the figures
+     had grown. Tong: *"是不是阴影太重了？那整体把这些配图的阴影都减一减"* — the
+     second layer had drifted from .24 to .5 across eight surfaces, each one
+     picked next to the last rather than against a scale, and the heaviest
+     of them was twice `--e-2`. Two roles, stated once:
+       --e-fig   a card resting on a ground
+       --e-lift  a card floating in front of another card
+     Both are channel-based so they follow `--ink` and the theme (C8). */
+  --e-fig:  0 1px 2px rgb(var(--ink-rgb) / .04),
+            0 14px 28px -22px rgb(var(--ink-rgb) / .20);
+  --e-lift: 0 1px 3px rgb(var(--ink-rgb) / .05),
+            0 20px 40px -26px rgb(var(--ink-rgb) / .26);
   --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
   /* the header has no elevation token — it separates by tone (RULES S3) */
 
@@ -1550,13 +1562,13 @@ h3{ font-family:var(--fd); }
   padding:15px;
   border:0;
   background:var(--paper);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .04), 0 16px 34px -24px rgb(var(--ink-rgb) / .24);
+  box-shadow:var(--e-fig);
   transition:transform var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap);
 }
 .acard:hover{
   transform:translateY(-3px);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .06), 0 26px 48px -26px rgb(var(--ink-rgb) / .32);
+  box-shadow:var(--e-lift);
 }
 .acard__ic{
   width:40px; height:40px; flex:none;
@@ -2299,8 +2311,7 @@ h3{ font-family:var(--fd); }
 .wfo--ask,.wfo--run,.wfo--list{
   background:var(--paper); color:var(--ink);
   border-radius:var(--r-card);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .09),
-             0 30px 56px -26px rgb(var(--ink-rgb) / .46);
+  box-shadow:var(--e-fig);
 }
 
 /* ── where the run lands ─────────────────────────────────────────────
@@ -2320,7 +2331,7 @@ h3{ font-family:var(--fd); }
   overflow:hidden;
   background:var(--slk-card);
   border-radius:var(--r-card);
-  box-shadow:0 2px 10px rgb(var(--ink-rgb) / .1), 0 26px 50px -26px rgb(var(--ink-rgb) / .42);
+  box-shadow:var(--e-lift);
   --slk-line:#E4E6E9;
   --slk-ink:#1D1C1D;
   --slk-mute:#616061;
@@ -2803,7 +2814,7 @@ h3{ font-family:var(--fd); }
 .ladder__frame .slackui{
   height:100%; min-height:0;
   border-radius:var(--r-card);
-  box-shadow:0 2px 10px rgb(var(--ink-rgb) / .12), 0 30px 60px -26px rgb(var(--ink-rgb) / .5);
+  box-shadow:var(--e-lift);
 }
 .ladder__frame .absui__body,
 .ladder__frame .flowui__grid{ flex:1 1 auto; min-height:0; overflow:hidden; }
@@ -4246,7 +4257,7 @@ h3{ font-family:var(--fd); }
 }
 .a2a__card:hover{
   transform:translateY(-2px);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .05), 0 20px 38px -24px rgb(var(--ink-rgb) / .28);
+  box-shadow:var(--e-lift);
 }
 .a2a__t{ font-family:var(--fb); font-size:14.5px; font-weight:600; color:var(--ink); }
 .a2a__dot.is-run{ background:var(--accent); box-shadow:0 0 0 3px rgb(var(--accent-rgb) / .16); }
@@ -5543,8 +5554,7 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-float);
   background:var(--paper);
   min-width:0;
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 18px 38px -20px rgb(var(--ink-rgb) / .30);
+  box-shadow:var(--e-lift);
 }
 /* One hangs from the top and one from the BOTTOM, which is the only way
    a pair of auto-height cards cannot leave the frame: `top:52%` on the
@@ -5616,8 +5626,7 @@ h3{ font-family:var(--fd); }
    this. Both readings — Slack's chrome and Okou's own — are windows, so
    this is the shared part and each adds only its own sidebar. */
 .scene[data-scene] .ochat{
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 18px 40px -20px rgb(var(--ink-rgb) / .30);
+  box-shadow:var(--e-fig);
 }
 /* THE FILL IS SET PER READING, NOT SHARED. `background:var(--paper)` on
    this selector out-specifies `.ochat--slack{ background:var(--slk-card) }`
@@ -5874,8 +5883,7 @@ h3{ font-family:var(--fd); }
      else, while the connector cards beside it are DARKER than it. It was
      the lightest thing in the row with nothing to sit on, so it dissolved.
      The rail does most of the separating and the shadow finishes it. */
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 18px 40px -20px rgb(var(--ink-rgb) / .30);
+  box-shadow:var(--e-fig);
   font-family:var(--fb);
 }
 

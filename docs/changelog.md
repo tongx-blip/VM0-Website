@@ -622,6 +622,52 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-29 · the figure shadows come off a scale again
+
+Tong: *"这阴影还是被截断了。嗯，是不是阴影太重了？那整体把这些配图的阴影都减一减"*
+— and the second sentence is the fix for the first.
+
+**They had drifted.** Eight figure surfaces carried hand-picked shadows whose
+second layer ran from `.24` to `.5`, each chosen next to the one before it
+rather than against a scale — the heaviest was twice `--e-2`, the page's own
+elevation token. Two roles now, stated once beside `--e-1..3`:
+
+```css
+--e-fig:  0 1px 2px  rgb(var(--ink-rgb) / .04), 0 14px 28px -22px rgb(var(--ink-rgb) / .20);
+--e-lift: 0 1px 3px  rgb(var(--ink-rgb) / .05), 0 20px 40px -26px rgb(var(--ink-rgb) / .26);
+```
+
+`--e-fig` is a card resting on a ground; `--e-lift` is a card floating in front
+of another card. Both are channel-based, so they follow `--ink` and the theme
+(C8). All nine declarations route through them — the workflow cards, the ladder
+mocks, the Outputs connector cards, the app window, the Slack panel and the
+comparison cards. Now **S10**.
+
+**And that is most of the cut.** The `#growth` card wipes in with an animating
+`clip-path`, and a clip cuts the shadow at its moving edge: while the card is
+half revealed, the shadow belonging to the half that IS revealed is not drawn.
+That is inherent — a wipe cannot carry a drop shadow — but at `.42` over a
+50px blur the cut read as a hard grey rectangle with corners, which is what the
+screenshot shows. At `--e-lift` the same frame is a clean leading edge.
+
+Checked at a forced worst-case frame rather than by waiting for the loop:
+
+```js
+p.style.transition='none'; p.style.clipPath='inset(-10px -10px calc(45% - 20px))';
+```
+
+**What the gate could and could not see.** `audit.js` §11 — added this morning
+from the other thread — asserts that every clipped surface leaves room for its
+shadow, and it passed both before and after: it measures the *static* bleed,
+which was correct all along. The fault was in a frame the check cannot reach.
+Written into the gate as an eye check with the snippet above, rather than
+pretended to be automated.
+
+**Gate.** axe 0 across 14 samples in both themes. `audit.js` §1, §6, §8, §9,
+§10 and §11 all PASS. `tokens.py` 0, `rules.py` 147 rules resolving.
+
+---
+
 ## 2026-08-29 · the new logo, and it gathers into the mark
 
 Tong sent the new OKOU logotype as an SVG and its standalone mark, and asked

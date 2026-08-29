@@ -2052,6 +2052,17 @@ python3 tools/tokens.py     # "sized grids with an implicit row track" must be 0
   own "once per load is an artifact" clause allows. Confirm the element is not
   text and not on a timer before reaching for it.
 
+- **A wipe cannot carry a drop shadow.** `clip-path` cuts the shadow at the
+  moving edge, so while a card wipes in, the shadow belonging to the part
+  already revealed is not drawn — and the heavier the shadow, the more the cut
+  reads as a broken rectangle rather than as the leading edge. §11 checks the
+  static bleed; it cannot see the moving edge, so judge that one by eye at a
+  forced mid-wipe frame:
+
+```js
+el.style.transition='none'; el.style.clipPath='inset(-10px -10px calc(45% - 20px))';
+```
+
 ## 10. Publish
 
 ```bash
