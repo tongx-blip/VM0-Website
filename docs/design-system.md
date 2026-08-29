@@ -57,9 +57,9 @@ private to the mocks; new work uses the named tokens above.
 
 | Role | Token | Family |
 |---|---|---|
-| Display | `--fd` | Archivo **500** |
-| Body | `--fb` | Instrument Sans 400/500 |
-| Utility | `--fm` | IBM Plex Mono 500, uppercase, `letter-spacing:.075–.16em` |
+| Display | `--fd` | Roobert TRIAL **500** |
+| Body | `--fb` | Roobert TRIAL 400/500 |
+| Utility | `--fm` | Roobert TRIAL Mono 500 (`MONO:100`), uppercase, `letter-spacing:.075–.16em` |
 | The ladder | Inter 300/400 | the one component built to a supplied design (§14) |
 
 ### The scale has two regions, and a rule for each

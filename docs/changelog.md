@@ -4,6 +4,103 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-29 · one typeface — Roobert everywhere, and it brought its own monospace
+
+Tong: *"把整个网站的字体全部换成 Roobert TRIAL … 检查网站上的所有的字体，全都换成
+Roobert TRIAL"*, then the twelve static cuts and the variable font.
+
+### what was actually there
+
+Audited before touching anything. **Six families, seven declarations**, and
+three of them were only fallbacks for each other:
+
+| | rendered on | role |
+|---|---|---|
+| Instrument Sans | 434 elements | `--fb`, prose |
+| IBM Plex Mono | 161 | `--fm`, utility text |
+| Archivo | 85 | `--fd`, headlines |
+| Noto Sans | 33 | `--vm-font`, the vm0 app mock |
+| Inter | 8 | `.ladder`, left over from a supplied reference |
+| system-ui | one mock | `.slackui`, Slack's own UI stack |
+| Cormorant Garamond | — | `.tpl__h1` / `.tpl__quote`, the artifact preview |
+
+All seven are Roobert now, mocks included. Two stacks left on the page.
+
+### the variable font has a MONO axis, and that is the whole story
+
+`RoobertTRIALVF.ttf` carries `wght` 300–900, `ital` 0–11 **and `MONO` 0–100** —
+the foundry ships a monospace of the same design, as named instances from
+`Mono Light` to `SemiMono Heavy`.
+
+So the page did not have to give up its third register. `--fm` is the *same
+file* at `MONO:100`, declared as a second `@font-face` on the same URL. Labels,
+timestamps, durations and figures keep a fixed advance: `LAUNCH CAMPAIGN` /
+`0:01` still line up across four cards, and `MING · 09:12` is still an
+instrument reading rather than prose in small caps. I had already written the
+fallback plan — proportional plus `tabular-nums` — and it was strictly worse.
+`tabular-nums` stays anyway: the axis fixes the advance, the feature fixes
+which figures get drawn, and they are not the same switch.
+
+### shipping the VF, not the statics
+
+Two reasons, and the first is a trap:
+
+* **The statics are stamped 650 and 750**, not 600 and 700. Every
+  `font-weight:600` in the stylesheet would have landed on a neighbour and the
+  page would have been subtly heavier everywhere, for no reason a screenshot
+  explains. The VF is continuous, so 600 is 600.
+* One axis file covers what twelve files covered, plus the mono.
+
+Three passes in `tools/build-fonts.py`, each measured:
+
+| | |
+|---|---|
+| supplied VF | 723 KB ttf · 253 KB woff2 |
+| pin `ital` 0 — there is no `font-style:italic` in this page's CSS | 165 KB |
+| subset to Latin, Latin-1, Latin Ext-A and the punctuation blocks | **64 KB** |
+
+One request, 64 KB, replacing six Google-hosted families across two extra
+connections. The Devanagari, CJK and Hangul in the language menu were never in
+Archivo either and still fall back to the system face.
+
+### what moved, and what did not
+
+Roobert's metrics are close enough to Instrument Sans that **three elements on
+the whole page changed line count** — two quote cards and the footer
+disclaimer, each by one line, none of them clipped. Measured by diffing
+`round(height / line-height)` for every text-bearing element against `main`
+rather than by looking.
+
+Everything else held: no horizontal overflow at 1440 or 390, no newly clipped
+text (`.slk__unfurl-u` at 390 is an ellipsised URL and is identical on `main`),
+audit §1–§11 pass, axe 0 in both themes.
+
+### the three pinned surfaces
+
+`RULES P1` pins a product mock to the product's own values, and three surfaces
+were pinned to a *typeface*: the vm0 app window (Noto Sans), the Slack window
+(system-ui) and the generated-website preview (Cormorant Garamond). All three
+are Roobert now, which is what was asked for. The serif is the one to watch —
+it was the only signal that the artifact preview is a *different* design, and
+`.tpl` is exactly the case `K4` carves out. One line to put back.
+
+### licence
+
+Roobert TRIAL is Displaay's evaluation cut. `site/assets/fonts/roobert-var.woff2`
+is published on GitHub Pages and directly downloadable, which is outside what a
+trial licence covers. Recorded in `src/fonts/README.md`; the originals are
+gitignored and only the built subset ships. Not a blocker — the site owner's
+call — but it should be a retail web-font licence before this is the public
+site for long.
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · 148 rules, 69
+gate sections, 11 audit blocks, every pointer resolves · `audit.js` §1–§11 pass
+· axe 0 violations in light and dark across 8 samples each, other than the known
+`.wfo--list` fade on the first post-walk sample (QA §4af, still open) · 1440 and
+390 clean.
+
+---
+
 ## 2026-08-29 · the missing shadow, and the composition I broke looking for it
 
 Tong: *"你之前那个覆盖关系，我觉得挺好的。我说的 bug 是你把阴影给去掉了。它也不是

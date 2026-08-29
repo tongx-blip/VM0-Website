@@ -57,7 +57,9 @@ and every rule in it comes from a decision that has already been argued once.
 - **No structural lines.** If a change needs a divider to read, the spacing or
   the grounds are wrong.
 - **No new dependency** without a stated reason. The page ships zero JS
-  libraries and three webfonts.
+  libraries and **one webfont** — a 64 KB variable Roobert, self-hosted, built
+  by `tools/build-fonts.py` (fontTools + brotli are a BUILD dependency, not a
+  shipped one). There is no Google Fonts request.
 
 ## Conventions
 
@@ -67,5 +69,7 @@ and every rule in it comes from a decision that has already been argued once.
 - Surfaces: fill + shadow, never an outline.
 - Anything scoped by section id (`#outputs .thing`) out-specifies state classes
   (`.thing.is-on`) — always add `:not(.is-on)`.
-- Utility text (labels, data, captions, controls) is IBM Plex Mono; prose is
-  Instrument Sans; headlines are Archivo.
+- **One typeface, three registers.** Headlines `--fd`, prose `--fb`, utility
+  text `--fm` — all Roobert TRIAL. `--fm` is the same file on its `MONO:100`
+  axis, so labels, data, captions and controls are still monospaced and still
+  align in a column; it is not a second family.

@@ -327,7 +327,7 @@ const svgs = [...document.querySelectorAll('.appui svg')];
 svgs.length && svgs.filter(s =>
   s.getAttribute('stroke-width') !== '2' ||
   s.getAttribute('viewBox') !== '0 0 24 24').length            // must be 0
-getComputedStyle(document.querySelector('.appui')).fontFamily  // "Noto Sans"
+getComputedStyle(document.querySelector('.appui')).fontFamily  // "Roobert TRIAL"
 ```
 
 ## 4g. The pinned ladder
@@ -393,7 +393,7 @@ the next section, not the first.
 
 ## 4i. Heading weight
 
-Every site-level title is Archivo **500** (`system.css` §3). Nothing outside a
+Every site-level title is Roobert **500** (`system.css` §3). Nothing outside a
 product mock may be 700, and 600 survives only on the wordmark:
 
 ```js
@@ -414,7 +414,7 @@ invisible in a diff:
 [...document.querySelectorAll('h2,h3,.display,.sentence')]
   .filter(h => !h.closest(MOCK))
   .map(h => getComputedStyle(h).fontFamily.split(',')[0])
-// every one "Archivo" — except the ladder, which is Inter by design
+// every one "Roobert TRIAL" — no exceptions left; the ladder's Inter is gone
 ```
 
 ## 4j. One section geometry
@@ -1189,7 +1189,7 @@ a regex that tolerates the stamp, and assert the replacement count.
 
 The wordmark appears in the header and in the footer, and they are authored in
 different places months apart. Every property must match — the page shipped
-its own name in **Archivo 600** at the top and **IBM Plex Mono 500** at the
+its own name in **Roobert 600** at the top and **Roobert Mono 500** at the
 bottom, at the same size and the same tracking, which reads as a mistake
 rather than as a variant:
 

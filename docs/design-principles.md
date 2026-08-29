@@ -129,9 +129,9 @@ the single biggest reason the page looked dead before 2026-08.
 
 ## 6. Type has three roles
 
-- **Display** — Archivo 600/700, tight tracking. Headlines and statements.
-- **Body** — Instrument Sans 400/500. Prose.
-- **Utility** — IBM Plex Mono 500, uppercase, tracked. Labels, data, captions,
+- **Display** — Roobert 500/600, tight tracking. Headlines and statements.
+- **Body** — Roobert 400/500. Prose.
+- **Utility** — Roobert at `MONO:100`, 500, uppercase, tracked. Labels, data, captions,
   controls. Its job is to signal "this string is metadata, not prose".
 
 One scale, nine steps (`docs/design-system.md`). The pre-2026-08 page had 25
