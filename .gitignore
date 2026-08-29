@@ -17,3 +17,7 @@ node_modules/
 # design exploration, not part of the site
 redesign/
 generated/
+
+# the supplied font originals — only the built woff2 ships
+src/fonts/*
+!src/fonts/README.md
