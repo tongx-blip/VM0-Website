@@ -2600,8 +2600,6 @@ h3{ font-family:var(--fd); }
   --wf-body-lh:1.55;                        /* the page's own leading for prose;
                                                1.21 is a title's leading, and on
                                                a four-line paragraph it crowds  */
-  --wf-foot:var(--t-sm);
-  --wf-foot-lh:1.5;
   --wf-media-r:clamp(16px, 1.5vw, 22px);    /* 16                                 */
 
   /* the mat. The reference fills its box with the picture, so its ground never
@@ -2827,25 +2825,6 @@ h3{ font-family:var(--fd); }
   padding:0;
   font-family:inherit;
   font-size:var(--wf-body); line-height:var(--wf-body-lh);
-  font-weight:var(--wf-title-wt);
-  color:var(--wf-title-ink-on);
-}
-
-
-/* the two closing paragraphs sit at the foot of the column (SPACE_BETWEEN in
-   the reference), beside the figure they describe */
-.ladder__foot{
-  margin-top:auto;
-  padding-top:clamp(22px, 2.6vw, 40px);
-  display:flex; flex-direction:column;
-  gap:var(--wf-row-gap);
-}
-
-.ladder__foot > p{
-  margin:0;
-  text-align:left;
-  font-family:inherit;
-  font-size:var(--wf-foot); line-height:var(--wf-foot-lh);
   font-weight:var(--wf-title-wt);
   color:var(--wf-title-ink-on);
 }
@@ -3176,6 +3155,15 @@ h3{ font-family:var(--fd); }
 .wfo{
   --wfo-pad:1em;
   position:absolute;
+  /* The page has no blanket element reset — every figure zeroes its own
+     margin. `.wfo--ask` is the only <figure> in this scene, so it alone kept
+     the UA default `margin:1em 40px`, and margin on an absolutely positioned
+     box is added AFTER the inset: the ask rendered 40px right and 1em below
+     the `left:12cqw; top:19cqh` it was authored at, which is exactly the
+     amount by which it lapped the run card's header. Declared here, on the
+     family, so the next object added to the scene cannot inherit the same
+     surprise from whichever tag it happens to use. */
+  margin:0;
   opacity:0; pointer-events:none;
   transition:opacity var(--t-state) var(--e-out),
              transform var(--t-reveal) var(--e-out),
@@ -3202,11 +3190,15 @@ h3{ font-family:var(--fd); }
    cards from fighting over a 760x545 canvas. Slack's own tokens, so the
    message reads as Slack and not as one of our surfaces (RULES P1). */
 .wfo--post{
-  /* It takes the ask's exact box, and it lands ON TOP: the newest thing in
-     the picture cannot be under the card that produced it. A 1cqh graze
-     against the card's top edge was the worst of both — either lap or
-     clear (RULES F9). */
-  left:15cqw; top:19cqh; width:min(44cqw, 29rem); z-index:3;
+  /* It shares the ask's top edge, and it CLEARS the run card — it does not
+     lap it. Lapping was the earlier call, on the argument that the newest
+     thing cannot sit under the card that produced it; what the lap actually
+     covered was the run card's header, so the card lost its icon, its title
+     and its `Public` tag and kept only a `RUNNING` tag floating over nothing.
+     A lap is only available where the thing underneath can spare the strip.
+     Here it cannot, so the two clear by 2cqh and the z-index only settles
+     the shadows (RULES F9). */
+  left:18cqw; top:14cqh; width:min(44cqw, 29rem); z-index:3;
   overflow:hidden;
   background:var(--slk-card);
   border-radius:var(--r-card);
@@ -3252,7 +3244,7 @@ h3{ font-family:var(--fd); }
 
 /* 1 · the ask ─────────────────────────────────────────────────────── */
 .wfo--ask{
-  left:12cqw; top:19cqh; width:min(44cqw, 30rem);
+  left:15cqw; top:14cqh; width:min(44cqw, 30rem);
   padding:1.15em 1.3em;
   transform:translateY(1.4em) rotate(-1.1deg);
 }
@@ -3281,18 +3273,18 @@ h3{ font-family:var(--fd); }
    subject that is centred can only stay centred if what recedes recedes
    along the same axis. */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.3; transform:translate(11cqw, -18cqh) rotate(-1.1deg);
+  opacity:.3; transform:translate(14cqw, -10cqh) rotate(-1.1deg);
 }
 
 .wfsc[data-step="3"] .wfo--ask,
 .wfsc[data-step="4"] .wfo--ask{
-  opacity:0; transform:translate(11cqw, -37cqh) rotate(-1.1deg);
+  opacity:0; transform:translate(14cqw, -29cqh) rotate(-1.1deg);
 }
 
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
 .wfo--run{
-  left:36cqw; top:36cqh; width:min(46cqw, 32rem);
+  left:39cqw; top:42.5cqh; width:min(46cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 
@@ -3301,7 +3293,7 @@ h3{ font-family:var(--fd); }
 /* THE PIVOT: it lifts, straightens and settles into the middle as the
    thing the team keeps, rather than a thing that happened once */
 .wfsc[data-step="2"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -11cqh) rotate(0deg);
+  opacity:1; transform:translate(-12cqw, -17.5cqh) rotate(0deg);
 }
 
 /* Step 3 holds THREE things — the card, the team and the line. The card
@@ -3310,12 +3302,12 @@ h3{ font-family:var(--fd); }
    That lap is the point: the people are on the workflow, not filed
    under it. Every other pair in this scene has to clear. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -18cqh) rotate(-.6deg);
+  opacity:1; transform:translate(-12cqw, -24.5cqh) rotate(-.6deg);
 }
 
 .wfsc[data-step="4"] .wfo--run{
   opacity:1; width:min(40cqw, 28rem);
-  transform:translate(-29cqw, -11cqh) rotate(-1.2deg);
+  transform:translate(-32cqw, -17.5cqh) rotate(-1.2deg);
 }
 
 /* A GRID, not a flex row with an absolutely-placed tag. The tag sat at
@@ -4002,7 +3994,16 @@ h3{ font-family:var(--fd); }
    back by exactly one copy's width, onto a frame identical to the one it
    left. */
 .lanes{
-  display:flex; align-items:stretch; gap:14px;
+  /* START, not STRETCH. The lanes are meant to be taller than the band and
+     cropped by it — but stretch sized each card to the band instead, so the
+     card's white surface stopped exactly at the crop while its last row went
+     on for another 26px. In light that is invisible; in dark the row's ink
+     landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`.
+     At content height the surface reaches past the crop, so the row that is
+     cut is cut over the card it belongs to. Every lane holds the same eight
+     steps, so they are all the same height and the crop stays a straight
+     edge. */
+  display:flex; align-items:flex-start; gap:14px;
   width:max-content; height:100%;
   transform:translate3d(var(--pan,0px),0,0);
 }
@@ -4333,7 +4334,11 @@ h3{ font-family:var(--fd); }
 
 .arti__dot{
   position:absolute; left:var(--x); top:var(--y);
-  width:8px; height:8px; margin:-4px 0 0 -4px;
+  /* centred with a transform, the way `.arti__val` beside it already is —
+     not with a negative margin half its own width. Both land the dot on the
+     point; only one of them survives a change to the dot's size, and only
+     one of them leaves `left`/`top` meaning what they say (audit §10). */
+  width:8px; height:8px; transform:translate(-50%, -50%);
   border-radius:50%; background:var(--p-run);
   box-shadow:0 0 0 2.5px var(--p-card);
 }
@@ -5470,11 +5475,7 @@ h3{ font-family:var(--fd); }
 
   .step.is-active:not(:last-child){ border-bottom-color:var(--wf-rule-ink); }
 
-  .step__body > p,.ladder__foot > p{ max-width:64ch; }
-
-  .step__body > p{ padding-top:8px; }
-
-  .ladder__foot{ margin-top:0; }
+  .step__body > p{ max-width:64ch; padding-top:8px; }
 
   .ladder__frame{ height:var(--wf-h); }
 
@@ -5787,18 +5788,6 @@ h3{ font-family:var(--fd); }
 .lead-in .inline-ic{ font-size:.85em; }
 
 .lead-in.is-swapping{ clip-path:inset(100% 0 -20% 0); transform:translateY(-.22em); }
-
-
-/* a paragraph that explains the figure above it, not more preamble */
-.figcap{
-  grid-column:1 / 13;
-  justify-self:center;
-  max-width:62ch;
-  margin:clamp(22px, 2.6vw, 34px) auto 0;
-  text-align:center;
-  font-size:var(--t-sm); line-height:1.6;
-  color:var(--ink-mute);
-}
 
 /* Every tab's version of this lands in exactly two lines, and the block
    reserves two — so switching tab never moves the strip underneath it.

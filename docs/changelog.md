@@ -6,6 +6,116 @@ wrong**, because the failure modes are the useful part.
 
 ---
 
+## 2026-08-29 · the workflow scene's beat 1 was a layout bug, not an animation bug
+
+Tong: *"这里的动画好像出 bug 了，你检查一下"* — a zoom on the ask card and the run
+card growing into each other. And: *"这段文字删掉"* on the two closing paragraphs
+in the ladder's left column.
+
+### the collision was 40 pixels of user-agent stylesheet
+
+`.wfo--ask` is the only `<figure>` in the scene. This page has **no blanket
+element reset** — every figure class on it (`.tplwin`, `.oresult`, `.quote`)
+zeroes its own margin, so nothing ever needed one. `.wfo` did not, and the ask
+card kept the UA default `margin:1em 40px`.
+
+A margin on an absolutely positioned box is **added to its inset** — `left`
+and `top` place the margin box. So the card rendered at 40px right and 14.15px
+below the `left:12cqw; top:19cqh` it was drawn at, and 40px right is exactly
+the strip by which it lapped the run card's header. Every geometry number this
+scene was tuned to over the last three rounds was measured through that offset.
+
+Nothing about it is animation. It is static in every beat, in every browser,
+at every width — which is why three rounds of screenshots went past it: the
+cards *move*, so anything wrong with where they end up reads as motion.
+
+`tools/audit.js` **§10** now sweeps every absolutely positioned box on the page
+for a margin. `auto` is exempt, because that is the centring idiom. **First run
+found the second one:** `.arti__dot`, centred on its data point with
+`margin:-4px 0 0 -4px` — half its own width, which stops being half the moment
+the dot changes size. Its neighbour `.arti__val` was already doing the same job
+with `translate(-50%,-100%)`; the dot now does too, and lands on the same pixel
+it did before.
+
+### the landing card was decapitating the card that produced it
+
+Separate fault in the same beat, and worse. The `#growth` Slack card lands
+`z-index:3` over the run card — the note beside it argues that the newest thing
+in the picture cannot sit under the card that produced it, and that a 1cqh
+graze is the worst of both, so **lap or clear** (F9).
+
+What it lapped was the run card's **header**: 137 × 60px over the icon, the
+title *Creator shortlist*, and the `Public` tag. What is left is a `RUNNING`
+tag floating over nothing on a card with no name. F9 says not to graze; it does
+not say a lap is free. A body can spare a strip, an identity row cannot.
+
+Beat 1 is really **two compositions** — the ask beside the run card, then the
+message that replaces it — and only the first one had ever been composed. Both
+now clear and both are centred in the canvas:
+
+| | ask + run | post + run |
+|---|---|---|
+| group X | 15 – 15 | 18 – 15 |
+| group Y | 13 – 14 | 14 – 14 |
+| overlaps | none | none |
+
+The ask and the Slack card share a **top** edge at 14cqh, the run card sits at
+42.5cqh, and beats 2, 3 and 4 are **pixel-identical to before** — the run card's
+base moved 3cqw / 6.5cqh and every later state absorbed the same amount in the
+other direction. That is the whole point of rebasing rather than nudging: the
+three beats Tong has already accepted did not move.
+
+### the probe could not see either of them
+
+`tools/probes/wfsc-geometry.js` reported `postxrun` in **all four** beats, so
+the one real overlap was buried in three phantoms. Two reasons, both worth
+keeping:
+
+* It tested visibility with `opacity` alone. The Slack card is `opacity:1` and
+  hidden by `clip-path` — deliberately, because it loops and axe composites an
+  inherited alpha (QA §1). It now reads the clip and reports the box that is
+  actually on screen.
+* Writing `data-step` by hand does **not** stop the runner's timer; only the
+  page's own scroll handler does. The loop took `is-in` back off the card
+  between the write and the measurement, and the landing measured 0px tall —
+  a probe returning a confident wrong number, which is the failure mode this
+  scene has now produced three times. It parks the pin on the last step first,
+  and reports `s1` and `s1+` separately.
+
+### and one the gate found on the way out
+
+Dark mode, `.lane:nth-child(1) .lane__s:nth-child(7) em` — 3.12:1, live on
+`main`. `.lanes` was `align-items:stretch`, so each lane card was sized to the
+**band** rather than to its content: the card's white surface stopped exactly
+at the crop while its last row carried on for another 26px, over the band's own
+dark ground. In light both grounds are near-white and nothing shows, which is
+why six audits missed it. At `align-items:flex-start` the surface runs past the
+crop and the row that gets cut is cut over the card it belongs to. All eight
+lanes hold the same eight steps, so the crop is still a straight edge.
+
+### the two paragraphs are gone
+
+`.ladder__foot` removed from the markup, and its rules, its two tokens
+(`--wf-foot`, `--wf-foot-lh`) and its narrow-width overrides with it. The steps
+column is top-aligned with the frame now. Centring it was the other option and
+it is wrong: the list is 326–379px depending on which step is open, so centring
+would drift all four titles by up to 26px every time you scroll a step.
+
+**Still open, and not mine:** `.wfo--list` fails contrast in dark **during** its
+fade — `#181d22` on `#171c21`, 1.01, six nodes, reproducible on `main` on the
+first audit after a full-page walk and clean in all 22 samples after it. It is
+the fault QA §4p2 describes: an opacity fade over text is a contrast change.
+The fix is the one `.wfo--post` already had applied to it — a clip wipe instead
+of a fade — but that changes the entrance of a beat that was signed off two
+rounds ago, so it is a call to make rather than a bug to quietly patch.
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` all 0 · 146 rules,
+69 gate sections, 10 audit blocks, every pointer resolves · `audit.js` §1–§10
+pass · axe 0 violations in light and dark across 22 samples each · 1440 / 390
+no horizontal overflow · beats 2–4 unchanged to the pixel.
+
+---
+
 ## 2026-08-28 · four directions for the control section, and the card was the wrong component
 
 Tong: *"16我不确定你是否使用了真实的场景卡片？… 17.用云端电脑，意思是可以用个插画

@@ -1644,6 +1644,46 @@ same 60% grey as the four inactive ones), and three dead lines in `base.css`
 still describing the rotator's old `display:none/block` machinery, replaced by
 `#rotator .rot` and unable to fire since.
 
+## 4af. Where an object is, and what it is allowed to sit on
+
+Three faults from one beat of the workflow scene, all of them read from the
+outside as "the animation is broken" and none of them animation.
+
+**A margin on an absolutely positioned box is added to its inset.** `left` and
+`top` place the *margin* box. This page has no blanket element reset — every
+figure class zeroes its own margin — so one `<figure>` with no `margin:0` of
+its own inherits the UA default `1em 40px` and lands 40px right and 14px low of
+where it was drawn. That was `.wfo--ask`, the only `<figure>` in the scene, and
+the 40px is exactly what it lapped the run card by. `tools/audit.js` §10 sweeps
+every absolutely positioned box on the page; `auto` is exempt (it is the
+centring idiom) and a negative margin used to centre a dot is not — use a
+transform, the way `.arti__val` already does. **First run found the second
+one:** `.arti__dot` at `margin:-4px 0 0 -4px`.
+
+**Ask what a lap covers before choosing it.** "Either lap or clear" only says
+not to graze. The Slack landing card lapped the run card's header, so the card
+lost its icon, its title and its `Public` tag and kept a `RUNNING` tag floating
+over nothing — a screenshot of that is a screenshot of a broken component. The
+body of a card can spare a strip; the row that names it cannot.
+
+**Beat 1 is two compositions, not one.** The ask beside the run card, and the
+#growth message that replaces it. Each has to be centred and clear on its own,
+so `tools/probes/wfsc-geometry.js` reports it twice — `s1` and `s1+`. Two
+things the probe needed before it could see any of this:
+
+* **Read `clip-path`, not just opacity.** An object hidden by a clip still has
+  its full border box, and the Slack card was counted as present in all four
+  beats — four phantom overlaps that buried the one real one.
+* **Park the loops first.** Setting `data-step` by hand does not stop the
+  runner's timer; it took `is-in` back off the card between the write and the
+  measurement, and the landing measured 0px tall.
+
+**A card in a cropped band takes its content's height.** `.lanes` stretched
+each lane to the band, so the lane's white surface stopped at the crop while
+its last row ran on another 26px over the band's own ground. Light hid it;
+dark shipped a 3.12:1 node that axe caught and six audits before it did not,
+because they were run in light.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2.

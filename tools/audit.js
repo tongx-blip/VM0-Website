@@ -403,3 +403,33 @@
   return lost.length
     ? body + '\n\nFAIL — these declarations never win\n  ' + lost.join('\n  ')
     : body + '\n\nPASS — every state declaration on the page wins its property';})()
+
+
+/* ── 10. MARGIN ON AN ABSOLUTE BOX — the inset is not the whole story.
+      `left`/`top` place the margin box, so a margin is ADDED to the number
+      you authored. Nothing on this page wants that: an object positioned in
+      container units is positioned exactly, and any margin on it is either a
+      UA default nobody zeroed or a leftover from when the thing was in flow.
+
+      This exists because `.wfo--ask` is the only <figure> in the workflow
+      scene and this page has no blanket element reset — every other figure
+      class zeroes its own margin, so nobody noticed. It kept the UA
+      `margin:1em 40px` and rendered 40px right and 14px below the
+      `left:12cqw; top:19cqh` it was drawn at, which is exactly the strip by
+      which it lapped the run card's header. Four rounds of screenshots read
+      that as "the animation is buggy". ──────────────────────────────── */
+(() => {
+  const bad = [...document.querySelectorAll('body *')].filter(el => {
+    const cs = getComputedStyle(el);
+    if (cs.position !== 'absolute' && cs.position !== 'fixed') return false;
+    /* `auto` is the centring idiom and resolves to a real number, so read the
+       cascaded value rather than the used one. */
+    const decl = [cs.marginTop, cs.marginRight, cs.marginBottom, cs.marginLeft];
+    return decl.some(v => v !== 'auto' && Math.abs(parseFloat(v) || 0) > 0.5);
+  }).map(el => (el.tagName.toLowerCase() + '.' + (el.className + '').trim().split(/\s+/).join('.'))
+      + ' {' + [getComputedStyle(el).marginTop, getComputedStyle(el).marginRight,
+                getComputedStyle(el).marginBottom, getComputedStyle(el).marginLeft].join(' ') + '}');
+  return bad.length
+    ? 'FAIL — absolutely positioned, and carrying a margin the inset does not account for\n  ' + [...new Set(bad)].join('\n  ')
+    : 'PASS — every absolutely positioned box is where its inset says it is';
+})()
