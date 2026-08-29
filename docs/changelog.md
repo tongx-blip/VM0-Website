@@ -4,9 +4,84 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-29 · the missing shadow, and the composition I broke looking for it
+
+Tong: *"你之前那个覆盖关系，我觉得挺好的。我说的 bug 是你把阴影给去掉了。它也不是
+阴影去掉，是你把 frame 缩小之后，阴影被截断了。"*
+
+Right on both counts, including the mechanism.
+
+### `inset(0)` deletes a box-shadow
+
+`clip-path: inset()` resolves against the **border box**, and a `box-shadow` is
+painted outside it. So the landed state of the Slack card —
+
+```css
+.wfsc[data-step="1"] .wfo--post.is-in{ clip-path:inset(0); }
+```
+
+— which reads as "clipped to nothing, everything visible", was cutting the
+shadow off at the card's own edge. The card rendered as a flat white rectangle
+with four hard corners, sitting on the mat beside two cards that lift off it.
+It is the frame being shrunk to the card, exactly as he described it.
+
+The bleed is read off the shadow rather than picked. `0 2px 10px` reaches five
+pixels sideways and up; `0 26px 50px -26px` reaches 26 − 26 + 25 = 25 down.
+`--slk-bleed:10px` / `--slk-drop:34px`, stated once and used by all three
+clip states so the closed one still collapses to zero height at the top edge
+and the wipe is unchanged.
+
+`tools/audit.js` **§11** now checks every clipped surface on the page against
+its own shadow: it parses both, works out the reach per side, and fails when
+the clip cuts inside it. Forced back to `inset(0)` it reports
+`cut top 3px, right 5px, bottom 25px, left 5px` — which is the shadow, measured.
+
+**Its first version was wrong in the way this scene keeps being wrong.** It
+parsed the clip with `/inset\(([^)]*)\)/`, which stops at the first `)` — and
+the first `)` in `inset(-10px -10px calc(100% + 10px))` is the calc's own. It
+reported the fixed card as still broken. `tools/probes/wfsc-geometry.js` had
+the identical bug and had been quietly measuring the closed card as open ever
+since I added clip-reading to it yesterday. Both now walk brackets.
+
+### and the composition was fine
+
+I read the same frame as a lapping fault — the landing card sits over the run
+card's header — pulled the two apart, moved the run card down 6.5cqh and
+re-centred the beat. All of it is reverted: `.wfo--ask` 12/19, `.wfo--post`
+15/19, `.wfo--run` 36/36 and every beat-2/3/4 translate back to what it was.
+
+The lesson is cheap and I paid full price for it: **a flat rectangle and a
+badly-placed rectangle look the same in a still.** Before restyling a
+composition because something in it looks wrong, name which pixels are wrong.
+`RULES F46` now says what it should have said all along, and the "a lap is only
+available where the thing underneath can spare the strip" rule I wrote
+yesterday is gone — it was a rule invented to justify a change that should not
+have been made.
+
+What stands from yesterday: `margin:0` on `.wfo` (the UA `<figure>` margin was
+real, and it is why the ask sat 40px right of where it was drawn), `audit.js`
+§10, the `.arti__dot` transform, the lanes' `align-items:flex-start`, and the
+two deleted paragraphs.
+
+`--slk-bleed` costs the composition nothing: the probe reports the same two
+laps it did before the whole detour — `s1 askxrun 175/23`, `s1+ postxrun
+199/29` — and beats 2, 3 and 4 are back to the numbers they shipped with.
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py` 0 · 146 rules, 69 gate
+sections, 11 audit blocks, every pointer resolves · `audit.js` §1–§11 pass ·
+axe 0 violations in light and dark across 8 samples each, other than the
+known `.wfo--list` fade on the first post-walk sample (QA §4af, still open).
+
+---
+
 ---
 
 ## 2026-08-29 · the workflow scene's beat 1 was a layout bug, not an animation bug
+
+> **Partly reverted the same day** — see the entry above. The margin fault and
+> the lane fault below are real and stand; the section on the landing card
+> lapping the run card's header is wrong, and the recomposition it describes
+> was undone. The lap was never the problem.
 
 Tong: *"这里的动画好像出 bug 了，你检查一下"* — a zoom on the ask card and the run
 card growing into each other. And: *"这段文字删掉"* on the two closing paragraphs

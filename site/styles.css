@@ -3190,15 +3190,14 @@ h3{ font-family:var(--fd); }
    cards from fighting over a 760x545 canvas. Slack's own tokens, so the
    message reads as Slack and not as one of our surfaces (RULES P1). */
 .wfo--post{
-  /* It shares the ask's top edge, and it CLEARS the run card — it does not
-     lap it. Lapping was the earlier call, on the argument that the newest
-     thing cannot sit under the card that produced it; what the lap actually
-     covered was the run card's header, so the card lost its icon, its title
-     and its `Public` tag and kept only a `RUNNING` tag floating over nothing.
-     A lap is only available where the thing underneath can spare the strip.
-     Here it cannot, so the two clear by 2cqh and the z-index only settles
-     the shadows (RULES F9). */
-  left:18cqw; top:14cqh; width:min(44cqw, 29rem); z-index:3;
+  /* It takes the ask's exact box, and it lands ON TOP: the newest thing in
+     the picture cannot be under the card that produced it. A 1cqh graze
+     against the card's top edge was the worst of both — either lap or
+     clear (RULES F9). The lap is the composition; I pulled the two apart
+     once on the theory that it was covering too much of the run card's
+     header, and it was not — what actually looked broken was this card's
+     missing shadow (see `--slk-bleed` below). Do not un-lap it again. */
+  left:15cqw; top:19cqh; width:min(44cqw, 29rem); z-index:3;
   overflow:hidden;
   background:var(--slk-card);
   border-radius:var(--r-card);
@@ -3214,8 +3213,26 @@ h3{ font-family:var(--fd); }
      opacity, which is why two nodes here failed contrast on two runs in
      three while measuring 16:1 and 5.6:1 at rest. Entrances of text use
      clip-path (QA §1). */
+  /* THE CLIP HAS TO CONTAIN THE SHADOW. `inset()` resolves against the
+     BORDER box, and a box-shadow is painted outside it — so `inset(0)`,
+     which reads as "clip to nothing", deletes the drop shadow and leaves a
+     white card with four hard edges sitting on the mat. Every other surface
+     in the scene had one and this one did not, which is what "阴影被截断了"
+     was pointing at.
+
+     The bleed is read off the shadow rather than guessed. Sideways and up,
+     `0 2px 10px` reaches five pixels; down, `0 26px 50px -26px` reaches
+     26 − 26 + 25 = 25. Rounded up to 10 and 34 so a change to the shadow
+     does not silently start clipping it again. The closed state keeps the
+     same bleed on three sides and collapses to zero height AT THE TOP EDGE,
+     so the wipe still starts from nothing. */
+  --slk-bleed:10px;
+  --slk-drop:34px;
   opacity:1;
-  clip-path:inset(0 0 100% 0);
+  clip-path:inset(calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed))
+                  calc(100% + var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed)));
   transform:translate(-2cqw, 3cqh) scale(.94);
   transition:clip-path var(--t-reveal) var(--e-out),
              transform var(--t-reveal) var(--e-out);
@@ -3231,11 +3248,20 @@ h3{ font-family:var(--fd); }
    out of the way in the same beat */
 .wfsc[data-step="1"] .wfo--run.is-delivered ~ .wfo--post,
 .wfsc[data-step="1"] .wfo--post.is-in{
-  clip-path:inset(0); transform:none;
+  clip-path:inset(calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-drop))
+                  calc(-1 * var(--slk-bleed)));
+  transform:none;
 }
 
 /* it belongs to beat 1 only; the other three states clip it away outright */
-.wfsc:not([data-step="1"]) .wfo--post{ clip-path:inset(0 0 100% 0); }
+.wfsc:not([data-step="1"]) .wfo--post{
+  clip-path:inset(calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed))
+                  calc(100% + var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed)));
+}
 
 .wfsc[data-step="1"] .wfo--ask.is-away{
   opacity:0; transform:translate(-4cqw, -6cqh) rotate(-1.1deg);
@@ -3244,7 +3270,7 @@ h3{ font-family:var(--fd); }
 
 /* 1 · the ask ─────────────────────────────────────────────────────── */
 .wfo--ask{
-  left:15cqw; top:14cqh; width:min(44cqw, 30rem);
+  left:12cqw; top:19cqh; width:min(44cqw, 30rem);
   padding:1.15em 1.3em;
   transform:translateY(1.4em) rotate(-1.1deg);
 }
@@ -3273,18 +3299,18 @@ h3{ font-family:var(--fd); }
    subject that is centred can only stay centred if what recedes recedes
    along the same axis. */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.3; transform:translate(14cqw, -10cqh) rotate(-1.1deg);
+  opacity:.3; transform:translate(11cqw, -18cqh) rotate(-1.1deg);
 }
 
 .wfsc[data-step="3"] .wfo--ask,
 .wfsc[data-step="4"] .wfo--ask{
-  opacity:0; transform:translate(14cqw, -29cqh) rotate(-1.1deg);
+  opacity:0; transform:translate(11cqw, -37cqh) rotate(-1.1deg);
 }
 
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
 .wfo--run{
-  left:39cqw; top:42.5cqh; width:min(46cqw, 32rem);
+  left:36cqw; top:36cqh; width:min(46cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 
@@ -3293,7 +3319,7 @@ h3{ font-family:var(--fd); }
 /* THE PIVOT: it lifts, straightens and settles into the middle as the
    thing the team keeps, rather than a thing that happened once */
 .wfsc[data-step="2"] .wfo--run{
-  opacity:1; transform:translate(-12cqw, -17.5cqh) rotate(0deg);
+  opacity:1; transform:translate(-9cqw, -11cqh) rotate(0deg);
 }
 
 /* Step 3 holds THREE things — the card, the team and the line. The card
@@ -3302,12 +3328,12 @@ h3{ font-family:var(--fd); }
    That lap is the point: the people are on the workflow, not filed
    under it. Every other pair in this scene has to clear. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-12cqw, -24.5cqh) rotate(-.6deg);
+  opacity:1; transform:translate(-9cqw, -18cqh) rotate(-.6deg);
 }
 
 .wfsc[data-step="4"] .wfo--run{
   opacity:1; width:min(40cqw, 28rem);
-  transform:translate(-32cqw, -17.5cqh) rotate(-1.2deg);
+  transform:translate(-29cqw, -11cqh) rotate(-1.2deg);
 }
 
 /* A GRID, not a flex row with an absolutely-placed tag. The tag sat at

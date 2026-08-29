@@ -433,3 +433,97 @@
     ? 'FAIL — absolutely positioned, and carrying a margin the inset does not account for\n  ' + [...new Set(bad)].join('\n  ')
     : 'PASS — every absolutely positioned box is where its inset says it is';
 })()
+
+
+/* ── 11. A CLIP THAT CUTS ITS OWN SHADOW — `inset()` resolves against the
+      BORDER box, and a box-shadow is painted outside it. So `inset(0)`, the
+      obvious way to write "clipped to nothing", silently deletes the drop
+      shadow: the surface goes flat and hard-edged while every other card on
+      the page still lifts off the mat. It reads as "阴影被截断了", and the
+      declaration it comes from looks completely innocent.
+
+      Run it in every beat — a wipe is only wrong in the state where it is
+      supposed to be SHOWING, which is the state nobody screenshots. A
+      collapsed clip is the point of a wipe, so a zero-area rect is skipped.
+
+      The first version of this block parsed the clip with `/inset\(([^)]*)\)/`
+      and split on whitespace, which cuts `calc(100% + 10px)` in half at its
+      own bracket and reports a card that is perfectly fine. Both the bracket
+      walk and the splitter below count depth for that reason. ──────── */
+(() => {
+  /* the argument of the first function call in `s`, brackets balanced */
+  const arg = s => {
+    const i = s.indexOf('(');
+    if (i < 0) return '';
+    for (let j = i, d = 0; j < s.length; j++) {
+      if (s[j] === '(') d++;
+      else if (s[j] === ')' && --d === 0) return s.slice(i + 1, j);
+    }
+    return '';
+  };
+  /* split on whitespace that is not inside brackets */
+  const words = s => {
+    const out = []; let d = 0, cur = '';
+    for (const ch of s) {
+      if (ch === '(') d++;
+      if (ch === ')') d--;
+      if (/\s/.test(ch) && !d) { if (cur) out.push(cur); cur = ''; }
+      else cur += ch;
+    }
+    if (cur) out.push(cur);
+    return out;
+  };
+  /* a px length, a percentage of `base`, or a flat calc() sum of the two */
+  const len = (tok, base) => {
+    let total = 0, sign = 1;
+    for (const t of words(/^calc\(/i.test(tok) ? arg(tok) : tok)) {
+      if (t === '+') { sign = 1; continue; }
+      if (t === '-') { sign = -1; continue; }
+      total += sign * (t.endsWith('%') ? parseFloat(t) / 100 * base : parseFloat(t) || 0);
+      sign = 1;
+    }
+    return total;
+  };
+
+  const bad = [];
+  for (const el of document.querySelectorAll('body *')) {
+    const cs = getComputedStyle(el);
+    if (cs.boxShadow === 'none' || !/^inset\(/.test(cs.clipPath)) continue;
+    /* the UNtransformed border box: that is what both the clip and the
+       shadow are resolved against */
+    const w = el.offsetWidth, h = el.offsetHeight;
+    if (!w || !h) continue;
+
+    const p = words(arg(cs.clipPath));
+    const r = p.indexOf('round');
+    const v = (r < 0 ? p : p.slice(0, r)).slice(0, 4);
+    if (!v.length) continue;
+    const side = [v[0], v[1] ?? v[0], v[2] ?? v[0], v[3] ?? v[1] ?? v[0]];
+    const clip = { top:len(side[0], h), right:len(side[1], w),
+                   bottom:len(side[2], h), left:len(side[3], w) };
+    if (h - clip.top - clip.bottom <= 0 || w - clip.left - clip.right <= 0) continue;
+
+    /* computed style writes the shadow colour-first: `rgba(…) 0 26px 50px -26px`.
+       A blur of B fades over B centred on the edge, so it reaches B/2 outward. */
+    const reach = { top:0, right:0, bottom:0, left:0 };
+    for (const layer of cs.boxShadow.split(/,(?![^(]*\))/)) {
+      if (/\binset\b/.test(layer)) continue;
+      const n = (layer.match(/-?[\d.]+px/g) || []).map(parseFloat);
+      if (n.length < 2) continue;
+      const [ox, oy, blur = 0, spread = 0] = n, b = blur / 2;
+      reach.top    = Math.max(reach.top,    -oy + spread + b);
+      reach.right  = Math.max(reach.right,   ox + spread + b);
+      reach.bottom = Math.max(reach.bottom,  oy + spread + b);
+      reach.left   = Math.max(reach.left,   -ox + spread + b);
+    }
+
+    const cut = ['top', 'right', 'bottom', 'left']
+      .filter(k => reach[k] > 0.5 && -clip[k] < reach[k] - 0.5)
+      .map(k => k + ' ' + Math.round(reach[k] + clip[k]) + 'px');
+    if (cut.length) bad.push((el.tagName.toLowerCase() + '.' +
+      (el.className + '').trim().split(/\s+/).join('.')) + ' — cut ' + cut.join(', '));
+  }
+  return bad.length
+    ? 'FAIL — clipped inside their own shadow\n  ' + [...new Set(bad)].join('\n  ')
+    : 'PASS — every clipped surface still has room for its shadow';
+})()

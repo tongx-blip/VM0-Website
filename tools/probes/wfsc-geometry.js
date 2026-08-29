@@ -17,19 +17,58 @@
   /* An object hidden by clip-path still has its full border box, and a probe
      that only reads opacity counted the Slack card as present in all four
      beats — four phantom overlaps that hid the one real one underneath them.
-     Read the clip too, and report what is actually on screen. */
+     Read the clip too, and report what is actually on screen.
+
+     Both helpers count bracket depth. `/inset\(([^)]*)\)/` stops at the first
+     `)`, which for `inset(-10px -10px calc(100% + 10px))` is the one inside
+     the calc — so the clip parsed as three tokens and a stray `+`, the closed
+     card measured as open, and `s1+` reported the frame it had just left.
+     Same parser as `audit.js` §11, same reason. */
+  const arg = s => {
+    const i = s.indexOf('(');
+    if (i < 0) return '';
+    for (let j = i, d = 0; j < s.length; j++) {
+      if (s[j] === '(') d++;
+      else if (s[j] === ')' && --d === 0) return s.slice(i + 1, j);
+    }
+    return '';
+  };
+  const words = s => {
+    const out = []; let d = 0, cur = '';
+    for (const ch of s) {
+      if (ch === '(') d++;
+      if (ch === ')') d--;
+      if (/\s/.test(ch) && !d) { if (cur) out.push(cur); cur = ''; }
+      else cur += ch;
+    }
+    if (cur) out.push(cur);
+    return out;
+  };
+  const len = (tok, base) => {
+    let total = 0, sign = 1;
+    for (const t of words(/^calc\(/i.test(tok) ? arg(tok) : tok)) {
+      if (t === '+') { sign = 1; continue; }
+      if (t === '-') { sign = -1; continue; }
+      total += sign * (t.endsWith('%') ? parseFloat(t) / 100 * base : parseFloat(t) || 0);
+      sign = 1;
+    }
+    return total;
+  };
   const visible = el => {
     const cs = getComputedStyle(el);
     if (parseFloat(cs.opacity) < 0.05 || cs.visibility === 'hidden') return null;
     const r = el.getBoundingClientRect();
-    const m = /^inset\(([^)]*)\)/.exec(cs.clipPath);
-    if (!m) return r;
-    const p = m[1].trim().split(/\s+/).slice(0, 4);
-    const s = [p[0], p[1] ?? p[0], p[2] ?? p[0], p[3] ?? p[1] ?? p[0]];
-    const px = (v, base) => v.endsWith('%') ? parseFloat(v) / 100 * base : parseFloat(v);
-    const t = px(s[0], r.height), rr = px(s[1], r.width),
-          b = px(s[2], r.height), l = px(s[3], r.width);
-    const box = { left:r.left + l, right:r.right - rr, top:r.top + t, bottom:r.bottom - b };
+    if (!/^inset\(/.test(cs.clipPath)) return r;
+    const p = words(arg(cs.clipPath));
+    const cut = p.indexOf('round');
+    const v = (cut < 0 ? p : p.slice(0, cut)).slice(0, 4);
+    const s = [v[0], v[1] ?? v[0], v[2] ?? v[0], v[3] ?? v[1] ?? v[0]];
+    const t = len(s[0], r.height), rr = len(s[1], r.width),
+          b = len(s[2], r.height), l = len(s[3], r.width);
+    /* the clip may bleed OUTSIDE the box to clear a shadow; the object is
+       still only as big as its own border box, so clamp at zero */
+    const box = { left:r.left + Math.max(0, l), right:r.right - Math.max(0, rr),
+                  top:r.top + Math.max(0, t), bottom:r.bottom - Math.max(0, b) };
     return (box.right - box.left > 1 && box.bottom - box.top > 1) ? box : null;
   };
 

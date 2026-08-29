@@ -1646,8 +1646,9 @@ still describing the rotator's old `display:none/block` machinery, replaced by
 
 ## 4af. Where an object is, and what it is allowed to sit on
 
-Three faults from one beat of the workflow scene, all of them read from the
-outside as "the animation is broken" and none of them animation.
+Four faults from one beat of the workflow scene, all of them read from the
+outside as "the animation is broken" and none of them animation. One of the
+four was mine, added while fixing the other three.
 
 **A margin on an absolutely positioned box is added to its inset.** `left` and
 `top` place the *margin* box. This page has no blanket element reset — every
@@ -1660,16 +1661,32 @@ centring idiom) and a negative margin used to centre a dot is not — use a
 transform, the way `.arti__val` already does. **First run found the second
 one:** `.arti__dot` at `margin:-4px 0 0 -4px`.
 
-**Ask what a lap covers before choosing it.** "Either lap or clear" only says
-not to graze. The Slack landing card lapped the run card's header, so the card
-lost its icon, its title and its `Public` tag and kept a `RUNNING` tag floating
-over nothing — a screenshot of that is a screenshot of a broken component. The
-body of a card can spare a strip; the row that names it cannot.
+**A `clip-path` clips the shadow off too.** `inset()` resolves against the
+**border box**, and a `box-shadow` is painted outside it — so `inset(0)`, which
+reads as "clipped to nothing", deletes the drop shadow. The Slack landing card
+was the one surface in the scene with no shadow: a flat white rectangle with
+four hard edges sitting on the mat, next to two cards that lift off it. Bleed
+the clip by the shadow's reach — read off the shadow, not guessed: sideways and
+up, `0 2px 10px` reaches 5px; down, `0 26px 50px -26px` reaches
+26 − 26 + 25 = 25px. `--slk-bleed` / `--slk-drop` state it once for both the
+open and the closed state. `tools/audit.js` §11 checks every clipped surface on
+the page against its own shadow, **in every beat** — a wipe is only wrong in the
+state where it is supposed to be showing, which is the state nobody screenshots.
+
+**And I mis-read that frame as a lapping fault.** The landing card overlaps the
+run card's header, and I took that for the bug, pulled the two apart and
+re-centred the whole beat. Tong: *"你之前那个覆盖关系，我觉得挺好的。我说的 bug
+是你把阴影给去掉了"*. The lap was never the problem; the missing shadow was what
+made the frame look broken, and the lap is what was carrying the depth that
+would have made the overlap read as depth. **Before restyling a composition
+because something in it looks wrong, name which pixels are wrong.** A flat
+rectangle and a badly-placed rectangle look the same in a still.
 
 **Beat 1 is two compositions, not one.** The ask beside the run card, and the
-#growth message that replaces it. Each has to be centred and clear on its own,
-so `tools/probes/wfsc-geometry.js` reports it twice — `s1` and `s1+`. Two
-things the probe needed before it could see any of this:
+#growth message that replaces it. Each has to be checked on its own, so
+`tools/probes/wfsc-geometry.js` reports it twice — `s1` and `s1+`. The two laps
+it reports there are intended. Two things the probe needed before it could see
+anything:
 
 * **Read `clip-path`, not just opacity.** An object hidden by a clip still has
   its full border box, and the Slack card was counted as present in all four
