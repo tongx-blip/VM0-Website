@@ -685,66 +685,6 @@
     checkOverflow();
   });
 
-  /* ── 3b. slk lift: the first message is readable before it is pushed ──
-     A Slack channel hangs from the bottom, so the list opened with its own
-     first message already cut by the channel bar. It starts top-anchored
-     now and is lifted afterwards by EXACTLY its overflow, which is the same
-     end state and a different arrival: the ask is read, then the replies
-     land on top of it and push it up.
-
-     Measured off the rows, written to the first row (RULES F23) — a margin
-     on the first row changes no row's own height, so re-measuring cannot
-     chase the value it just wrote. Re-run whenever a scene is shown, since
-     a `display:none` pane measures zero for everything. */
-  var SLK_HOLD = 1500;   // long enough to read the ask before it moves
-  [].slice.call(doc.querySelectorAll('.slk__list')).forEach(function (list) {
-    var timer = null;
-    function overflow() {
-      // Summing row heights misses the gaps between them (12px short), and
-      // scrollHeight misses this box's own bottom padding (6px short). Ask
-      // the thing the answer is about: with the lift at zero, how far is the
-      // last row past the floor the composer starts at.
-      list.style.setProperty('--slk-lift', '0px');
-      void list.offsetHeight;
-      var last = list.lastElementChild;
-      if (!last) return 0;
-      var pad = parseFloat(getComputedStyle(list).paddingBottom) || 0;
-      var floor = list.getBoundingClientRect().bottom - pad;
-      return Math.max(0, Math.round(last.getBoundingClientRect().bottom - floor));
-    }
-    function settle() {
-      if (timer) { clearTimeout(timer); timer = null; }
-      if (!list.clientHeight) return;          // its pane is not shown
-      // Measure TWICE, and the second one is the one that counts. The first
-      // reading happens while the rows are still arriving, so it came out
-      // 14px short and left the last message under the floor. This one only
-      // zeroes the lift for the hold; the amount is read at the moment it is
-      // applied, when nothing is moving any more.
-      if (!overflow()) return;        // leaves the lift at 0
-      timer = setTimeout(function () {
-        var over = overflow();
-        if (over) list.style.setProperty('--slk-lift', '-' + over + 'px');
-      }, SLK_HOLD);
-    }
-    // THE HOLD STARTS WHEN YOU ARRIVE, NOT WHEN THE PAGE LOADS. Run at load,
-    // the 1.5s was spent long before anyone scrolled this far and the channel
-    // was already lifted by the time it was looked at — which is the bug,
-    // restored. It waits for the section to be on screen.
-    doc.addEventListener('okou:scene', settle);
-    window.addEventListener('resize', settle, { passive: true });
-    if ('IntersectionObserver' in window) {
-      var seen = false;
-      new IntersectionObserver(function (entries) {
-        if (!entries[0].isIntersecting) { if (timer) clearTimeout(timer); return; }
-        if (seen) return;
-        seen = true;
-        settle();
-      }, { threshold: 0.3 }).observe(list);
-    } else {
-      window.addEventListener('load', settle);
-    }
-  });
-
   /* ── 3c. the floating header is as wide as what it carries ─────
      `.nav.is-stuck` insets by `50% - --nav-w-stuck/2` on both sides, so the
      number this writes is the only thing standing between a full-width bar

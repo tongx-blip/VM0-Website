@@ -640,33 +640,41 @@ Three traps:
   `querySelectorAll` — six of seven windows once shared a handler that only
   ever ran for the first.
 
-## 4m3. A bottom-anchored list is readable when you arrive at it
+## 4m3. A conversation plays like one, and ends on the composer
 
-RULES N22, N23. Slack hangs a channel from the bottom, and copying that
-verbatim means the FIRST message is the one cut off — before anything has
-happened.
+RULES N22, N23. A channel hangs from the bottom, and copying that verbatim
+without collapsing the messages that have not been said yet gives you the
+worst of both: the conversation plays in the top half, the reserved rows hold
+the bottom empty, and the messages that HAVE arrived are the ones pushed off.
 
 ```js
-// on arrival, at every width and on every tab: the first row starts at 0
-[...document.querySelectorAll('.slk__list')].map(l => {
-  const t = l.firstElementChild.getBoundingClientRect().top
-          - l.getBoundingClientRect().top;
-  return l.closest('.scene').dataset.scene + ' ' + Math.round(t);
-})
+// settled, on every tab and at every width
+(() => {
+  const sc = document.querySelector('.scene.is-on');
+  const l = sc.querySelector('.slk__list, .okw__list');
+  const lb = l.getBoundingClientRect();
+  const rows = [...l.children].filter(e => e.getBoundingClientRect().height > .5
+    && getComputedStyle(e).position !== 'absolute');
+  const last = rows[rows.length - 1].getBoundingClientRect();
+  const comp = sc.querySelector('.slk__composer, .okw__composer');
+  return { clipped: Math.round(last.bottom - lb.bottom),          // must be ≤ 0
+           gap: Math.round(comp.getBoundingClientRect().top - lb.bottom) };  // must be 0
+})()
 ```
 
-- **Arrival is 0, settled is the full overflow.** Both, or it is only half
-  fixed: the last message must end exactly on the floor the composer starts
-  at, or it is painted through (98px of overlap at 1120 is why the crop was
-  put there).
-- **Measure at the moment you apply it, not before the hold.** The rows are
-  still arriving during the hold, so a reading taken up front came out 14px
-  short and left the last message under the floor.
-- **The hold starts on intersection.** Run at load, it expires before anyone
-  has scrolled that far and the list is already lifted when it is looked at.
-- **Sweep every tab and several widths.** The overflow is 0 at 1000 and 1080,
-  97px at 1120, 26px at 1440 — four widths that all happen to fit is exactly
-  the failure QA §4j already names.
+- **Un-arrived rows collapse, and only under `.is-live`.** At rest the
+  conversation is finished (N2), so with no JS and under reduced motion every
+  message is present at full height. Check it: reduced motion must show every
+  row but the typing one.
+- **Nothing between the last message and the composer.** No list padding-bottom,
+  no composer margin-top, and the typing indicator lives *inside* the list so it
+  takes no room when nobody is typing.
+- **Watch it, do not only measure it.** Two rounds of this were spent reading
+  numbers that were describing a mid-animation frame as a bug. Screenshot the
+  tab early and late and look at the two.
+- **All seven tabs, and both readings of the window** — four are the Slack
+  channel (`.slk__list`), three are Okou's own (`.okw__list`), and they had the
+  same two faults. Sweep 1024 / 1120 / 1240 / 1440 / 1920 / 390.
 
 ## 4m. An auto-advancing carousel yields
 

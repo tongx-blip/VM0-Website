@@ -169,6 +169,76 @@ gate sections, 11 audit blocks, every pointer resolves · `audit.js` §1–§11 
 
 ---
 
+## 2026-08-30 · the conversation plays like a conversation
+
+Tong: *"你检查一下所有tab下的对话流，是否出现同样的问题… 现在有的tab的对话流，
+最后一个bubble被盖起来了。而且图二chat内容应该从prompt box的上边缘出现，中间不应
+该有space。检查所有tab修复问题"*
+
+Both faults, on all seven tabs, and the fix for yesterday's one was making the
+first of them worse.
+
+### What was actually wrong
+
+**A message that had not been said yet still held its space.** The rows are all
+in the DOM from the start (N2: the resting state is the finished conversation)
+and the loop reveals them with `clip-path` — at **full height**. In a
+bottom-anchored list that means the un-arrived rows hold the floor and the
+conversation plays in the top half, so the messages that HAD arrived were the
+ones pushed off the top. 130px of reserved nothing under the newest message.
+
+Yesterday's fix — top-anchor, then lift by the overflow — was treating the
+symptom. Both are gone: **un-arrived rows collapse**, and `flex-end` then does
+the entire job by itself. Each message appears on the composer's edge and lifts
+the ones before it; once they no longer fit, the earliest go off the top. That
+is a channel, and it needs no measurement, no hold and no JS at all — the whole
+`slk lift` module is deleted.
+
+Collapsing is scoped to `.is-live`, so with no JS and under reduced motion every
+row is still there at full height. Verified: 6/7 and 3/4 rows visible per scene
+under reduced motion — the missing one is the typing indicator, which is correct
+in a finished conversation.
+
+### The space above the composer
+
+`.slk__ghost` — "Okou is typing…" — was a **fixed 17px row outside the list**,
+reserving 19px whether or not anyone was typing, on every tab, always. That is
+the gap in the second screenshot. It is a message now: inside the list,
+collapsed when idle, growing when it types. Plus `.slk__list` lost its
+`padding-bottom:4px` and `.okw__composer` its `margin-top:10px`.
+
+Both readings of the window had it — four tabs are the Slack channel
+(`.slk__list`), three are Okou's own (`.okw__list`), 19px and 14px respectively.
+
+### Two process notes, because both cost a round
+
+**A probe that measures a mid-animation frame reports the choreography as a
+bug.** The first sweep flagged "lastClipped 12" on every tab at every width —
+that 12 was the drop, mid-transition, doing exactly what it was for. A constant
+that does not vary with the viewport is not an overflow.
+
+**Then I stopped measuring and took two screenshots**, one early and one late,
+and the actual fault — an empty bottom half — was visible immediately. It had
+been in front of me in Tong's own screenshot the whole time.
+
+### One thing I broke and put back
+
+Deleting the drop machinery with `re.sub(r'.*--slk-drop.*')` also removed two
+lines of an **unrelated** component that happens to use the same token name —
+`--slk-drop:34px` on the workflow scene's Slack post, and its use in that
+element's clip-path. Caught by reading the diff, restored, verified 0 in the
+diff afterwards. RULES R2 is about slicing between anchors; this is the same
+mistake with a regex, and the same fix: read the diff before building.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 153 rules,
+all pointers resolve · `audit.js` §1 §6 §7 PASS · axe **0 violations**, 5 light
+and 3 dark · all seven tabs settled clean at 1024 / 1120 / 1240 / 1440 / 1920
+and 390 — nothing clipped, gap 0 everywhere.
+
+---
+
 ## 2026-08-29 · the missing shadow, and the composition I broke looking for it
 
 Tong: *"你之前那个覆盖关系，我觉得挺好的。我说的 bug 是你把阴影给去掉了。它也不是

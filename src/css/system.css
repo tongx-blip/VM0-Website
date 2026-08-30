@@ -6196,14 +6196,19 @@ h3{ font-family:var(--fd); }
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
   gap:14px;
-  padding:0 18px 4px;
+  /* NO FLOOR PADDING. The conversation comes off the top edge of the
+     composer, with nothing between them — 4px here plus the composer's own
+     10px top margin was a 14px strip of ground under the newest message,
+     which reads as the message being unfinished rather than as air. */
+  padding:0 18px 0;
 }
+.okw__list > *{ flex:none; }
 
 /* ── the composer, 1:1 with `.zero-composer` ───────────────────────
    white, a 0.7px gray-400 hairline, 1.5rem, and the cool card shadow. */
 .okw__composer{
   display:flex; align-items:center; gap:8px; flex:none;
-  margin:10px 18px 12px;
+  margin:0 18px 12px;
   padding:6px 6px 6px 10px;
   /* NOT THE PRODUCT'S 24px HERE, and the deviation is written at the rule
      (P12). `--zero-composer-radius` is 1.5rem on a composer that is ~120px
@@ -6394,22 +6399,10 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
    painted through (the 98px overlap at 1120 that put the crop here). */
 .slk__list{
   flex:1; min-height:0; overflow:hidden;
-  display:flex; flex-direction:column; justify-content:flex-start;
-  padding-bottom:6px;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding-bottom:0;
 }
 .slk__list > *{ flex:none; }
-/* The lift is a margin on the first row rather than a transform on the list,
-   because the list is the element whose `overflow` does the clipping and
-   moving it would move the crop with it. Measured off the ROWS and written
-   to the ROW — a negative margin here does not change any row's own height,
-   so the measurement cannot chase the value it just wrote (RULES F23). */
-.slk__list > :first-child{
-  margin-top:var(--slk-lift, 0px);
-  transition:margin-top 820ms var(--e-out);
-}
-@media (prefers-reduced-motion:reduce){
-  .slk__list > :first-child{ transition:none; }
-}
 
 .slk__bar{
   display:flex; align-items:center; gap:10px; flex:none;
@@ -6631,9 +6624,16 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
    between the list and the composer whose height never changes, so
    nothing above it can move; Slack puts its typing indicator under the
    message pane anyway. */
+/* IT IS A MESSAGE NOW, NOT A STRIP. Outside the list it was a fixed 17px
+   row that reserved its space whether or not anyone was typing — 19px of
+   nothing between the last message and the composer, every tab, always
+   ("chat 内容应该从 prompt box 的上边缘出现，中间不应该有 space"). Inside
+   the list it collapses when idle and grows when Okou types, and flex-end
+   then does the rest: the conversation lengthens and pushes itself up. */
 .slk__ghost{
   display:flex; align-items:center; gap:6px; flex:none;
-  height:17px; margin:0 clamp(14px,1.4vw,18px) 2px;
+  height:0; overflow:hidden;
+  margin:0 clamp(14px,1.4vw,18px) 0;
   font-size:var(--t-meta); color:var(--slk-mute);
   /* Clipped, never faded: it carries a sentence (RULES N3).
 
@@ -6643,10 +6643,15 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
      announcing that Okou was still working on something it had already
      shipped four messages ago. */
   clip-path:inset(0 100% 0 0);
-  transition:clip-path 200ms var(--e-out);
+  transition:clip-path 200ms var(--e-out),
+             height 220ms var(--e-out),
+             margin-bottom 220ms var(--e-out);
 }
 
-.ochat--slack.is-live .slk__ghost.is-on{ clip-path:inset(0 0 0 0); }
+.ochat--slack.is-live .slk__ghost.is-on{
+  clip-path:inset(0 0 0 0);
+  height:17px; margin-bottom:2px;
+}
 
 .slk__ghost-d{ display:inline-flex; align-items:center; gap:3px; }
 
@@ -6712,9 +6717,23 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
    `:not(.slk__ghost)` because the ghost runs its own left-to-right wipe;
    this selector out-specifies it and would have replaced it. */
+/* A MESSAGE THAT HAS NOT ARRIVED TAKES NO ROOM. Clipped but full height, the
+   rows that had not been said yet still held their space at the bottom of a
+   bottom-anchored list — so the conversation played in the TOP half against
+   130px of reserved nothing, and the messages that had arrived were the ones
+   pushed off. Collapsed, the list does the whole job by itself: each message
+   appears on the composer's edge and lifts the ones before it, and once they
+   no longer fit the earliest go off the top. That is a channel.
+
+   Only under `.is-live`. At rest the conversation is FINISHED (N2), so every
+   row is there at full height with no JS and under reduced motion. */
 .ochat.is-live .ochat__row:not(.slk__ghost){
   clip-path:inset(0 0 100% 0);
   transform:translateY(12px);
+}
+.ochat.is-live .slk__list > .ochat__row:not(.slk__ghost):not(.is-on),
+.ochat.is-live .okw__list > .ochat__row:not(.slk__ghost):not(.is-on){
+  height:0; margin-block:0; overflow:hidden;
 }
 .ochat.is-live .ochat__row[data-beat="result"]{
   transform:translateY(22px) scale(.985);
