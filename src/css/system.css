@@ -5416,6 +5416,21 @@ h3{ font-family:var(--fd); }
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   /* the frame's own measurements */
   --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
+  /* THE AIR AROUND THE FIGURES STRIP — one value, used on BOTH sides.
+     It was two: the frame's `row-gap` above and `--o-fpad` below, which at
+     1440 is 15 against 27.36. Measured to the letters that came out 18
+     over and 28 under on every tab — *"这个文字上边的空间和下边的空间要一样高"*.
+     Two gaps that are meant to look the same have to be the same
+     declaration; derived from different ones they are only ever equal by
+     coincidence, and these were not even close.
+     The strip's ink sits 3.3px below its line box's top and 2.3px above
+     its content bottom (averaged over the seven tabs — the words change
+     with the tab, so the ascenders and descenders do too). A 1px
+     asymmetry is left in rather than corrected: it is smaller than the
+     tab-to-tab variation it would be correcting for.
+     21 at 1440 is the midpoint of the 15 and 27.36 it replaces, so the
+     frame keeps its height and the windows keep theirs. */
+  --o-mgap:clamp(13px, 1.5vw, 21px);       /* above and below the strip  */
   --o-cw:clamp(176px, 16.4vw, 236px);      /* a connector card           */
   /* HOW FAR A CARD SITS ON THE WINDOW. Small on purpose: at 26px it ate
      the first 26px of whichever sidebar was behind it — Okou's thread
@@ -5496,7 +5511,7 @@ h3{ font-family:var(--fd); }
      stage sets the height; the window's job is to take it and clip.
      The second track is the outcome strip and takes only what it needs. */
   grid-template-rows:minmax(0,1fr) auto;
-  row-gap:clamp(10px, 1.2vw, 15px);
+  row-gap:var(--o-mgap);
   align-items:stretch;
   min-width:0;
 }
@@ -5560,7 +5575,7 @@ h3{ font-family:var(--fd); }
   gap:clamp(14px, 1.8vw, 30px) clamp(24px, 3.2vw, 54px);
   list-style:none; margin:0;
   /* its own floor, since the frame no longer keeps one */
-  padding:0 clamp(2px, .6vw, 8px) var(--o-fpad);
+  padding:0 clamp(2px, .6vw, 8px) var(--o-mgap);
   min-width:0;
 }
 /* ONE LINE, NOT A STACKED BLOCK. Number then label, on a shared baseline.
@@ -7017,8 +7032,16 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
   }
   .ostage__frame{
     display:block;
+    /* NO BOTTOM PADDING HERE EITHER. `display:block` throws away the grid's
+       `row-gap`, so the strip had nothing above it and the frame's padding
+       plus its own underneath — 2px over and 35px under, four times worse
+       than the desktop imbalance this token was added to fix. The strip
+       carries the air on both sides instead, exactly as it does above
+       1080. */
     padding:clamp(12px, 2.4vw, 18px);
+    padding-bottom:0;
   }
+  .ometrics{ margin-top:var(--o-mgap); }
   /* THE ROW BECOMES A COLUMN, and with it the whole opening beat stands
      down: centring a 62% unit inside a full-width column is a translate to
      nowhere, and sliding the artifact in from the right of a stacked layout

@@ -1604,6 +1604,47 @@ the gate for #control, they took a session to get right, and twice they were
 written to /tmp and lost when the sandbox reset. A probe that has to be
 rewritten is a probe that will be rewritten wrong.
 
+## 4ag. Equal air is one declaration, and it is measured to the ink
+
+The `#outputs` figures strip had 18px above it and 28px below. Two causes, and
+the first is the one that generalises:
+
+**The two gaps came from different declarations.** Above, the frame’s
+`row-gap: clamp(10px, 1.2vw, 15px)`. Below, the strip’s
+`padding-bottom: var(--o-fpad)` — the frame’s general air, borrowed. Two
+values that are meant to look identical are only ever equal by coincidence.
+Both now read `--o-mgap`, one token used twice (RULES M7).
+
+**And a line box is not the ink.** Even with the same number on both sides the
+gaps differ, because the letters do not sit centred in their line box. Here the
+ink sits 3.3px below the box top and 2.3px above the content bottom, averaged
+over the seven tabs — a 1px residual, left in deliberately because it is
+smaller than the tab-to-tab variation it would be correcting for.
+
+**`display:block` throws the `row-gap` away.** Below 1080 the frame stacks its
+children as blocks, so the gap above the strip simply stopped existing: 2px
+over and 35px under, four times worse than the desktop fault. The frame drops
+its bottom padding there and the strip carries the air on both sides, exactly
+as it does above 1080. **Check a token that lives on a grid at one width and a
+block at another.**
+
+`tools/probes/ometrics-air.js`, every tab, every width. Three things it had to
+get right before it reported anything true — all three had it calling the
+strip balanced while it was 10px out:
+
+* **Canvas ink, not the box.** `actualBoundingBoxAscent/Descent`.
+* **The baseline from the DOM, not from arithmetic.** The strip is a
+  baseline-aligned flex row, so a child’s box height is not its line-height
+  and half-leading arithmetic lands several pixels out. A zero-size
+  `inline-block` sits with its bottom margin edge on the baseline.
+* **Wait for the strip to land.** `.ostage.is-live .ometrics li` holds a
+  `translateY(6px)` until the run finishes, and 6px is most of the error.
+  Poll the transform on the scene that is on *after* the swap — polling the
+  one captured before it returns immediately against the outgoing scene, which
+  is how three separate runs of this probe produced three different answers.
+
+Expect every tab within ~2px, at 1920 / 1440 / 1280 / 1100 / 1024 / 390.
+
 ## 4ad. A channel token is not a fill token — now a lint
 
 `--ink-rgb` and `--paper-rgb` are the shadow-and-scrim channels and they do

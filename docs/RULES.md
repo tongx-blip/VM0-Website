@@ -38,6 +38,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 | M5 | **`height` on a grid container is not a ceiling.** An implicit row track is `auto`, so the tallest item pushes the frame past the height you declared. Say `grid-template-rows:minmax(0,1fr)`, and `min-height:0` on the children. | Seven tabs came out 545 / 552 / 574: the section jumped as you moved along the strip. | QA §4ab |
 | M6 | **A column beside a fixed-width object takes that object's width, not the leftover track.** | The Cloud browser card caps itself at 400px the way the product does; a `1fr` column left it sitting against 200px of nothing with the captions running past it on both sides. | QA §4j |
 | M4 | **Equal air above and below a pinned block is derived**, not chosen — and it measures against the **stuck** header height, not the resting one. | A fixed top margin balances at one window height only. | QA §4j |
+| M7 | **Two gaps that must look the same have to BE the same declaration** — and they are measured to the **ink**, not to the line box. A line box is taller than the letters and the letters are not centred in it, so equal `gap` and `padding` still read unequal. | The figures strip took its air above from the frame’s `row-gap` and its air below from `--o-fpad`: 15 against 27.36, which measured 18 over and 28 under on every tab. Read as *"这个文字上边的空间和下边的空间要一样高"*. | QA §4ag |
 
 ## Type
 

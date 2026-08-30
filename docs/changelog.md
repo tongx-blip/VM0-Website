@@ -4,6 +4,74 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-30 · the figures strip had 18 over and 28 under
+
+Tong, on the `#outputs` outcome strip: *"这个文字上边的空间和下边的空间要一样高"*.
+
+Measured before touching it, and he is reading 10px: **18px from the window's
+bottom edge to the top of the letters, 28px from the bottom of the letters to
+the edge of the band.** Same on all seven tabs.
+
+### two gaps, two declarations
+
+Above the strip, the frame's `row-gap: clamp(10px, 1.2vw, 15px)`. Below it, the
+strip's `padding-bottom: var(--o-fpad)` — the frame's general air, borrowed
+when the strip was given the frame's bottom padding to carry. 15 against 27.36.
+
+Two values that are meant to look identical have to **be** the same
+declaration; derived from different ones they are equal only by coincidence,
+and these were not close. Both are `--o-mgap` now, one token used twice, set to
+21 at 1440 — the midpoint of the two it replaces, so the frame keeps its height
+and the windows keep theirs.
+
+### and below 1080 it was four times worse
+
+`display:block` throws a grid's `row-gap` away. In the stacked layout the strip
+had **nothing** above it and the frame's padding plus its own underneath: 2px
+over, 35px under. The frame drops its bottom padding there and the strip
+carries the air on both sides, the same way it does on the grid.
+
+| | before | after |
+|---|---|---|
+| 1920 / 1440 | 18 / 28 | 24 / 21.6 |
+| 1280 | 16 / 26 | 22.2 / 20.8 |
+| 1024 | 2 / 35 | 17.4 / 17 |
+| 390 | 2 / 33 | 15 / 14.6 |
+
+Every tab is now within 2.4px and most within 1. The residual is the words: an
+ascender in `nightly` or a descender in `Waiting on you` moves the ink by up to
+3px, and no single value equalises seven different strings at once. A 1px
+correction was available and left out — it is smaller than the thing it would
+be correcting for.
+
+### the probe was wrong three times before it was right
+
+`tools/probes/ometrics-air.js`. Three faults, each of which reported the strip
+as **balanced** while it was 10px out:
+
+* **It measured the line box.** A line box is taller than the letters and the
+  letters are not centred in it. Canvas `actualBoundingBoxAscent/Descent`.
+* **It reconstructed the baseline from half-leading.** The strip is a
+  baseline-aligned flex row, so a child's box height is not its line-height and
+  the arithmetic landed several pixels out — enough to invert the answer. A
+  zero-size `inline-block` sits with its bottom margin edge on the baseline;
+  ask the DOM instead of deriving it.
+* **It sampled before the strip landed.** `.ostage.is-live .ometrics li` holds
+  a `translateY(6px)` until the run finishes, and 6px is most of the error.
+  Worse, the first fix polled the transform on the scene captured *before* the
+  tab swap, so it returned immediately against the outgoing scene — three runs,
+  three different answers, all confident.
+
+The answer was only settled by scanning the painted pixels of a screenshot and
+finding the same 18/28 that Tong's crop shows. **When a probe and a screenshot
+disagree, the screenshot is right.**
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · 154 rules, 71
+gate sections, 11 audit blocks, every pointer resolves · `audit.js` §1–§11 pass
+· axe 0 in light and dark · six widths measured.
+
+---
+
 ## 2026-08-29 · one typeface — Roobert everywhere, and it brought its own monospace
 
 Tong: *"把整个网站的字体全部换成 Roobert TRIAL … 检查网站上的所有的字体，全都换成
