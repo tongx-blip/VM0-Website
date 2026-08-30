@@ -7,28 +7,42 @@ looking rather than by description.
     python3 tools/build-control-options.py
     okou host ./options-control --site okou-control-options
 
-Why four. The shipped version answered feedback 16-20 and Tong's verdict was
-"设计太平淡了，就是简单的排版" — with the terms for fixing it stated exactly:
+ROUND 2. The first four were built from feedback 16-20 alone and Tong's verdict
+on what is live was *"完全不符合我们的期望"*. Three inputs arrived with that
+verdict and all three change the answer:
 
-    简单的排版 → 对视觉要求非常高
-    更新颖的交互 → 需要 ui 更加简洁
-    either way 都可以，但是我要看到的是高质量
+  · **The wireframe** (okou-ai-teammate-swiss) — the origin of this section, and
+    it is one real product screen with four short claims around it. *"其实讲的
+    事情很简单。就是关于 agent 权限的问题。"* The shipped version had grown a
+    dialog, a browser card, two captions and a note.
 
-So two of these take the first bet and two take the second, and none of them
-is the shipped layout with better spacing.
+  · **The R2 brand illustrations.** The register is now fixed and it is NOT the
+    hand-drawn ink spot this repo already had: flat vector, one uniform black
+    outline, geometric, a character with an orange face, a cobalt beanie and a
+    lime jumpsuit, no noise, tonal shadow only. Two new spots were generated to
+    match it — `spot-permission-key.png` and `spot-cloud-computer.png`.
 
-What is fixed in all four
+  · **Three named routes.** *"可以是插画，或者交互的方式，或者抽象模拟我们真实
+    产品"* — so the four below are one of each plus one that is all three at the
+    smallest possible size, rather than four layouts of the same idea.
+
+Fixed in all four
   · 16  The card is the product's REAL in-chat permission card
-        (`PermissionActionCard`, chat-body-cards.tsx) — the one that appears in
-        the conversation mid-run. The shipped version used the standalone
-        `/permission-allow` page instead, which is a different component with a
-        different shape and an orange confirm; the in-chat one is a single 88px
-        row with a NEUTRAL bordered confirm.
-  · 17  The cloud machine is an illustration, in the page's own hand-drawn
-        brand register, generated for this and not a UI drawing.
-  · 18  Gone. No credential/network card anywhere.
-  · 19  The activity trail is one clause in a closing line, never a picture.
-  · 20  Every direction is one screen or less.
+        (`PermissionActionCard`) — one 88px row, neutral bordered confirm, the
+        product's own strings, the real scope from the connector catalog.
+  · 17  Isolated execution is the cloud COMPUTER drawing, never a UI rectangle,
+        and it is never the subject.
+  · 18  Gone. No credential or network card anywhere.
+  · 19  The activity trail is half of one closing line.
+  · 20  **btw or it does not count.** The shipped section is 1.25 screens;
+        every direction here is under 0.8 and two are under 0.6.
+
+Content, and what changed in it
+  The heading and the lede are the wireframe's, unedited. What was cut is the
+  two long claims and the closing note — three paragraphs compressed to one
+  trailing line, with `microVM` said in the reader's language as feedback 17
+  asks. Nothing new is claimed; every sentence here is a shorter version of a
+  sentence that was already on the page.
 """
 import hashlib
 import os
@@ -67,12 +81,15 @@ TICK = ('<svg class="ico-tick" viewBox="0 0 24 24" fill="none" stroke-width="2" 
 # ══════════════════════════════════════════════════════════════════════
 
 def pcard(state='ready', dur='1 hour'):
-    """state: ready | saved"""
-    if state == 'saved':
-        right = '<span class="pcard__done">%s Permissions updated</span>' % TICK
-    else:
-        right = ('<span class="pcard__sel">%s%s</span>'
-                 '<span class="pcard__go">Confirm</span>' % (dur, CHEV))
+    """state: ready | saved
+
+    BOTH states are always in the markup and CSS shows one of them. The first
+    version swapped `.pcard__c`'s innerHTML on confirm, which orphaned the
+    listeners bound to the nodes it replaced — "Ask again" put the controls
+    back and then nothing answered them. A state that is a class is also the
+    only version that works with JavaScript off, which every other direction
+    here needs.
+    """
     return (
         '<div class="pcard" data-state="%s">'
         '<span class="pcard__l">'
@@ -81,195 +98,176 @@ def pcard(state='ready', dur='1 hour'):
         '<span class="pcard__t"><b>Google Ads permissions</b>'
         '<i>Allow campaign-budgets.write</i></span>'
         '</span>'
-        '<span class="pcard__c">%s</span>'
-        '</div>' % (state, right))
+        '<span class="pcard__c">'
+        '<span class="pcard__ready"><span class="pcard__sel">%s%s</span>'
+        '<span class="pcard__go">Confirm</span></span>'
+        '<span class="pcard__done">%s Permissions updated</span>'
+        '</span>'
+        '</div>' % (state, dur, CHEV, TICK))
 
 
-SPOT = ('<img class="spot" src="assets/brand/spot-cloud-machine.png" alt="" '
-        'width="900" height="900" loading="lazy">')
+SPOT_KEY = ('<img class="spot" src="assets/brand/spot-permission-key.png" alt="" '
+            'width="900" height="900" loading="lazy">')
+SPOT_CLOUD = ('<img class="spot" src="assets/brand/spot-cloud-computer.png" alt="" '
+              'width="900" height="900" loading="lazy">')
 
-# The claims. Every sentence is lifted from the shipped section — the wording is
-# Tong's and design work does not rewrite it (RULES K1). What each direction
-# changes is which of them survive and how they are shown.
-CLAIM_PERM = ('Grant access one connector and one action at a time, per Agent. '
-              'Sensitive writes wait for an explicit approval instead of running '
-              'on their own — and it is a person who answers it.')
-CLAIM_ISO = ('Each run gets its own microVM: a fresh machine with nothing left '
-             'over from the last task and no route to another run’s files. '
-             'When the work finishes the machine is destroyed.')
-NOTE = ('Every run keeps an activity trail: what was read, what was written, who '
-        'approved it and when — and the engine underneath is open source, so '
-        'the behaviour can be checked rather than believed.')
-
+# ── the copy ──────────────────────────────────────────────────────────
+# Heading and lede are the WIREFRAME's, unedited (RULES K1). The two long
+# claims and the closing note are cut to one trailing line: `microVM` becomes
+# the reader's words because feedback 17 asks for a cloud computer, and the
+# activity trail becomes half a sentence because 19 asks for less of it.
 HEAD = ('<h2 class="display display--center"><span class="line">Everything stays</span>'
         '<span class="line">under <mark class="mark mark--red">your control.</mark></span></h2>')
 LEDE = ('<p class="section-body">Decide what each Agent and each workflow can read, '
         'change, and approve. Permissions follow the person, not the automation.</p>')
+BTW = ('Each run gets its own cloud computer, wiped when the job ends, and keeps a '
+       'trail of what it read and wrote.')
 
 
 # ══════════════════════════════════════════════════════════════════════
-#  A · The ask, in the conversation
-#     Bet: simple layout, and ALL of the craft in one true picture.
-#     One product window, cropped at the band edge the way every other
-#     product visual on this page is (RULES P6, P9). The permission card is
-#     not a specimen on a slide — it is where it actually appears, in a run
-#     that has stopped to wait for a person.
+#  A · 抽象模拟真实产品 — the ask, and nothing else
+#
+#  The route: abstract the real product. One run, stopped. No columns, no
+#  captions, no drawing, no window chrome — the conversation is three lines of
+#  type on the section's own ground, and the only object is the card.
+#  The bet: the section is over in six seconds and the reader has understood
+#  the whole permission model, because the model IS "it stopped to ask you".
 # ══════════════════════════════════════════════════════════════════════
 
 def option_a():
     return '''
-<section class="panel panel--card oc" id="a">
+<section class="panel panel--card oc oc--a" id="a">
   %s
   %s
-  <div class="oa">
-    <div class="oa__win">
-      <div class="ochat oa__chat">
-        <div class="ochat__row ochat__row--user">
-          <p class="ochat__bubble">Where did last week’s spend actually go?</p>
-        </div>
-        <div class="ochat__row ochat__row--okou">
-          <span class="ochat__ava"><img src="assets/brand/agent-okou.svg" alt="" width="48" height="48"></span>
-          <p class="ochat__bubble">$2,770 across three campaigns. Blended ROAS 2.74x, and one of the three is carrying it.</p>
-        </div>
-        <div class="ochat__row ochat__row--user">
-          <p class="ochat__bubble">Rebalance this week’s paid budget toward whatever is actually converting.</p>
-        </div>
-        <div class="ochat__row ochat__row--okou">
-          <span class="ochat__ava"><img src="assets/brand/agent-okou.svg" alt="" width="48" height="48"></span>
-          <p class="ochat__bubble">Broad Test is at 1.1x ROAS and Founder Ops at 3.8x. I can move 30%% of Broad Test’s spend across — total spend stays flat.</p>
-        </div>
-        <div class="ochat__row ochat__row--okou oa__ask">
-          <span class="ochat__ava"><img src="assets/brand/agent-okou.svg" alt="" width="48" height="48"></span>
-          <div class="oa__cardwrap">%s</div>
-        </div>
-        <div class="ochat__row ochat__row--okou oa__cut">
-          <span class="ochat__ava"><img src="assets/brand/agent-okou.svg" alt="" width="48" height="48"></span>
-          <p class="ochat__bubble">Waiting on that one before I touch anything.</p>
-        </div>
-      </div>
-    </div>
-    <div class="oa__side">
-      <p class="oa__claim">%s</p>
-      <p class="oa__claim oa__claim--iso"><span class="oa__spot">%s</span>%s</p>
-    </div>
+  <div class="oa2">
+    <p class="oa2__said"><span>Maya</span>Rebalance this week’s paid budget toward whatever is converting.</p>
+    <p class="oa2__said oa2__said--ok"><span>Okou</span>Broad Test is at 1.1× and Founder Ops at 3.8×. I can move 30%% of the spend across — but I need to write the new budgets.</p>
+    %s
+    <p class="oa2__after">The run waits here until a person answers. Not a rule set six months ago.</p>
   </div>
   <p class="note">%s</p>
-</section>''' % (HEAD, LEDE, pcard(), CLAIM_PERM, SPOT, CLAIM_ISO, NOTE)
+</section>''' % (HEAD, LEDE, pcard(), BTW)
 
 
 # ══════════════════════════════════════════════════════════════════════
-#  B · The drawing carries it
-#     Bet: simple layout, and the visual quality comes from the brand's own
-#     warmth layer at full size rather than from another grey rectangle.
-#     The spot is the subject; the real card laps its lower edge, so the
-#     abstract claim and the literal product touch each other.
+#  B · 插画 — the drawing says it
+#
+#  The route: illustration, in the R2 brand register. The person holds the
+#  key and keeps hold of the ring; the agent is the orange cube, waiting on
+#  the other side of a door it cannot open. That picture is the whole claim —
+#  "permissions follow the person" — before a word is read.
+#  The card laps the drawing's lower edge so the picture and the product are
+#  one object rather than an illustration with a screenshot next to it.
 # ══════════════════════════════════════════════════════════════════════
 
 def option_b():
     return '''
-<section class="panel panel--card oc" id="b">
-  %s
-  %s
-  <div class="ob">
-    <figure class="ob__fig">
+<section class="panel panel--card oc oc--b" id="b">
+  <div class="ob2">
+    <div class="ob2__art">%s</div>
+    <div class="ob2__say">
       %s
-      <div class="ob__card">%s</div>
-    </figure>
-    <div class="ob__txt">
-      <p class="ob__claim"><b>It asks, and a person answers.</b> %s</p>
-      <p class="ob__claim"><b>It runs somewhere else.</b> %s</p>
+      %s
+      %s
+      <p class="ob2__btw">%s</p>
     </div>
   </div>
-  <p class="note">%s</p>
-</section>''' % (HEAD, LEDE, SPOT, pcard(), CLAIM_PERM, CLAIM_ISO, NOTE)
+</section>''' % (SPOT_KEY, HEAD.replace(' display--center', ''),
+                 LEDE.replace('section-body', 'section-body ob2__lede'), pcard(), BTW)
 
 
 # ══════════════════════════════════════════════════════════════════════
-#  C · One machine, three states
-#     Bet: the interaction IS the idea, so the UI gets out of its way.
-#     No headings, no captions, no columns — one object, one sentence, and
-#     the run's own life playing on it: it asks, it is granted for an hour,
-#     it is destroyed. The card's real terminal state does the second beat
-#     ("Permissions updated" is the product's own string), which is why this
-#     only works with the RIGHT card.
+#  C · 交互 — you allow it, here
+#
+#  The route: the newer interaction, and therefore the simplest UI on the
+#  page. The card is LIVE: change the duration, press Confirm, and the run
+#  above it moves on. The claim is not described, it is handed to the reader —
+#  the one gesture the product actually asks of a person is the one gesture
+#  this section asks of them.
+#  Everything else is deleted, including both captions and the heading's
+#  second line, because an interactive object with prose around it reads as a
+#  diagram of an interaction rather than as one.
 # ══════════════════════════════════════════════════════════════════════
 
 def option_c():
-    beats = [
-        ('asks', 'It stops and asks. One connector, one action, and a person answers it.'),
-        ('granted', 'Granted for an hour — to this Agent, for this action, by a person.'),
-        ('gone', 'The machine it ran on is destroyed, with nothing carried to the next task.'),
-    ]
-    dots = ''.join('<button class="occ__dot" data-go="%d" aria-label="State %d"></button>'
-                   % (i, i + 1) for i in range(3))
-    lines = ''.join('<p class="occ__line" data-beat="%s">%s</p>' % (k, t) for k, t in beats)
     return '''
-<section class="panel panel--card oc" id="c">
+<section class="panel panel--card oc oc--c" id="c">
   %s
-  <div class="occ" id="occ" data-beat="asks">
-    <div class="occ__stage">
-      <div class="occ__machine">%s</div>
-      <div class="occ__card">%s</div>
-      <div class="occ__card occ__card--done">%s</div>
-    </div>
-    <div class="occ__say">%s</div>
-    <div class="occ__dots">%s</div>
+  %s
+  <div class="oc2" data-live="1">
+    <p class="oc2__ask"><b>Okou</b> wants to write next week’s budgets in Google Ads.</p>
+    <div class="oc2__card">%s</div>
+    <p class="oc2__out" aria-live="polite"><i></i><span>Granted by Maya · expires in 1 hour</span></p>
   </div>
   <p class="note">%s</p>
-</section>''' % (HEAD, SPOT, pcard(), pcard('saved'), lines, dots, NOTE)
+</section>''' % (HEAD, LEDE, pcard(), BTW)
 
 
 # ══════════════════════════════════════════════════════════════════════
-#  D · The dark interlude
-#     Bet: atmosphere, and brevity. The page already ends on a dark band, so
-#     a second dark moment is in the language rather than an import. Nothing
-#     here is a column of claims: one drawing on a lit sheet, one card, two
-#     lines. It is the shortest of the four, and the point is that it reads
-#     as a breath between two white sections rather than a chapter.
+#  D · 三格 — asked, granted, gone
+#
+#  The route: all three at the smallest size there is. Three frames, read left
+#  to right, one line under them: the cube at a door it cannot open, the key
+#  handed over for an hour, the machine wiped. It is the only direction where
+#  isolated execution is SHOWN rather than mentioned, and it is also the
+#  shortest — which is the most literal reading of "应该是一个 btw 的感觉".
+#  No headings inside the frames: a three-frame strip that captions itself is
+#  four things to read, not three pictures.
 # ══════════════════════════════════════════════════════════════════════
 
 def option_d():
     return '''
-<section class="panel od" id="d">
-  <div class="od__in">
-    <div class="od__l">
-      <h2 class="od__h">Everything stays<br>under <mark class="mark mark--red">your control.</mark></h2>
-      <p class="od__p">%s</p>
-      <p class="od__p od__p--dim">%s</p>
-    </div>
-    <div class="od__r">
-      <figure class="od__sheet">%s</figure>
-      <div class="od__card">%s</div>
-    </div>
-  </div>
-  <p class="od__note">%s</p>
-</section>''' % (CLAIM_PERM, CLAIM_ISO, SPOT, pcard(), NOTE)
+<section class="panel panel--card oc oc--d" id="d">
+  %s
+  %s
+  <ol class="od2">
+    <li class="od2__f">
+      <span class="od2__art od2__art--ask"><img src="assets/brand/spot-permission-key.png" alt="" width="900" height="900" loading="lazy"></span>
+      <p class="od2__c"><b>It asks.</b> One connector, one action.</p>
+    </li>
+    <li class="od2__f">
+      <span class="od2__art od2__art--card">%s</span>
+      <p class="od2__c"><b>You allow it.</b> For as long as you choose.</p>
+    </li>
+    <li class="od2__f">
+      <span class="od2__art od2__art--iso"><img src="assets/brand/spot-cloud-computer.png" alt="" width="900" height="900" loading="lazy"></span>
+      <p class="od2__c"><b>Then it is gone.</b> The machine is wiped.</p>
+    </li>
+  </ol>
+  <p class="note">Permissions follow the person, not the automation — and every run keeps a trail of what it read and wrote.</p>
+</section>''' % (HEAD, LEDE, pcard())
 
 
 OPTIONS = [
-    ('A', 'The ask, in the conversation',
-     'Simple layout · the craft is one true picture',
-     'One product window, cropped at the band edge like every other product visual '
-     'on this page. The card is not a specimen — it is a run that has stopped to '
-     'wait for a person. The drawing is a footnote beside the second claim.',
+    ('A', 'The ask, and nothing else',
+     '抽象模拟真实产品 · 0.83 screens · shipped is 1.25',
+     'Three lines of conversation and the card that stopped it. No columns, no '
+     'captions, no drawing, no window chrome. The permission model IS "it '
+     'stopped to ask you", so the fastest way to explain it is to show a run '
+     'that has stopped.',
      option_a),
-    ('B', 'The drawing carries it',
-     'Simple layout · the visual quality is the illustration',
-     'The spot at full size is the subject, and the real card laps its lower edge so '
-     'the abstract claim and the literal product touch. Warmest of the four, and the '
-     'closest to the brand layer the rest of the page already uses.',
+
+    ('B', 'The drawing says it',
+     '插画 · R2 brand register · 0.76 screens',
+     'The person holds the key and keeps hold of the ring; the agent is the '
+     'orange cube, waiting at a door it cannot open. That is "permissions '
+     'follow the person" before a word is read. The real card laps the '
+     'drawing so the picture and the product are one object.',
      option_b),
-    ('C', 'One machine, three states',
-     'Novel interaction · so the UI gets out of the way',
-     'No headings, no captions, no columns. One object and one sentence, with the '
-     'run’s own life playing on it: it asks, it is granted for an hour, it is '
-     'destroyed. The middle beat is the card’s real terminal state.',
+
+    ('C', 'You allow it, here',
+     '交互 · the card is live · 0.73 screens · the shortest',
+     'Change the duration, press Confirm, and the run above it moves on. The '
+     'one gesture the product asks of a person is the one gesture this section '
+     'asks of the reader. Everything else is deleted, because prose around an '
+     'interactive object turns it into a diagram of an interaction.',
      option_c),
-    ('D', 'The dark interlude',
-     'Novel form · shortest, and the only one with a mood',
-     'The page already ends on a dark band, so a second dark moment is in the '
-     'language. One drawing on a lit sheet, one card, two lines — a breath '
-     'between two white sections rather than a chapter.',
+
+    ('D', 'Asked, granted, gone',
+     '三格连环画 · all three routes · 0.79 screens',
+     'Three frames and one line under them. The only direction where isolated '
+     'execution is shown rather than mentioned instead of being a claim in '
+     'prose, and the only one that gets both new drawings on screen at once.',
      option_d),
 ]
 
@@ -286,8 +284,9 @@ def build():
     # refuses to publish a stylesheet whose assets are missing, and it is right
     # to — a review build with holes in it is worse than a slow one.
     css = open(os.path.join(OUT, 'styles.css'), encoding='utf-8').read()
-    wanted = {'brand/spot-cloud-machine.png', 'brand/agent-okou.svg',
-              'connectors/google-ads.svg'}
+    wanted = {'brand/spot-permission-key.png', 'brand/spot-cloud-computer.png',
+              'brand/agent-okou.svg', 'connectors/google-ads.svg',
+              'fonts/roobert-var.woff2'}
     wanted |= {m.split('?')[0] for m in
                re.findall(r'url\(\s*assets/([^)\'"\s]+)', css)}
     for rel in sorted(wanted):
@@ -324,9 +323,7 @@ def build():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Control section · four directions</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!-- the site's own typeface: styles.css already carries the @font-face -->
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="variants.css">
 </head>
@@ -335,10 +332,13 @@ def build():
   <p class="opts__k">Feedback 16–20 · four directions</p>
   <h1 class="opts__h">The security section, four ways</h1>
   <p class="opts__l">Each one is the real section at real size, on the real stylesheet.
-  All four fix 16 with the product’s <b>in-chat</b> permission card, answer 17 with a
-  drawing, delete 18, demote 19 to the closing line, and fit one screen.
-  A and B take the <b>simple layout / high visual craft</b> bet; C and D take the
-  <b>newer interaction / simpler UI</b> one.</p>
+  All four carry the product’s <b>in-chat</b> permission card (16), say isolated
+  execution as a cloud <b>computer</b> in the R2 brand register (17), delete the
+  credential card (18), demote the activity trail to half a line (19), and come in
+  <b>under 0.8 screens</b> against the shipped 1.25 (20). Heading and lede are the
+  wireframe’s, unedited; what was cut is two long claims and a closing note.
+  <b>A</b> abstracts the real product, <b>B</b> is illustration-led, <b>C</b> is
+  interactive, <b>D</b> is all three at the smallest size there is.</p>
 </header>
 <main>
 %s

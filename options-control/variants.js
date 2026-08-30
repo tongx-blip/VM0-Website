@@ -1,49 +1,78 @@
-/* Option C only: one machine, three states.
-   One rAF-free cue list on a single interval, gated on visibility and on the
-   observer, and parked for good the moment someone drives it themselves
-   (RULES N4, N8, N16). Nothing here ships — it is the mechanic being reviewed. */
+/* Option C only: the permission card is live.
+   Nothing here ships as-is — it is the mechanic being reviewed. The point of
+   the direction is that the reader performs the one gesture the product asks
+   of a person, so the card has to actually do it: pick a duration, press
+   Confirm, and the grant appears with the duration you chose and the name of
+   the person it belongs to.
+
+   Deliberately small: no library, no rAF, no timers. There is no loop here —
+   a loop would make it a demo playing at you, which is the opposite of the
+   claim. It waits, exactly like the run does. */
 (function () {
   'use strict';
-  var el = document.getElementById('occ');
-  if (!el) return;
-  var BEATS = ['asks', 'granted', 'gone'];
-  var HOLD = [3200, 2600, 2000];   // the arrival holds longer than the step (F40)
-  var i = 0, timer = null, parked = false, seen = false;
+  var stage = document.querySelector('.oc2[data-live]');
+  if (!stage) return;
 
-  var dots = [].slice.call(el.querySelectorAll('.occ__dot'));
+  var card = stage.querySelector('.pcard');
+  var sel = stage.querySelector('.pcard__sel');
+  var go = stage.querySelector('.pcard__go');
+  var out = stage.querySelector('.oc2__out span');
+  if (!card || !sel || !go || !out) return;
 
-  function paint() {
-    el.dataset.beat = BEATS[i];
-    dots.forEach(function (d, n) { d.classList.toggle('is-on', n === i); });
+  var DURATIONS = ['This time only', '1 hour', '24 hours', 'Always'];
+  var at = 1;
+
+  /* The select is a real control, so it has to behave like one for a keyboard
+     as well: the product's is a <select>, and a div that only answers the
+     mouse would be a picture of a control (RULES F35). */
+  function relabel() {
+    sel.firstChild.nodeValue = DURATIONS[at];
+    sel.setAttribute('aria-label', 'Permission duration: ' + DURATIONS[at]);
   }
-  function stop() { if (timer) { clearTimeout(timer); timer = null; } }
-  function tick() {
-    stop();
-    if (parked || !seen || document.hidden) return;
-    timer = setTimeout(function () { i = (i + 1) % BEATS.length; paint(); tick(); }, HOLD[i]);
+  function cycle() {
+    if (card.dataset.state === 'saved') return;
+    at = (at + 1) % DURATIONS.length;
+    relabel();
+  }
+  function confirm() {
+    if (card.dataset.state === 'saved') return;
+    /* the card carries both states in its markup and CSS shows one — see
+       pcard(). Replacing the controls with innerHTML orphaned the listeners
+       bound to them, and "Ask again" came back dead. */
+    card.dataset.state = 'saved';
+    out.textContent = at === 3
+      ? 'Granted by Maya · until she revokes it'
+      : (at === 0 ? 'Granted by Maya · this run only'
+                  : 'Granted by Maya · expires in ' + DURATIONS[at]);
+    stage.dataset.done = '1';
+    reset.hidden = false;
   }
 
-  dots.forEach(function (d) {
-    d.addEventListener('click', function () {
-      parked = true; stop();
-      i = Number(d.dataset.go) || 0; paint();
+  [sel, go].forEach(function (el) {
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
     });
   });
+  sel.addEventListener('click', cycle);
+  go.addEventListener('click', confirm);
 
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) stop(); else tick();
+  /* A one-way demo is spent the moment the first reader touches it, and four
+     people look at a review page. Putting it back is part of the mechanic. */
+  var reset = document.createElement('button');
+  reset.type = 'button';
+  reset.className = 'oc2__again';
+  reset.textContent = 'Ask again';
+  reset.hidden = true;
+  reset.addEventListener('click', function () {
+    card.dataset.state = 'ready';
+    stage.dataset.done = '';
+    reset.hidden = true;
+    at = 1; relabel();
+    sel.focus();
   });
+  stage.appendChild(reset);
 
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      seen = entries[0].isIntersecting;
-      if (seen) tick(); else stop();
-    }, { threshold: 0.25 }).observe(el);
-  } else { seen = true; }
-
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    parked = true;
-  }
-  paint();
-  tick();
+  relabel();
 })();

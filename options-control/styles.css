@@ -20,7 +20,7 @@ body{
   margin:0;
   background:var(--paper);
   color:var(--ink);
-  font-family:Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:var(--fd);
   font-size:16px;
   line-height:1.5;
   -webkit-font-smoothing:antialiased;
@@ -53,13 +53,13 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .btn,.nav__signin,.nav__burger{ border-radius:var(--r-btn); }
 
 /* left square on purpose: rules, dividers, underlined links and the
-   bare eyebrow are not surfaces, so a radius would only blur them */.nav__logo,.nav__links,.nav__auth,.metrics li{ border-radius:0; }
+   bare eyebrow are not surfaces, so a radius would only blur them */.nav__logo,.nav__links,.nav__auth{ border-radius:0; }
    /* .state's radius belongs to the design layer */.quote__av{ border-radius:50%; }
 
 
 /* ─────────────── display type ─────────────── */
 .display{
-  font-family:Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:var(--fd);
   font-weight:700;
   font-size:clamp(38px, 6.4vw, 96px);
   line-height:.92;
@@ -93,8 +93,8 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 
 
-/* ─────────────── monospace metadata ─────────────── */.metrics span,.footnote,.footer__copy{
-  font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+/* ─────────────── monospace metadata ─────────────── */.footer__copy{
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
 }
 
 
@@ -117,12 +117,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   box-shadow:none;
 }
 
-.nav__logo img{ width:17px; height:17px; }
-
-.nav__logo span{
-  font-weight:700; font-size:15px; letter-spacing:.20em;
-}
-
 .nav__links{
   display:flex; align-items:stretch;
   background:transparent; border:0; padding:0; box-shadow:none;
@@ -132,7 +126,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .nav__links a{
   display:flex; align-items:center;
   padding:0 18px; border-radius:0;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
   color:var(--ink-soft);
   transition:color var(--t-hover), background var(--t-hover);
@@ -149,7 +143,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .nav__signin{
   padding:0; border-radius:0;
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
 }
 
@@ -162,7 +156,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   border:1px solid var(--ink);
-  font-family:"IBM Plex Mono", ui-monospace, monospace;
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:11.5px; font-weight:500;
   letter-spacing:.08em; text-transform:uppercase;
   cursor:pointer;
@@ -238,13 +232,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .inline-ic{ font-size:.74em; vertical-align:.04em; }
 
-
-.footnote{
-  margin-top:16px; text-align:left;
-  font-size:11px; letter-spacing:.05em; text-transform:uppercase;
-  color:var(--ink-mute);
-}
-
 .note{
   max-width:60ch; margin:clamp(44px,5vw,68px) 0 0;
   padding-top:22px; border-top:1px solid var(--hairline);
@@ -254,36 +241,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .side__list li.is-active{
   color:var(--ink); font-weight:600;
   border-bottom-color:var(--ink);
-}
-
-
-/* ─────────────── metrics: a ruled data row ─────────────── */
-.metrics{
-  display:grid; grid-template-columns:repeat(3, 1fr);
-  gap:0;
-  margin-top:clamp(52px,5.5vw,76px);
-  border:1px solid var(--hairline);
-  border-radius:var(--r-card);
-  overflow:hidden;
-}
-
-.metrics li{
-  text-align:left; padding:26px 28px;
-  border-right:1px solid var(--hairline);
-}
-
-.metrics li:last-child{ border-right:0; }
-
-.metrics b{
-  display:block;
-  font-weight:700; font-size:clamp(34px,4.6vw,62px);
-  line-height:1; letter-spacing:-.045em;
-}
-
-.metrics span{
-  display:block; margin-top:12px;
-  font-size:10.5px; letter-spacing:.10em; text-transform:uppercase;
-  color:var(--ink-mute);
 }
 
 @keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
@@ -367,18 +324,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 .reveal.is-in{ opacity:1; transform:none; }
-
-
-/* ─────────────── responsive ─────────────── */
-@media (max-width:1080px){
-  
-  .metrics{ grid-template-columns:1fr; }
-
-  .metrics li{ border-right:0; border-bottom:1px solid var(--hairline); }
-
-  .metrics li:last-child{ border-bottom:0; }
-
-}
 
 
 @media (max-width:860px){
@@ -543,7 +488,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .pgrant__act code{
   flex:none; white-space:nowrap;
-  font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:12px;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:12px;
   padding:2px 6px;
   border:1px solid var(--hairline); border-radius:4px;
   background:var(--tile); color:var(--ink-soft);
@@ -663,7 +608,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   border-radius:var(--r-card);
   overflow:hidden;
   background:#fff;
-  font-family:system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family:var(--fb);   /* was system-ui, Slack's own UI stack */
   color:#1D1C1D;
   min-height:430px;
   box-shadow:0 2px 6px rgba(0,0,0,.05), 0 22px 52px -24px rgba(0,0,0,.28);
@@ -868,6 +813,31 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 }
 
 
+/* ==== FONTS: generated by tools/build-fonts.py — do not edit ==== */
+@font-face{
+  font-family:"Roobert TRIAL";
+  src:url(assets/fonts/roobert-var.woff2?v=59e88b43) format("woff2-variations"),
+      url(assets/fonts/roobert-var.woff2?v=59e88b43) format("woff2");
+  font-weight:300 900;
+  font-style:normal;
+  font-display:swap;
+}
+
+@font-face{
+  font-family:"Roobert TRIAL Mono";
+  src:url(assets/fonts/roobert-var.woff2?v=59e88b43) format("woff2-variations"),
+      url(assets/fonts/roobert-var.woff2?v=59e88b43) format("woff2");
+  font-weight:300 900;
+  font-style:normal;
+  font-display:swap;
+  /* the SAME file — one download. Roobert carries its own
+     monospace on a variation axis, so the utility register is
+     this typeface rather than a second one. */
+  font-variation-settings:"MONO" 100;
+}
+
+/* ==== end fonts ==== */
+
 /* ================================================================
    OKOU — the authoritative design layer. Everything above this banner is
    component-internal CSS (product mocks, Slack, permissions,
@@ -1027,9 +997,16 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   );
   --pad:    var(--edge);
   --gutter: clamp(18px, 2vw, 30px);
-  --nav-h:  62px;                            /* 38px control + 2 × --nav-pad */
+  --nav-h:  68px;                            /* 38px control + 2 × --nav-pad */
   --nav-top:12px;
-  --nav-h-stuck:54px;                        /* the header once you scroll  */
+  --nav-h-stuck:58px;                        /* the header once you scroll  */
+  /* THE HEADER'S OWN INSET, AND IT IS A NUMBER. It used to be derived from
+     the measure — `max(--nav-pad, --edge - --card-gap)` — so the distance
+     from the wordmark to the window edge changed at every width and was
+     ~250px at 2560. A frame's inset is a constant; the thing that tracks
+     the measure is the content, and once the floating bar shrinks to its
+     own content (see .nav.is-stuck) it tracks it by construction. */
+  --nav-pad-x:28px;
   /* anything that measures itself against the header while the page is
      scrolled must use the STUCK height — the header is never its resting
      size at the moment a pinned section is on screen */
@@ -1063,13 +1040,63 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --e-1: 0 1px 2px rgba(12,15,18,.03), 0 14px 30px -24px rgba(12,15,18,.2);
   --e-2: 0 1px 2px rgba(12,15,18,.04), 0 22px 54px -40px rgba(12,15,18,.26);
   --e-3: 0 2px 8px rgba(12,15,18,.05), 0 34px 64px -34px rgba(12,15,18,.3);
+  /* FIGURES GET THEIR OWN PAIR, and it is lighter than what the figures
+     had grown. Tong: *"是不是阴影太重了？那整体把这些配图的阴影都减一减"* — the
+     second layer had drifted from .24 to .5 across eight surfaces, each one
+     picked next to the last rather than against a scale, and the heaviest
+     of them was twice `--e-2`. Two roles, stated once:
+       --e-fig   a card resting on a ground
+       --e-lift  a card floating in front of another card
+     Both are channel-based so they follow `--ink` and the theme (C8).
+
+     Each carries a HAIRLINE as its first layer. Tong: *"两个frame糊在一起了，
+     就是可以加一个非常浅的 stroke"* — with the shadows lightened, two white
+     cards that overlap have nothing between them, and the ask card's corner
+     dissolved into the shortlist card's. A 0.5px ring is not a structural
+     line (S4): it is the edge of a surface, it costs no layout, and it is
+     what the product's own `--zero-card-shadow` already does. It reads only
+     where two surfaces meet. */
+  --e-fig:  0 0 0 .5px rgb(var(--ink-rgb) / .07),
+            0 1px 2px rgb(var(--ink-rgb) / .04),
+            0 14px 28px -22px rgb(var(--ink-rgb) / .20);
+  --e-lift: 0 0 0 .5px rgb(var(--ink-rgb) / .08),
+            0 1px 3px rgb(var(--ink-rgb) / .05),
+            0 20px 40px -26px rgb(var(--ink-rgb) / .26);
   --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
   /* the header has no elevation token — it separates by tone (RULES S3) */
 
-  /* type roles */
-  --fd: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --fb: "Instrument Sans", Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --fm: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* ── TYPE ROLES — one typeface, three registers ──────────────────
+     The page was three families: Archivo for headlines, Instrument Sans
+     for prose, IBM Plex Mono for anything that behaves like data. It is
+     now Roobert TRIAL for all three.
+
+     THE TOKENS STAY, even though all three now resolve to the same stack.
+     They are the three REGISTERS, not three fonts: ~700 declarations name
+     one of them, and collapsing them to a single token would delete the
+     only record of which text is a headline, which is prose and which is
+     an instrument reading. The register is now carried by size, weight and
+     tracking instead of by family — see `--fm` below.
+
+     The fallbacks are the system UI face, not the families they replaced:
+     keeping Archivo in the stack would mean loading a second webfont to
+     be a fallback for the first. */
+  --fd: "Roobert TRIAL", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --fb: "Roobert TRIAL", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* THE UTILITY REGISTER IS STILL MONOSPACED, and it is still Roobert.
+     The supplied variable font carries a `MONO` axis (0–100) — the foundry
+     ships a monospace of the same design — so `--fm` is not a second
+     typeface and not a proportional face pretending to be data. It is the
+     same file at `MONO:100`, declared as a second family in the generated
+     `@font-face` block above, which means one download for both.
+
+     That matters beyond taste: `09:12`, `17s`, `4.2×`, `1,204`, the run
+     durations and every uppercase label were aligned by a fixed advance,
+     and a proportional substitute loses the column. `tabular-nums` stays
+     alongside it — the axis fixes the advance, the feature fixes which
+     figures are drawn, and the two are not the same switch.
+     `ui-monospace` remains at the end of the stack: if the webfont fails,
+     utility text should still not be mistaken for prose. */
+  --fm: "Roobert TRIAL Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* ── THE TYPE SCALE, and the rule behind it ──────────────────────
      It has TWO regions, because one ratio cannot serve both ends.
@@ -1311,7 +1338,7 @@ img{ filter:none; }
 
 
 /* every page-level rule inherited from the component layer comes off:
-   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.footnote,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.metrics,.metrics li,.step,.nav,.panel{
+   this page separates with grounds, space and shadow, never with a line */.hero__body,.section-body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy,.step,.nav,.panel{
   border:0;
 }
 .hero__body,.note,.quote figcaption,.footer__disclaimer,.footer__links,.footer__copy{ padding-top:0; }
@@ -1351,8 +1378,8 @@ h3{ font-family:var(--fd); }
    string is metadata and not prose */
 /* .metrics span is NOT here: a stat tile's label is the first line you read
    in that tile, and uppercase mono above a 54px numeral competes with it for
-   the top of the box instead of introducing it. It is set as prose. */.footnote,.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
-  font-family:var(--fm);
+   the top of the box instead of introducing it. It is set as prose. */.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-weight:500;
   text-transform:uppercase;
   letter-spacing:.075em;
@@ -1373,19 +1400,6 @@ h3{ font-family:var(--fd); }
   max-width:64ch;
   margin:clamp(40px,4.5vw,64px) 0 0;
   font-size:var(--t-sm);
-  color:var(--ink-mute);
-}
-
-/* A caveat under a KPI row must not be dressed as a fourth label. In the
-   utility face, uppercase and letter-spaced it read as another stat; in prose
-   at caption size it reads as what it is — a note about the numbers above.
-   (dataviz: the stat-tile contract is label + value, and nothing else in the
-   row may borrow the label's clothes.) */
-.footnote{
-  margin-top:clamp(18px, 2vw, 26px);
-  font-family:var(--fb);
-  font-size:var(--t-meta);
-  letter-spacing:0; text-transform:none;
   color:var(--ink-mute);
 }
 
@@ -1463,6 +1477,13 @@ h3{ font-family:var(--fd); }
   --nav-ink-hi:var(--ink);
   --nav-accent:var(--accent-wash);
   --nav-chip:var(--wash-2);
+  /* Sign in is the one control in here with no ground of its own. On the
+     stuck bar's --wash-2 a --wash-2 fill is invisible, which is why it has
+     been plain text — and plain text next to a filled button does not read
+     as the second half of a pair. A hairline is the exception S3 does not
+     make, so it is written down here: an inset ring at 14% ink, one token,
+     no layout, and it swaps with the ground like everything else in here. */
+  --nav-stroke:rgb(var(--ink-rgb) / .14);
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -1470,7 +1491,12 @@ h3{ font-family:var(--fd); }
   grid-template-rows:minmax(0,1fr);  /* M5 */
   grid-template-columns:1fr auto 1fr;
   align-items:center;
-  gap:16px;
+  /* At rest this only trims the two 1fr columns and is invisible. Once the
+     bar shrinks to its content it becomes the ONLY space between the three
+     groups, and at 16 the mark, the links and the buttons read as one dense
+     run. It is the spacing of the floating state, set where the floating
+     state can inherit it. */
+  gap:clamp(18px, 2.2vw, 32px);
   margin:0;
   /* THE HEADER OBEYS THE MEASURE — but sits one --card-gap OUTSIDE it.
      Left to --nav-pad the header was the only thing on the page ignoring the
@@ -1485,7 +1511,7 @@ h3{ font-family:var(--fd); }
      exactly one --card-gap outside the section column at every width.
      Bounded, related, and deliberately not flush. */
   padding-block:0;
-  padding-inline:max(var(--nav-pad), calc(var(--edge) - var(--card-gap)));
+  padding-inline:var(--nav-pad-x);
   background:var(--nav-ground);
   color:var(--nav-ink);
   border:0; border-radius:0;
@@ -1508,16 +1534,25 @@ h3{ font-family:var(--fd); }
    corner. The old --r-nav derived the corner from the CONTROL inside plus
    its padding, which at 22px made a 54px bar read as a lozenge; the header
    is the width of a card, so it is a card. */
+/* IT SHRINKS TO WHAT IT IS CARRYING. Inset to the section cards' width it
+   was a second full-width band with a lot of air in the middle of it; the
+   pull-in read as "the page moved" but not as "this is now an object". Now
+   it goes to exactly the width of its own content and centres — so the
+   ground stops being a bar and becomes a thing.
+
+   --nav-w-stuck is measured in app.js off the three groups inside, and it is
+   an inset on BOTH sides rather than a width, because `left` and `right`
+   interpolate and `width:auto → fit-content` does not — the pull-in has to
+   stay a transition, not a jump. The `max()` is the floor: on a window
+   narrower than the content the bar stops at the page gutter instead of
+   growing past the screen. */
 .nav.is-stuck{
   --nav-ground:var(--nav-fill);
   top:var(--nav-top);
-  left:var(--card-gap); right:var(--card-gap);
+  left:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
+  right:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
   height:var(--nav-h-stuck);
   border-radius:var(--r-section);
-  /* The bar has just pulled in by --card-gap, so its padding gives the same
-     amount back and the CONTENT does not move between the two states. Only
-     the ground travels — which is the whole point of the transition. */
-  padding-inline:max(var(--nav-pad), calc(var(--edge) - 2 * var(--card-gap)));
 }
 
 
@@ -1541,6 +1576,7 @@ h3{ font-family:var(--fd); }
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
   --nav-chip:rgb(var(--paper-rgb) / .1);
+  --nav-stroke:rgb(var(--paper-rgb) / .18);
 }
 
 .nav.is-dark.is-stuck{ --nav-ground:var(--nav-fill-dark); }
@@ -1554,16 +1590,57 @@ h3{ font-family:var(--fd); }
   transition:color var(--t-state) var(--e-out);
 }
 
-.nav__logo img{
-  width:20px; height:20px;
+/* ── the mark, and the four shapes it opens with ────────────────────
+   The logotype is OKOU: a scalloped O, a K, a ring O and a U. The page
+   opens showing all four and then gathers the last three in behind the
+   first, which is the standalone mark.
+
+   THE BOX IS THE FINISHED STATE. The `viewBox` is `0 0 138 140` — the first
+   glyph alone — and the other three live outside it, drawn only because
+   `overflow` is visible. So the header is laid out for the mark from the
+   very first frame: nothing reflows when the three leave, and the nav's
+   centred links never move. The alternative, animating the element's width,
+   is a layout property on a timer (N1) and would reflow the bar every frame
+   for the whole of the gather.
+
+   `opacity` here is deliberate and allowed. N3 forbids fading TEXT on a
+   LOOP — "once per load is an artifact; every twelve seconds forever is a
+   defect" — and this is four graphic paths inside an `aria-hidden` svg,
+   playing once. The link carries its own name in `aria-label`. */
+.wm{
+  height:26px; width:auto;
+  overflow:visible;                 /* the three that start outside the box */
+  color:var(--nav-ink-hi);
   transition:transform var(--t-state) var(--e-spring);
 }
 
-.nav__logo:hover img{ transform:rotate(-12deg) scale(1.08); }
+.wm__g{ fill:currentColor; }
 
-.nav__logo span{
-  font-family:var(--fd); font-weight:600;
-  font-size:var(--t-wordmark); letter-spacing:.22em;
+.nav__logo:hover .wm{ transform:rotate(-8deg) scale(1.06); }
+
+
+/* RESTING IS THE GATHERED MARK (N2). No JS, no `.is-intro`, reduced motion
+   and a slow connection all show the finished logo rather than a wordmark
+   that never resolves. `--tuck` is each glyph's own distance home, in the
+   svg's user units, so the three land exactly on the first. */
+.wm__g[style]{
+  opacity:0;
+  transform:translateX(calc(var(--tuck) * 1px));
+}
+
+/* armed one painted frame after the intro state, so the opening frame is a
+   state and not an animation played backwards (N12) */
+.wm.is-armed .wm__g[style]{
+  transition:opacity 380ms var(--e-out),
+             transform 620ms var(--e-out);
+  transition-delay:var(--gd, 0ms);
+}
+
+.wm.is-intro .wm__g[style]{ opacity:1; transform:none; }
+
+@media (prefers-reduced-motion:reduce){
+  .wm.is-armed .wm__g[style]{ transition:none; }
+
 }
 
 .nav__links{
@@ -1583,6 +1660,10 @@ h3{ font-family:var(--fd); }
 
 .nav__links a:hover{ color:var(--nav-ink-hi); background:transparent; }
 
+/* a control's label never wraps. The bar is sized to its content now, so a
+   label that can break makes the measurement and the render disagree. */
+.nav__links a,.nav__signin,.nav__auth .btn{ white-space:nowrap; }
+
 .nav__auth{
   justify-self:end;
   display:flex; align-items:center; gap:6px;
@@ -1594,10 +1675,18 @@ h3{ font-family:var(--fd); }
   height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
   color:var(--nav-ink);
-  transition:color var(--t-hover) var(--e-snap), background var(--t-hover) var(--e-snap);
+  /* an INSET ring, not a border: a border would add 2px to a control whose
+     height has to match the one beside it to the pixel */
+  box-shadow:inset 0 0 0 1px var(--nav-stroke);
+  transition:color var(--t-hover) var(--e-snap),
+             box-shadow var(--t-hover) var(--e-snap),
+             background var(--t-hover) var(--e-snap);
 }
 
-.nav__signin:hover{ color:var(--nav-ink-hi); background:transparent; }
+.nav__signin:hover{
+  color:var(--nav-ink-hi); background:transparent;
+  box-shadow:inset 0 0 0 1px var(--nav-ink-hi);
+}
 
 
 /* ── the theme control ──────────────────────────────────────────────
@@ -1826,7 +1915,7 @@ h3{ font-family:var(--fd); }
 
 
 /* wide figures span the ledger too */
-/* figures, data and card grids reach across all twelve columns */.scenes,.reach,.ladder,.metrics,.versus,.proof,.showcase{
+/* figures, data and card grids reach across all twelve columns */.scenes,.reach,.ladder,.versus,.proof,.showcase{
   grid-column:1 / 13;
 }
 
@@ -2394,7 +2483,7 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-btn);
   background:var(--wash-2);
   padding:9px calc(16px - .075em) 11px 16px;
-  font-family:var(--fm);
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:var(--t-mono); letter-spacing:.075em; text-transform:uppercase;
   color:var(--ink-soft); cursor:pointer;
   transition:color var(--t-hover) var(--e-snap),
@@ -2459,32 +2548,6 @@ h3{ font-family:var(--fd); }
   gap:clamp(14px,1.5vw,22px);
   align-items:center;
   position:static; padding:0;
-}
-
-
-/* ─────────────── 11. metrics: one ruled data row ─────────────── */
-/* Three figures spread across a 1300px card stop reading as one group —
-   they become three unrelated statements. The row keeps its own measure so
-   the eye takes them together. (dataviz: a KPI row is a row.) */
-.metrics{
-  display:grid; grid-template-columns:repeat(3, 1fr);
-  gap:clamp(20px, 3vw, 52px);
-  max-width:760px; margin-inline:auto;
-  margin-top:clamp(48px,5vw,72px);
-  border:0; border-radius:0; overflow:visible;
-  background:transparent;
-}
-
-.metrics li{ padding:0; border:0; background:transparent; }
-
-.metrics b{ font-weight:500;
-  font-size:var(--t-d2); line-height:1;
-  letter-spacing:-.045em;
-  font-variant-numeric:tabular-nums;
-}
-
-.metrics span{
-  display:block; margin-top:12px;
 }
 
 
@@ -2688,8 +2751,6 @@ h3{ font-family:var(--fd); }
   --wf-body-lh:1.55;                        /* the page's own leading for prose;
                                                1.21 is a title's leading, and on
                                                a four-line paragraph it crowds  */
-  --wf-foot:var(--t-sm);
-  --wf-foot-lh:1.5;
   --wf-media-r:clamp(16px, 1.5vw, 22px);    /* 16                                 */
 
   /* the mat. The reference fills its box with the picture, so its ground never
@@ -2720,7 +2781,7 @@ h3{ font-family:var(--fd); }
   position:relative;
   margin-top:clamp(40px, 4.4vw, 68px);
   height:calc(var(--wf-h) + (var(--wf-steps) - 1) * var(--wf-travel));
-  font-family:Inter, var(--fb);
+  font-family:var(--fb);   /* was Inter, from the supplied reference */
 }
 
 
@@ -2732,27 +2793,67 @@ h3{ font-family:var(--fd); }
      a 495 box — a transient, but it is the same shape as the fault that put
      seven Outputs tabs at three different heights. Inert at 700/800/900/1100
      and it removes the disagreement. */
-  grid-template-rows:minmax(0,1fr);
+  /* Two rows: the ladder's lede, then the steps. The stage spans both. */
+  grid-template-rows:auto minmax(0,1fr);
   grid-template-columns:minmax(0,286fr) minmax(0,649fr);
-  gap:var(--wf-gap);
+  gap:0 var(--wf-gap);
   align-items:stretch;
 }
+
+.ladder__lede{ grid-area:1 / 1; }
 
 /* the media comes first in the source so that when the section unwinds at
    narrow widths it can sit on top and stay sticky over the list; on the wide
    layout the two are placed explicitly, left and right */
 .ladder__col{
-  grid-area:1 / 1;
-  display:flex; flex-direction:column; min-width:0;
+  grid-area:2 / 1;
+  /* Tong: *"上边的title stick top和下边的定位stick bottom"*. The lede holds the
+     frame's top row; the ladder hangs from the bottom of the second, so the
+     column's slack sits BETWEEN the two rather than dumped under the last
+     step — 125px of it at steps 1-3 and 178 at step 4. */
+  display:flex; flex-direction:column; justify-content:flex-end;
+  min-width:0;
 }
 
-.ladder__stage{ grid-area:1 / 2; min-width:0; }
+.ladder__stage{ grid-area:1 / 2 / span 2; min-width:0; }
 
 /* No gap between rows: every bit of air belongs to a row, so the rule under a
    row is that row's OWN bottom edge and travels with it. With the air sitting
    between two rows instead, the rule stayed 29px away from where the paragraph
    was being cut, and the text appeared out of empty space rather than from
    behind the line. */
+/* ── the ladder's own lede ──────────────────────────────────────────
+   Tong: *"把我图一标记的这段文字去掉，然后放到图二的位置 … 你可以用 Primary 橙色
+   去标记里边的词。跟其他 section 的风格保持一致"*.
+
+   It reads as the other sections' headlines do — Archivo at display scale
+   with one accent phrase — but at the COLUMN's scale rather than the page's,
+   because it introduces the four steps beside it and not the section. Set as
+   a `<p>`: it is a lede, and making it an `<h3>` would sit at the same level
+   as the four step headings it introduces.
+
+   `--accent-solid`, not `--accent`. C1 gives display marks the brand orange,
+   but this one clamps down to 23px, and 23px regular is BELOW the large-text
+   threshold where #ED4E01's 3.4:1 stops being enough. --accent-solid is 4.5:1
+   on paper at any size, and at this scale the two are indistinguishable. */
+.ladder__lede{
+  margin:0 0 clamp(26px, 3.4vw, 48px);
+  font-family:var(--fd); font-weight:500;
+  font-size:var(--t-d3); line-height:1.18;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  text-wrap:balance;
+}
+
+/* orange from the resting frame, not on `.is-lit`: the mark's colour is the
+   point of the sentence, and it must not wait for JS (N2) */
+.ladder__lede .mark,
+.ladder__lede .mark.is-lit{
+  background-image:none;
+  color:var(--accent-solid);
+}
+
+
 .ladder__steps{
   display:flex; flex-direction:column;
   gap:0;
@@ -2920,25 +3021,6 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* the two closing paragraphs sit at the foot of the column (SPACE_BETWEEN in
-   the reference), beside the figure they describe */
-.ladder__foot{
-  margin-top:auto;
-  padding-top:clamp(22px, 2.6vw, 40px);
-  display:flex; flex-direction:column;
-  gap:var(--wf-row-gap);
-}
-
-.ladder__foot > p{
-  margin:0;
-  text-align:left;
-  font-family:inherit;
-  font-size:var(--wf-foot); line-height:var(--wf-foot-lh);
-  font-weight:var(--wf-title-wt);
-  color:var(--wf-title-ink-on);
-}
-
-
 /* the media: one fixed-height rounded box with a ground of its own, so the
    section never resizes when the step changes */
 .ladder__frame{
@@ -2998,7 +3080,7 @@ h3{ font-family:var(--fd); }
 
 .par__you{
   display:inline-flex; align-items:center; gap:.45em;
-  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.08em;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono); letter-spacing:.08em;
   text-transform:uppercase; color:var(--ink-mute);
 }
 
@@ -3020,7 +3102,7 @@ h3{ font-family:var(--fd); }
 .par__state{
   align-self:center;
   display:flex; align-items:center; gap:.55em;
-  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.09em;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono); letter-spacing:.09em;
   text-transform:uppercase; color:var(--ink-mute);
 }
 
@@ -3046,8 +3128,7 @@ h3{ font-family:var(--fd); }
   padding:clamp(12px,1.3vw,18px);
   border-radius:var(--r-card);
   background:var(--paper);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .07),
-             0 18px 34px -22px rgb(var(--ink-rgb) / .38);
+  box-shadow:var(--e-fig);
   /* they arrive together, not in a queue — a stagger here would be the
      one thing the figure exists to deny */
   opacity:0; transform:translateY(12px);
@@ -3074,14 +3155,14 @@ h3{ font-family:var(--fd); }
    once. No numbering: a `01 /` on each would read as filing, not sequence. */
 .par__seq{
   margin:0 0 .5em;
-  font-family:var(--fm); font-size:var(--t-meta); font-weight:400;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-meta); font-weight:400;
   letter-spacing:.08em; text-transform:uppercase;
   color:var(--ink-mute);
 }
 
 .par__el{
-  font-style:normal; font-family:var(--fm); font-size:var(--t-mono);
-  color:var(--ink-mute); font-variant-numeric:tabular-nums;
+  font-style:normal; font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono);
+  color:var(--ink-mute);
 }
 
 .par__do{ font-size:var(--t-meta); color:var(--ink-soft); }
@@ -3264,6 +3345,15 @@ h3{ font-family:var(--fd); }
 .wfo{
   --wfo-pad:1em;
   position:absolute;
+  /* The page has no blanket element reset — every figure zeroes its own
+     margin. `.wfo--ask` is the only <figure> in this scene, so it alone kept
+     the UA default `margin:1em 40px`, and margin on an absolutely positioned
+     box is added AFTER the inset: the ask rendered 40px right and 1em below
+     the `left:12cqw; top:19cqh` it was authored at, which is exactly the
+     amount by which it lapped the run card's header. Declared here, on the
+     family, so the next object added to the scene cannot inherit the same
+     surprise from whichever tag it happens to use. */
+  margin:0;
   opacity:0; pointer-events:none;
   transition:opacity var(--t-state) var(--e-out),
              transform var(--t-reveal) var(--e-out),
@@ -3279,8 +3369,7 @@ h3{ font-family:var(--fd); }
 .wfo--ask,.wfo--run,.wfo--list{
   background:var(--paper); color:var(--ink);
   border-radius:var(--r-card);
-  box-shadow:0 2px 6px rgb(var(--ink-rgb) / .09),
-             0 30px 56px -26px rgb(var(--ink-rgb) / .46);
+  box-shadow:var(--e-fig);
 }
 
 
@@ -3293,12 +3382,15 @@ h3{ font-family:var(--fd); }
   /* It takes the ask's exact box, and it lands ON TOP: the newest thing in
      the picture cannot be under the card that produced it. A 1cqh graze
      against the card's top edge was the worst of both — either lap or
-     clear (RULES F9). */
+     clear (RULES F9). The lap is the composition; I pulled the two apart
+     once on the theory that it was covering too much of the run card's
+     header, and it was not — what actually looked broken was this card's
+     missing shadow (see `--slk-bleed` below). Do not un-lap it again. */
   left:15cqw; top:19cqh; width:min(44cqw, 29rem); z-index:3;
   overflow:hidden;
   background:var(--slk-card);
   border-radius:var(--r-card);
-  box-shadow:0 2px 10px rgb(var(--ink-rgb) / .1), 0 26px 50px -26px rgb(var(--ink-rgb) / .42);
+  box-shadow:var(--e-lift);
   --slk-line:#E4E6E9;
   --slk-ink:#1D1C1D;
   --slk-mute:#616061;
@@ -3310,8 +3402,26 @@ h3{ font-family:var(--fd); }
      opacity, which is why two nodes here failed contrast on two runs in
      three while measuring 16:1 and 5.6:1 at rest. Entrances of text use
      clip-path (QA §1). */
+  /* THE CLIP HAS TO CONTAIN THE SHADOW. `inset()` resolves against the
+     BORDER box, and a box-shadow is painted outside it — so `inset(0)`,
+     which reads as "clip to nothing", deletes the drop shadow and leaves a
+     white card with four hard edges sitting on the mat. Every other surface
+     in the scene had one and this one did not, which is what "阴影被截断了"
+     was pointing at.
+
+     The bleed is read off the shadow rather than guessed. Sideways and up,
+     `0 2px 10px` reaches five pixels; down, `0 26px 50px -26px` reaches
+     26 − 26 + 25 = 25. Rounded up to 10 and 34 so a change to the shadow
+     does not silently start clipping it again. The closed state keeps the
+     same bleed on three sides and collapses to zero height AT THE TOP EDGE,
+     so the wipe still starts from nothing. */
+  --slk-bleed:10px;
+  --slk-drop:34px;
   opacity:1;
-  clip-path:inset(0 0 100% 0);
+  clip-path:inset(calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed))
+                  calc(100% + var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed)));
   transform:translate(-2cqw, 3cqh) scale(.94);
   transition:clip-path var(--t-reveal) var(--e-out),
              transform var(--t-reveal) var(--e-out);
@@ -3327,11 +3437,20 @@ h3{ font-family:var(--fd); }
    out of the way in the same beat */
 .wfsc[data-step="1"] .wfo--run.is-delivered ~ .wfo--post,
 .wfsc[data-step="1"] .wfo--post.is-in{
-  clip-path:inset(0); transform:none;
+  clip-path:inset(calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-drop))
+                  calc(-1 * var(--slk-bleed)));
+  transform:none;
 }
 
 /* it belongs to beat 1 only; the other three states clip it away outright */
-.wfsc:not([data-step="1"]) .wfo--post{ clip-path:inset(0 0 100% 0); }
+.wfsc:not([data-step="1"]) .wfo--post{
+  clip-path:inset(calc(-1 * var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed))
+                  calc(100% + var(--slk-bleed))
+                  calc(-1 * var(--slk-bleed)));
+}
 
 .wfsc[data-step="1"] .wfo--ask.is-away{
   opacity:0; transform:translate(-4cqw, -6cqh) rotate(-1.1deg);
@@ -3350,7 +3469,7 @@ h3{ font-family:var(--fd); }
 .wfo--ask figcaption{
   display:flex; align-items:center; gap:.55em;
   margin-top:.85em; color:var(--ink-mute);
-  font-family:var(--fm); font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
 }
 
 .wfo--ask figcaption img{ border-radius:var(--r-pill); }
@@ -3442,7 +3561,7 @@ h3{ font-family:var(--fd); }
 
 .wfo__tag{
   grid-column:3; grid-row:1; font-style:normal; justify-self:end;
-  font-family:var(--fm); font-size:.68em; letter-spacing:.1em; text-transform:uppercase;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.1em; text-transform:uppercase;
   color:var(--ink-mute);
 }
 
@@ -3601,7 +3720,7 @@ h3{ font-family:var(--fd); }
   padding:.35em .75em; border-radius:var(--r-pill);
   transform:translateY(-50%);
   background:var(--wash-2); color:var(--ink-soft);
-  font-family:var(--fm); font-size:.68em; letter-spacing:.08em; text-transform:uppercase;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.08em; text-transform:uppercase;
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-spring);
 }
 
@@ -3719,7 +3838,7 @@ h3{ font-family:var(--fd); }
    beside the group instead. */
 .wfo__ran{
   flex:0 0 100%;
-  font-style:normal; font-family:var(--fm); font-size:.68em; letter-spacing:.08em;
+  font-style:normal; font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.08em;
   text-transform:uppercase; color:var(--ink-mute); white-space:nowrap;
 }
 
@@ -3766,7 +3885,7 @@ h3{ font-family:var(--fd); }
    same height regardless of how long the name is. */
 .wfo__sub{
   margin:0; padding:.7em var(--wfo-pad) .1em;
-  font-family:var(--fm); font-size:.68em; letter-spacing:.09em;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.09em;
   text-transform:uppercase; color:var(--ink-mute);
 }
 
@@ -3787,7 +3906,7 @@ h3{ font-family:var(--fd); }
 
 .wfo__row em{
   grid-column:2; justify-self:start; white-space:nowrap; font-style:normal;
-  font-family:var(--fm); font-size:.77em; letter-spacing:.07em; text-transform:uppercase;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.77em; letter-spacing:.07em; text-transform:uppercase;
   color:var(--ink-mute);
 }
 
@@ -3855,7 +3974,7 @@ h3{ font-family:var(--fd); }
 .ladder__frame .slackui{
   height:100%; min-height:0;
   border-radius:var(--r-card);
-  box-shadow:0 2px 10px rgb(var(--ink-rgb) / .12), 0 30px 60px -26px rgb(var(--ink-rgb) / .5);
+  box-shadow:var(--e-lift);
 }
 
 .ladder__frame .absui__body,
@@ -3960,10 +4079,26 @@ h3{ font-family:var(--fd); }
 }
 
 
-.vs--wide  { grid-column:span 7; }
+/* THREE, ON ONE LINE. Two of the four cards were arguing one axis twice —
+   "Codex helps one person with one coding task … your whole team can work
+   together" and "Claude Code lives on one engineer's machine … shared
+   capability" are the same sentence — so they merge, and three equal
+   columns fit the measure. The card itself is unchanged: same mock on top,
+   same lockup, same type. A comparison card without the product on it is a
+   claim without the receipt. */
+.versus--three .vs{ grid-column:span 4; }
 
+/* ONE height for the three windows. The old set had two rows and the rule
+   that shortened the second one still applies here — with everything on one
+   line it made the third card's mock 60px shallower than its neighbours and
+   left a hole under its paragraph. Inside a row the windows are the same
+   depth; that was already the rule, the row just changed shape. */
+.versus--three .vs__viz{ height:clamp(214px, 21vw, 276px); }
 
-.vs--narrow{ grid-column:span 5; }
+@media (max-width:900px){
+  .versus--three .vs{ grid-column:1 / -1; }
+
+}
 
 
 /* ── the comparison cards ────────────────────────────────────────────
@@ -4036,13 +4171,10 @@ h3{ font-family:var(--fd); }
 .vs__viz--artifact{ --vs-hue:var(--hue-product); }
 
 
-.vs__viz--shared  { --vs-hue:var(--hue-leadership); }
-
-
-/* second row sits shorter than the first — the height difference is
-   between rows, never inside one */
-.versus > :nth-child(n+3) .vs__viz{ height:clamp(178px, 17vw, 216px); }
-
+/* The "second row sits shorter" rule is gone with the second row: three
+   cards are one line. It also OUT-SPECIFIED the three-up override while
+   sitting later in the file, so the third window stayed 60px shallow and
+   left a hole under its paragraph — the exact shape audit.js §9 looks for. */
 
 
 /* ── the four devices ────────────────────────────────────────────────
@@ -4077,7 +4209,16 @@ h3{ font-family:var(--fd); }
    back by exactly one copy's width, onto a frame identical to the one it
    left. */
 .lanes{
-  display:flex; align-items:stretch; gap:14px;
+  /* START, not STRETCH. The lanes are meant to be taller than the band and
+     cropped by it — but stretch sized each card to the band instead, so the
+     card's white surface stopped exactly at the crop while its last row went
+     on for another 26px. In light that is invisible; in dark the row's ink
+     landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`.
+     At content height the surface reaches past the crop, so the row that is
+     cut is cut over the card it belongs to. Every lane holds the same eight
+     steps, so they are all the same height and the crop stays a straight
+     edge. */
+  display:flex; align-items:flex-start; gap:14px;
   width:max-content; height:100%;
   transform:translate3d(var(--pan,0px),0,0);
 }
@@ -4126,7 +4267,7 @@ h3{ font-family:var(--fd); }
    a row's meta — and it gives the name the whole left side */
 .lane__h span{
   margin-left:auto; padding-left:8px;
-  font-family:var(--fm); font-size:12px; letter-spacing:.02em;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:12px; letter-spacing:.02em;
   color:var(--p-mute); white-space:nowrap;
 }
 
@@ -4215,7 +4356,7 @@ h3{ font-family:var(--fd); }
    it is text (see the shutter note above). */
 .lane__s i{
   margin-left:auto; padding-left:12px;
-  font-family:var(--fm); font-style:normal; font-size:12px;
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-style:normal; font-size:12px;
   color:var(--p-mute); white-space:nowrap;
   transition:clip-path var(--t-state) var(--e-out);
 }
@@ -4319,7 +4460,7 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:center; gap:6px;
   flex:1; min-width:0; margin-left:6px; padding:3px 10px;
   border-radius:var(--r-pill); background:var(--p-card);
-  font-family:var(--fm); font-size:10px; color:var(--p-mute);
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:10px; color:var(--p-mute);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
@@ -4367,7 +4508,7 @@ h3{ font-family:var(--fd); }
 /* the label leads, the way a KPI is read aloud */
 .arti__s span{
   order:-1; flex:none;
-  font-family:var(--fm); font-size:10px; letter-spacing:.06em; color:var(--p-mute);
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:10px; letter-spacing:.06em; color:var(--p-mute);
 }
 
 
@@ -4408,7 +4549,11 @@ h3{ font-family:var(--fd); }
 
 .arti__dot{
   position:absolute; left:var(--x); top:var(--y);
-  width:8px; height:8px; margin:-4px 0 0 -4px;
+  /* centred with a transform, the way `.arti__val` beside it already is —
+     not with a negative margin half its own width. Both land the dot on the
+     point; only one of them survives a change to the dot's size, and only
+     one of them leaves `left`/`top` meaning what they say (audit §10). */
+  width:8px; height:8px; transform:translate(-50%, -50%);
   border-radius:50%; background:var(--p-run);
   box-shadow:0 0 0 2.5px var(--p-card);
 }
@@ -4483,144 +4628,7 @@ h3{ font-family:var(--fd); }
 
 .arti__step i{
   margin-left:10px; font-style:normal;
-  font-family:var(--fm); font-size:11px; color:var(--p-mute);
-}
-
-
-
-/* D — Claude Code: "Built for shared work, not one terminal."
-   The terminal recedes to a ground — still running, still the
-   alternative's own form — and the foreground is what the sentence is
-   actually about: a workflow with an author, a schedule, ten people
-   using it, and a strip of its past runs, the newest of which fires
-   while you watch.
-
-   AND IT IS DRAWN AS A TERMINAL. The old one was flat grey monospace on
-   a dark box with three dots: no window title, no prompt colour, no
-   difference between what a person typed and what the machine said back.
-   Nothing in it was a terminal except the background. Every tone below
-   belongs to the terminal's own world and is fenced in its own group, so
-   it is never mistaken for a page token and never used outside this
-   component — the same fence `--t-shell` already sat behind. A terminal
-   really is coloured; drawing it monochrome to protect the page's
-   palette is drawing something that is not a terminal. */
-.tsh{ position:relative; width:100%; height:100%; }
-
-
-.tsh__term{
-  --term-bg:#0E1317;
-  --term-bar:#171D23;
-  --term-rim:#2A333C;
-  --term-dim:#7C8792;      /* output           */
-  --term-cmd:#E9EEF3;      /* what was typed   */
-  --term-path:#6FB2C9;     /* the working dir  */
-  --term-file:#B9A66B;     /* a path in output */
-  --term-ok:#68B98A;       /* it worked        */
-  width:74%; height:calc(100% + 26px);
-  margin-left:calc(-1 * clamp(20px,2vw,26px) - 16px);
-  border-radius:0 var(--p-r-card) 0 0;
-  border:1px solid var(--term-rim); border-left:0;
-  overflow:hidden;
-  background:var(--term-bg);
-  font-family:var(--fm); font-size:12px; line-height:2;
-}
-
-
-/* a real title bar: dots at one end, the session's name in the middle */
-.tsh__bar{
-  position:relative; display:flex; align-items:center; gap:6px;
-  margin:0; padding:8px 12px 8px calc(clamp(20px,2vw,26px) + 28px);
-  background:var(--term-bar); border-bottom:1px solid var(--term-rim);
-}
-
-
-.tsh__bar i{ width:8px; height:8px; border-radius:50%; flex:none; }
-
-
-/* the one place the alternative's own colours belong. Monochrome dots
-   are a design-system reflex; no terminal on earth has them. */
-.tsh__d1{ background:#E05C4B; }
-
-
-.tsh__d2{ background:#D9A441; }
-
-
-.tsh__d3{ background:#4FA96C; }
-
-
-.tsh__title{
-  position:absolute; left:50%; transform:translateX(-50%);
-  font-size:10px; color:var(--term-dim); letter-spacing:.02em; white-space:nowrap;
-}
-
-
-.tsh__body{ padding:10px 14px 14px calc(clamp(20px,2vw,26px) + 30px); }
-
-
-.tsh__l{ margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--term-dim); }
-
-
-.tsh__p{ color:var(--term-path); }
-
-
-.tsh__d{ color:var(--term-rim); margin:0 6px 0 4px; }
-
-
-.tsh__c{ color:var(--term-cmd); }
-
-
-.tsh__ok{ display:inline-flex; width:12px; margin-right:7px; vertical-align:-1px; }
-
-
-.tsh__tick{ width:10px; height:10px; stroke:var(--term-ok); flex:none; }
-
-
-/* NOT bled to the right: `Mon 09:00` sits at this panel's right margin,
-   and a crop takes the schedule off a card whose whole point is that it
-   runs on one. */
-/* CENTRED, NOT TOP-ANCHORED. The band is `clamp(178px, 17vw, 216px)` and
-   this panel grew when the run-history strip came out and everything left
-   got bigger — at 1024 the band is 178 and a panel pinned 22px from the
-   top hung 7px out of the bottom of it. Centring makes the overflow
-   impossible at any band height, and it gives the terminal underneath
-   equal air above and below, which is what a ground should have. */
-.tsh__wf{
-  /* half the band's own top inset back off the centre: `.tsh` starts
-     below that padding, so centring inside it is not centring inside the
-     band — it left 28px above and 7 below at 1024. */
-  position:absolute; right:8px; width:60%;
-  top:calc(50% - clamp(20px,2vw,26px) / 2); transform:translateY(-50%);
-  padding:16px 18px 14px; border-radius:var(--p-r-card);
-  border:1px solid var(--p-border); background:var(--p-card);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .06),
-             0 18px 36px -18px rgb(var(--ink-rgb) / .38);
-  font-family:var(--fb); color:var(--p-fg);
-}
-
-
-.tsh__wfh{ display:flex; align-items:flex-start; gap:12px; margin:0 0 16px; }
-
-
-.tsh__av{ width:38px; height:38px; flex:none; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
-
-
-.tsh__wfh span{ flex:1; min-width:0; }
-
-
-.tsh__wfh b{ display:block; font-size:16px; font-weight:500; line-height:1.3; letter-spacing:-.01em; }
-
-
-.tsh__wfh em{
-  display:block; margin-top:3px; font-style:normal;
-  font-size:13px; color:var(--p-mute);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-
-
-.tsh__sched{
-  flex:none; font-style:normal; padding:4px 11px;
-  border-radius:var(--r-pill); background:var(--p-tint);
-  font-family:var(--fm); font-size:11px; color:var(--p-mute);
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:11px; color:var(--p-mute);
 }
 
 
@@ -4628,18 +4636,6 @@ h3{ font-family:var(--fd); }
    squashed transform on the base rule, no-JS and reduced motion got a row
    of two-pixel slivers instead of a run history (RULES N2). */
 .tsh.is-live .tsh__runs span:not(.is-on){ transform:scaleY(.14); }
-
-
-.tsh__faces{ display:flex; align-items:center; margin:0 0 2px; padding-left:50px; }
-
-
-.tsh__face{
-  width:28px; height:28px; border-radius:50%; object-fit:cover; object-position:top;
-  margin-right:-8px; box-shadow:0 0 0 2px var(--p-card);
-}
-
-
-.tsh__faces em{ margin-left:18px; font-style:normal; font-size:13px; color:var(--p-mute); }
 
 
 
@@ -4924,7 +4920,7 @@ h3{ font-family:var(--fd); }
 .vs__pair{
   display:flex; align-items:center; gap:9px;
   margin:0 0 12px;
-  font-family:var(--fm);
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:var(--t-mono); letter-spacing:.06em;
   color:var(--ink-mute);
 }
@@ -5389,7 +5385,7 @@ h3{ font-family:var(--fd); }
 
 .footer__col h3{
   margin:0 0 14px;
-  font-family:var(--fm); font-size:var(--t-mono);
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono);
   letter-spacing:.11em; text-transform:uppercase;
   color:var(--ink-mute);
 }
@@ -5452,6 +5448,16 @@ h3{ font-family:var(--fd); }
 .pref__btn:hover{ background:var(--wash-2); color:var(--ink); }
 
 .pref__btn svg,.pref__globe svg{ width:16px; height:16px; }
+
+/* THE WRAPPER, NOT THE SVG. An `<svg>` is inline by default, so a span that
+   holds one is a LINE BOX: 16px of glyph plus 5.6px of descender space below
+   it. `align-items:center` then centres that 21.6px box and the visible
+   globe rides 2.8px high — measured — while the label and the chevron, which
+   are flex items in their own right and have no line box, sit dead centre.
+   Fixed on the span rather than with `.pref__btn svg{display:block}`, which
+   is (0,1,1) and would out-specify `.pref__moon{display:none}` (0,1,0) and
+   show the sun and the moon at once. */
+.pref__globe{ display:inline-flex; align-items:center; }
 
 .pref__moon{ display:none; }
 
@@ -5694,11 +5700,7 @@ h3{ font-family:var(--fd); }
 
   .step.is-active:not(:last-child){ border-bottom-color:var(--wf-rule-ink); }
 
-  .step__body > p,.ladder__foot > p{ max-width:64ch; }
-
-  .step__body > p{ padding-top:8px; }
-
-  .ladder__foot{ margin-top:0; }
+  .step__body > p{ max-width:64ch; padding-top:8px; }
 
   .ladder__frame{ height:var(--wf-h); }
 
@@ -5723,9 +5725,14 @@ h3{ font-family:var(--fd); }
     --card-gap:12px;
     --pad-section:clamp(16px, 2.8vw, 24px);
     --nav-pad:8px;
-    --nav-h:56px;
-    --nav-h-stuck:50px;
+    --nav-pad-x:16px;
+    --nav-h:60px;
+    --nav-h-stuck:54px;
   }
+
+  /* narrow is a flex bar with a burger, so there is no content width to
+     shrink to — it keeps the gutter inset it always had */
+  .nav.is-stuck{ left:var(--card-gap); right:var(--card-gap); }
 
   .nav{
     display:flex; align-items:center; justify-content:space-between;
@@ -5795,30 +5802,12 @@ h3{ font-family:var(--fd); }
 
   .versus{ grid-template-columns:1fr; }
 
-  /* the spans have to go with the twelve columns. `span 7` inside a
-     one-column grid does not clamp — it generates six implicit columns
-     and the section runs off the page. */
-  .vs--wide,.vs--narrow{ grid-column:auto; }
-
-  .versus > :nth-child(n+3) .vs__viz{ height:clamp(196px,19vw,244px); }
-
   /* 76vw, not the 320px the wide layout uses: at 390 the band is 342
      wide, so a 320px lane leaves an eight-pixel sliver of the next one —
      the same non-peek the desktop width was fixed for. 76vw keeps a 68px
      peek at every phone size, and the track's arithmetic is measured
      rather than assumed, so it follows the narrower lane on its own. */
   .lane{ flex:0 0 min(320px,76vw); }
-
-  /* ONE COLUMN, NOT A NARROWER TWO. At 70% of a 342px band the workflow
-     panel has 97px for its title, so "Weekly team digest" broke over
-     three lines and pushed its own team off the bottom of the card. The
-     terminal becomes the full ground and the panel sits across it —
-     which is the same reading, with the two surfaces stacked instead of
-     side by side. */
-  .tsh__term{ width:calc(100% + clamp(20px,2vw,26px) + 16px); }
-
-
-  .tsh__wf{ width:96%; right:0; top:auto; bottom:6px; transform:none; }
 
   .scene.is-on{ grid-template-columns:1fr; }
 
@@ -5989,10 +5978,6 @@ h3{ font-family:var(--fd); }
    Slack". This lifts them to about 530. */
 .panel--cta{ padding-bottom:clamp(232px, 16.5vw, 276px); }
 
-.metrics{ text-align:center; }
-
-.metrics li{ display:flex; flex-direction:column; align-items:center; }
-
 .ladder__steps{ text-align:left; }
 
 
@@ -6034,18 +6019,6 @@ h3{ font-family:var(--fd); }
 
 .lead-in.is-swapping{ clip-path:inset(100% 0 -20% 0); transform:translateY(-.22em); }
 
-
-/* a paragraph that explains the figure above it, not more preamble */
-.figcap{
-  grid-column:1 / 13;
-  justify-self:center;
-  max-width:62ch;
-  margin:clamp(22px, 2.6vw, 34px) auto 0;
-  text-align:center;
-  font-size:var(--t-sm); line-height:1.6;
-  color:var(--ink-mute);
-}
-
 /* Every tab's version of this lands in exactly two lines, and the block
    reserves two — so switching tab never moves the strip underneath it.
    The longest phrase ("Okou rebuilds Dana's board deck.") is what the
@@ -6053,120 +6026,7 @@ h3{ font-family:var(--fd); }
 #sceneCopy{ min-height:calc(2 * 1.55em); }
 
 
-/* the three figures and their note read as one object on the page */
-/* NO CARD OF ITS OWN. Three grey tiles inside a white card inside a white
-   section card is three grounds to say one thing, and the middle one says
-   nothing the section card had not already said — same colour, one shadow
-   apart. The tiles stay (they are what keeps three figures on a shared
-   vertical, RULES §4q); the card they were sitting on goes. */
-.figures{
-  grid-column:1 / 13;
-  margin-top:clamp(44px, 5vw, 72px);
-  padding:0;
-  background:transparent;
-  border-radius:0;
-  box-shadow:none;
-}
-
-/* ── the KPI row: three tiles, label over figure ───────────────────
-   Each figure sits on the same surface as the panels above it — same grey,
-   same corner, same inner padding — so the row reads as part of the section
-   rather than as three numbers floating on the white card.
-
-   LABEL FIRST. A stat tile is read label-then-value: what it is, then how
-   much. Value-first made three display numerals the first thing on the row
-   and turned the labels into a caption underneath, which is a scoreboard.
-   (dataviz: the stat-tile contract is label + value, in that order.)
-
-   Content is left-aligned and the air is all on the right. Centring three
-   short figures inside wide tiles gives each one a different left edge, and
-   the row loses the vertical the eye reads down. */
-.figures .metrics{
-  /* `margin:0` overrode the row's own `margin-inline:auto`, so the measure
-     was being kept but hung off the LEFT of a 1300px card. */
-  margin:0 auto;
-  grid-column:auto;
-  max-width:1000px;
-  gap:var(--tile-gap);
-}
-
-.figures .metrics li{
-  display:flex; flex-direction:column;
-  align-items:stretch; text-align:left;
-  gap:clamp(4px, .5vw, 7px);
-  /* Top and bottom are SHORTER than the sides on purpose: the label's leading
-     and the numeral's descent space are already inside their line boxes, so
-     equal padding on all four sides puts more air above and below the ink
-     than beside it. Padding is the box; the gap you see is the ink. */
-  padding:clamp(11px, 1.3vw, 16px) var(--tile-pad);
-  background:var(--tile);
-  border-radius:var(--r-section);
-}
-
-
-/* numeral and unit are two sizes, so the figure reads as a quantity
-   rather than a slab of type */
-.metrics b{
-  display:flex; align-items:baseline; justify-content:flex-start; gap:.14em;
-  font-family:var(--fd);
-  color:var(--ink);
-}
-
-/* PROPORTIONAL figures at display size. `tabular-nums` gives every digit the
-   width of a zero, which is right in a column of numbers that must align and
-   wrong on a standalone figure — at 56px a "14" set tabular reads loose and
-   mechanical. Tabular is for tables. (dataviz: marks-and-anatomy.) */
-.metrics b i{
-  font-style:normal; font-weight:600;
-  font-size:var(--t-figure);
-  line-height:1; letter-spacing:-.045em;
-  font-variant-numeric:proportional-nums;
-}
-
-/* the unit is the quantity's second half, not a note about it — it sits in
-   the reading ink, one step down from the numeral, on its baseline */
-.metrics b em{
-  font-style:normal; font-weight:500;
-  font-size:var(--t-unit);
-  line-height:1.1; letter-spacing:-.02em;
-  color:var(--ink-soft);
-}
-
-/* the label: prose, sentence case, caption size. Tight leading because it is
-   a single line introducing the figure, not a paragraph */
-.metrics span{
-  margin:0;
-  font-family:var(--fb); font-weight:400;
-  font-size:var(--t-sm); line-height:1.25;
-  letter-spacing:0; text-transform:none;
-  color:var(--ink-mute);
-}
-
-
-/* The row stacked at 960 because three BARE figures needed the width to stay
-   apart. Once each one is a tile, the tile keeps them apart and three columns
-   hold much further down — 640 is where the longest label ("Brief to first
-   draft") stops fitting on one line inside a third of the row. */
-@media (max-width:640px){
-  .figures .metrics{ grid-template-columns:1fr; }
-
-}
-
-
-/* The note belongs to the figures, so it sits with them — but as PROSE. Set
-   at label size and letter-spaced it read as a fourth stat in the row, which
-   is the one thing §the utility-face rule says a caveat must not do. It keeps
-   .footnote's own size and tracking; only the placement is local. */
-.figures .footnote{
-  margin:clamp(20px, 2.4vw, 32px) auto 0;
-  max-width:52ch;
-  text-align:center;
-}
-
-
 @media (max-width:720px){
-  .figures .metrics{ gap:clamp(18px, 5vw, 28px); }
-
   #sceneCopy{ min-height:0; }
 
 }
@@ -6277,10 +6137,26 @@ h3{ font-family:var(--fd); }
   --o-pad:var(--tile-pad);                 /* 20/32 · inside a panel     */
   --o-r:var(--r-section);                  /* 16 · every panel's corner  */
   --o-fill:var(--tile);                    /* the reference's panel grey */
-  --o-h:clamp(420px, 40vw, 553px);         /* 553 · the row's height     */
+  --o-h:calc(clamp(420px, 40vw, 553px) + var(--o-mh));
+  --o-mh:clamp(30px, 2.9vw, 42px);         /* the outcome strip          */
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   /* the frame's own measurements */
   --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
+  /* THE AIR AROUND THE FIGURES STRIP — one value, used on BOTH sides.
+     It was two: the frame's `row-gap` above and `--o-fpad` below, which at
+     1440 is 15 against 27.36. Measured to the letters that came out 18
+     over and 28 under on every tab — *"这个文字上边的空间和下边的空间要一样高"*.
+     Two gaps that are meant to look the same have to be the same
+     declaration; derived from different ones they are only ever equal by
+     coincidence, and these were not even close.
+     The strip's ink sits 3.3px below its line box's top and 2.3px above
+     its content bottom (averaged over the seven tabs — the words change
+     with the tab, so the ascenders and descenders do too). A 1px
+     asymmetry is left in rather than corrected: it is smaller than the
+     tab-to-tab variation it would be correcting for.
+     21 at 1440 is the midpoint of the 15 and 27.36 it replaces, so the
+     frame keeps its height and the windows keep theirs. */
+  --o-mgap:clamp(13px, 1.5vw, 21px);       /* above and below the strip  */
   --o-cw:clamp(176px, 16.4vw, 236px);      /* a connector card           */
   /* HOW FAR A CARD SITS ON THE WINDOW. Small on purpose: at 26px it ate
      the first 26px of whichever sidebar was behind it — Okou's thread
@@ -6289,11 +6165,19 @@ h3{ font-family:var(--fd); }
      `.okw__side` and `.slk__rail`), so the strip a card covers is empty. */
   --o-lap:clamp(11px, 1.2vw, 17px);
   margin-top:clamp(28px, 3.2vw, 44px);
+  /* HOW THE ROW DIVIDES, as a share of the frame's inner width. The app
+     unit leads because it is where the work happens; the artifact is the
+     payoff and needs enough width to be a page rather than a thumbnail —
+     at the old 330/983 it was 33.6% of the STAGE, which inside a padded
+     frame came to less. 38% of the inner width is 41px wider at 1440 and
+     the opening beat's centring arithmetic reads off the same number. */
+  --o-appw:62%;
   display:grid;
-  /* TWO OBJECTS, NOT THREE. 200 + 16 + 437 of the reference's row is now
-     one frame — the app window with the connectors floating over it — and
-     330 is still the page it shipped. Same total, one less thing to read. */
-  grid-template-columns:minmax(0,653fr) minmax(0,330fr);
+  /* ONE OBJECT NOW, not two. Tong: *"右边的结果我觉得也应该放进这个渐变色的
+     frame里"* — the frame used to stop 66% of the way across and the page
+     it shipped sat beside it on white, the only thing in the row without a
+     ground under it. */
+  grid-template-columns:minmax(0,1fr);
   /* ONE HEIGHT FOR ALL SEVEN TABS. `height` on a grid container is not a
      ceiling: the row track was implicit and therefore `auto`, so a scene
      whose artifact happened to be taller pushed the track past the declared
@@ -6332,7 +6216,14 @@ h3{ font-family:var(--fd); }
 .ostage__frame{
   position:relative;
   --oframe-hue:var(--tab, var(--ink));
-  padding:var(--o-fpad);
+  /* NO BOTTOM PADDING — the strip supplies its own. *"整个frame下方因为在一开始
+     要给data预留空间，所以看起来有点空"*: the band was 68px of reserved height
+     sitting empty for the five seconds the run takes, above a further 27px of
+     frame padding. Handing the padding to the windows makes the strip read as
+     a footer on the frame rather than a row floating in a gap, and gives the
+     conversation 35px it can use for the whole cycle rather than only at the
+     end. */
+  padding:var(--o-fpad) var(--o-fpad) 0;
   border-radius:var(--r-lg);
   background:
     radial-gradient(118% 132% at 4% 0%,
@@ -6345,17 +6236,180 @@ h3{ font-family:var(--fd); }
      its own content, so the moment the typing row appeared the whole app
      grew 62px and its last message crossed the composer — at every width,
      which is what says it is a sizing fault and not an arithmetic one. The
-     stage sets the height; the window's job is to take it and clip. */
-  grid-template-rows:minmax(0,1fr);
+     stage sets the height; the window's job is to take it and clip.
+     The second track is the outcome strip and takes only what it needs. */
+  grid-template-rows:minmax(0,1fr) auto;
+  row-gap:var(--o-mgap);
   align-items:stretch;
   min-width:0;
 }
 
 
+/* ── the row inside the frame ──────────────────────────────────────
+   Two items: the app unit (connectors + window, which move together) and
+   the page it shipped. A flex row rather than a grid, because the opening
+   beat translates the whole row and a percentage translate resolves
+   against the row's own width — the same number `--o-appw` is stated in,
+   so the centring cannot drift from the layout. */
+.ostage__row{
+  display:flex; gap:var(--o-gap);
+  min-width:0; min-height:0;
+  transition:transform 760ms var(--e-spring);
+}
+
+.ostage__app{
+  position:relative;
+  flex:0 0 var(--o-appw);
+  min-width:0; min-height:0;
+  display:grid; grid-template-rows:minmax(0,1fr);
+}
+
 /* the app window sits to the right of the cards, less the overlap */
-.ostage__frame > .ochat{
+.ostage__app > .ochat{
   margin-left:calc(var(--o-cw) - var(--o-lap));
   min-width:0; min-height:0;
+}
+
+/* the artifact takes what is left, and the frame's full inner height —
+   the same height as the window, so the two read as a pair rather than as
+   a window and a thumbnail beside it */
+.ostage__row > .tplwin{
+  flex:1 1 0;
+  min-width:0; min-height:0;
+  transition:transform 760ms var(--e-spring),
+             clip-path 760ms var(--e-out);
+}
+
+
+/* ── what the run produced ─────────────────────────────────────────
+   Tong: *"如果下边的data和每个tab是有联系的，那这几个数据你觉得应该怎么放？"*
+
+   ON THE FRAME, NOT UNDER IT. They were three grey blocks in a row below
+   the stage, which is the reading feedback 05 called 太多层 — and once the
+   numbers belong to a tab, a strip floating on the page under a frame is
+   saying they belong to the page. Standing them on the frame's own ground
+   makes them part of the run, and the tab switch changes them for free:
+   every scene ships its own, so there is no JS to keep in sync.
+
+   AND THEY LAND WITH THE ARTIFACT. These are what the run produced, so
+   they arrive when it is finished, on the same `.is-landed` cue as the page
+   it shipped — not before it, which would be the answer turning up before
+   the work.
+
+   `clip-path`, not opacity: this is text, on a loop, and it is the fault
+   N3 exists for. */
+.ometrics{
+  display:flex; align-items:baseline;
+  /* CENTRED ON THE FRAME, not parked under the left column. The strip
+     summarises the whole run, so it belongs to the whole frame — Tong:
+     *"data是不是可以在整个frame中间"*. */
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:clamp(14px, 1.8vw, 30px) clamp(24px, 3.2vw, 54px);
+  list-style:none; margin:0;
+  /* its own floor, since the frame no longer keeps one */
+  padding:0 clamp(2px, .6vw, 8px) var(--o-mgap);
+  min-width:0;
+}
+
+/* ONE LINE, NOT A STACKED BLOCK. Number then label, on a shared baseline.
+   The stacked form was 46px tall and the band under the windows could not
+   get smaller than it — and that band sits empty for the five seconds the
+   run takes, which is the *"看起来有点空"*. Inline it is 24px, so the frame
+   loses 22px it was holding for nothing and the strip reads as a footer
+   line under the picture rather than a row parked in a gap. */
+.ometrics li{
+  display:flex; flex-direction:row; align-items:baseline; gap:7px;
+  min-width:0;
+}
+
+.ometrics span{
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono);
+  letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-mute);
+  white-space:nowrap;
+}
+
+.ometrics b{
+  display:flex; align-items:baseline; gap:.18em;
+  /* `<i>` is italic by default and the numeral is in one, so the whole
+     strip rendered oblique — a slanted figure under an upright picture. */
+  font-style:normal;
+  font-family:var(--fd);
+  font-weight:500; line-height:1;
+  letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+  color:var(--ink);
+  font-size:var(--t-h);
+}
+
+.ometrics i,.ometrics em{ font-style:normal; }
+
+.ometrics em{
+  font-size:var(--t-sm); font-weight:400; color:var(--ink-soft);
+}
+
+/* ONE SIZE. The lead used to be set at display size, and with only two
+   metrics under a tab that reads as two different type sizes rather than as
+   a hierarchy — *"date字号不一样大？"*. The differentiation the numbers
+   needed is already carried by every tab having its own labels and its own
+   count; doing it in the type as well was one signal too many. The lead
+   keeps a darker label, which is enough to say which one to read first. */
+.ometrics li.is-lead span{ color:var(--ink-soft); }
+
+
+.ostage.is-live .ometrics li{
+  clip-path:inset(0 0 100% 0);
+  transform:translateY(6px);
+  transition:clip-path 460ms var(--e-out), transform 520ms var(--e-out);
+  transition-delay:calc(var(--mi, 0) * 70ms);
+}
+
+.ostage.is-live.is-landed .ometrics li{
+  clip-path:inset(0 0 0 0);
+  transform:none;
+}
+
+.ometrics li:nth-child(2){ --mi:1; }
+
+.ometrics li:nth-child(3){ --mi:2; }
+
+
+/* ── the opening beat: centred, then the page arrives ──────────────
+   Tong: *"用户刚切到一个tab上以后，connector和对话窗口居中，当对话结束后，
+   右边的artifacts从右侧滑进渐变frame"*.
+
+   RESTING IS THE FINISHED FRAME (N2). Both objects are in their final
+   places in the DOM with no transform at all, so reduced motion, no-JS and
+   a tab at rest all show the whole row. `.is-live` is added by JS and is
+   what puts the row into its OPENING state; `.is-landed`, added at the cue,
+   takes it out again. Nothing here is a keyframe — the transition on
+   `.ostage__row` and `.tplwin` does the travelling (N11: the movement is
+   the only thing the animation carries).
+
+   The centring is one expression: the app unit is `--o-appw` of the row, so
+   the offset that centres it is half of what is left. Both percentages
+   resolve against the row's own width, which is why they cannot drift. */
+.ostage.is-live:not(.is-landed) .ostage__row{
+  transform:translateX(calc((100% - var(--o-appw)) / 2));
+}
+
+/* SLID OUT AND WIPED, not faded. The frame keeps `overflow:visible` so the
+   connector cards' shadows are not cut at its edge, which means nothing
+   clips the artifact for us — and a fade would put an `opacity` on a
+   window full of text, on a loop, which is the fault N3 exists for and
+   which axe has already caught on this page twice. `clip-path` is the
+   reveal the rule names, and paired with the slide it reads as the page
+   coming in from the frame's right edge. */
+.ostage.is-live:not(.is-landed) .ostage__row > .tplwin{
+  transform:translateX(14%);
+  clip-path:inset(0 0 0 100%);
+}
+
+/* and nothing travels when the choreography is skipped */
+@media (prefers-reduced-motion:reduce){
+  .ostage__row,.ostage__row > .tplwin{ transition:none; }
+
 }
 
 
@@ -6365,10 +6419,23 @@ h3{ font-family:var(--fd); }
    further right so it laps further onto the window: an even pair of
    offsets reads as a layout, an uneven pair reads as objects. */
 .ostage__conn{
+  /* ANCHORED TO THE APP UNIT, not to the frame. They lap the window's left
+     edge, so when the opening beat centres the window they have to travel
+     with it — pinned to the frame they would have stayed put and the lap
+     would have opened into a gap. */
   position:absolute; z-index:2;
-  left:var(--o-fpad); top:var(--o-fpad); bottom:var(--o-fpad);
+  left:0; top:0; bottom:0;
   width:var(--o-cw);
   min-width:0;
+  /* THE PAIR IS CENTRED AS A GROUP, with a fixed gap. Percentage offsets
+     from each end do not survive a column that changes height: at 1440 they
+     left 134px between two content-height cards, and at 1120 — where the
+     column is 403px and the cards total 272 — the same percentages
+     overlapped them by five. Centring holds the gap constant and splits
+     whatever is left equally above and below, which is the shape the void
+     complaint was asking for either way. */
+  display:flex; flex-direction:column; justify-content:center;
+  gap:clamp(16px, 2vw, 30px);
 }
 
 /* Tong: *"connector card 可以活泼一点，像我给你发的图一样。而且我感觉 logo
@@ -6384,15 +6451,19 @@ h3{ font-family:var(--fd); }
    read as a layout no matter how far apart you push them. `rotate` rather
    than `transform`, since the entrance animation owns `transform`. */
 .ocard{
-  position:absolute; left:0; right:0;
-  display:flex; flex-direction:row; align-items:flex-start;
-  gap:11px;
+  /* in flow, so the column can centre the pair; `relative` for the ::after */
+  position:relative;
+  /* STACKED, FLUSH LEFT: the mark on top, the text under it. Tong asked
+     for this twice — 「icon和text都上下对齐」 and then 「我都说了icon和text纵向
+     左对齐，icon在text上边」 — and I read the first as "share a vertical axis"
+     and built a row. 上下 was the arrangement, not the alignment. */
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:clamp(9px, 1vw, 13px);
   padding:13px 15px;
   border-radius:var(--r-float);
   background:var(--paper);
   min-width:0;
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 18px 38px -20px rgb(var(--ink-rgb) / .30);
+  box-shadow:var(--e-lift);
 }
 
 /* One hangs from the top and one from the BOTTOM, which is the only way
@@ -6400,16 +6471,18 @@ h3{ font-family:var(--fd); }
    lower one put its last line 40px below the ground it was floating on. */
 /* One hangs from the top and one from the BOTTOM, which is the only way a
    pair of auto-height cards cannot leave the frame. */
-.ocard:nth-of-type(1){ top:13%; rotate:-1.3deg; }
+/* CLUSTERED. At 13% from each end they left 187px of empty gradient between
+   them in a 496px column — the void Tong pointed at. Brought together they
+   read as a pair of objects the run touched, with the air around the pair
+   instead of inside it. */
+/* ONE WIDTH, TWO HEIGHTS. *"connector的card宽度应该是固定的，高度可以根据
+   content变高"* — the horizontal stagger made card two narrower than card one,
+   which reads as two card sizes rather than as two cards. Both take the
+   column's width; the stagger is vertical and the tilt does the rest, and
+   the lap is now one number for both, which is what the rail insets by. */
+.ocard:nth-of-type(1){ rotate:-1.3deg; }
 
-.ocard:nth-of-type(2){
-  bottom:13%;
-  left:clamp(14px, 1.7vw, 26px);
-  right:calc(-1 * clamp(10px, 1.1vw, 18px));
-  rotate:1.1deg;
-}
-
-.ocard .ocard__txt{ padding-top:1px; }
+.ocard:nth-of-type(2){ rotate:1.1deg; }
 
 .ocard .ocard__txt b{ font-size:var(--t-sm); line-height:1.3; }
 
@@ -6473,8 +6546,7 @@ h3{ font-family:var(--fd); }
    this. Both readings — Slack's chrome and Okou's own — are windows, so
    this is the shared part and each adds only its own sidebar. */
 .scene[data-scene] .ochat{
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 18px 40px -20px rgb(var(--ink-rgb) / .30);
+  box-shadow:var(--e-fig);
 }
 
 /* THE FILL IS SET PER READING, NOT SHARED. `background:var(--paper)` on
@@ -6618,8 +6690,7 @@ h3{ font-family:var(--fd); }
      else, while the connector cards beside it are DARKER than it. It was
      the lightest thing in the row with nothing to sit on, so it dissolved.
      The rail does most of the separating and the shadow finishes it. */
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05),
-             0 18px 40px -20px rgb(var(--ink-rgb) / .30);
+  box-shadow:var(--e-fig);
   font-family:var(--fb);
 }
 
@@ -6648,7 +6719,7 @@ h3{ font-family:var(--fd); }
    muddy on white"). */
 .ochat--okou{
   /* type — Noto Sans is already one of the page's loaded families */
-  --vm-font:"Noto Sans", "Instrument Sans", system-ui, sans-serif;
+  --vm-font:var(--fb);                     /* was Noto Sans, the app's own */
 
   /* primary scale · globals.css @layer base :root */
   --vm-primary:#ED4E01;                    /* --primary-700 */
@@ -6783,17 +6854,30 @@ h3{ font-family:var(--fd); }
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
   gap:14px;
-  padding:0 18px 4px;
+  /* NO FLOOR PADDING. The conversation comes off the top edge of the
+     composer, with nothing between them — 4px here plus the composer's own
+     10px top margin was a 14px strip of ground under the newest message,
+     which reads as the message being unfinished rather than as air. */
+  padding:0 18px 0;
 }
+
+.okw__list > *{ flex:none; }
 
 
 /* ── the composer, 1:1 with `.zero-composer` ───────────────────────
    white, a 0.7px gray-400 hairline, 1.5rem, and the cool card shadow. */
 .okw__composer{
   display:flex; align-items:center; gap:8px; flex:none;
-  margin:10px 18px 12px;
+  margin:0 18px 12px;
   padding:6px 6px 6px 10px;
-  border-radius:var(--vm-r-composer);
+  /* NOT THE PRODUCT'S 24px HERE, and the deviation is written at the rule
+     (P12). `--zero-composer-radius` is 1.5rem on a composer that is ~120px
+     tall, where it reads as a rounded rectangle; this mock compresses that
+     control to a single 46px row, and at 46px the same corner is a lozenge
+     with a square 8px button sitting inside it — *"输入框圆的，但是里边的
+     button方的，非常不严谨"*, and S1's own complaint about a page holding two
+     ideas of what a control is. The corner follows the box it is on. */
+  border-radius:14px;
   background:var(--vm-card);
   border:.7px solid var(--vm-hairline);
   box-shadow:var(--vm-shadow);
@@ -6847,9 +6931,16 @@ h3{ font-family:var(--fd); }
   background:none; border:0; box-shadow:none; padding:0;
 }
 
+/* A HEADER, NOT A FIRST LINE. On white above a white page the caption ran
+   straight into the document under it — *"artifacts的标题和下边内容融为一体
+   了"*. The product's own `CardHeader` is a band on the card, so this takes
+   the same shape: gray-50 with the card's 0.7px rule under it. */
 .ochat--okou .oresult figcaption{
   font-family:var(--vm-font);
   font-size:13px; line-height:18px; color:var(--vm-muted-fg);
+  padding:9px 12px;
+  background:var(--vm-gray-50);
+  border-bottom:.7px solid var(--vm-border);
 }
 
 .ochat--okou .oresult{
@@ -6866,7 +6957,10 @@ h3{ font-family:var(--fd); }
    the TOP, so what is lost is the tail of the page rather than its
    headline (the crop-through-the-headline fault from the tab windows). */
 .ochat--okou .oresult img{
-  max-height:clamp(92px, 10vw, 144px);
+  /* 144 left the Spec Writing thread one pixel over its list, so the user's
+     own prompt was sliced through its first line by the title bar. Sized for
+     HEADROOM rather than for a fit: ~34px of slack, checked on all three. */
+  max-height:clamp(76px, 8vw, 110px);
   object-fit:cover; object-position:top center;
 }
 
@@ -6979,11 +7073,25 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
    names: a width expression that agrees with you at the one width you
    looked at. Clipped and bottom-anchored it cannot overlap at any width,
    and the newest message is the one kept — which is what Slack does. */
+/* IT HANGS FROM THE TOP UNTIL IT HAS TO HANG FROM THE BOTTOM. Anchored to
+   the end, the channel opened with its FIRST message already cut in half by
+   the channel bar — at 1120 the ask was 47px above its own box before
+   anything had happened. Tong, twice: 用户刚进到对应的 tab 的时候，中间的
+   对话 chat bubble 不要直接就被截断，第一个 chat bubble 要显示出来，但是在
+   对话的过程中，可以被下面的 bubble 推上去.
+   A message clipped on ARRIVAL reads as a rendering fault; the same message
+   clipped after three more have landed on top of it reads as scrollback,
+   which is the thing the crop was for. So the list starts at flex-start and
+   is lifted afterwards by exactly its own overflow — see `slk lift` in
+   app.js. The clip stays on this box, so the composer can still never be
+   painted through (the 98px overlap at 1120 that put the crop here). */
 .slk__list{
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
-  padding-bottom:6px;
+  padding-bottom:0;
 }
+
+.slk__list > *{ flex:none; }
 
 
 .slk__bar{
@@ -7150,7 +7258,7 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
 .slk__unfurl-u{
   margin:1px 0 0;
-  font-family:var(--fm); font-size:var(--t-meta); color:var(--slk-mute);
+  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-meta); color:var(--slk-mute);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
@@ -7245,9 +7353,16 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
    between the list and the composer whose height never changes, so
    nothing above it can move; Slack puts its typing indicator under the
    message pane anyway. */
+/* IT IS A MESSAGE NOW, NOT A STRIP. Outside the list it was a fixed 17px
+   row that reserved its space whether or not anyone was typing — 19px of
+   nothing between the last message and the composer, every tab, always
+   ("chat 内容应该从 prompt box 的上边缘出现，中间不应该有 space"). Inside
+   the list it collapses when idle and grows when Okou types, and flex-end
+   then does the rest: the conversation lengthens and pushes itself up. */
 .slk__ghost{
   display:flex; align-items:center; gap:6px; flex:none;
-  height:17px; margin:0 clamp(14px,1.4vw,18px) 2px;
+  height:0; overflow:hidden;
+  margin:0 clamp(14px,1.4vw,18px) 0;
   font-size:var(--t-meta); color:var(--slk-mute);
   /* Clipped, never faded: it carries a sentence (RULES N3).
 
@@ -7257,11 +7372,16 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
      announcing that Okou was still working on something it had already
      shipped four messages ago. */
   clip-path:inset(0 100% 0 0);
-  transition:clip-path 200ms var(--e-out);
+  transition:clip-path 200ms var(--e-out),
+             height 220ms var(--e-out),
+             margin-bottom 220ms var(--e-out);
 }
 
 
-.ochat--slack.is-live .slk__ghost.is-on{ clip-path:inset(0 0 0 0); }
+.ochat--slack.is-live .slk__ghost.is-on{
+  clip-path:inset(0 0 0 0);
+  height:17px; margin-bottom:2px;
+}
 
 
 .slk__ghost-d{ display:inline-flex; align-items:center; gap:3px; }
@@ -7340,9 +7460,24 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
    `:not(.slk__ghost)` because the ghost runs its own left-to-right wipe;
    this selector out-specifies it and would have replaced it. */
+/* A MESSAGE THAT HAS NOT ARRIVED TAKES NO ROOM. Clipped but full height, the
+   rows that had not been said yet still held their space at the bottom of a
+   bottom-anchored list — so the conversation played in the TOP half against
+   130px of reserved nothing, and the messages that had arrived were the ones
+   pushed off. Collapsed, the list does the whole job by itself: each message
+   appears on the composer's edge and lifts the ones before it, and once they
+   no longer fit the earliest go off the top. That is a channel.
+
+   Only under `.is-live`. At rest the conversation is FINISHED (N2), so every
+   row is there at full height with no JS and under reduced motion. */
 .ochat.is-live .ochat__row:not(.slk__ghost){
   clip-path:inset(0 0 100% 0);
   transform:translateY(12px);
+}
+
+.ochat.is-live .slk__list > .ochat__row:not(.slk__ghost):not(.is-on),
+.ochat.is-live .okw__list > .ochat__row:not(.slk__ghost):not(.is-on){
+  height:0; margin-block:0; overflow:hidden;
 }
 
 .ochat.is-live .ochat__row[data-beat="result"]{
@@ -7646,11 +7781,42 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
   }
 
   .ostage__frame{
-    display:flex; flex-direction:column; gap:var(--o-gap);
+    display:block;
+    /* NO BOTTOM PADDING HERE EITHER. `display:block` throws away the grid's
+       `row-gap`, so the strip had nothing above it and the frame's padding
+       plus its own underneath — 2px over and 35px under, four times worse
+       than the desktop imbalance this token was added to fix. The strip
+       carries the air on both sides instead, exactly as it does above
+       1080. */
     padding:clamp(12px, 2.4vw, 18px);
+    padding-bottom:0;
   }
 
-  .ostage__frame > .ochat{ margin-left:0; }
+  .ometrics{ margin-top:var(--o-mgap); }
+
+  /* THE ROW BECOMES A COLUMN, and with it the whole opening beat stands
+     down: centring a 62% unit inside a full-width column is a translate to
+     nowhere, and sliding the artifact in from the right of a stacked layout
+     would take it off the side of the phone. Everything is in place from
+     the first frame here, which is what the resting state already is. */
+  .ostage__row{
+    display:flex; flex-direction:column; gap:var(--o-gap);
+    transform:none;
+  }
+
+  .ostage__app{
+    flex:0 0 auto;
+    display:flex; flex-direction:column; gap:var(--o-gap);
+  }
+
+  .ostage__app > .ochat{ margin-left:0; }
+
+  .ostage.is-live:not(.is-landed) .ostage__row,
+  .ostage.is-live:not(.is-landed) .ostage__row > .tplwin{
+    transform:none; clip-path:none;
+  }
+
+  .ostage__row > .tplwin{ flex:0 0 auto; }
 
   .ostage__conn{
     position:static; width:auto;

@@ -4,6 +4,90 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-30 · the control section, four directions from the wireframe back
+
+Tong: *"我们最初的时候是基于这个 Wireframe 来改的。现在看起来图片这个 section 我们
+之前给做复杂了。其实讲的事情很简单。就是关于 agent 权限的问题 … 现在网站上你之前做
+的，完全不符合我们的期望。"* Plus the R2 brand illustrations, and feedback 16–20.
+
+**https://okou-control-options-zxll.sites.vm0.io** — four directions, each the
+real section at real size on the real stylesheet. Nothing merged.
+
+### what the wireframe actually says
+
+Going back to it is the whole instruction. The origin of this section is **one
+real product screen with four short claims around it** — the Agent's
+Authorization tab, rows reading `Google Drive · Read files in a shared folder ·
+Allowed` and `Gmail · Send mail · Denied`. It is one idea, shown once.
+
+What is live is a 548px dialog, a browser card, two long captions and a closing
+note, at **1.25 screens**. Every direction here is 0.73–0.83.
+
+### the content, since he asked
+
+The heading and the lede are the wireframe's and are **unedited** — the lede's
+second sentence, *"Permissions follow the person, not the automation"*, is the
+most differentiating line in the section and it happens to be exactly what the
+product does: `permission-request` updates *the current user's* connector
+grants. What was cut is everything after it:
+
+| shipped | here |
+|---|---|
+| "Granular permissions." + 3 sentences | gone — the card *is* the claim |
+| "Isolated execution." + microVM, 3 sentences | half a line, and `microVM` said as **cloud computer** (17) |
+| closing note: activity trail + open source, 3 lines | the other half of that line (19) |
+
+Nothing new is claimed. Every sentence that survives is a shorter version of a
+sentence that was already on the page. **`microVM` is the one word changed**,
+and 17 asked for it.
+
+### the drawings are in the R2 register now, not this repo's
+
+The illustration style arrived with the brief and it is not the hand-drawn ink
+spot this repo already had: flat vector, one uniform black outline, geometric,
+a character with an orange face, a cobalt beanie and a lime jumpsuit, no noise,
+tonal shadow only. Two spots were generated to match — `spot-permission-key.png`
+(the person holds the key and keeps the ring; the agent is the orange cube,
+waiting at a door it cannot open) and `spot-cloud-computer.png` (17, literally).
+
+`nano-banana-2` matched the reference first try on a **raw** prompt. The style
+compiler has to be bypassed: `--prompt` routes into one of the house styles and
+`image-style:vm0-illustration` is the *old* register, which is what produced the
+ink spot the brief supersedes. Both come back on a flat cream ground, which the
+page does not use — flood-filled from the border and trimmed to the ink.
+
+### the four
+
+| | route | what it is |
+|---|---|---|
+| **A** The ask, and nothing else | 抽象模拟真实产品 · 0.83 | Three lines of conversation and the card that stopped it. No columns, no captions, no drawing, no window chrome |
+| **B** The drawing says it | 插画 · 0.76 | The key picture at full size, the claim and the card beside it |
+| **C** You allow it, here | 交互 · 0.73 | The card is **live**: pick a duration, press Confirm, and the grant appears with your name and your hour |
+| **D** Asked, granted, gone | 三格 · 0.79 | Three frames, one line. The only one that *shows* isolated execution |
+
+### found while building
+
+**A third of a card is not a card.** D's middle frame is ~380px and the row
+form of `PermissionActionCard` has a ~450px min-content — the title is
+`nowrap` and the scope is a long string, so it rendered as `Googl…` over three
+wrapped lines. The product stacks below `sm`; the cell is narrower than `sm`,
+so it stacks. Not a special case, the same rule the phone gets.
+
+**A state that is markup cannot be toggled twice.** C's confirm first swapped
+`.pcard__c`'s innerHTML, which orphaned the listeners bound to the nodes it
+replaced: "Ask again" put the controls back and nothing answered them. Both
+states are in the markup now and CSS shows one — which is also the only version
+that renders correctly with JavaScript off, as the other three need.
+
+**The review page was still loading Google Fonts.** Built before the site was
+self-hosted Roobert, so the four directions were being judged in Archivo.
+
+Gate: 0 axe violations at 1440 and 390, no horizontal overflow at either, no
+clipped text. `site/index.html` is untouched; the two new illustrations are the
+only thing added to `site/`.
+
+---
+
 ## 2026-08-30 · the figures strip had 18 over and 28 under
 
 Tong, on the `#outputs` outcome strip: *"这个文字上边的空间和下边的空间要一样高"*.
