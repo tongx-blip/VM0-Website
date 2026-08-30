@@ -19,8 +19,17 @@
   var out = stage.querySelector('.oc2__out span');
   if (!card || !sel || !go || !out) return;
 
-  var DURATIONS = ['This time only', '1 hour', '24 hours', 'Always'];
-  var at = 1;
+  /* THE PRODUCT'S OWN FOUR, and only those. Checked against
+     `USER_PERMISSION_GRANT_EXPIRES_IN_OPTIONS` = ["1h","24h","7d","always"] in
+     signals/permission-allow/permission-grant-expiration.ts, and the labels
+     against `authorization.permission.durationOptions.*`. The first version of
+     this file offered "This time only", which the product does not have, and
+     left out "7 days", which it does. Default is "1h" —
+     DEFAULT_USER_PERMISSION_GRANT_EXPIRES_IN. */
+  var DURATIONS = ['1 hour', '24 hours', '7 days', 'Always'];
+  var EXPIRY = ['Expires in 1 hour', 'Expires in 24 hours', 'Expires in 7 days', ''];
+  var exp = stage.querySelector('.pcard__exp');
+  var at = 0;
 
   /* The select is a real control, so it has to behave like one for a keyboard
      as well: the product's is a <select>, and a div that only answers the
@@ -40,10 +49,10 @@
        pcard(). Replacing the controls with innerHTML orphaned the listeners
        bound to them, and "Ask again" came back dead. */
     card.dataset.state = 'saved';
-    out.textContent = at === 3
-      ? 'Granted by Maya · until she revokes it'
-      : (at === 0 ? 'Granted by Maya · this run only'
-                  : 'Granted by Maya · expires in ' + DURATIONS[at]);
+    /* the duration goes on the CARD, in the product's amber, because that is
+       where the product puts it; the page's line beside it says the thing the
+       page is claiming and does not repeat the UI */
+    if (exp) { exp.textContent = EXPIRY[at]; exp.hidden = !EXPIRY[at]; }
     stage.dataset.done = '1';
     reset.hidden = false;
   }
@@ -69,7 +78,7 @@
     card.dataset.state = 'ready';
     stage.dataset.done = '';
     reset.hidden = true;
-    at = 1; relabel();
+    at = 0; relabel();
     sel.focus();
   });
   stage.appendChild(reset);

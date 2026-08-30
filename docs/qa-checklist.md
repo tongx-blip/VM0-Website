@@ -1778,6 +1778,39 @@ its last row ran on another 26px over the band's own ground. Light hid it;
 dark shipped a 3.12:1 node that axe caught and six audits before it did not,
 because they were run in light.
 
+## 4ah. A mock is only as true as its least-sourced part
+
+`PermissionActionCard` was copied out of the product line by line — shell,
+icon, title, detail, duration select, and the neutral bordered confirm that is
+the tell for this component. Every string came from `common.json`. Then a
+direction needed the card to be *clickable*, and the duration list written to
+make that work offered **"This time only"**, which the product has never had,
+and omitted **"7 days"**, which it has.
+
+The copied 95% is what hides the invented 5%: a reviewer checks the parts that
+look like decisions, and a dropdown full of plausible durations does not look
+like a decision.
+
+**So: when a mock gains behaviour the source did not have, the behaviour gets
+sourced too.** For this product that means:
+
+```
+USER_PERMISSION_GRANT_EXPIRES_IN_OPTIONS   ["1h","24h","7d","always"]
+DEFAULT_USER_PERMISSION_GRANT_EXPIRES_IN   "1h"
+authorization.permission.durationOptions.* 1 hour / 24 hours / 7 days / Always
+chat.permissions.*                         the card's own strings
+```
+
+`gh api search/code` reaches all of it; the connector **catalog** does not
+(`api.vm0.ai/api/connector-catalog/…` needs auth), so a scope name like
+`campaign-budgets.write` cannot be verified this way and has to be recorded as
+unverified rather than left looking sourced.
+
+**And put the state where the product puts it.** The expiry is amber, on the
+card, `mt-0.5 text-xs font-medium text-amber-700` — not a caption underneath.
+A line under a card that mixes a real product string with a marketing phrase
+reads as UI and is not.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2.

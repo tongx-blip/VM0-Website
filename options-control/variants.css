@@ -64,6 +64,14 @@ body.opts{ background:var(--wash); }
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .pcard__t i{ margin-top:2px; font-style:normal; font-size:14px; line-height:20px;
   color:var(--ink-mute); }
+/* the product puts the expiry ON the card, in amber, once the grant is
+   saved — `mt-0.5 text-xs font-medium text-amber-700`. It is not a separate
+   line under the card, and the page's own sentence must not repeat it. */
+.pcard__exp{
+  margin-top:2px; font-style:normal; font-size:12px; font-weight:500;
+  color:#B45309;
+}
+.pcard[data-state="ready"] .pcard__exp{ display:none; }
 .pcard__c{ display:flex; align-items:center; gap:8px; flex:none; }
 .pcard__ready{ display:flex; align-items:center; gap:8px; }
 .pcard[data-state="ready"] .pcard__done,

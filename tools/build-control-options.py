@@ -83,12 +83,33 @@ TICK = ('<svg class="ico-tick" viewBox="0 0 24 24" fill="none" stroke-width="2" 
 def pcard(state='ready', dur='1 hour'):
     """state: ready | saved
 
-    BOTH states are always in the markup and CSS shows one of them. The first
-    version swapped `.pcard__c`'s innerHTML on confirm, which orphaned the
-    listeners bound to the nodes it replaced — "Ask again" put the controls
-    back and then nothing answered them. A state that is a class is also the
-    only version that works with JavaScript off, which every other direction
-    here needs.
+    Read out of `PermissionActionCard` in
+    `vm0-ai/vm0 → turbo/apps/platform/src/views/okou-page/chat-body-cards.tsx`,
+    and checked against it again this round line by line:
+
+        shell     min-h-[88px] w-full flex-col gap-3 rounded-lg
+                  border-border/70 bg-background/85 p-3 shadow-sm
+                  sm:flex-row sm:items-center sm:justify-between
+        icon      h-10 w-10 rounded-lg border-border/70 bg-muted/40, mark at 22
+        title     truncate text-[0.9375rem] font-medium
+        detail    mt-0.5 line-clamp-2 text-sm leading-5 muted
+        expiry    mt-0.5 text-xs font-medium text-amber-700
+        duration  h-8 w-[116px] rounded-lg text-xs
+        confirm   h-9 rounded-lg BORDER + bg-background hover:bg-state-hover —
+                  neutral, never the brand primary
+
+    Strings are the product's own, from `i18n/locales/en-US/common.json`:
+        chat.permissions.connectorTitle     "{{connectorName}} permissions"
+        chat.permissions.actionDescription  "{{action}} {{permissionName}}"
+        chat.permissions.allow              "Allow"
+        chat.permissions.updated            "Permissions updated"
+        chat.permissions.duration           "Permission duration"  (the select's
+                                            aria-label)
+        chat.permissions.expiresInHours_one "Expires in {{count}} hour"
+
+    BOTH states are always in the markup and CSS shows one — swapping
+    `.pcard__c`'s innerHTML orphaned the listeners bound to the nodes it
+    replaced, and it is also the only version that renders with JS off.
     """
     return (
         '<div class="pcard" data-state="%s">'
@@ -96,7 +117,8 @@ def pcard(state='ready', dur='1 hour'):
         '<span class="pcard__ic"><img src="assets/connectors/google-ads.svg" alt="" '
         'width="22" height="22"></span>'
         '<span class="pcard__t"><b>Google Ads permissions</b>'
-        '<i>Allow campaign-budgets.write</i></span>'
+        '<i>Allow campaign-budgets.write</i>'
+        '<em class="pcard__exp">Expires in 1 hour</em></span>'
         '</span>'
         '<span class="pcard__c">'
         '<span class="pcard__ready"><span class="pcard__sel">%s%s</span>'
@@ -197,7 +219,7 @@ def option_c():
   <div class="oc2" data-live="1">
     <p class="oc2__ask"><b>Okou</b> wants to write next week’s budgets in Google Ads.</p>
     <div class="oc2__card">%s</div>
-    <p class="oc2__out" aria-live="polite"><i></i><span>Granted by Maya · expires in 1 hour</span></p>
+    <p class="oc2__out" aria-live="polite"><i></i><span>Maya’s grant, not the workflow’s</span></p>
   </div>
   <p class="note">%s</p>
 </section>''' % (HEAD, LEDE, pcard(), BTW)

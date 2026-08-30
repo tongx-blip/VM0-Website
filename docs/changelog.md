@@ -4,6 +4,73 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · the permission card, checked against the source line by line
+
+Tong: *"我想问一下，option C 这个是我们真实的 UI 界面吗"* — a fair question, and
+the honest answer before checking was "the shape yes, the interaction I added
+no". So it got checked, against `vm0-ai/vm0` rather than against memory.
+
+### what was right
+
+`PermissionActionCard` in
+`turbo/apps/platform/src/views/okou-page/chat-body-cards.tsx`, and every line
+of it matches what this repo draws:
+
+| | product | here |
+|---|---|---|
+| shell | `min-h-[88px] flex-col gap-3 rounded-lg border-border/70 bg-background/85 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between` | same, including the `flex-col` that made D's narrow cell stack |
+| icon | `h-10 w-10 rounded-lg border-border/70 bg-muted/40`, mark at 22 | same |
+| title | `truncate text-[0.9375rem] font-medium` | same |
+| detail | `mt-0.5 line-clamp-2 text-sm leading-5` muted | same |
+| duration | `h-8 w-[116px] rounded-lg text-xs` | same |
+| confirm | `h-9 rounded-lg border border-border bg-background hover:bg-state-hover` | same — **neutral, not the brand primary** |
+
+Strings too, from `i18n/locales/en-US/common.json`: `connectorTitle`
+`"{{connectorName}} permissions"`, `actionDescription`
+`"{{action}} {{permissionName}}"`, `allow` `"Allow"`, `updated`
+`"Permissions updated"`.
+
+### what was wrong, and it was in the part I invented
+
+The card is a faithful copy. **The interaction added for direction C was not**,
+and it is the only part of any direction that was made up rather than read:
+
+* **`"This time only"` does not exist.** The real set is
+  `USER_PERMISSION_GRANT_EXPIRES_IN_OPTIONS = ["1h","24h","7d","always"]`
+  (`signals/permission-allow/permission-grant-expiration.ts`), labelled
+  `1 hour` / `24 hours` / `7 days` / `Always` in
+  `authorization.permission.durationOptions.*`.
+* **`7 days` was missing**, and it is real.
+* The default is `1h` (`DEFAULT_USER_PERMISSION_GRANT_EXPIRES_IN`); C opened on
+  the second option instead of the first.
+* The expiry belongs **on the card**, in amber
+  (`mt-0.5 text-xs font-medium text-amber-700`), using
+  `chat.permissions.expiresInHours_one` — not on a mono line underneath it. The
+  line underneath was also doing two jobs: half of it was a product string and
+  half was marketing. It says one thing now, and the duration is on the card.
+
+All four fixed. C cycles `1 hour → 24 hours → 7 days → Always` and the saved
+card reads `✓ Permissions updated` with `Expires in 7 days` in amber.
+
+### the one string still unverified
+
+`campaign-budgets.write`. The connector catalog needs auth
+(`api.vm0.ai/api/connector-catalog/google-ads/permissions` → `UNAUTHORIZED`) and
+the only Google Ads entry in the repo is a test fixture with `permissions: []`.
+The *format* is right — Gmail's `messages.write` appears in the CLI's own help —
+but the specific scope is not sourced, and it is written down here rather than
+left to look verified because everything around it is.
+
+**A rule that came out of this:** a mock can be right in every part that was
+copied and wrong in the one part that was invented, and the invented part is
+invisible precisely because the rest is accurate. When a mock gains an
+interaction it did not have, the interaction needs its own source.
+
+Gate: 0 axe violations at 1440 and 390, no overflow, no clipped text.
+Republished as v2.
+
+---
+
 ## 2026-08-30 · the control section, four directions from the wireframe back
 
 Tong: *"我们最初的时候是基于这个 Wireframe 来改的。现在看起来图片这个 section 我们
