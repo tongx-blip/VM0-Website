@@ -230,10 +230,20 @@
      of them was twice `--e-2`. Two roles, stated once:
        --e-fig   a card resting on a ground
        --e-lift  a card floating in front of another card
-     Both are channel-based so they follow `--ink` and the theme (C8). */
-  --e-fig:  0 1px 2px rgb(var(--ink-rgb) / .04),
+     Both are channel-based so they follow `--ink` and the theme (C8).
+
+     Each carries a HAIRLINE as its first layer. Tong: *"两个frame糊在一起了，
+     就是可以加一个非常浅的 stroke"* — with the shadows lightened, two white
+     cards that overlap have nothing between them, and the ask card's corner
+     dissolved into the shortlist card's. A 0.5px ring is not a structural
+     line (S4): it is the edge of a surface, it costs no layout, and it is
+     what the product's own `--zero-card-shadow` already does. It reads only
+     where two surfaces meet. */
+  --e-fig:  0 0 0 .5px rgb(var(--ink-rgb) / .07),
+            0 1px 2px rgb(var(--ink-rgb) / .04),
             0 14px 28px -22px rgb(var(--ink-rgb) / .20);
-  --e-lift: 0 1px 3px rgb(var(--ink-rgb) / .05),
+  --e-lift: 0 0 0 .5px rgb(var(--ink-rgb) / .08),
+            0 1px 3px rgb(var(--ink-rgb) / .05),
             0 20px 40px -26px rgb(var(--ink-rgb) / .26);
   --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
   /* the header has no elevation token — it separates by tone (RULES S3) */
@@ -2188,8 +2198,7 @@ h3{ font-family:var(--fd); }
   padding:clamp(12px,1.3vw,18px);
   border-radius:var(--r-card);
   background:var(--paper);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .07),
-             0 18px 34px -22px rgb(var(--ink-rgb) / .38);
+  box-shadow:var(--e-fig);
   /* they arrive together, not in a queue — a stagger here would be the
      one thing the figure exists to deny */
   opacity:0; transform:translateY(12px);

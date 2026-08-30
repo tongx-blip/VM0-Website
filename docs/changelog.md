@@ -817,6 +817,40 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-29 · a hairline in the shadow tokens, because two whites met
+
+Tong: *"两个frame糊在一起了，就是可以加一个非常浅的 stroke"*, then *"那其他地方都
+要加哈"*.
+
+This is the bill for lightening the shadows: separation was doing two jobs, and
+only one of them was "this card is raised". Where the ask card overlaps the
+shortlist card, two pure whites met with nothing between them.
+
+**The hairline goes in the tokens, not on the components.** `--e-fig` and
+`--e-lift` each take `0 0 0 .5px` as their FIRST layer, so every surface that
+already reads them gets an edge from one edit — nine declarations across the
+workflow cards, the ladder mocks, the Outputs connector cards, the app window,
+the Slack panel and the comparison cards. `.par__c` was still declaring its own
+shadow and now reads the token too.
+
+It is a shadow layer, not a `border`: no layout, no box-sizing, and it is
+exactly what the product's own `--zero-card-shadow` does. **S4's exception list
+names it** — a surface's own edge is not a divider, and at `.07`/`.08` of
+`--ink` it only shows where two surfaces overlap.
+
+**Where it did NOT go, and why.** A survey of every near-white card-scale
+surface on the page turned up nine. Four are the page's own section cards
+(`.panel`, `.footer`, `.close`, body) — they sit on the grey `--wash` and have
+never dissolved into anything; ringing them would make the page boxy and is the
+thing S2 and S4 were argued over. Three more (`.cbro__view`, `.vs`, `.quote`)
+are `--tile` grey on white, which is already a step off their ground. The two
+that overlap another surface are the two that got it.
+
+If "其他地方" meant the section cards as well, say so and I will — it is a
+different decision, not a missed spot.
+
+---
+
 ## 2026-08-29 · the globe rode 2.8px high, and the check for it was wrong twice
 
 Tong: *"这个语言选择 icon 和文字没有对齐。"*
