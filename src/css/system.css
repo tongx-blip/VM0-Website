@@ -1952,7 +1952,12 @@ h3{ font-family:var(--fd); }
    layout the two are placed explicitly, left and right */
 .ladder__col{
   grid-area:2 / 1;
-  display:flex; flex-direction:column; min-width:0;
+  /* Tong: *"上边的title stick top和下边的定位stick bottom"*. The lede holds the
+     frame's top row; the ladder hangs from the bottom of the second, so the
+     column's slack sits BETWEEN the two rather than dumped under the last
+     step — 125px of it at steps 1-3 and 178 at step 4. */
+  display:flex; flex-direction:column; justify-content:flex-end;
+  min-width:0;
 }
 .ladder__stage{ grid-area:1 / 2 / span 2; min-width:0; }
 /* No gap between rows: every bit of air belongs to a row, so the rule under a

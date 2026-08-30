@@ -885,6 +885,40 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-30 · the ladder hangs from the bottom
+
+Tong: *"上边的title stick top和下边的定位stick bottom"*.
+
+The lede already held the frame's top row; the steps sat at the top of the
+second, so all the column's slack piled up under the last one — **125px at
+steps 1-3 and 178 at step 4**, measured. `justify-content:flex-end` on
+`.ladder__col` hangs the ladder from the bottom instead, and the air moves to
+where it does some work: between the title and the steps.
+
+The payoff is an alignment that was not there before. The ladder's bottom rule
+now lands on the same line as the stage's bottom edge, in **every** step — both
+at 660 of the 660px frame — so the two columns close together instead of one
+trailing off into empty space.
+
+**What moves instead, and why it is fine.** The slack has to go somewhere, and
+bottom-hanging puts the variation on the ladder's TOP edge: 279 at steps 1-3
+and 332 at step 4, because step 4's body is 74px against ~126 for the others.
+That 53px shift happens during the same transition that opens step 4's body —
+the ladder is already re-flowing at every step change — and it lands in open
+space under the title with nothing to measure itself against. The bottom edge,
+which now has the stage to line up with, is the one that holds still.
+
+I considered reserving the tallest body height so neither edge moved. It needs
+a pixel value that would be wrong at every width the copy rewraps at, and it
+would buy stability on an edge nothing is aligned to.
+
+**Gate.** axe 0 across 8 samples; `audit.js` §1, §6, §8, §9, §10, §11 PASS;
+`tokens.py` 0; `rules.py` 154 rules resolving. Below 1080 `.ladder__col` is
+`display:block`, so the rule is inert there and the stacked order is unchanged
+— checked at 768 and 1024.
+
+---
+
 ## 2026-08-29 · the ladder gets its own lede
 
 Tong: *"把我图一标记的这段文字去掉，然后放到图二的位置，你可以用 Primary 橙色去
