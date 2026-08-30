@@ -817,6 +817,55 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-29 · the ladder gets its own lede
+
+Tong: *"把我图一标记的这段文字去掉，然后放到图二的位置，你可以用 Primary 橙色去
+标记里边的词。跟其他 section 的风格保持一致"*
+
+**"One chat becomes something the whole team runs"** leaves the centred lede and
+becomes the ladder's own heading, at the top of the left column above Run /
+Save / Hand over / Automate. Wording untouched; only the trailing full stop
+goes, because a heading takes no trailing punctuation. It reads as the other
+sections' headlines do — Archivo at display scale with one accent phrase — but
+at the COLUMN's scale rather than the page's, because it introduces the four
+steps beside it and not the section.
+
+**A `<p>`, not an `<h3>`.** It would otherwise sit at the same heading level as
+the four step titles it introduces.
+
+**`--accent-solid`, not `--accent`.** C1 gives display marks the brand orange,
+but this one clamps down to 23px at 1024, and 23px regular is below the
+large-text threshold where #ED4E01's 3.4:1 stops being enough. `--accent-solid`
+is 4.5:1 on paper at any size and the two are indistinguishable at this scale.
+It is also orange from the resting frame rather than on `.is-lit`: the colour
+is the point of the sentence and must not wait for JS (N2).
+
+### The placement had a second half
+
+Dropped into `.ladder__col` it was correct at desktop and quietly broken below
+1080, where the layout stacks and `.ladder__stage` is sticky: the lede sat
+between the stage and the steps, so it scrolled **under** the figure and out of
+sight. Measured at 768 — on screen at y 583, with the stage occupying 78–655.
+
+It is a grid item of `.ladder__view` now, not a child of the column: the view
+takes a second row, the lede holds `1 / 1`, the steps `2 / 1`, and the stage
+spans both at `1 / 2`. That also puts it first in the DOM, so the stacked
+layout reads it before the figure instead of sliding it underneath. Verified at
+390 and 1024 (lede above stage above steps) and at 1120 and 1920 (side by side,
+where reading order does not apply).
+
+**Gate.** axe 0 across 13 samples in both themes; `audit.js` §1, §6, §8, §9,
+§10, §11 PASS; `tokens.py` 0, `scopes.py` 0, `rules.py` 153 rules resolving.
+
+**One tension worth naming:** the section now carries two accent phrases —
+`asset it keeps.` in the headline and `whole team runs` in the ladder's lede.
+`.sentence .mark` was de-coloured once for exactly that reason. These two are
+at different scales in different columns with the centred lede between them, so
+I do not think it reads as a competition — but if it does, say so and the
+headline's mark can go back to ink.
+
+---
+
 ## 2026-08-29 · a hairline in the shadow tokens, because two whites met
 
 Tong: *"两个frame糊在一起了，就是可以加一个非常浅的 stroke"*, then *"那其他地方都

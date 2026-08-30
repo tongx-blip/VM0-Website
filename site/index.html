@@ -10,7 +10,7 @@
      system.css by tools/build-fonts.py; the sources live in src/fonts/ and
      are not committed. No Google Fonts request at all now — six families
      were being fetched and three of them were fallbacks for each other. -->
-<link rel="stylesheet" href="styles.css?r=2e1b600a">
+<link rel="stylesheet" href="styles.css?r=92bde033">
 </head>
 <body>
 
@@ -634,7 +634,6 @@
   </h2>
 
   <p class="section-body reveal">
-    <span class="lead-in">One chat becomes something the whole team runs.</span>
     One person works out how a job should get done. That becomes a workflow the rest of the team
     can run, and the workspace keeps it.
   </p>
@@ -644,6 +643,15 @@
        four mocks of four different shapes read as one object. -->
   <div class="ladder" id="ladder">
     <div class="ladder__view">
+      <!-- The sentence that used to open the centred lede. It belongs to the
+           ladder, not to the section: it says what the four steps add up to,
+           and read from the middle of the measure it was a second claim
+           competing with the headline above it. A grid item of the view, not
+           a child of the column, so the stacked layout reads it BEFORE the
+           sticky stage instead of sliding it under. -->
+        <p class="ladder__lede reveal">
+          One chat becomes something the <mark class="mark">whole team runs</mark>
+        </p>
       <div class="ladder__stage">
         <div class="ladder__frame">
           <div class="wfsc" id="wfScene" data-step="1">

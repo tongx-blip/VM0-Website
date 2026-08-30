@@ -2793,27 +2793,62 @@ h3{ font-family:var(--fd); }
      a 495 box — a transient, but it is the same shape as the fault that put
      seven Outputs tabs at three different heights. Inert at 700/800/900/1100
      and it removes the disagreement. */
-  grid-template-rows:minmax(0,1fr);
+  /* Two rows: the ladder's lede, then the steps. The stage spans both. */
+  grid-template-rows:auto minmax(0,1fr);
   grid-template-columns:minmax(0,286fr) minmax(0,649fr);
-  gap:var(--wf-gap);
+  gap:0 var(--wf-gap);
   align-items:stretch;
 }
+
+.ladder__lede{ grid-area:1 / 1; }
 
 /* the media comes first in the source so that when the section unwinds at
    narrow widths it can sit on top and stay sticky over the list; on the wide
    layout the two are placed explicitly, left and right */
 .ladder__col{
-  grid-area:1 / 1;
+  grid-area:2 / 1;
   display:flex; flex-direction:column; min-width:0;
 }
 
-.ladder__stage{ grid-area:1 / 2; min-width:0; }
+.ladder__stage{ grid-area:1 / 2 / span 2; min-width:0; }
 
 /* No gap between rows: every bit of air belongs to a row, so the rule under a
    row is that row's OWN bottom edge and travels with it. With the air sitting
    between two rows instead, the rule stayed 29px away from where the paragraph
    was being cut, and the text appeared out of empty space rather than from
    behind the line. */
+/* ── the ladder's own lede ──────────────────────────────────────────
+   Tong: *"把我图一标记的这段文字去掉，然后放到图二的位置 … 你可以用 Primary 橙色
+   去标记里边的词。跟其他 section 的风格保持一致"*.
+
+   It reads as the other sections' headlines do — Archivo at display scale
+   with one accent phrase — but at the COLUMN's scale rather than the page's,
+   because it introduces the four steps beside it and not the section. Set as
+   a `<p>`: it is a lede, and making it an `<h3>` would sit at the same level
+   as the four step headings it introduces.
+
+   `--accent-solid`, not `--accent`. C1 gives display marks the brand orange,
+   but this one clamps down to 23px, and 23px regular is BELOW the large-text
+   threshold where #ED4E01's 3.4:1 stops being enough. --accent-solid is 4.5:1
+   on paper at any size, and at this scale the two are indistinguishable. */
+.ladder__lede{
+  margin:0 0 clamp(26px, 3.4vw, 48px);
+  font-family:var(--fd); font-weight:500;
+  font-size:var(--t-d3); line-height:1.18;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  text-wrap:balance;
+}
+
+/* orange from the resting frame, not on `.is-lit`: the mark's colour is the
+   point of the sentence, and it must not wait for JS (N2) */
+.ladder__lede .mark,
+.ladder__lede .mark.is-lit{
+  background-image:none;
+  color:var(--accent-solid);
+}
+
+
 .ladder__steps{
   display:flex; flex-direction:column;
   gap:0;
