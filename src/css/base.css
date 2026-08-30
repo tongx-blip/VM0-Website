@@ -2225,3 +2225,143 @@ a.acard .acard__txt i{ color:var(--ink); }
   .flowsave__head{ flex-direction:column; }
   .flowlist__head{ flex-direction:column; }
 }
+
+/* ── the product's in-chat permission card ───────────────────────────
+   `PermissionActionCard`, turbo/apps/platform/src/views/okou-page/
+   chat-body-cards.tsx, copied class for class and checked against it again
+   on 2026-08-31 (QA §4ah):
+
+     shell     min-h-[88px] w-full flex-col gap-3 rounded-lg
+               border-border/70 bg-background/85 p-3 shadow-sm
+               sm:flex-row sm:items-center sm:justify-between
+     icon      h-10 w-10 rounded-lg border-border/70 bg-muted/40, mark at 22
+     title     truncate text-[0.9375rem] font-medium
+     detail    mt-0.5 line-clamp-2 text-sm leading-5 muted
+     duration  h-8 w-[116px] rounded-lg text-xs
+     confirm   h-9 rounded-lg BORDER + bg-background hover:bg-state-hover
+
+   The confirm is NEUTRAL. The orange primary belongs to the standalone
+   /permission-allow page, which is a different component — using it is what
+   made an earlier version of this section the wrong screen. */
+.pcard{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  min-height:88px; padding:12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--paper);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05);
+  text-align:left;
+}
+.pcard__l{ display:flex; align-items:center; gap:12px; min-width:0; }
+.pcard__ic{
+  width:40px; height:40px; flex:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--hairline); border-radius:8px; background:var(--tile);
+}
+.pcard__ic img{ width:22px; height:22px; object-fit:contain; }
+.pcard__t{ display:flex; flex-direction:column; min-width:0; }
+.pcard__t b{
+  font-size:15px; font-weight:500; color:var(--ink);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.pcard__t i{
+  margin-top:2px; font-style:normal; font-size:14px; line-height:20px;
+  color:var(--ink-mute);
+}
+.pcard__c{ display:flex; align-items:center; gap:8px; flex:none; }
+.pcard__sel{
+  display:inline-flex; align-items:center; justify-content:space-between; gap:6px;
+  width:116px; height:32px; padding:0 10px;
+  border:1px solid var(--hairline); border-radius:8px;
+  font-size:12px; color:var(--ink);
+}
+.pcard__sel svg{ width:14px; height:14px; flex:none; stroke:var(--ink-mute); }
+.pcard__go{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:36px; padding:0 12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--paper); color:var(--ink);
+  font-size:15px; font-weight:500;
+}
+/* the product's own responsive shape: `flex-col … sm:flex-row`. Left as a row
+   at every width the card's min-content is ~450px — the title is nowrap — and
+   it pushes a 390 phone sideways. */
+@media (max-width:640px){
+  .pcard{ flex-direction:column; align-items:stretch; }
+  .pcard__c{ width:100%; }
+  .pcard__go{ flex:1; }
+  .pcard__t b{ white-space:normal; }
+}
+
+/* ── #control · the agent screen the frame draws ─────────────────────
+   Product-mock internals, so they live here and not in the design layer:
+   the sizes are the app's own (14.5/13/16px rows, a 40px avatar tile),
+   not the page's type scale. */
+.ctrl__who{
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  grid-template-rows:auto auto;
+  column-gap:12px; align-items:center;
+  margin:0; padding:0 2px;
+}
+.ctrl__ava{
+  grid-row:1 / span 2; width:40px; height:40px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:var(--p-r-item, 10px); background:var(--paper);
+}
+.ctrl__ava img{ width:26px; height:26px; }
+.ctrl__who b{ align-self:end; font-size:16px; font-weight:600; color:var(--ink); }
+.ctrl__who i{
+  align-self:start; font-style:normal;
+  font-size:var(--t-sm); color:var(--ink-mute);
+}
+
+/* 1 · the authorization list */
+.perms{
+  list-style:none; margin:0; padding:0;
+  background:var(--paper); border-radius:var(--r-card);
+  overflow:hidden;
+}
+.perms li{
+  display:grid; grid-template-columns:24px minmax(0,1fr) auto;
+  align-items:center; gap:14px;
+  padding:11px clamp(12px,1.2vw,16px);
+  border-bottom:1px solid var(--hairline);
+}
+.perms li:last-child{ border-bottom:0; }
+.perms img{ width:24px; height:24px; object-fit:contain; }
+.perms__what{ display:flex; flex-direction:column; min-width:0; }
+.perms__what b{ font-size:14.5px; font-weight:600; color:var(--ink); }
+.perms__what i{
+  font-style:normal; font-size:13px; line-height:1.35; color:var(--ink-mute);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* 2 · the ask, mid-run */
+.cpane--ask{ display:flex; flex-direction:column; gap:12px; }
+.cpane__said{
+  margin:0; padding:11px 14px;
+  background:var(--paper); border-radius:var(--r-card);
+  font-size:14.5px; line-height:1.5; color:var(--ink);
+}
+.cpane__wait{
+  display:flex; align-items:center; gap:.6em; margin:0;
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
+  font-size:var(--t-mono); letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.cpane__wait i{
+  width:.5em; height:.5em; border-radius:var(--r-pill); flex:none;
+  background:rgb(var(--wait-rgb) / .85);
+}
+
+/* 3 · isolated execution, drawn */
+/* THE DRAWING IS CAPPED, or it sizes the whole section. It is a 900x900 PNG
+   and the panes share one grid cell, so at `max-width:100%` it took the
+   column's width — 657px tall — and the frame was sized by the picture rather
+   than by the list, which is 314. The cap is a little over the list's height
+   so the list stays the tallest thing and the frame keeps one height. */
+.cpane--iso{ display:flex; align-items:center; justify-content:center; height:100%; }
+.cpane--iso img{
+  width:auto; height:auto;
+  max-width:min(100%, 340px); max-height:340px;
+}
+

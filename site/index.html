@@ -10,7 +10,7 @@
      system.css by tools/build-fonts.py; the sources live in src/fonts/ and
      are not committed. No Google Fonts request at all now — six families
      were being fetched and three of them were fallbacks for each other. -->
-<link rel="stylesheet" href="styles.css?r=76c6008d">
+<link rel="stylesheet" href="styles.css?r=f6e547f4">
 </head>
 <body>
 
@@ -857,6 +857,13 @@
 </section>
 
 <!-- ═══════════════ 04 / CONTROL ═══════════════ -->
+<!-- ═══════════════ 04 / CONTROL ═══════════════ -->
+<!-- Left column carries the claim, right column carries one frame with three
+     states. The frame keeps ONE agent identity row across all three — this is
+     the same agent the whole way through, so the thing that changes is what it
+     is allowed to do, not who is doing it (RULES F2). The breadcrumb and the
+     Authorization/Profile/Activity tabs are gone: feedback 15, and they were
+     chrome explaining a screen the reader is not navigating. -->
 <section class="panel panel--card" id="control">
   <h2 class="display display--center" data-reveal="mask">
     <span class="line">Everything stays</span>
@@ -868,58 +875,96 @@
     the person, not the automation.
   </p>
 
-  <div class="ctrl">
-    <div class="ctrl__dialog reveal">
-      <div class="pgrant">
-        <p class="pgrant__brand">Okou</p>
-        <div class="pgrant__col">
-          <p class="pgrant__hi">Hey Maya, you’re updating your permissions for Okou.</p>
-          <p class="pgrant__who">
-            <img src="assets/brand/agent-okou.svg?v=435cf1b5" alt="" width="40" height="40">Okou
-          </p>
-          <p class="pgrant__lbl">Would like to</p>
-          <div class="pgrant__perm">
-            <p class="pgrant__conn">
-              <span class="pgrant__mark"><img src="assets/connectors/google-ads.svg?v=687a9327" alt="" width="20" height="20"></span>Google Ads
-            </p>
-            <p class="pgrant__act">
-              <svg class="pgrant__tick" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-              <span>Create and update campaign budgets.</span>
-              <code>campaign-budgets.write</code>
-            </p>
-          </div>
-          <p class="pgrant__dur"><span>Duration</span><em>1 hour<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></em></p>
+  <div class="ctrl reveal" id="ctrl">
+    <ol class="ctrl__steps">
+      <li class="cstep is-on" data-step="1">
+        <span class="cstep__bar" aria-hidden="true"></span>
+        <h3 class="cstep__h"><button class="cstep__t" type="button"
+            aria-expanded="true" aria-controls="ctrl-1">One connector, one action</button></h3>
+        <div class="cstep__body" id="ctrl-1">
+          <p>Grant access one connector and one action at a time, per Agent. Every action a run
+             takes is checked against this list before it leaves the sandbox — Okou can draft
+             the mail, but it cannot send it.</p>
         </div>
-        <p class="pgrant__go"><span>Confirm</span></p>
+      </li>
+      <li class="cstep" data-step="2">
+        <span class="cstep__bar" aria-hidden="true"></span>
+        <h3 class="cstep__h"><button class="cstep__t" type="button"
+            aria-expanded="false" aria-controls="ctrl-2">It stops and asks</button></h3>
+        <div class="cstep__body" id="ctrl-2">
+          <p>Sensitive writes wait for an explicit approval instead of running on their own, and
+             it is a person who answers it — not a rule buried in a settings page six months ago.</p>
+        </div>
+      </li>
+      <li class="cstep" data-step="3">
+        <span class="cstep__bar" aria-hidden="true"></span>
+        <h3 class="cstep__h"><button class="cstep__t" type="button"
+            aria-expanded="false" aria-controls="ctrl-3">Its own machine</button></h3>
+        <div class="cstep__body" id="ctrl-3">
+          <p>Each run gets its own cloud computer: nothing left over from the last task, no route
+             to another run’s files, and it is destroyed when the work finishes.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="ctrl__stage">
+      <div class="ctrl__frame" data-beat="1">
+        <p class="ctrl__who">
+          <span class="ctrl__ava"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="40" height="40"></span>
+          <b>Okou</b><i>Your AI teammate, tuned to you</i>
+        </p>
+
+        <div class="ctrl__panes">
+          <!-- 1 · the agent's own authorization list -->
+          <div class="cpane cpane--list" data-pane="1">
+            <ul class="perms">
+              <li><img src="assets/connectors/google-drive_marketing.svg?v=714a38f4" alt="" width="24" height="24">
+                <span class="perms__what"><b>Google Drive</b><i>Read files in a shared folder</i></span>
+                <em class="state state--ok">Allowed</em></li>
+              <li><img src="assets/connectors/gmail_marketing.svg?v=f4a3e85b" alt="" width="24" height="24">
+                <span class="perms__what"><b>Gmail</b><i>Save a draft</i></span>
+                <em class="state state--ok">Allowed</em></li>
+              <li><img src="assets/connectors/gmail_marketing.svg?v=f4a3e85b" alt="" width="24" height="24">
+                <span class="perms__what"><b>Gmail</b><i>Send mail</i></span>
+                <em class="state state--wait">Denied</em></li>
+              <li><img src="assets/connectors/slack.svg?v=55532dd8" alt="" width="24" height="24">
+                <span class="perms__what"><b>Slack</b><i>Post to a channel</i></span>
+                <em class="state state--ok">Allowed</em></li>
+              <li><img src="assets/connectors/github_marketing.svg?v=9cedfc6c" alt="" width="24" height="24">
+                <span class="perms__what"><b>GitHub</b><i>Open a pull request</i></span>
+                <em class="state state--off">Not granted</em></li>
+            </ul>
+          </div>
+
+          <!-- 2 · the product's in-chat permission card, mid-run.
+               Copied from PermissionActionCard; the durations and strings are
+               the product's own (QA §4ah). -->
+          <div class="cpane cpane--ask" data-pane="2">
+            <p class="cpane__said">Rebalance this week’s paid budget toward whatever is converting.</p>
+            <div class="pcard">
+              <span class="pcard__l">
+                <span class="pcard__ic"><img src="assets/connectors/google-ads.svg?v=687a9327" alt="" width="22" height="22"></span>
+                <span class="pcard__t"><b>Google Ads permissions</b><i>Allow campaign-budgets.write</i></span>
+              </span>
+              <span class="pcard__c">
+                <span class="pcard__sel">1 hour<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+                <span class="pcard__go">Confirm</span>
+              </span>
+            </div>
+            <p class="cpane__wait"><i></i>The run waits here until a person answers</p>
+          </div>
+
+          <!-- 3 · isolated execution, as a drawing (feedback 17) -->
+          <div class="cpane cpane--iso" data-pane="3">
+            <img src="assets/brand/spot-cloud-computer.png?v=0" alt="" width="900" height="900" loading="lazy">
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="ctrl__side">
-      <p class="ctrl__cap reveal">
-        <b>Granular permissions.</b> Grant access one connector and one action at a time, per
-        Agent. Sensitive writes wait for an explicit approval instead of running on their own —
-        and it is a person who answers it, not a rule buried in a settings page six months ago.
-      </p>
-
-      <div class="cbro reveal">
-        <p class="cbro__bar"><b>Cloud browser</b><em><i></i>Live</em></p>
-        <span class="cbro__view">
-          <img src="assets/artifact/ads-v1-card.jpg?v=78b91d4e" alt="" width="760" height="487" loading="lazy">
-        </span>
-      </div>
-
-      <p class="ctrl__cap reveal">
-        <b>Isolated execution.</b> Each run gets its own microVM: a fresh machine with nothing
-        left over from the last task and no route to another run’s files. When the work
-        finishes the machine is destroyed.
-      </p>
     </div>
   </div>
 
   <p class="note reveal">
-    Every run keeps an activity trail: what was read, what was written, who approved it and
-    when — and the engine underneath is open source, so the behaviour can be checked rather
-    than believed.
+    Every run keeps an activity trail — what was read, what was written, who approved it and when.
   </p>
 </section>
 
@@ -1189,6 +1234,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=3cf0f402"></script>
+<script src="app.js?r=baae0c63"></script>
 </body>
 </html>

@@ -2987,31 +2987,115 @@ h3{ font-family:var(--fd); }
    the three things in it one aligned block. The pair is then centred in
    the section rather than stretched across it. */
 .ctrl{
-  display:grid; grid-template-columns:auto minmax(0,400px);
-  justify-content:center;
-  gap:clamp(28px,4.2vw,72px);
-  margin-top:clamp(34px,3.8vw,56px);
+  /* Left column claims, right column shows. The text column is narrower than
+     the frame on purpose: a claim is read once and the frame is looked at for
+     the whole of the beat, so they are not peers. */
+  display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1fr);
+  gap:clamp(28px,4.2vw,68px); align-items:center;
+  margin-top:clamp(30px,3.4vw,50px);
 }
-.ctrl__dialog{ min-width:0; }
-/* The column spans the dialog rather than floating in the middle of it.
-   Centred, the three things in it stopped 100px above the dialog's floor
-   and the section ended on a hole; space-between hangs the first caption
-   off the top edge and the last off the bottom, so the two halves read as
-   one block. The gap is the FLOOR, not the spacing. */
-.ctrl__side{
-  min-width:0;
-  display:flex; flex-direction:column; justify-content:space-between;
-  gap:clamp(20px,2.4vw,30px);
+
+/* ── the three steps ─────────────────────────────────────────────────
+   The same shutter the workflow ladder uses (RULES N13): the body is a
+   1-track grid opened from 0fr, so a closed step collapses to its title and
+   the rule under it is the row's OWN bottom edge, travelling with it. NO
+   padding on the body — a 0fr track is floored at the padding box of the
+   item inside it, which is what kept closed rows 6px tall the first time
+   this mechanic was built. */
+.ctrl__steps{ list-style:none; margin:0; padding:0; }
+.cstep{
+  position:relative;
+  padding:clamp(14px,1.6vw,20px) 0;
 }
-.ctrl__cap{
+/* NO RULE BETWEEN THE STEPS. The first version gave every step a
+   `border-bottom` and let the progress bar sit on top of it, which is three
+   hairlines of furniture to make one of them mean something — and S4 forbids
+   exactly that. The steps separate by space; the only line on screen is the
+   ACTIVE step's track, which is a state and not a divider. It is drawn under
+   the step that is playing and nowhere else, so it also says which one that
+   is without a second marker. */
+.cstep__bar{
+  position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--hairline);
+  opacity:0; transition:opacity var(--t-state) var(--e-out);
+}
+.cstep__bar::after{
+  content:""; position:absolute; inset:0;
+  transform-origin:left center; transform:scaleX(var(--p,0));
+  background:var(--accent-solid);
+}
+.cstep.is-on .cstep__bar{ opacity:1; }
+.cstep__h{ margin:0; font-size:inherit; font-weight:inherit; }
+.cstep__t{
+  display:block; width:100%; padding:0; border:0; background:none;
+  text-align:left; cursor:pointer;
+  font-family:var(--fd); font-weight:500;
+  font-size:var(--wf-title); line-height:1.24;
+  letter-spacing:-.01em;
+  color:var(--ink-mute);
+  transition:color var(--t-state) var(--e-out);
+}
+.cstep.is-on .cstep__t,.cstep__t:hover{ color:var(--ink); }
+.cstep__body{
+  display:grid; grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows var(--t-reveal) var(--e-out),
+             opacity var(--t-state) var(--e-out);
+}
+.cstep.is-on .cstep__body{ grid-template-rows:1fr; opacity:1; }
+.cstep__body > p{
+  overflow:hidden; min-height:0; margin:0; padding:0;
   font-size:var(--t-sm); line-height:1.62; color:var(--ink-soft);
 }
-.ctrl__cap b{ font-weight:600; color:var(--ink); }
+/* the air under an open paragraph is CONTENT height, which a 0fr track does
+   collapse — padding is not */
+.cstep__body > p::after{ content:""; display:block; height:.7em; }
 
-/* Narrow: one column. Neither mock scales — both already cap themselves
-   against the measure they are given, exactly as they do in the app. */
+/* ── the frame: one object, three states ─────────────────────────────
+   ONE HEIGHT for all three panes. A frame that resizes between beats is a
+   section that jumps while it plays itself, and the three panes are a list,
+   a card and a drawing — three natural heights. They share a grid cell. */
+.ctrl__stage{ min-width:0; }
+.ctrl__frame{
+  border-radius:var(--r-lg);
+  background:var(--tile);
+  padding:clamp(14px,1.5vw,20px);
+  display:flex; flex-direction:column; gap:clamp(12px,1.3vw,16px);
+}
+/* THE AGENT IS THE CONSTANT. Breadcrumb and tabs are gone (feedback 15) —
+   they explained a screen the reader is not navigating. What is left is who
+   this is, and it stays put across all three states, so the thing that
+   changes is what the agent may do rather than which screen you are on. */
+/* ONE HEIGHT, set by the tallest pane, and the two shorter ones sit in the
+   middle of it rather than hanging from the top. The list is five rows for the
+   same reason: at six it was 761px and the other two beats left 500px of empty
+   ground under themselves. */
+/* TOP-ALIGNED. The identity row is the frame's constant and the pane starts
+   directly under it — centred in the cell, beat 2 opened with 130px of grey
+   between the agent's name and the first thing it said, which reads as two
+   objects rather than one screen. Only the drawing centres: it is a picture,
+   not a list, and a picture hanging from a top edge looks dropped. */
+.ctrl__panes{ display:grid; align-items:start; }
+.cpane{
+  grid-area:1 / 1; min-width:0;
+  opacity:0; pointer-events:none;
+  transition:opacity var(--t-state) var(--e-out);
+}
+/* the pane that is not showing is taken out of the reader's way with `inert`
+   from app.js §16, not with `visibility` — a visibility transition needs a
+   delay to work, and a delay is a duration nobody tokenised */
+.ctrl__frame[data-beat="1"] .cpane[data-pane="1"],
+.ctrl__frame[data-beat="2"] .cpane[data-pane="2"],
+.ctrl__frame[data-beat="3"] .cpane[data-pane="3"]{
+  opacity:1; pointer-events:auto;
+}
+
+/* Narrow: one column, and the frame goes first — the picture is the reason
+   to keep reading on a phone, and three collapsed titles are not. */
 @media (max-width:1000px){
-  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(24px,4.4vw,34px); }
+  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(20px,3.4vw,28px); }
+  .ctrl__stage{ order:-1; }
+  .cpane--iso img{ max-height:260px; }
 }
 .feat,.vs,.quote{
   border:0;

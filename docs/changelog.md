@@ -4,6 +4,88 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · control becomes a left-right stepper that plays itself
+
+Tong: *"我们还是用之前这个界面吧，只是删掉顶部的信息，顶部只留 agent 头像和名称&
+副标题。然后把这个 section 做成左右结构 左文字，右展示图，然后你看看做成步骤的感觉，
+但是是自动播放的，用户也可以去切换。"*
+
+Merged into `site/`. The four review directions were the wrong shape for this
+answer — none of them was a stepper.
+
+### the screen he pointed at, minus the chrome
+
+The Authorization list from the wireframe, kept. What goes is the
+`Agents / Okou` breadcrumb and the `Authorization | Profile | Activity` tabs —
+feedback 15, and they explained a screen the reader is not navigating. What
+stays is the agent: avatar, name, subtitle.
+
+**And the identity row is the frame's constant.** It does not belong to beat 1;
+it sits above all three, so what changes between beats is what this agent is
+allowed to do, not which screen you are on (RULES F2).
+
+| | left | right |
+|---|---|---|
+| 1 | One connector, one action | the authorization list — `Allowed` / `Denied` / `Not granted` |
+| 2 | It stops and asks | the real in-chat `PermissionActionCard`, mid-run |
+| 3 | Its own machine | the cloud-computer drawing (feedback 17) |
+
+Copy is cut from what was already there. `microVM` is the one word changed and
+17 asked for it. The activity trail is the closing line and nothing else (19).
+
+**1.04 screens, down from 1.25.** Still the largest thing in the section is the
+heading; §7 passes.
+
+### it plays, and it stops the moment you touch it
+
+`app.js` §16. Not a scroll animation — the ladder above it is already
+scroll-driven, and a second scroll-driven stepper on one page is the same
+device twice. So: `requestAnimationFrame`, 5.2s a beat, gated on an
+`IntersectionObserver` and `visibilitychange`, no timer at all under
+`prefers-reduced-motion`, and **parked for good on the first click** (N4). A
+player that resumes under someone's hand argues with them, and the progress
+bar is the tell — it would restart mid-gesture.
+
+Arrow keys walk the group. The buttons were already in the tab order; that was
+the only thing missing.
+
+### three things the gate caught
+
+**The drawing was sizing the section.** A 900×900 PNG at `max-width:100%` in a
+shared grid cell took the column's width — 657px tall — so the frame was sized
+by the picture and the list, which is 314, sat in the middle of it. The section
+came out at **1.39 screens, worse than what it replaced**. Capped at 340px, the
+list is the tallest pane again and the frame is 444.
+
+**Centred panes broke the frame's one claim.** With the panes vertically
+centred, beat 2 opened with 130px of grey between the agent's name and the
+first thing it said — the identity row stopped reading as part of the screen.
+Top-aligned; only the drawing centres, because a picture hanging off a top edge
+looks dropped.
+
+**Three hairlines to make one of them mean something.** The first version gave
+every step a `border-bottom` and drew the progress bar on top of it, which is
+furniture on two steps to give the third a track — the thing S4 forbids, and
+`audit.js` §1 said so. The steps separate by space now and the only line on
+screen is the **active** step's track: a state, not a divider, and it doubles
+as the marker for which step is playing.
+
+`.ctrl__frame` is named in §1's mock list: `PermissionActionCard` is
+`border-border/70` on its shell, its icon tile and both controls, and the
+permission rows are separated the way the product separates them. Naming the
+frame rather than the four classes inside it means the next pane added does not
+fail the audit on its first day.
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · `audit.js`
+§1–§11 pass · axe 0 in light and dark other than the known `.wfo--list` fade
+(QA §4af, open) · 1440 and 390 clean, the one ellipsis at 390 being the
+product's own `text-overflow` on a row label.
+
+Dead now and pruned out of the shipped CSS by the build, left in source:
+`.pgrant`, `.cbro`.
+
+---
+
 ## 2026-08-31 · the permission card, checked against the source line by line
 
 Tong: *"我想问一下，option C 这个是我们真实的 UI 界面吗"* — a fair question, and

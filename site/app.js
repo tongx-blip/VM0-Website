@@ -1685,4 +1685,104 @@
        with the layout */
     window.addEventListener('resize', unlockClose);
   }
+
+  /* ───────────────────────────────────────────────────────────────────
+     16. #control · three steps that play themselves
+
+     Tong: *"做成步骤的感觉，但是自动播放的，用户也可以去切换"*. So it is a
+     player, not a scroll animation — the ladder above it is already
+     scroll-driven and a second scroll-driven stepper on one page reads as
+     the same device twice.
+
+     The rules it has to obey are the page's existing ones for anything that
+     moves by itself:
+       · it does not run off screen, and it does not run in a hidden tab
+         (N8) — an IntersectionObserver and `visibilitychange`;
+       · `prefers-reduced-motion` gets the first step and no timer (N16);
+       · **and the moment someone drives it, it parks for good** (N4). A
+         player that resumes after a click argues with the person using it,
+         and the progress bar is the tell: it would restart under their hand.
+     ─────────────────────────────────────────────────────────────────── */
+  var ctrl = doc.getElementById('ctrl');
+  if (ctrl) {
+    var cSteps = [].slice.call(ctrl.querySelectorAll('.cstep'));
+    var frame = ctrl.querySelector('.ctrl__frame');
+    var cPanes = [].slice.call(ctrl.querySelectorAll('.cpane'));
+    var HOLD = 5200;                 /* long enough to read the paragraph */
+    var TICK = 60;
+    var at = 0, t0 = 0, raf = null, parked = false, seen = false;
+
+    function paint(i) {
+      at = i;
+      cSteps.forEach(function (s, n) {
+        var on = n === i;
+        s.classList.toggle('is-on', on);
+        if (!on) s.style.removeProperty('--p');
+        var b = s.querySelector('.cstep__t');
+        if (b) b.setAttribute('aria-expanded', on ? 'true' : 'false');
+      });
+      if (frame) frame.dataset.beat = String(i + 1);
+      /* `inert`, not a visibility transition: the two cPanes that are not
+         showing still hold real text, and fading them out leaves them in the
+         tab order and in the accessibility tree. Same treatment the ladder's
+         closed panels get. */
+      cPanes.forEach(function (p, n) {
+        var on = n === i;
+        if ('inert' in p) p.inert = !on;
+        p.setAttribute('aria-hidden', on ? 'false' : 'true');
+      });
+    }
+
+    function stop() {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      cSteps.forEach(function (s) { s.style.removeProperty('--p'); });
+    }
+
+    function run() {
+      stop();
+      if (parked || !seen || doc.hidden) return;
+      t0 = performance.now();
+      var step = function (now) {
+        if (parked || !seen || doc.hidden) { stop(); return; }
+        var p = (now - t0) / HOLD;
+        if (p >= 1) { paint((at + 1) % cSteps.length); t0 = now; p = 0; }
+        cSteps[at].style.setProperty('--p', p.toFixed(3));
+        raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    cSteps.forEach(function (s, n) {
+      var btn = s.querySelector('.cstep__t');
+      if (!btn) return;
+      btn.addEventListener('click', function () { parked = true; stop(); paint(n); });
+      /* arrow keys walk the group, the way a tablist does — the buttons are
+         already in the tab order, so this is the only thing missing */
+      btn.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
+              : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        parked = true; stop();
+        var next = (n + d + cSteps.length) % cSteps.length;
+        paint(next);
+        cSteps[next].querySelector('.cstep__t').focus();
+      });
+    });
+
+    doc.addEventListener('visibilitychange', function () {
+      if (doc.hidden) stop(); else run();
+    });
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      parked = true;
+    }
+    paint(0);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        seen = es[0].isIntersecting;
+        if (seen) run(); else stop();
+      }, { threshold: 0.3 }).observe(ctrl);
+    } else { seen = true; run(); }
+  }
 })();
