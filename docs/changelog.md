@@ -1638,7 +1638,7 @@ with an inset ring; the ghost was a filled one; the primary lifted onto a
 swapped its fill to `--accent-wash`, a dark brown that read as a different
 control entirely; and sign in rolled its own label on hover while nothing else
 did. Now: two shapes, one hover — a 1px lift and a single light shadow at .28,
-no fill changes colour, no label moves (**S13**). The closing band's secondary
+no fill changes colour, no label moves (**S17**). The closing band's secondary
 also drops its *resting* shadow, which made it the heaviest control on the page
 while every other one was flat until touched.
 
@@ -1647,7 +1647,7 @@ while every other one was flat until touched.
 IS `--wash-2` once stuck, so Sign in became a wash-2 chip on a wash-2 bar: a
 button you cannot see. The secondary is one step off *the ground it sits on*,
 and which step that is depends on the ground: `--wash-2` on the white section
-cards, `--paper` on the closing band and in the header (**S12**). The outlined
+cards, `--paper` on the closing band and in the header (**S16**). The outlined
 version it replaced had the opposite fault — it was the heaviest thing up there.
 
 **The gap between sections is the gap beside them.** The block margin was its own
