@@ -1334,6 +1334,49 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-30 · the hero's two buttons come out, Slack stays as a line
+
+Tong: *"把hero上的那两个button去掉，但是add to slack这个入口还是需要留下，不过现
+在方的这个位置插在文本和下边的prompt box中间有点尴尬。你有什么更好的建议吗？给我
+四个方案"* — four placements were rendered on the real hero and he took **B**.
+
+| | where | why not |
+| --- | --- | --- |
+| A | a Slack chip in the composer's control row | sits among *tools you attach*, so it reads as "attach Slack" rather than "install Okou into Slack" |
+| **B** | **a quiet text line under the box** | **shipped** |
+| C | a pill riding the composer's top-right corner | the one new shape on the page, and it crowds the sticker to its right |
+| D | into the nav beside Get started | turns a hero decision into permanent chrome, and three controls top-right is a busier header |
+
+**B, and the reason it is the right one, is the ordering.** The pair of buttons
+stood between the sentence and the product — that is the awkwardness he named,
+not the buttons themselves. Moving the entry point *after* the box lets the
+hero read straight through to the thing, and the second way in arrives once you
+have seen what it opens. It is TEXT rather than a button because the nav's
+"Get started" is two inches above it and never leaves.
+
+**K8 changed with it.** It read *"the page asks twice: the hero and the closing
+band"*. The hero no longer asks — the header does, permanently — so the rule
+now says header and closing band, and adds that a second entry point in the
+hero is text and goes after the box. A rule that describes a page the page no
+longer is gets re-litigated in three rounds' time.
+
+**Dead machinery removed.** `.hero[data-cta="box"]` existed to hide the pair
+for exactly this decision; with the decision made, the variant, both
+`.hero__cta` blocks and the note explaining the switch are gone rather than
+left as a toggle nobody will flip back.
+
+**One detail worth the four lines it cost.** WCAG 2.2's target-size minimum
+exempts a link inside a sentence, which this is, but 21px is fiddly on a phone
+for no reason. The box takes 5px of padding and the underline is drawn with a
+negative spread — `inset 0 -6px 0 -5px` — so it stays on the text's baseline
+instead of travelling down with the box. 31px target, underline unmoved.
+
+**Gate.** axe 0 across 12 samples in both themes; `audit.js` §1, §6, §8, §9,
+§10, §11 PASS; `tokens.py` 0, `scopes.py` 0, `rules.py` 155 rules resolving.
+Centred to 0px under the box at 390, 768, 1440 and 1920.
+
+---
+
 ## 2026-08-30 · the ladder hangs from the bottom
 
 Tong: *"上边的title stick top和下边的定位stick bottom"*.

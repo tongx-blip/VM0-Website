@@ -1734,7 +1734,6 @@ a.acard .acard__txt i{ color:var(--ink); }
 .marquee,.marquee:first-of-type{ border-top:0; border-bottom:0; }
 
 /* ── hero: both buttons sit on one row ── */
-.hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }
 .btn--ghost img{ width:20px; height:20px; }
 
 /* ── hero: the tail headline cycles through a few short statements ── */

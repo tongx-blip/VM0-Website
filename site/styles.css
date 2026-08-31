@@ -556,8 +556,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 
 /* ── hero: both buttons sit on one row ── */
-.hero__cta{ display:flex; flex-wrap:wrap; gap:12px; }
-
 .btn--ghost img{ width:20px; height:20px; }
 
 
@@ -2004,10 +2002,42 @@ h3{ font-family:var(--fd); }
   color:var(--ink-soft);
 }
 
-.hero__cta{
-  display:flex; flex-wrap:wrap; justify-content:center; gap:12px;
-  margin-top:clamp(4px,.6vw,10px);
+/* ── the hero's second way in ────────────────────────────────────────
+   Tong: *"把hero上的那两个button去掉，但是add to slack这个入口还是需要留下，
+   不过现在方的这个位置插在文本和下边的prompt box中间有点尴尬"* — of four
+   placements he took the quiet line under the box.
+
+   AFTER the composer, not before it. The pair of buttons stood between the
+   sentence and the product, which is the awkwardness; an entry point reads
+   better once you have seen the thing it opens. And it is TEXT: a second
+   button here would be a third ask on a page that asks twice (K8), and the
+   nav's "Get started" is two inches above it. */
+.hero__slack{
+  margin:clamp(16px,1.8vw,24px) 0 0;
+  display:flex; justify-content:center; align-items:center;
+  flex-wrap:wrap; gap:0 8px;
+  font-size:var(--t-sm); line-height:1.4;
+  color:var(--ink-soft);
 }
+
+.hero__slack a{
+  display:inline-flex; align-items:center; gap:7px;
+  color:var(--ink); text-decoration:none;
+  /* WCAG 2.2's target-size minimum exempts a link inside a sentence, which
+     this is — but 21px is fiddly on a phone for no reason, so the box takes
+     5px of padding. The underline is drawn with a negative spread so it
+     stays on the text's baseline instead of travelling down with the box:
+     `-6px` offset less `-5px` spread leaves a 1px line 5px off the bottom.
+     The one underline on the page that is a link's own and not a divider —
+     it says "this is the thing to click" where no button does. */
+  padding:5px 2px;
+  box-shadow:inset 0 -6px 0 -5px rgb(var(--ink-rgb) / .24);
+  transition:box-shadow var(--t-hover) var(--e-out);
+}
+
+.hero__slack a:hover{ box-shadow:inset 0 -6px 0 -5px var(--ink); }
+
+.hero__slack img{ width:16px; height:16px; flex:none; }
 
 
 /* the rotating second statement, one line, centred under the headline */
@@ -2123,26 +2153,6 @@ h3{ font-family:var(--fd); }
   margin-top:clamp(28px, 3vw, 44px);
   padding-bottom:clamp(168px, 12vw, 190px);
 }
-
-/* ── the hero's CTA, next to a box that is also a CTA ─────────────────
-   Three calls to action inside 240px: a filled orange button, a secondary
-   beside it, and an orange send key on the box below — and pressing
-   anything on the box produces a fourth, "Get started for free", in the
-   unlock note. v0 and Cursor, the two heroes built around a prompt box,
-   carry no buttons at all: the box IS the entry point.
-
-   Switched on `data-cta` so the call is one word. Default stays `pair` —
-   removing a hero's primary CTA is a funnel decision, not a design one.
-     (default) — buttons above the box, as it shipped
-     `box`     — no buttons; the box is the way in, and the nav still
-                 carries "Get started" two inches above it
-
-   A third option, buttons UNDER the box, needs .hero__cta to become a
-   direct child of .hero: it and .showcase are siblings of .stack, so
-   reordering it past the figure with `order` alone dissolved .stack into
-   the panel's 12-column grid and set the paragraph one word per line.
-   Not shipped as a broken variant. */
-.hero[data-cta="box"] .hero__cta{ display:none; }
 
 
 /* ── the hero's prompt box ───────────────────────────────────────────
