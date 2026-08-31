@@ -73,6 +73,83 @@ for the one thing it is for.
 
 ---
 
+## 2026-08-31 · the agent has a face, and it is composed
+
+Tong: *"这是我们新branding的Avatar Composer。这个是我们的agent 头像规则，以后都
+可以用这个… 替换我们网站上的所有之前的agent logo。其他用户头像你可以ai生成虚拟
+头像替换。"*
+
+### The composer, reproduced rather than clicked
+
+`avatar-composer-v10-sharp.sites.vm0.io` is six dimensions over 232,050 valid
+combinations. `tools/build-avatars.py` reproduces its `compose()` exactly, so
+an avatar built here is identical to one downloaded from the tool:
+
+    layers = [ background, underlay+rear+overlay, face, front+ear-join, expression ]
+
+with the two colours as `--avatar-skin` / `--avatar-hair` on the root, which is
+how one file recolours without touching a path. **The geometry lookup has four
+fallbacks and all of them matter** — a hairstyle carries a variant per face
+*geometry*, then per-face overrides on top for the underlay, the overlay, the
+ear join and the front. Take `geometry.front` and stop and the hair floats off
+a face it was never cut for. Adding an agent is a dict entry and a re-run.
+
+**The composed SVG is 4.9 MB** — its background layer is a 2048² PNG inline,
+right for a design tool and wrong for a 22px avatar in a chat row. The SVG is
+the source; a PNG ships, rendered by headless Chromium (the composer's own
+engine) at 4× the largest size the page uses. 24 KB after a 128-colour pass.
+
+### Which one, and why not orange
+
+Ten candidates rendered at 160, 44 and **22px**, because 22 is where this has
+to work. The pick is `teal-stripes / round / rounded-crop / gentle-smile /
+gold / black`, and the interesting choice is the ground:
+
+**Not `orange-marks`.** The page spends its one accent in three places (C1) and
+this avatar sits beside two of them; an orange-grounded avatar makes a fourth
+and the accent stops being the accent. The deep green is also the only ground
+in the set that holds the gold face at 22px — on pink and on sky the head
+dissolves into it.
+
+### Agent, person and product are three different things
+
+The cube was doing all three jobs.
+
+| | |
+|---|---|
+| **agent** — the Slack row, Okou's own window, the runner on the connector chain | the composed avatar, 19 slots |
+| **person** — Slack authors, the member pile, the teammates, the lanes, six testimonials, two hero stickers | AI-generated, 6 portraits |
+| **product** — nav, footer, workspace tile, unfurl, workflow icon, comparison card, the `.par__ic` run badge | still the cube |
+
+`.par__ic` is 13px. A face does not read at 13px and that tile's hue is the
+*scene's* identity, not the agent's — it stays a mark, on purpose. The runner
+keeps its orange halo, because the halo is what says *travelling*; the puck
+under it was an orange tile with the mark knocked out in white, and it is the
+face now.
+
+### The people
+
+Six portraits from `gpt-image-1` in the register the page already draws in:
+flat fills, one black contour, a crayon ground edge to edge. Deliberately
+*drawn* where the agent is *composed* — shoulders, a lighter line, more face —
+which is what tells an agent from a person at 22px with no AGENT badge in
+frame. 707 → 304 KB across all seven at 128 colours.
+
+### One regression the swap caused
+
+Two hero stickers were round **only because the old files had transparent
+corners**. New files are square tiles, so they became squares with a drop
+shadow. The slot says `border-radius:50%` now — a file's shape is not a layout
+(new rule B5).
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 157
+rules, all pointers resolve · `audit.js` §1 §6 §7 PASS · axe **0 violations**,
+5 light and 3 dark · 291 images, 0 broken.
+
+---
+
 ## 2026-08-31 · control becomes a left-right stepper that plays itself
 
 Tong: *"我们还是用之前这个界面吧，只是删掉顶部的信息，顶部只留 agent 头像和名称&
