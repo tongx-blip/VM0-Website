@@ -1,0 +1,197 @@
+/* options-parallel — the comparison surface only. Not shipped.
+   Every band below is 334 x 214, the real one. The heights are stated, not
+   guessed: whatever does not fit in 214 is the thing being judged. */
+.obody{ margin:0; padding:40px clamp(16px,4vw,56px) 96px; background:var(--wash);
+  font-family:var(--fb); color:var(--ink); }
+.ohead{ max-width:70ch; margin:0 auto 40px; }
+.ohead h1{ font-family:var(--fd); font-size:30px; font-weight:500; margin:0 0 12px; }
+.ohead p{ font-size:15px; line-height:1.6; color:var(--ink-mute); margin:0 0 12px; }
+.ohead b{ color:var(--ink); font-weight:500; }
+.ohead__c{ display:flex; gap:10px; }
+.ohead__c button{ font-family:var(--fm); font-size:12px; letter-spacing:.06em;
+  text-transform:uppercase; padding:9px 14px; border:0; border-radius:10px;
+  background:var(--accent-solid); color:#fff; cursor:pointer; }
+.ohead__c .ghost{ background:var(--wash-2); color:var(--ink); }
+
+/* 334 EXACTLY, NOT `minmax(334px,1fr)`. The 1fr stretched every column to the
+   viewport — the bands were coming out 634 wide in a one-column pane, so the
+   whole premise of this page ("drawn at the real size") was false and D's pan
+   arithmetic, which is stated against a 334 band, centred on nothing. */
+.ogrid{ display:grid; gap:32px; grid-template-columns:repeat(auto-fit,334px);
+  justify-content:center; max-width:1320px; margin:0 auto; align-items:start; }
+.ocard2{ width:334px; }
+.okey{ display:flex; align-items:baseline; gap:10px; margin:0 0 10px;
+  font-family:var(--fm); font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
+.okey b{ font-size:15px; color:var(--accent-solid); }
+.okey span{ color:var(--ink-mute); }
+.owhy{ font-size:14px; line-height:1.6; color:var(--ink-mute); margin:14px 2px 8px; }
+.oges{ font-size:13px; line-height:1.6; color:var(--ink-mute); margin:0 2px; }
+.oges b{ font-family:var(--fm); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink); margin-right:8px; }
+
+.ogrid .vs__viz{ width:100%; height:214px; overflow:hidden; position:relative; }
+/* FILL THE BAND, DO NOT ASK IT. `height:100%` on the option root came back as
+   194 in a 214 band, so B's fourth lane cleared the bottom edge by 2px — which
+   is not clipped and still reads as clipped. `inset:0` is the band, exactly,
+   and every height below is then stated against a number that is true. */
+.oA,.oB,.oC,.oD{ position:absolute; inset:0; }
+.oav{ border-radius:9999px; flex:none; object-fit:cover; }
+/* B5. The supplied avatar is a square tile with its own ground; rounding it
+   crops the ground the branding file draws. The people stay circles. */
+.oav--agent{ border-radius:6px; }
+/* the owner, with the runner badged on it. `--s` is the photograph's size, so
+   the badge and the box follow it and one rule serves 16 / 18 / 20 / 22. */
+.opair{ position:relative; display:inline-flex; flex:none;
+  width:var(--s); height:var(--s); }
+.oav--badge{ position:absolute; right:-3px; bottom:-3px; border-radius:5px;
+  box-shadow:0 0 0 1.5px var(--p-card); }
+
+/* ── A · the count ──────────────────────────────────────────────────
+   12 padding both sides leaves 190. Four 38px rows and three 8px gaps
+   is 176, so the stack is centred in 190 with 7 either side and NOTHING
+   is cut — which is the entire claim of this option. */
+.oA{ padding:12px; display:flex; flex-direction:column;
+  justify-content:center; gap:8px; box-sizing:border-box; }
+.arow{ height:38px; box-sizing:border-box; flex:none;
+  display:flex; align-items:center; gap:9px; padding:0 10px;
+  border-radius:10px; background:var(--p-card); border:1px solid var(--p-border); }
+.arow__t{ flex:1; min-width:0; font-size:12.5px; font-weight:500; color:var(--p-fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.arow__bar{ flex:0 0 52px; height:4px; border-radius:9999px;
+  background:var(--p-tint); overflow:hidden; }
+.arow__fill{ display:block; height:100%; width:0; border-radius:inherit;
+  background:var(--p-run); }
+.is-play .arow__fill{ width:var(--p); transition:width 1500ms var(--e-out);
+  transition-delay:var(--d); }
+
+/* ── B · the split ──────────────────────────────────────────────────
+   190 usable: a 30px ask, an 8px gap, then four 33px lanes on 6px gaps
+   = 150. The fan is what is left, and it is the whole point, so it gets
+   the slack rather than the ask. */
+.oB{ padding:12px; display:flex; flex-direction:column; gap:8px;
+  box-sizing:border-box; }
+.bask{ height:30px; box-sizing:border-box; flex:none;
+  display:flex; align-items:center; gap:8px; padding:0 10px;
+  border-radius:9px; background:var(--p-tint);
+  opacity:0; transform:translateY(-6px); }
+.is-play .bask{ opacity:1; transform:none;
+  transition:opacity 300ms var(--e-out),transform 300ms var(--e-out); }
+.bask__l{ height:6px; border-radius:9999px; background:var(--p-border); flex:1; }
+.bask__l--s{ flex:0 0 38px; }
+.bask i{ font-style:normal; font-size:10px; color:var(--p-mute); }
+.bfan{ display:flex; flex-direction:column; gap:6px; flex:1;
+  justify-content:center; }
+.blane{ height:32px; box-sizing:border-box; flex:none;
+  display:flex; align-items:center; gap:8px; padding:0 9px;
+  border-radius:9px; background:var(--p-card); border:1px solid var(--p-border);
+  opacity:0; transform:translateY(-8px) scale(.98); }
+.is-play .blane{ opacity:1; transform:none;
+  transition:opacity 320ms var(--e-out),transform 420ms var(--e-spring);
+  transition-delay:var(--d); }
+.blane__t{ flex:1; min-width:0; font-size:12px; color:var(--p-fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.blane__bar{ flex:0 0 44px; height:4px; border-radius:9999px;
+  background:var(--p-tint); overflow:hidden; }
+.blane__fill{ display:block; height:100%; width:0; border-radius:inherit;
+  background:var(--p-run); }
+.is-play .blane__fill{ width:var(--p); transition:width 1400ms var(--e-out);
+  transition-delay:620ms; }
+
+/* ── C · the comparison ─────────────────────────────────────────────
+   One x axis for both halves. The serial chips are laid out to total
+   111%, so the last one is cut by the band — that IS the reading: it has
+   not finished. Every parallel chip ends under 50%. */
+.oC{ padding:12px 12px 10px; display:flex; flex-direction:column;
+  box-sizing:border-box; }
+.chead{ margin:0 0 5px; font-family:var(--fm); font-size:10px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--p-mute); }
+.chead--us{ color:var(--accent-solid); margin-top:14px; }
+.crow{ position:relative; height:22px; }
+.cpar .crow{ height:19px; margin-bottom:5px; }
+.cpar .crow:last-child{ margin-bottom:0; }
+.cchip{ position:absolute; top:50%; translate:0 -50%; left:var(--x); width:var(--w);
+  height:16px; border-radius:5px; background:var(--p-border); color:var(--p-mute);
+  font-size:9.5px; line-height:16px; padding-left:6px; overflow:hidden;
+  white-space:nowrap; box-sizing:border-box; }
+.cpar{ position:relative; }
+.cpar .oav{ position:absolute; left:0; top:50%; translate:0 -50%; }
+.cchip--us{ left:22px; width:calc(var(--w) - 6px);
+  background:color-mix(in srgb,var(--p-run) 32%,var(--p-card));
+  color:var(--p-fg); opacity:0; transform:scaleX(.15); transform-origin:left center; }
+.is-play .cchip--us{ opacity:1; transform:none;
+  transition:opacity 240ms var(--e-out),transform 700ms var(--e-out);
+  transition-delay:var(--d); }
+.csweep{ position:absolute; top:28px; bottom:10px; left:12px; width:1px;
+  background:var(--accent-solid); opacity:0; }
+.is-play .csweep{ animation:cSweep 2600ms var(--e-out) forwards; }
+@keyframes cSweep{ 0%{opacity:.85;transform:translateX(0)}
+  92%{opacity:.85} 100%{opacity:0;transform:translateX(300px)} }
+
+/* ── D · the overflow ───────────────────────────────────────────────
+   200 + 10 of gap in a 334 band centres one card and leaves a 57px peek
+   either side, so the focused member is flanked rather than sitting on a
+   strip of bare ground. The pan is stated once:
+
+       centre of card i = i*210 + 100          (track coords)
+       we want it at    = 334/2 = 167
+       so translateX    = 67 - i*210
+
+   NOT AN ANIMATION ON THE TRACK. The focus is a state (`--i` plus
+   `.is-focus`), and the transition carries it — so reduced motion lands on
+   a finished, readable frame instead of a paused one. */
+.oD{ overflow:hidden; }
+.dtrack{ display:flex; gap:10px; padding:12px 0 0; width:max-content;
+  align-items:flex-start;
+  transform:translate3d(calc(67px - var(--i,1) * 210px),0,0);
+  transition:transform 560ms var(--e-spring); }
+
+/* TALLER THAN THE BAND, AND TALL ENOUGH TO SURVIVE THE SCALE. At content
+   height the cards stopped 135px into a 214 band and the count floated in
+   60px of empty ground. 240 also means a card stepped down to .94 about its
+   own centre still runs past the crop (12 + 240*.94 ≈ 237 > 214) — otherwise
+   the two side cards would show a bottom edge the centre one does not have,
+   and the crop would read as belonging to the focus rather than to the band. */
+.dlane{ flex:0 0 200px; height:240px; overflow:hidden;
+  padding:12px 13px; border-radius:12px 12px 0 0;
+  border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
+  opacity:.42; transform:scale(.94);
+  transition:opacity 560ms var(--e-out), transform 560ms var(--e-spring); }
+.dlane.is-focus{ opacity:1; transform:none; }
+.dlane__h{ display:flex; align-items:center; gap:8px; margin:0 0 7px; }
+.dlane__h b{ font-size:12.5px; font-weight:500; color:var(--p-fg); }
+.dlane__t{ margin:0 0 9px; font-size:13.5px; font-weight:500; color:var(--p-fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dlane__s{ display:flex; align-items:center; gap:7px; margin:0 0 6px;
+  font-size:11.5px; color:var(--p-mute); }
+.dlane__s em{ font-style:normal; flex:1; min-width:0; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; }
+.dlane__s i{ font-style:normal; font-size:10.5px; }
+.dlane__s--now{ color:var(--p-fg); background:var(--p-tint);
+  margin-inline:-7px; padding:4px 7px; border-radius:6px; }
+.otick{ width:12px; height:12px; stroke:var(--p-mute); flex:none; }
+
+/* THE COUNT IS NOT PART OF THE CARDS. It was white-on-blur over white
+   surfaces — the same material as the thing behind it, so it read as a
+   label printed on a card rather than as the band's own. Ink fill, light
+   type, and the lift shadow: a different material, which is what separates
+   it. Fill and shadow, never an outline.
+
+   IN THE CORNER, NOT FLOATING NEAR IT. At `right:12 bottom:12` the chip is
+   130 wide in a 334 band, so it cannot clear the 200px centred card — it
+   landed across the focused card's fourth step row and cut it mid-height,
+   and the focused card is the one thing here that is meant to be read.
+   Anchored into the band's own corner it belongs to the band, and what it
+   covers is the strip the crop was already taking. */
+.dcount{ position:absolute; right:0; bottom:0; z-index:2;
+  font-family:var(--fm); font-size:10px; letter-spacing:.05em;
+  text-transform:uppercase; color:rgb(255 255 255 / .72);
+  background:var(--p-fg); box-shadow:var(--e-lift);
+  padding:7px 12px 8px; border-radius:10px 0 0 0; }
+.dcount b{ color:#fff; font-weight:500; }
+
+@media (prefers-reduced-motion:reduce){
+  .dtrack,.dlane{ transition:none; }
+  .is-play .csweep{ animation:none; opacity:0; }
+  .arow__fill,.blane__fill{ width:var(--p) !important; transition:none !important; }
+  .bask,.blane,.cchip--us{ opacity:1 !important; transform:none !important; }
+}
