@@ -131,8 +131,16 @@ the single biggest reason the page looked dead before 2026-08.
 
 - **Display** — Roobert 500/600, tight tracking. Headlines and statements.
 - **Body** — Roobert 400/500. Prose.
-- **Utility** — Roobert at `MONO:100`, 500, uppercase, tracked. Labels, data, captions,
-  controls. Its job is to signal "this string is metadata, not prose".
+- **Utility** — Roobert at `MONO:100`, 500, uppercase, tracked. Labels, data,
+  captions. Its job is to signal "this string is metadata, not prose".
+
+**The utility register is uppercase, mono AND tracked — the three travel
+together.** Take the capitals off one and the other two turn into faults: a
+fixed advance gives `i` the same width as `m`, so a lowercase word visibly
+spaces unevenly ("字间距都不一样"), and tracking drawn for capitals opens it
+further. **Controls are therefore set in Body**, at `--t-meta` (large buttons
+`--t-sm`), with the font's own spacing and no tracking compensation — the same
+register the product's own controls use, which is what they sit next to.
 
 One scale, nine steps (`docs/design-system.md`). The pre-2026-08 page had 25
 distinct font sizes and one typeface doing all three jobs.

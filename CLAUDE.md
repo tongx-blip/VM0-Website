@@ -71,5 +71,9 @@ and every rule in it comes from a decision that has already been argued once.
   (`.thing.is-on`) — always add `:not(.is-on)`.
 - **One typeface, three registers.** Headlines `--fd`, prose `--fb`, utility
   text `--fm` — all Roobert TRIAL. `--fm` is the same file on its `MONO:100`
-  axis, so labels, data, captions and controls are still monospaced and still
-  align in a column; it is not a second family.
+  axis, so labels, data and captions are still monospaced and still align in a
+  column; it is not a second family.
+- **Controls are prose.** `--fb` 500, sentence case, `letter-spacing:normal`,
+  `--t-meta` (`--t-sm` on `.btn--lg`). The utility register is mono **and**
+  uppercase **and** tracked, and the three only work together: on a lowercase
+  string a fixed advance spaces the word visibly unevenly. RULES S18.

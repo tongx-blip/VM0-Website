@@ -55,6 +55,26 @@ Four things this turned up, none of them visible in a screenshot:
 `.footer__mark` had no hover at all and now takes a colour change only — it is
 deliberately the static logotype, so it must not tilt like the header's.
 
+### a control is set in prose (the second half of the same fix)
+
+Tong, on the result of the first pass: *"字体用的对么？为什么字间距都不一样？"*
+
+The case came off but the **register** did not, and that was the real fault.
+Every control was `--fm` — Roobert on its `MONO:100` axis — at 12px with .085em
+of tracking. In capitals that is a register: one letter height, one advance,
+tracking that a tracked label wants. In sentence case all three parts turn into
+bugs at once: a fixed advance gives `i` and `l` the width of `m`, so the gaps
+inside a lowercase word are visibly unequal — *"字间距都不一样"* is literally
+what a monospaced font does, and only all-caps hides it — and the face reads as
+a typewriter six inches from a product mock whose own controls have always been
+proportional Roobert at 14px.
+
+Controls are Body now: `--fb` 500, `--t-meta` (13.5px; `--t-sm` on `.btn--lg`),
+`letter-spacing:normal`, and no trailing-space compensation, which pays back
+tracking that no longer exists. 12px was the floor for an uppercase *label*, and
+a control is not a label. `--fm` keeps everything it is actually for: eyebrows,
+tags, status chips, data, the footer's legal strip.
+
 ### uppercase marks a label, never a control
 
 Every control inherited the utility face's `text-transform:uppercase`, so the

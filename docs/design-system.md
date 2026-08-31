@@ -59,8 +59,13 @@ private to the mocks; new work uses the named tokens above.
 |---|---|---|
 | Display | `--fd` | Roobert TRIAL **500** |
 | Body | `--fb` | Roobert TRIAL 400/500 |
-| Utility | `--fm` | Roobert TRIAL Mono 500 (`MONO:100`), uppercase, `letter-spacing:.075–.16em` |
+| Utility | `--fm` | Roobert TRIAL Mono 500 (`MONO:100`), **uppercase**, `letter-spacing:.075–.16em` — labels, data, captions. Never a control. |
 | The ladder | Inter 300/400 | the one component built to a supplied design (§14) |
+
+**Controls are Body**, not Utility: `--fb` 500 at `--t-meta` (13.5px), `--t-sm`
+(15px) on `.btn--lg`, sentence case, `letter-spacing:normal`. The three parts of
+the utility register — mono advance, capitals, tracking — only work together;
+a control in sentence case needs all three off (RULES §S18, §T5).
 
 ### The scale has two regions, and a rule for each
 

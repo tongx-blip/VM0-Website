@@ -2118,18 +2118,34 @@ Two ways the step goes missing even when the declaration is there:
   ground is `--wash-2` — the nav chip was the bar. A step is
   `color-mix(--state-ink --hover-step, --fill)`, derived from the fill.
 
-**b. Uppercase marks a label, never a control** (RULES §S18):
+**b. Uppercase marks a label, never a control** (RULES §S18) — and **the whole
+register comes off with the capitals**. Mono advance, uppercase and tracking are
+one thing; a control that keeps any of the three is the bug. Print all three:
 
 ```js
 [...document.querySelectorAll('a,button,[role=tab]')]
-  .filter(el => getComputedStyle(el).textTransform === 'uppercase')
-  .map(el => el.className + ' | ' + el.innerText.trim())
-// must contain no nav link, no .btn, no .tab — only the footer's legal strip
+  .filter(el => el.innerText.trim())
+  .map(el => {
+    const c = getComputedStyle(el);
+    return [el.className, c.fontFamily.split(',')[0], c.fontSize,
+            c.letterSpacing, c.textTransform].join(' | ');
+  })
+// no nav link, .btn, .tab or .pref__btn may show "Roobert TRIAL Mono",
+// `uppercase`, or a letter-spacing other than `normal`. Only the footer's
+// legal strip and the eyebrows/tags/chips are allowed the utility register.
 ```
 
-And when the case comes off, the tracking comes with it: `.075em`/`.085em` are
-drawn for capitals. Check the trailing-space compensation that pairs with it
-(RULES §T7) — `calc(28px - .085em)` is now wrong by the difference.
+The three failures are one failure. `text-transform:none` on a monospaced face
+leaves `i` as wide as `m`, which is *visible* as uneven spacing inside a
+lowercase word and reads as a typewriter next to the mock's proportional 14px
+controls — Tong caught it as *"为什么字间距都不一样？"* one round after the
+capitals came off. And `--t-mono` (12px) is the floor for a *label*: a control
+set in prose takes `--t-meta`, or `--t-sm` at `.btn--lg`.
+
+Then drop the trailing-space compensation with it (RULES §T7):
+`calc(28px - .085em)` pays back the space `letter-spacing` adds after the last
+glyph, and prose has none to pay back — left in place it just makes the button
+asymmetric by the difference.
 
 ## 4aa. Behaviour, before publishing
 

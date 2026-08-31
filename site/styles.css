@@ -1446,7 +1446,7 @@ h3{ font-family:var(--fd); }
    string is metadata and not prose */
 /* .metrics span is NOT here: a stat tile's label is the first line you read
    in that tile, and uppercase mono above a 54px numeral competes with it for
-   the top of the box instead of introducing it. It is set as prose. */.state,.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
+   the top of the box instead of introducing it. It is set as prose. */.state,.footer__links,.footer__links a,.footer__copy{
   font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-weight:500;
   text-transform:uppercase;
@@ -1454,25 +1454,41 @@ h3{ font-family:var(--fd); }
   font-feature-settings:"tnum" 1;
 }
 
-/* ── UPPERCASE MARKS A LABEL, NEVER A CONTROL ──────────────────────
-   Tong: *"header和所有button不要全都大写，只有第一个字母大写就成"*.
-   Every control on this page kept the utility face's uppercase, so the
-   header read GET STARTED / SIGN IN / FEATURES and the tab rail read
-   STOREFRONT LAUNCH — six words shouting above a headline that is set in
-   sentence case, and the product mock two inches below them (which has
-   always been sentence case, RULES P5) disagreeing with the page around
-   it. The register is still the utility face: mono, 500, tabular — case
-   is what separates a thing you READ from a thing you PRESS.
+/* ── A CONTROL IS SET IN PROSE ─────────────────────────────────────
+   Tong: *"header和所有button不要全都大写，只有第一个字母大写就成"* — and then,
+   looking at the result: *"字体用的对么？为什么字间距都不一样？"*.
 
-   The tracking comes down with the case. .075em is drawn for capitals,
-   where the letterforms are all one height and need the air; on lowercase
-   it opens the word up and the label stops reading as one object.
+   Both are the same fault, one round apart. Every control used to live in
+   the utility register (`--fm`, Roobert on its MONO:100 axis) with
+   `text-transform:uppercase` and .085em of tracking. UPPERCASE MONO IS A
+   REAL REGISTER — the letterforms are one height, the advance is uniform,
+   and the tracking is what a tracked label wants. Take the capitals off and
+   every one of those three things becomes wrong at once:
+
+   · a fixed advance gives `i` and `l` the same width as `m`, so the gaps
+     inside a lowercase word are visibly unequal — *"字间距都不一样"* is
+     literally what a monospaced font does, and it only stops being invisible
+     when the word is not all caps;
+   · the face reads as a typewriter, sitting six inches from a product mock
+     whose own controls have always been proportional Roobert at 14px;
+   · 12px is the floor for an uppercase LABEL, and a control is not a label.
+
+   So a control leaves the utility register with the capitals: prose face,
+   500, the font's own spacing, and a size a control can carry. Uppercase
+   mono stays where it belongs — eyebrows, tags, status chips, data, the
+   footer's legal strip (RULES S18, T5).
 
    The copy is untouched — it was authored in sentence case all along and
-   only the CSS was shouting it. */
-.nav__links a,.nav__signin,.btn,.tab{
+   only the CSS was shouting it. */.nav__links a,.nav__signin,.btn,.tab,.pref__btn{
+  font-family:var(--fb);
+  font-variant-numeric:normal;
+  font-weight:500;
+  font-size:var(--t-meta);
   text-transform:none;
-  letter-spacing:.01em;
+  /* NOT a number. The mono face needed tracking because it was set in caps;
+     proportional Roobert is spaced by its own kerning, and anything added
+     here is the fault Tong named, one notch quieter. */
+  letter-spacing:normal;
 }
 .section-body,.note,.hero__body,.step p,.vs p,.quote blockquote{ font-family:var(--fb); }
 
@@ -1830,8 +1846,7 @@ h3{ font-family:var(--fd); }
 .nav__links a{
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
-  /* case and tracking come from the controls rule in §4 — one place */
-  font-size:var(--t-mono);
+  /* face, size, case and tracking come from the controls rule in §4 */
   color:var(--nav-ink);
   transition:color var(--t-hover) var(--e-snap),
              background var(--t-hover) var(--e-snap);
@@ -1852,7 +1867,6 @@ h3{ font-family:var(--fd); }
 .nav__signin{
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
-  font-size:var(--t-mono);
   /* THE SAME SECONDARY AS EVERY OTHER ONE. It used to be an outlined chip
      while `.btn--ghost` was a filled one — two answers to "what is a
      secondary button" sitting 6px apart, and the ring read as the heaviest
@@ -1986,8 +2000,7 @@ h3{ font-family:var(--fd); }
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   border:1px solid transparent;
-  font-size:var(--t-mono); font-weight:500;
-  /* case and tracking come from the controls rule in §4 — one place */
+  /* face, size, case and tracking come from the controls rule in §4 */
   /* the resting fill, painted once for every variant */
   background:var(--fill, transparent);
   cursor:pointer; will-change:transform;
@@ -2753,12 +2766,9 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-btn);
   --fill:var(--wash-2);
   background:var(--fill);
-  /* the trailing half-space a tracked label leaves inside its own box.
-     It shrinks with the tracking — at .01em there is almost nothing to
-     take back, which is the padding telling the truth either way. */
-  padding:9px calc(16px - .01em) 11px 16px;
-  font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:var(--t-mono);
+  /* no trailing-space compensation (RULES T7): that pays back the tracking
+     a CAPITAL label carries, and this one has none to pay back. */
+  padding:9px 16px 11px;
   color:var(--ink-soft); cursor:pointer;
   transition:color var(--t-hover) var(--e-snap),
              background var(--t-hover) var(--e-snap);
@@ -5865,7 +5875,7 @@ h3{ font-family:var(--fd); }
   height:34px; padding:0 10px;
   border:0; border-radius:var(--r-btn);
   background:transparent; color:var(--ink-mute);
-  font:inherit; font-size:var(--t-mono); letter-spacing:.06em;
+  font:inherit;
   cursor:pointer;
   transition:background var(--t-hover) var(--e-out), color var(--t-hover) var(--e-out);
 }
@@ -6303,11 +6313,13 @@ h3{ font-family:var(--fd); }
 /* ── controls become pills, as in the brand comps ── */
 .btn{ border-radius:var(--r-btn); }
 
-/* the right pad takes back the tracking's trailing half-space, so it follows
-   the tracking down with the case (.085em was drawn for capitals) */
-.btn--lg{ padding:16px calc(28px - .01em) 16px 28px; }
+/* NO TRAILING-SPACE COMPENSATION ANY MORE (RULES T7). `calc(28px - .085em)`
+   pays back the space `letter-spacing` adds after the LAST glyph of a tracked
+   label; these are set in prose now, with no tracking to pay back, and
+   subtracting from the padding anyway just makes the button asymmetric. */
+.btn--lg{ padding:16px 28px; font-size:var(--t-sm); }
 
-.btn--sm{ height:38px; padding:0 calc(18px - .01em) 0 18px; }
+.btn--sm{ height:38px; padding:0 18px; }
 
 /* A finger needs 44px. The five control-section buttons are all .btn--sm,
    and 38px is the one place on this page where a real tap target falls
