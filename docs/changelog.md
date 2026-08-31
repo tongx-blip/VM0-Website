@@ -1626,6 +1626,47 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-31 · four buttons that were meant to be two
+
+Tong: *"button样式不统一，不要加这么重的阴影，button的文字不要hover滚动。hover的
+颜色太重，和其他button的hover也不统一。section直接空的space应该和网站左右padding
+统一。footer底部的logo需要用四个图形的logo不带动画。"*
+
+**The set had four answers to "what is a button".** Sign in was an outlined chip
+with an inset ring; the ghost was a filled one; the primary lifted onto a
+**.66-alpha** orange shadow; the ghost onto a .35 ink one; the composer's send
+swapped its fill to `--accent-wash`, a dark brown that read as a different
+control entirely; and sign in rolled its own label on hover while nothing else
+did. Now: two shapes, one hover — a 1px lift and a single light shadow at .28,
+no fill changes colour, no label moves (**S13**). The closing band's secondary
+also drops its *resting* shadow, which made it the heaviest control on the page
+while every other one was flat until touched.
+
+**A fix that broke it worse, caught by measuring.** Making every secondary a
+`--wash-2` fill is the obvious way to unify them — and the header's own ground
+IS `--wash-2` once stuck, so Sign in became a wash-2 chip on a wash-2 bar: a
+button you cannot see. The secondary is one step off *the ground it sits on*,
+and which step that is depends on the ground: `--wash-2` on the white section
+cards, `--paper` on the closing band and in the header (**S12**). The outlined
+version it replaced had the opposite fault — it was the heaviest thing up there.
+
+**The gap between sections is the gap beside them.** The block margin was its own
+clamp, 32px at 1440 against the inline gap's 26, so the grey around a card was
+wider above and below than at its sides — two decisions where the page makes one.
+Both are `--card-gap` now; measured 25.92 / 25.92 at 1440 and 12 / 12 at 390.
+
+**The footer takes the whole logotype, static.** The header's mark gathers
+because it is the first thing you see; the footer is the last, and a logo that
+reassembles as you reach the bottom is a second performance of something already
+said. Four glyphs, no animation, `currentColor`.
+
+**Gate.** axe 0 across 14 samples in both themes; `audit.js` §1, §6, §8, §9,
+§10, §11 PASS; `tokens.py` 0 — it caught a duplicate `.nav__signin:hover` I had
+stacked instead of merged; `scopes.py` 0; `rules.py` 162 rules resolving. Zero
+rolls left in any button, zero resting shadows on any of the five.
+
+---
+
 ## 2026-08-31 · the brand palette, and nothing bright carrying weight
 
 Tong shared the Brand Guidelines file — logos, ten colours, six textures — and

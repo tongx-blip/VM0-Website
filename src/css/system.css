@@ -991,17 +991,22 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
   font-size:var(--t-mono); letter-spacing:.085em;
-  color:var(--nav-ink);
-  /* an INSET ring, not a border: a border would add 2px to a control whose
-     height has to match the one beside it to the pixel */
-  box-shadow:inset 0 0 0 1px var(--nav-stroke);
+  /* THE SAME SECONDARY AS EVERY OTHER ONE. It used to be an outlined chip
+     while `.btn--ghost` was a filled one — two answers to "what is a
+     secondary button" sitting 6px apart, and the ring read as the heaviest
+     thing in the header. A fill, like the rest (S3: a surface is a fill,
+     never an outline). */
+  color:var(--ink);
+  /* --paper, NOT --wash-2. The secondary is always ONE STEP off the ground
+     it sits on, and the header's ground IS --wash-2 once stuck — a
+     wash-2 chip on a wash-2 bar is a button you cannot see, which is what
+     the first pass shipped. On the white section cards --wash-2 is the step
+     (`.btn--ghost`); on the closing band and here it is --paper. */
+  background:var(--paper);
   transition:color var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap),
+             transform var(--t-hover) var(--e-snap),
              background var(--t-hover) var(--e-snap);
-}
-.nav__signin:hover{
-  color:var(--nav-ink-hi); background:transparent;
-  box-shadow:inset 0 0 0 1px var(--nav-ink-hi);
 }
 
 /* ── the theme control ──────────────────────────────────────────────
@@ -1136,11 +1141,16 @@ h3{ font-family:var(--fd); }
    orange is 2.08 and was never an option; the old vivid accent could
    carry white, and losing that is what makes the button calmer. */
 .btn--dark{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+/* ── ONE HOVER FOR EVERY BUTTON ─────────────────────────────────────
+   Tong: *"不要加这么重的阴影 … hover的颜色太重，和其他button的hover也不统一"*.
+   There were three: the primary lifted onto a .66-alpha orange shadow, the
+   ghost onto a .35 ink one, and the composer's send swapped its fill to
+   `--accent-wash` — a dark brown that read as a different button. A hover
+   is an acknowledgement, not an event. One 1px lift and one light shadow,
+   and no fill changes colour. */
 .btn--dark:hover{
-  /* the fill does not change on hover: any brighter orange drops white
-     text under 4.5:1. The lift and the shadow carry the feedback. */
   transform:translateY(-1px);
-  box-shadow:0 12px 26px -12px rgb(var(--accent-solid-rgb) / .66);
+  box-shadow:0 4px 12px -8px rgb(var(--ink-rgb) / .28);
 }
 .btn--ghost{ background:var(--wash-2); border-color:transparent; color:var(--ink); }
 /* On the closing band the ground is --wash and the button is --wash-2 —
@@ -1149,14 +1159,22 @@ h3{ font-family:var(--fd); }
    surface is here: a fill and an elevation, never an outline (RULES S3).
    On the white section cards --wash-2 is still right, so this is scoped. */
 .close .btn--ghost{
+  /* NO RESTING SHADOW. It carried one so a --wash-2 button would read on the
+     band; on --paper the fill is already the step, and a button that sits on
+     a shadow at rest is the heaviest control on the page — every other one
+     here is flat until you touch it. */
   background:var(--paper); color:var(--ink);
-  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05), 0 8px 20px -14px rgb(var(--ink-rgb) / .3);
 }
 .close .btn--ghost:hover{ background:var(--paper); }
 .btn--ghost:hover{
   background:var(--wash-2); color:var(--ink);
   transform:translateY(-1px);
-  box-shadow:0 10px 22px -14px rgb(var(--ink-rgb) / .35);
+  box-shadow:0 4px 12px -8px rgb(var(--ink-rgb) / .28);
+}
+.nav__signin:hover{
+  color:var(--ink); background:var(--paper);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px -8px rgb(var(--ink-rgb) / .28);
 }
 .btn--ghost:hover img{ filter:none; }
 .btn--ghost img{ width:16px; height:16px; }
@@ -1273,7 +1291,12 @@ h3{ font-family:var(--fd); }
 /* ── a section as one object on the grey page ── */
 .panel--card{
   margin-inline:var(--card-gap);
-  margin-block:clamp(14px, 2.2vw, 32px);   /* grey shows above and below */
+  /* THE SAME GAP ON ALL FOUR SIDES. Tong: *"section直接空的space应该和网站左右
+     padding统一"*. The block gap was its own clamp — 32px at 1440 against the
+     inline gap's 26 — so the grey around a section card was wider above and
+     below than beside it, which is two decisions where the page only makes
+     one (M1). */
+  margin-block:var(--card-gap);
   /* --pad-section is the FLOOR; past 1320px of content the padding grows
      instead, which is what keeps the measure capped. Setting the padding
      to --pad-section alone silently removed that cap and let a 1920 card
@@ -1639,7 +1662,9 @@ h3{ font-family:var(--fd); }
   width:var(--pbox-ctrl-h); padding:0;
   background:var(--accent); color:var(--accent-ink);
 }
-.pbox__send:hover{ background:var(--accent-wash); }
+/* the fill holds; the brown was --accent-wash and read as a
+   different control, not as the same one being hovered */
+.pbox__send:hover{ background:var(--accent); }
 
 /* ── the unlock note ─────────────────────────────────────────────────
    A popover hanging off the box, not a modal over the page: nothing here
@@ -4867,6 +4892,8 @@ h3{ font-family:var(--fd); }
    with the footer: at 16px or more a 600 weight trips the heading-weight
    gate (4i), where the wordmark is the one exemption *because* it sits
    under that threshold. */
+.footer__wm{ height:22px; width:auto; }
+.footer__wm path{ fill:currentColor; }
 .footer__mark img{ width:20px; height:20px; }
 .footer__mark span{
   font-family:var(--fd); font-size:var(--t-wordmark);
