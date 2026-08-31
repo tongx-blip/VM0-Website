@@ -4,6 +4,85 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · a hover that answers, and controls that stop shouting
+
+Tong: *"图一，怎么一点hover效果都不给了。我说了header和所有button不要全都大写，
+只有第一个字母大写就成"*.
+
+### the hover, again — and why "no event" was not the fix
+
+The previous round's complaint was that there were four hovers and all of them
+were loud: an orange glow at .66 alpha, an ink one at .35, a send button that
+swapped to a dark brown, a sign-in that rolled its own label. The correction
+was "no fill changes colour", and that is what shipped — with the result that
+five controls had a **hovered computed style identical to their resting one**.
+The screenshot Tong sent is the composer's send button, whose entire hover rule
+was `background:var(--accent)` — the fill it already had.
+
+An event and no event are both wrong answers. The rule now (RULES §S17):
+
+> **a hover is one step of the control's own colour.** Each control declares
+> its resting fill as `--fill` and paints from it; hover is
+> `color-mix(--state-ink --hover-step, --fill)` — 8% toward the ink — plus a
+> 1px lift and `--e-btn`.
+
+Derived rather than picked, which is what stops five buttons drifting into five
+hovers again: an orange button and a white one now acknowledge by the same
+*amount* instead of by the same colour. `--state-ink` is a token so the dark
+header can invert it; in the dark theme `--ink` is already the off-white, so the
+same expression lightens with no override.
+
+Four things this turned up, none of them visible in a screenshot:
+
+- **A legacy hover in `base.css` was painting the design layer.** `.btn--dark:hover`
+  and `.btn--ghost:hover` still lived there from the pre-system page. system.css
+  re-declares fill, border, lift and shadow — but not `color`, because a hover
+  has no business moving a label — so the surviving half applied: **the primary's
+  label went white on the brand orange at 2.08:1** on every hover, and the
+  sign-in's went to the raw accent, also 2.08. axe does not hover. Both rules
+  are gone; §6's silence about `color` is now deliberate and written down.
+- **A variant that paints its own fill can out-specify the shared hover.**
+  `.close .btn--ghost` is (0,2,0), the same weight as `.btn:hover`, and comes
+  later — so the closing band's secondary was the one button with no hover.
+  A variant names `--fill`; `.btn` paints it. One `background` for rest, one
+  for hover.
+- **`.tab.is-on` (0,2,0) beat `.tab:hover` (0,1,1)** — the *selected* tab was
+  the one tab that did not answer. The hover names the state class now.
+- **`--nav-chip` was `--wash-2`**, which is the stuck header's own ground: the
+  chip under a hovered nav control was the bar. It is the state layer now, the
+  same one the dark header already used.
+
+`.footer__mark` had no hover at all and now takes a colour change only — it is
+deliberately the static logotype, so it must not tilt like the header's.
+
+### uppercase marks a label, never a control
+
+Every control inherited the utility face's `text-transform:uppercase`, so the
+header read GET STARTED / SIGN IN / FEATURES and the tab rail read STOREFRONT
+LAUNCH — above a headline in sentence case, and above a product mock that has
+been sentence case all along (RULES §P5). Nav links, buttons and tabs are now
+sentence case at `.01em`; eyebrows, tags, status chips, data labels and the
+footer's legal strip keep the uppercase, which is what they are for
+(RULES §S18). **No copy changed** — it was authored in sentence case and only
+the CSS was shouting it.
+
+Tracking follows the case: `.075em`/`.085em` are drawn for capitals and open a
+lowercase word until it stops reading as one object. The trailing-space
+compensations that pair with them (RULES §T7) came down with it.
+
+### one thing that was mine, from the round before
+
+The brand palette landed in `@media (prefers-color-scheme: dark)` and **not** in
+`:root[data-theme="dark"]`. For a day the page had two dark modes: warm and
+brand-correct if your OS was dark, the old cool one (#171C21) if you pressed the
+button. Ten tokens apart. Neither looks wrong alone, and no screenshot shows
+both — so `tools/tokens.py` now diffs the two blocks and fails if they disagree.
+
+Gate: axe 0 violations in both themes (fresh, at `#outputs`, and on the
+jump-to-`#cta` path); `audit.js` §1/§2/§3/§6/§8/§9/§10/§11 pass; tokens 0 with
+the new check; 165 rules resolving; every control on the page measured in both
+states, and none of them now computes the same hovered as at rest.
+
 ## 2026-08-31 · the hero becomes a full viewport that folds to card width
 
 Tong: *"可以把 hero 的高度保持 full viewport，不管用户的屏幕多大。给 hero 一个我们

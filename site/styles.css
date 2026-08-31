@@ -123,16 +123,20 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   margin-left:26px;
 }
 
+/* CASE AND HOVER BELONG TO THE DESIGN LAYER, NOT TO THIS ONE. system.css §6
+   re-declares this control completely except for the properties it has no
+   reason to name — and those are exactly the ones that leaked through from
+   here. Its hover set `color` and this one did too, at the same specificity,
+   so the design layer's background landed on the legacy layer's ink. Kept:
+   geometry. Removed: the uppercase (RULES S18) and the whole hover. */
 .nav__links a{
   display:flex; align-items:center;
   padding:0 18px; border-radius:0;
   font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
+  font-size:11.5px; letter-spacing:.07em;
   color:var(--ink-soft);
   transition:color var(--t-hover), background var(--t-hover);
 }
-
-.nav__links a:hover{ color:var(--ink); background:var(--paper-2); }
 
 
 .nav__auth{
@@ -144,21 +148,30 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .nav__signin{
   padding:0; border-radius:0;
   font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
+  font-size:11.5px; letter-spacing:.07em;
 }
 
-.nav__signin:hover{ background:transparent; color:var(--accent); }
-
+/* its hover lived here and set `color:var(--accent)` — the raw brand orange,
+   2.08:1 as text, on a white button. Measured on the shipped page. */
 .nav__burger{ display:none; }
 
 
 /* ─────────────── buttons ─────────────── */
+/* THE HOVERS ARE GONE FROM HERE. system.css §6 owns every button on the page
+   and re-declares fill, border, lift and shadow — but not `color`, because a
+   hover has no business changing a label's ink. These rules did, at the same
+   (0,2,0) specificity, so the surviving half of a legacy hover painted the
+   design layer's button: the primary's label went WHITE on hover (2.08:1 on
+   the brand orange, since the fill under it stopped being ink and became the
+   accent) and the ghost's did the same. Neither is visible in a screenshot
+   and axe does not hover, which is how it shipped. Geometry stays; case goes
+   with the rest of the uppercase (RULES S18). */
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   border:1px solid var(--ink);
   font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:11.5px; font-weight:500;
-  letter-spacing:.08em; text-transform:uppercase;
+  letter-spacing:.08em;
   cursor:pointer;
   transition:background var(--t-hover), color var(--t-hover), transform var(--t-hover) var(--ease);
 }
@@ -169,13 +182,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .btn--dark{ background:var(--ink); color:var(--paper); }
 
-.btn--dark:hover{ background:var(--accent); border-color:var(--accent); color:var(--paper); }
-
 .btn--ghost{ background:transparent; color:var(--ink); }
-
-.btn--ghost:hover{ background:var(--ink); color:var(--paper); }
-
-.btn--ghost:hover img{ filter:brightness(0) invert(1); }
 
 .btn--ghost img{ transition:filter var(--t-hover); }
 
@@ -1092,6 +1099,32 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   --e-hover: 0 2px 6px rgba(12,15,18,.05), 0 24px 46px -26px rgba(12,15,18,.28);
   /* the header has no elevation token — it separates by tone (RULES S3) */
 
+  /* ── THE HOVER STEP ───────────────────────────────────────────────
+     One acknowledgement for every control on the page, and it is a STEP
+     of the control's own colour, not a different colour: the resting fill
+     carried 8% toward the ink, plus a 1px lift and one light shadow.
+
+     The version this replaces said "no fill changes colour" — which read
+     as "nothing changes at all". Measured on the shipped page: the
+     composer's send computed the SAME rgb(248 161 1) hovered as at rest,
+     `--nav-chip` was `--wash-2` on a bar whose own ground is `--wash-2`,
+     and the sign-in's whole answer was a shadow at .09 alpha on a white
+     button on a near-white bar. Tong: *"怎么一点hover效果都不给了"*.
+
+     Why a step and not a swap: the fault Tong named before this was that
+     the hovers were four different EVENTS — an orange glow, a brown fill,
+     a rolling label. A step is the same button, acknowledged; it cannot
+     drift into a second identity because it is derived from the resting
+     fill rather than picked next to it.
+
+     --state-ink is what the step is carried toward, and it is a token so
+     the dark header can invert it: over a dark bar the layer has to be
+     paper, not ink, or it is a hole. In the dark THEME --ink is already
+     the off-white, so the same formula lightens with no override. */
+  --hover-step: 8%;
+  --state-ink:  var(--ink);
+  --e-btn: 0 2px 6px -2px rgb(var(--ink-rgb) / .16);
+
   /* ── TYPE ROLES — one typeface, three registers ──────────────────
      The page was three families: Archivo for headlines, Instrument Sans
      for prose, IBM Plex Mono for anything that behaves like data. It is
@@ -1311,19 +1344,26 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 }
 
+/* THE SAME TEN VALUES AS THE BLOCK ABOVE, and they have to be: this is the
+   toggled dark theme and that one is the system's. The brand palette landed
+   in the media query and not here, so for a day the OS's dark mode was warm
+   (#1F1D1D on the brand near-black) and the theme BUTTON gave you the old
+   cool one (#171C21) — two dark modes, and only one of them the brand's.
+   Nothing looks wrong in either screenshot; it is only wrong side by side.
+   `tools/tokens.py` now diffs the two blocks, so this cannot drift again. */
 :root[data-theme="dark"]{
-  --paper:      #171C21;
-  --wash:       #0E1217;
-  --wash-2:     #242C34;
-  --tile:       #1D232A;
-  --ink:        #EEF1F3;
-  --ink-soft:   #B4BCC3;
-  --ink-mute:   #9AA3AB;
-  --hairline:   #2A323A;
+  --paper:      #1F1D1D;
+  --wash:       #161414;
+  --wash-2:     #2B2828;
+  --tile:       #252222;
+  --ink:        #FAF5F3;
+  --ink-soft:   #C3BCB9;
+  --ink-mute:   #A69E9B;
+  --hairline:   #332F2F;
   --rule:       #3C464F;
   --grid:       #1B2027;
-  --mat:        #05070A;
-  --accent-wash:#FF7A3D;
+  --mat:        #0D0C0C;
+  --accent-wash:#F8A101;
   --ok-ink:     #5FD99A;
   --wait-ink:   #F5B33C;
   --nav-fill-dark:#2E3740;
@@ -1412,6 +1452,27 @@ h3{ font-family:var(--fd); }
   text-transform:uppercase;
   letter-spacing:.075em;
   font-feature-settings:"tnum" 1;
+}
+
+/* ── UPPERCASE MARKS A LABEL, NEVER A CONTROL ──────────────────────
+   Tong: *"header和所有button不要全都大写，只有第一个字母大写就成"*.
+   Every control on this page kept the utility face's uppercase, so the
+   header read GET STARTED / SIGN IN / FEATURES and the tab rail read
+   STOREFRONT LAUNCH — six words shouting above a headline that is set in
+   sentence case, and the product mock two inches below them (which has
+   always been sentence case, RULES P5) disagreeing with the page around
+   it. The register is still the utility face: mono, 500, tabular — case
+   is what separates a thing you READ from a thing you PRESS.
+
+   The tracking comes down with the case. .075em is drawn for capitals,
+   where the letterforms are all one height and need the air; on lowercase
+   it opens the word up and the label stops reading as one object.
+
+   The copy is untouched — it was authored in sentence case all along and
+   only the CSS was shouting it. */
+.nav__links a,.nav__signin,.btn,.tab{
+  text-transform:none;
+  letter-spacing:.01em;
 }
 .section-body,.note,.hero__body,.step p,.vs p,.quote blockquote{ font-family:var(--fb); }
 
@@ -1511,7 +1572,11 @@ h3{ font-family:var(--fd); }
   --nav-ink:var(--ink-soft);
   --nav-ink-hi:var(--ink);
   --nav-accent:var(--accent-wash);
-  --nav-chip:var(--wash-2);
+  /* THE HOVER STEP, not a named grey. `--wash-2` is the stuck bar's OWN
+     ground, so the chip under a hovered nav control was the bar itself —
+     the same fault S16 caught on the sign-in's fill, one line further up.
+     A state layer is the ground plus the step, whatever the ground is. */
+  --nav-chip:color-mix(in srgb, var(--state-ink) var(--hover-step), transparent);
   /* Sign in is the one control in here with no ground of its own. On the
      stuck bar's --wash-2 a --wash-2 fill is invisible, which is why it has
      been plain text — and plain text next to a filled button does not read
@@ -1676,6 +1741,9 @@ h3{ font-family:var(--fd); }
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
+  /* over a dark bar the hover layer is paper, not ink — and every control
+     in here mixes toward --state-ink, so it is swapped once for all of them */
+  --state-ink:var(--paper-ink);
   --nav-chip:rgb(var(--paper-rgb) / .1);
   --nav-stroke:rgb(var(--paper-rgb) / .18);
 }
@@ -1762,7 +1830,8 @@ h3{ font-family:var(--fd); }
 .nav__links a{
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
-  font-size:var(--t-mono); letter-spacing:.085em;
+  /* case and tracking come from the controls rule in §4 — one place */
+  font-size:var(--t-mono);
   color:var(--nav-ink);
   transition:color var(--t-hover) var(--e-snap),
              background var(--t-hover) var(--e-snap);
@@ -1783,7 +1852,7 @@ h3{ font-family:var(--fd); }
 .nav__signin{
   display:inline-flex; align-items:center;
   height:38px; padding:0 14px; border-radius:var(--r-btn);
-  font-size:var(--t-mono); letter-spacing:.085em;
+  font-size:var(--t-mono);
   /* THE SAME SECONDARY AS EVERY OTHER ONE. It used to be an outlined chip
      while `.btn--ghost` was a filled one — two answers to "what is a
      secondary button" sitting 6px apart, and the ring read as the heaviest
@@ -1795,7 +1864,8 @@ h3{ font-family:var(--fd); }
      wash-2 chip on a wash-2 bar is a button you cannot see, which is what
      the first pass shipped. On the white section cards --wash-2 is the step
      (`.btn--ghost`); on the closing band and here it is --paper. */
-  background:var(--paper);
+  --fill:var(--paper);
+  background:var(--fill);
   transition:color var(--t-hover) var(--e-snap),
              box-shadow var(--t-hover) var(--e-snap),
              transform var(--t-hover) var(--e-snap),
@@ -1917,7 +1987,9 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   border:1px solid transparent;
   font-size:var(--t-mono); font-weight:500;
-  letter-spacing:.085em; text-transform:uppercase;
+  /* case and tracking come from the controls rule in §4 — one place */
+  /* the resting fill, painted once for every variant */
+  background:var(--fill, transparent);
   cursor:pointer; will-change:transform;
   transition:background var(--t-hover) var(--e-snap),
              color var(--t-hover) var(--e-snap),
@@ -1933,21 +2005,15 @@ h3{ font-family:var(--fd); }
 /* brand orange with the brand near-black on it (7.68:1). White on this
    orange is 2.08 and was never an option; the old vivid accent could
    carry white, and losing that is what makes the button calmer. */
-.btn--dark{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+/* A VARIANT NAMES ITS FILL; IT DOES NOT PAINT IT. One `background` for the
+   resting state (on `.btn` itself) and one for hover, both reading `--fill`.
+   Painting inside each variant is what broke the first version of this: the
+   closing band's secondary is `.close .btn--ghost` — (0,2,0), the same weight
+   as `.btn:hover` — and it is declared LATER, so it took the background back
+   and that one button had no hover while the other four did. */
+.btn--dark{ --fill:var(--accent); border-color:var(--fill); color:var(--accent-ink); }
 
-/* ── ONE HOVER FOR EVERY BUTTON ─────────────────────────────────────
-   Tong: *"不要加这么重的阴影 … hover的颜色太重，和其他button的hover也不统一"*.
-   There were three: the primary lifted onto a .66-alpha orange shadow, the
-   ghost onto a .35 ink one, and the composer's send swapped its fill to
-   `--accent-wash` — a dark brown that read as a different button. A hover
-   is an acknowledgement, not an event. One 1px lift and one light shadow,
-   and no fill changes colour. */
-.btn--dark:hover{
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px -8px rgb(var(--ink-rgb) / .28);
-}
-
-.btn--ghost{ background:var(--wash-2); border-color:transparent; color:var(--ink); }
+.btn--ghost{ --fill:var(--wash-2); border-color:transparent; color:var(--ink); }
 
 /* On the closing band the ground is --wash and the button is --wash-2 —
    one step apart, which does not read as a button, it reads as a smudge on
@@ -1959,21 +2025,37 @@ h3{ font-family:var(--fd); }
      band; on --paper the fill is already the step, and a button that sits on
      a shadow at rest is the heaviest control on the page — every other one
      here is flat until you touch it. */
-  background:var(--paper); color:var(--ink);
+  --fill:var(--paper); color:var(--ink);
 }
 
-.close .btn--ghost:hover{ background:var(--paper); }
+/* ── ONE HOVER FOR EVERY BUTTON ─────────────────────────────────────
+   Tong, first: *"不要加这么重的阴影 … hover的颜色太重，和其他button的hover也
+   不统一"* — there were three of them, an orange glow at .66 alpha, an ink
+   one at .35, and a send button that swapped to a dark brown.
+   Tong, then: *"怎么一点hover效果都不给了"* — because the answer to "four
+   events" had been "no event", and no event is no answer either.
 
-.btn--ghost:hover{
-  background:var(--wash-2); color:var(--ink);
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px -8px rgb(var(--ink-rgb) / .28);
-}
+   So: THE HOVER IS ONE STEP OF THE BUTTON'S OWN COLOUR. Each control
+   declares its resting fill as `--fill` and paints from it, and every
+   hover on the page is that same fill carried `--hover-step` toward
+   `--state-ink`, with a 1px lift and `--e-btn`. Derived, not picked —
+   which is what stops five buttons from drifting into five hovers again,
+   and why an orange button and a white one now acknowledge by the same
+   amount instead of by the same colour.
 
-.nav__signin:hover{
-  color:var(--ink); background:var(--paper);
+   IT DOES NOT TOUCH `color`. A hover moves the surface, never the label —
+   and the one time this file left `color` unsaid, a legacy `.btn--dark:hover`
+   in base.css supplied it and the primary's label went white on the orange
+   at 2.08:1. That rule is gone; the silence here is now deliberate. */
+.btn:hover,.nav__signin:hover{
+  --fill-hover:color-mix(in srgb, var(--state-ink) var(--hover-step), var(--fill));
+  background:var(--fill-hover);
+  /* the border is the fill's own edge on these (`.btn--dark` sets both), so
+     it steps with it — otherwise the resting accent survives as a bright
+     1px ring around a darkened button */
+  border-color:var(--fill-hover);
   transform:translateY(-1px);
-  box-shadow:0 4px 12px -8px rgb(var(--ink-rgb) / .28);
+  box-shadow:var(--e-btn);
 }
 
 .btn--ghost:hover img{ filter:none; }
@@ -2485,11 +2567,17 @@ h3{ font-family:var(--fd); }
   transition:background var(--t-state) var(--e-out), color var(--t-state) var(--e-out);
 }
 
-.pbox__ib{ width:var(--pbox-ctrl-h); padding:0; background:transparent; color:var(--ink-mute); }
+.pbox__ib{ width:var(--pbox-ctrl-h); padding:0; --fill:transparent; background:var(--fill); color:var(--ink-mute); }
 
-.pbox__pick{ gap:4px; padding:0 12px; background:transparent; color:var(--ink-mute); }
+.pbox__pick{ gap:4px; padding:0 12px; --fill:transparent; background:var(--fill); color:var(--ink-mute); }
 
-.pbox__ib:hover,.pbox__pick:hover{ background:var(--wash-2); color:var(--ink); }
+/* the same step as every other control — on a transparent fill the mix IS
+   the state layer, which is also how the app draws it (RULES C3) */
+.pbox__ib:hover,.pbox__pick:hover,.pbox__send:hover{
+  background:color-mix(in srgb, var(--state-ink) var(--hover-step), var(--fill));
+}
+
+.pbox__ib:hover,.pbox__pick:hover{ color:var(--ink); }
 
 .pbox__ib svg,.pbox__send svg{ width:18px; height:18px; }
 
@@ -2499,13 +2587,15 @@ h3{ font-family:var(--fd); }
 
 .pbox__send{
   width:var(--pbox-ctrl-h); padding:0;
-  background:var(--accent); color:var(--accent-ink);
+  --fill:var(--accent); background:var(--fill); color:var(--accent-ink);
 }
 
-/* the fill holds; the brown was --accent-wash and read as a
-   different control, not as the same one being hovered */
-.pbox__send:hover{ background:var(--accent); }
-
+/* This button is the one Tong screenshotted. Its hover used to be
+   `background:var(--accent)` — the fill it already had, so the computed
+   colour was identical hovered and at rest and the control answered
+   nothing. It steps like the rest now; it does not LIFT like the rest,
+   because it lives inside a picture of the app and app controls do not
+   float off their own toolbar (RULES P1). */
 
 /* ── the unlock note ─────────────────────────────────────────────────
    A popover hanging off the box, not a modal over the page: nothing here
@@ -2556,13 +2646,26 @@ h3{ font-family:var(--fd); }
   display:inline-flex; align-items:center; justify-content:center;
   height:34px; padding:0 14px;
   border-radius:var(--pbox-ctrl-r, 8px);
-  background:var(--accent-solid); color:var(--paper-ink);
+  --fill:var(--accent-solid); background:var(--fill); color:var(--paper-ink);
   font-family:var(--fb); font-size:14px; font-weight:500;
   letter-spacing:0; text-transform:none; text-decoration:none;
   transition:background var(--t-state) var(--e-out);
 }
 
-.unlock__btn:hover{ background:var(--accent-wash); color:var(--paper-ink); }
+/* the same step as everything else, from its own fill. It used to swap to
+   --accent-wash, which is a different orange in each theme and read as a
+   second button rather than as this one being touched.
+
+   THE ONE FILL THAT STEPS DOWN THE CHANNEL INSTEAD OF TOWARD --state-ink.
+   This is the page's only button carrying WHITE text, and --accent-solid is
+   tuned to exactly 4.5:1 against it. In the dark theme --state-ink is the
+   off-white, so the generic step would LIGHTEN this fill and walk the label
+   off AA on hover. --ink-rgb does not flip (S15), so it darkens in both
+   themes — which is the safe direction for anything carrying paper ink. */
+.unlock__btn:hover{
+  background:color-mix(in srgb, rgb(var(--ink-rgb)) var(--hover-step), var(--fill));
+  color:var(--paper-ink);
+}
 
 
 @media (prefers-reduced-motion: no-preference){
@@ -2648,16 +2751,30 @@ h3{ font-family:var(--fd); }
   overflow:hidden;
   border:0;
   border-radius:var(--r-btn);
-  background:var(--wash-2);
-  padding:9px calc(16px - .075em) 11px 16px;
+  --fill:var(--wash-2);
+  background:var(--fill);
+  /* the trailing half-space a tracked label leaves inside its own box.
+     It shrinks with the tracking — at .01em there is almost nothing to
+     take back, which is the padding telling the truth either way. */
+  padding:9px calc(16px - .01em) 11px 16px;
   font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:var(--t-mono); letter-spacing:.075em; text-transform:uppercase;
+  font-size:var(--t-mono);
   color:var(--ink-soft); cursor:pointer;
   transition:color var(--t-hover) var(--e-snap),
              background var(--t-hover) var(--e-snap);
 }
 
-.tab:hover{ color:var(--ink); }
+/* a tab is pressed, so it steps like everything else that is — and it steps
+   from ITS OWN fill, so hovering the selected tab deepens that tab's hue
+   rather than repainting it back to the rail's grey */
+/* `.tab.is-on` is (0,2,0) and sets its own background, so a plain `.tab:hover`
+   at (0,1,1) loses to it and the SELECTED tab was the one tab with no hover —
+   the house convention, restated: a state class out-specifies a pseudo-class,
+   so the hover has to name it (CLAUDE.md → conventions). */
+.tab:hover,.tab.is-on:hover{
+  color:var(--ink);
+  background:color-mix(in srgb, var(--state-ink) var(--hover-step), var(--fill));
+}
 
 .tab__label{ position:relative; z-index:1; }
 
@@ -2683,7 +2800,8 @@ h3{ font-family:var(--fd); }
 .tab.is-on{
   animation:tabLand 460ms var(--e-spring) both;
   color:var(--ink);
-  background:color-mix(in srgb, var(--tab) 16%, var(--wash-2));
+  --fill:color-mix(in srgb, var(--tab) 16%, var(--wash-2));
+  background:var(--fill);
 }
 
 .tab__fill{
@@ -5343,7 +5461,12 @@ h3{ font-family:var(--fd); }
 
 .railnav__b svg{ width:19px; height:19px; }
 
-.railnav__b:hover{ background:var(--wash-2); color:var(--ink); }
+/* the page's one hover step, not a named grey: --wash-2 is a GROUND, and a
+   ground is only a step where the thing under it happens to be lighter */
+.railnav__b:hover{
+  background:color-mix(in srgb, var(--state-ink) var(--hover-step), transparent);
+  color:var(--ink);
+}
 
 .railnav__b:disabled{ opacity:.28; cursor:default; }
 
@@ -5664,6 +5787,13 @@ h3{ font-family:var(--fd); }
 
 .footer__wm path{ fill:currentColor; }
 
+/* It is a LINK — back to the top — and it was the one control on the page
+   that answered nothing at all (S17). Colour only: the header's mark tilts
+   because it animates, and this one is deliberately static. */
+.footer__mark{ transition:color var(--t-hover) var(--e-snap); }
+
+.footer__mark:hover{ color:var(--accent-wash); }
+
 .footer__mark img{ width:20px; height:20px; }
 
 .footer__mark span{
@@ -5739,7 +5869,10 @@ h3{ font-family:var(--fd); }
   cursor:pointer;
   transition:background var(--t-hover) var(--e-out), color var(--t-hover) var(--e-out);
 }
-.pref__btn:hover{ background:var(--wash-2); color:var(--ink); }
+.pref__btn:hover{
+  background:color-mix(in srgb, var(--state-ink) var(--hover-step), transparent);
+  color:var(--ink);
+}
 
 .pref__btn svg,.pref__globe svg{ width:16px; height:16px; }
 
@@ -6170,9 +6303,11 @@ h3{ font-family:var(--fd); }
 /* ── controls become pills, as in the brand comps ── */
 .btn{ border-radius:var(--r-btn); }
 
-.btn--lg{ padding:16px calc(28px - .085em) 16px 28px; }
+/* the right pad takes back the tracking's trailing half-space, so it follows
+   the tracking down with the case (.085em was drawn for capitals) */
+.btn--lg{ padding:16px calc(28px - .01em) 16px 28px; }
 
-.btn--sm{ height:38px; padding:0 calc(18px - .085em) 0 18px; }
+.btn--sm{ height:38px; padding:0 calc(18px - .01em) 0 18px; }
 
 /* A finger needs 44px. The five control-section buttons are all .btn--sm,
    and 38px is the one place on this page where a real tap target falls
@@ -6383,15 +6518,14 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* the primary button answers with a press, not a colour change */
-.nav .btn--dark{ transition:transform 220ms var(--e-snap), box-shadow 220ms var(--e-snap); }
-
-.nav .btn--dark:hover{ transform:translateY(-1px) scale(1.015); }
-
-.nav .btn--dark:active{ transform:translateY(0) scale(.985); }
-
-.nav__logo:hover span{ color:var(--nav-accent); transition:color 220ms var(--e-snap); }
-
+/* THE HEADER'S PRIMARY IS THE PAGE'S PRIMARY. This scoped block gave the
+   one in the bar a 1.015 scale nobody else had, and — because it restated
+   the transition list without `background` — a hover step that would have
+   snapped on instead of easing. The button in the header and the button in
+   the closing band are the same button; §6 owns both. */
+/* `.nav__logo:hover span` went with it: the header's logo is one <svg> and has
+   contained no <span> since the wordmark became a drawn mark — the rule could
+   not fire (S13). The tilt on `.wm` is the whole hover, and it is measured. */
 
 @media (prefers-reduced-motion:reduce){
   .roll__t{ transition:none; }

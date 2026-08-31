@@ -2086,6 +2086,51 @@ const q = document.querySelector('.quote'), r = q.getBoundingClientRect();
 - **`margin-inline:auto` on a grid item** turns stretch into shrink-to-fit.
   With a `flex:1 1 0%` child that resolves to zero width.
 
+## 4aj. Every control answers, and none of them shouts
+
+Two failures, one sweep. Both were shipped and neither was visible in a
+screenshot: a hover is invisible in a still, and case only looks wrong beside
+the thing it disagrees with.
+
+**a. A hover must CHANGE something** (RULES §S17). The rule is one step of the
+control's own colour, so the check is arithmetic, not taste: hover each control,
+let the transition settle, and assert the computed style is not the resting one.
+
+```js
+// for every a, button, [role=tab] the page renders:
+//   rest  = {backgroundColor, color, boxShadow, transform}
+//   hover = same, sampled >260ms after the pointer lands (--t-hover is 220)
+// FAIL if hover deep-equals rest
+```
+
+The state this catches is `.pbox__send:hover{ background:var(--accent) }` — the
+fill it already had. It shipped, and every gate we own passed it, because
+nothing looks at a control in two states at once. Sample **after** the
+transition or every control looks like a pass mid-fade.
+
+Two ways the step goes missing even when the declaration is there:
+
+- **A state class out-specifies a pseudo-class.** `.tab.is-on` is (0,2,0) and
+  sets its own background, so `.tab:hover` at (0,1,1) never lands and the
+  *selected* tab is the one tab with no hover. Name the state in the selector.
+- **The layer is a named grey.** `--wash-2` is a *ground*; it is only a step
+  where what is under it happens to be lighter. On the stuck header — whose own
+  ground is `--wash-2` — the nav chip was the bar. A step is
+  `color-mix(--state-ink --hover-step, --fill)`, derived from the fill.
+
+**b. Uppercase marks a label, never a control** (RULES §S18):
+
+```js
+[...document.querySelectorAll('a,button,[role=tab]')]
+  .filter(el => getComputedStyle(el).textTransform === 'uppercase')
+  .map(el => el.className + ' | ' + el.innerText.trim())
+// must contain no nav link, no .btn, no .tab — only the footer's legal strip
+```
+
+And when the case comes off, the tracking comes with it: `.075em`/`.085em` are
+drawn for capitals. Check the trailing-space compensation that pairs with it
+(RULES §T7) — `calc(28px - .085em)` is now wrong by the difference.
+
 ## 4aa. Behaviour, before publishing
 
 `site/app.js` is one IIFE. `var` is function-scoped and a block is not a

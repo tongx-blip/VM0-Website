@@ -130,15 +130,20 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   background:transparent; border:0; padding:0; box-shadow:none;
   margin-left:26px;
 }
+/* CASE AND HOVER BELONG TO THE DESIGN LAYER, NOT TO THIS ONE. system.css §6
+   re-declares this control completely except for the properties it has no
+   reason to name — and those are exactly the ones that leaked through from
+   here. Its hover set `color` and this one did too, at the same specificity,
+   so the design layer's background landed on the legacy layer's ink. Kept:
+   geometry. Removed: the uppercase (RULES S18) and the whole hover. */
 .nav__links a{
   display:flex; align-items:center;
   padding:0 18px; border-radius:0;
   font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
+  font-size:11.5px; letter-spacing:.07em;
   color:var(--ink-soft);
   transition:color var(--t-hover), background var(--t-hover);
 }
-.nav__links a:hover{ color:var(--ink); background:var(--paper-2); }
 
 .nav__auth{
   margin-left:auto;
@@ -148,28 +153,35 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .nav__signin{
   padding:0; border-radius:0;
   font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
+  font-size:11.5px; letter-spacing:.07em;
 }
-.nav__signin:hover{ background:transparent; color:var(--accent); }
+/* its hover lived here and set `color:var(--accent)` — the raw brand orange,
+   2.08:1 as text, on a white button. Measured on the shipped page. */
 .nav__burger{ display:none; }
 
 /* ─────────────── buttons ─────────────── */
+/* THE HOVERS ARE GONE FROM HERE. system.css §6 owns every button on the page
+   and re-declares fill, border, lift and shadow — but not `color`, because a
+   hover has no business changing a label's ink. These rules did, at the same
+   (0,2,0) specificity, so the surviving half of a legacy hover painted the
+   design layer's button: the primary's label went WHITE on hover (2.08:1 on
+   the brand orange, since the fill under it stopped being ink and became the
+   accent) and the ghost's did the same. Neither is visible in a screenshot
+   and axe does not hover, which is how it shipped. Geometry stays; case goes
+   with the rest of the uppercase (RULES S18). */
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   border:1px solid var(--ink);
   font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-size:11.5px; font-weight:500;
-  letter-spacing:.08em; text-transform:uppercase;
+  letter-spacing:.08em;
   cursor:pointer;
   transition:background var(--t-hover), color var(--t-hover), transform var(--t-hover) var(--ease);
 }
 .btn--sm{ padding:9px 16px; }
 .btn--lg{ padding:15px 26px; }
 .btn--dark{ background:var(--ink); color:var(--paper); }
-.btn--dark:hover{ background:var(--accent); border-color:var(--accent); color:var(--paper); }
 .btn--ghost{ background:transparent; color:var(--ink); }
-.btn--ghost:hover{ background:var(--ink); color:var(--paper); }
-.btn--ghost:hover img{ filter:brightness(0) invert(1); }
 .btn--ghost img{ transition:filter var(--t-hover); }
 
 /* ─────────────── panels: full-bleed, rule-separated ─────────────── */

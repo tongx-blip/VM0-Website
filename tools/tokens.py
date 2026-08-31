@@ -303,6 +303,36 @@ def dead_declarations(paths):
     return {k: v for k, v in seen.items() if len(v) > 1}
 
 
+def dark_themes_disagree(path):
+    """The two dark palettes must declare the same values.
+
+    There are two of them and there always will be: the OS's preference
+    (`@media (prefers-color-scheme: dark)` on `:root:not([data-theme=light])`)
+    and the toggle (`:root[data-theme="dark"]`). They are the SAME theme
+    reached two ways, so any token one declares the other must declare
+    identically.
+
+    The brand palette landed in one of them and not the other, and nothing
+    caught it: each block is internally consistent, each renders a plausible
+    dark page, and no screenshot shows both. The page had a warm dark mode on
+    a Mac set to dark and a cool one for anyone who pressed the button.
+    """
+    css = strip_comments(path.read_text(encoding='utf-8'))
+
+    def declared(selector):
+        out = {}
+        for m in re.finditer(re.escape(selector) + r'\s*\{(.*?)\n?\s*\}', css, re.S):
+            for d in re.finditer(r'(--[a-z0-9-]+)\s*:\s*([^;]+);', m.group(1)):
+                out[d.group(1)] = ' '.join(d.group(2).split())
+        return out
+
+    auto = declared(':root:not([data-theme="light"])')
+    toggle = declared(':root[data-theme="dark"]')
+    return [(t, auto.get(t), toggle.get(t))
+            for t in sorted(set(auto) | set(toggle))
+            if auto.get(t) != toggle.get(t)]
+
+
 def grid_height_without_rows(paths):
     """A sized grid whose row track is left implicit.
 
@@ -376,6 +406,12 @@ def main():
     for name, line, sel, h in grids:
         print(f'  {name}:{line}  {sel:<44} height:{h}')
     total += len(grids)
+
+    drift = dark_themes_disagree(ROOT / 'src/css/system.css')
+    print(f'\n=== tokens where the two dark themes disagree: {len(drift)}')
+    for token, auto, toggle in drift:
+        print(f'  {token:<16} prefers-color-scheme={auto}  data-theme={toggle}')
+    total += len(drift)
 
     missing = undefined_refs([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
     print(f'\n=== var() references with no declaration: {len(missing)}')
