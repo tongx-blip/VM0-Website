@@ -73,6 +73,71 @@ for the one thing it is for.
 
 ---
 
+## 2026-08-31 · the people are photographs
+
+Tong: *"现在团队成员的头像你生成的和agent头像有点风格太一致导致分不出来谁是agent，
+我们试试用seeddream去生成真人头像呢？各种人中都可以。然后把团队成员生成真人作为
+一条规则"*
+
+He is right, and the fault was mine this morning. I drew the six team members
+in the page's own hand-drawn register because it was coherent with everything
+else — and the agent avatar is **built out of the same kind of flat vector
+face**. At 256px you can tell them apart. At 22px in a Slack row, with the
+AGENT badge out of frame, you cannot, which is the only size that matters.
+
+**The distinction is the medium, not the styling.** An agent is drawn; a person
+is photographed. Nothing smaller than that survives a 22px circle.
+
+Six portraits from `seedream5-pro`, and every line of the prompt is
+load-bearing at that size:
+
+| | |
+|---|---|
+| tight head-and-shoulders | a half-body shot is a blob at 22px |
+| one flat, evenly-lit wall | a background with anything in it turns to noise |
+| soft frontal light | a hard shadow across a face reads as damage |
+| unretouched, pores and stray hairs | the glossy-stock look is what makes a photo read as AI |
+
+Cast: six people who are visibly six people — East Asian, Black, South Asian,
+white, Latina, Middle Eastern; twenties through fifties.
+
+**JPEG, not PNG.** These are photographs: 256px at q86 is 8–10 KB each, and the
+same frames as PNG are 84–93 KB. All seven avatars now cost 100 KB together.
+45 references moved from `.png` to `.jpg`, plus `tools/ship-figures.py`.
+
+### Both halves are executable now
+
+`tools/build-avatars.py --people` regenerates the portraits, prompt and cast
+included, so "team members are real people" is a rule with a command behind it
+rather than a paragraph. RULES B4 restated, and QA §4n gained the greppable
+invariant: agents are `assets/avatars/*.png`, people are
+`assets/brand/avatar-N.jpg`, and `assets/brand/avatar-N.png` must return 0.
+
+The 128-colour pass on the composed avatar moved INTO `rasterise()`. It had
+been a one-off I ran by hand, so the next run of the tool would have silently
+shipped 52 KB instead of 24.
+
+### Found while running the gate
+
+`.pcard` — the product's in-chat permission card, merged to the page by
+another thread with the control section — **was not registered as a mock**, so
+NO-RULES flagged its border. It is the app's own chrome (S4's written
+exception), so it is registered in `audit.js` §1 and §2 now.
+
+Also worth saying and not mine to fix: §2's type census reads **17 distinct
+sizes**, against the 11 that T3 allows. That is the variable-font swap that
+landed this week, not this change.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 157
+rules, all pointers resolve · `audit.js` §1 §6 §7 PASS · axe **0 violations**
+across 14 consecutive samples light and 3 dark — the one hit in an earlier
+sweep was the cold-walk entrance-fade artifact already recorded on 08-27 ·
+296 images, 0 broken.
+
+---
+
 ## 2026-08-31 · the agent has a face, and it is composed
 
 Tong: *"这是我们新branding的Avatar Composer。这个是我们的agent 头像规则，以后都

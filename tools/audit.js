@@ -41,7 +41,7 @@
   // the frame rather than the four classes inside it means the next pane
   // added to it does not fail this audit on its first day.
   const MOCK = '.absui,.slackui,.flowui,.okoui,.mock,.appui,.tplwin,.tpl,.step,' +
-               '.vs__viz,.wfo,.pbox,.ochat,.pgrant,.cbro,.ctrl__frame';
+               '.vs__viz,.wfo,.pbox,.ochat,.pgrant,.cbro,.ctrl__frame,.pcard';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
@@ -72,7 +72,7 @@
      .par .ochat .ochip .ostage .pgrant .cbro .vs__viz. */
   const MOCK = '.absui,.slackui,.flowui,.okoui,.acard,.a2a,.scene__shot,'
     + '.appui,.tplwin,.tpl,.pbox,.arti,.tsh,.lane,.vsui,.wfsc,.wfo,.par,'
-    + '.ochat,.ochip,.ostage,.pgrant,.cbro,.vs__viz,.mock';
+    + '.ochat,.ochip,.ostage,.pgrant,.cbro,.vs__viz,.mock,.pcard';
   const sizes = {};
   document.querySelectorAll('main *,.footer *,.nav *,.announce *').forEach(el => {
     if (el.closest(MOCK) || !el.textContent.trim()) return;

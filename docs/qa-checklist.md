@@ -810,6 +810,28 @@ into `base.css` twice.
 Non-square marks (Gmail 4:3, Meta, Zapier) are exempt on the short axis only:
 they letterbox, they never stretch.
 
+### An agent is drawn and a person is photographed
+
+RULES B4. The two must be told apart at **22px with no AGENT badge in frame**,
+and the only difference that survives at that size is the medium. The invariant
+is greppable:
+
+```bash
+# agents: composed by tools/build-avatars.py, under assets/avatars/
+grep -o 'assets/avatars/[a-z-]*\.png' site/index.html | sort -u
+# people: photographs, under assets/brand/, and JPEG because they are photographs
+grep -o 'assets/brand/avatar-[0-9]\.jpg' site/index.html | sort -u
+# and nothing may cross over
+grep -c 'assets/brand/avatar-[0-9]\.png' site/index.html    # must be 0
+```
+
+- **Look at it at 22px, not at 256.** Both media read fine large; the whole point
+  is the small size. Crop a Slack row from a screenshot and check that the
+  agent row is obvious.
+- **A person is never drawn in the page's own register.** That was the first
+  attempt and it was coherent and wrong — the agent avatar is built from the
+  same flat vector faces.
+
 ## 4o. The header is in the right state for the scroll position
 
 Two states, and each one is a claim about where the page is. At rest it is

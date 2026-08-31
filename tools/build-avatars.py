@@ -33,6 +33,10 @@ committed: they are what the page ships, and regenerating them must not need
 the network.
 
 ADDING AN AGENT: put it in ROSTER and re-run. Nothing else.
+
+AND THE PEOPLE ARE PHOTOGRAPHS. `--people` regenerates the six human avatars
+through `okou generate image`. That is a separate rule and a deliberate
+opposite: see PEOPLE below for why they cannot be drawn.
 """
 import argparse
 import json
@@ -91,6 +95,91 @@ ROSTER = {
         'hairColor': 'black',
     },
 }
+
+
+# ── the people ───────────────────────────────────────────────────────
+#
+# TEAM MEMBERS ARE PHOTOGRAPHS OF REAL-LOOKING PEOPLE. Not illustrations.
+#
+# The first attempt drew them in the page's own hand-drawn register, which
+# looked coherent and was wrong: the agent avatar is composed from the same
+# kind of flat vector faces, so at 22px in a Slack row nobody could tell which
+# row was the agent. Tong: "生成的和agent头像有点风格太一致导致分不出来谁是
+# agent". The distinction has to survive the AGENT badge being out of frame,
+# and the only difference strong enough at that size is medium: the agent is
+# drawn, a person is photographed.
+#
+# What makes these work at 22px, and every line of it is load-bearing:
+#   tight head-and-shoulders    a half-body shot is a blob at 22px
+#   flat, evenly-lit plain wall a background with anything in it turns to noise
+#   soft frontal light          a hard shadow across a face reads as damage
+#   unretouched skin            the glossy-stock look is what makes it read as
+#                               AI; pores and stray hairs are what stop it
+#
+# Cast: six people who are visibly six people — age, ethnicity, gender, hair.
+PEOPLE_STYLE = """A candid editorial headshot of one person, square 1:1 crop, \
+photographed on a 50mm lens.
+
+FRAMING: tight head and shoulders. The head fills most of the frame and is \
+centred; the top of the hair is close to the top edge. The crop will be shown \
+as a small circle, so nothing important sits near the corners.
+
+LIGHT: soft, even, diffused daylight from the front. No hard shadow across the \
+face, no rim light, no dramatic contrast, no colour cast.
+
+BACKGROUND: one plain, flat, evenly-lit wall in a single muted colour, softly \
+out of focus. Nothing else in the frame — no props, no plants, no window, no \
+office, no pattern.
+
+LOOK: real, natural, unretouched. Visible skin texture, pores, faint lines and \
+stray hairs. Relaxed closed-mouth smile, looking straight into the lens. \
+Ordinary everyday clothing, plain, no logos, no branding, no lanyard.
+
+NOT: not a glossy corporate stock photo, not a glamour portrait, not \
+airbrushed, not a 3D render, not an illustration, not AI-glossy plastic skin. \
+No text, no letters, no watermark, no border."""
+
+PEOPLE = [
+    'a woman in her early thirties, East Asian, straight black shoulder-length '
+    'hair tucked behind one ear, wearing a plain rust-orange knit. Background: '
+    'a muted sage-green wall.',
+    'a man in his late twenties, Black, short natural hair and a neat short '
+    'beard, wearing a plain navy crew-neck. Background: a muted warm grey wall.',
+    'a woman in her forties, South Asian, dark hair pulled back, thin round '
+    'glasses, wearing a plain deep-teal shirt. Background: a muted clay-pink wall.',
+    'a man in his fifties, white, short grey hair and a trimmed grey beard, '
+    'wearing a plain olive shirt. Background: a muted dusty-blue wall.',
+    'a woman in her mid twenties, Latina, dark curly hair worn loose, wearing a '
+    'plain mustard-yellow top. Background: a muted stone-grey wall.',
+    'a man in his thirties, Middle Eastern, short dark wavy hair and light '
+    'stubble, wearing a plain charcoal shirt. Background: a muted pale-sand wall.',
+]
+# JPEG, not PNG: these are photographs. 256px q86 is 8-10 KB each; the same
+# frames as PNG are 84-93 KB, and the largest slot on the page is 88px.
+PEOPLE_SIZE = 256
+PEOPLE_QUALITY = 86
+
+
+def build_people():
+    """Regenerate site/assets/brand/avatar-N.jpg. Costs credits, so it is
+    opt-in — the images are committed and nothing routine needs this."""
+    import io
+    out = os.path.join(ROOT, 'site', 'assets', 'brand')
+    for i, who in enumerate(PEOPLE, 1):
+        cmd = ['npx', '--yes', '--package=' + os.environ.get('CLI_PKG_URL', ''),
+               'okou', 'generate', 'image', '--provider', 'built-in',
+               '--model', 'seedream5-pro', '--quality', 'high',
+               '--size', '1024x1024', '--json',
+               '--raw-prompt', PEOPLE_STYLE + '\n\nTHIS PERSON: ' + who]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        url = json.loads(r.stdout.strip().splitlines()[-1])['url']
+        raw = _get(url)
+        from PIL import Image
+        im = Image.open(io.BytesIO(raw)).convert('RGB')
+        im = im.resize((PEOPLE_SIZE, PEOPLE_SIZE), Image.LANCZOS)
+        path = os.path.join(out, 'avatar-%d.jpg' % i)
+        im.save(path, quality=PEOPLE_QUALITY, optimize=True, progressive=True)
+        print('avatar-%d   %4.1f KB   %s' % (i, os.path.getsize(path) / 1024, who[:52]))
 
 
 def fetch(path):
@@ -195,6 +284,12 @@ def rasterise(svg_path, png_path, size=RASTER):
             check=True, capture_output=True, timeout=180)
         from PIL import Image
         im = Image.open(os.path.join(work, 'o.png')).convert('RGB')
+        # 128 colours. The composed avatar is flat fills plus one crayon
+        # texture, so a palette holds it exactly and halves the file — and it
+        # belongs HERE rather than in a one-off pass afterwards, or the next
+        # person to run this tool silently ships 52 KB instead of 24.
+        im = im.convert('P', palette=Image.ADAPTIVE, colors=128,
+                        dither=Image.FLOYDSTEINBERG)
         im.save(png_path, optimize=True)
         return im.size
     finally:
@@ -205,7 +300,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--list', action='store_true', help='print every dimension')
     ap.add_argument('--svg', action='store_true', help='also keep the source SVG')
+    ap.add_argument('--people', action='store_true',
+                    help='regenerate the human portraits (costs credits)')
     args = ap.parse_args()
+    if args.people:
+        build_people()
+        return 0
     m = manifest()
 
     if args.list:

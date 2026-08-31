@@ -148,7 +148,7 @@ def card_d():
         '<div class="tsh__body">%s</div></div>'
         '<div class="tsh__wf">'
         '<p class="tsh__wfh">'
-        '<img class="tsh__av" src="assets/brand/avatar-4.png" alt="" width="32" height="32">'
+        '<img class="tsh__av" src="assets/brand/avatar-4.jpg" alt="" width="32" height="32">'
         '<span><b>Weekly team digest</b><em>from Ravi · used by 10 people</em></span>'
         '<i class="tsh__sched">Mon 09:00</i></p>'
         '<p class="tsh__faces">%s<em>running now</em></p>'
