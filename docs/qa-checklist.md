@@ -126,14 +126,37 @@ one selector at a time.
 ## 3. Ground alternation
 
 No two adjacent sections may share a ground, because that is the only thing
-separating them. Check with:
+separating them — **unless they are deliberately sharing a card**, in which
+case space separates them and the check is that the seam is not paying its
+padding twice.
 
 ```js
-['hero','outputs','workflows','parallel','control','positioning','proof','cta']
-  .map(id => id + ':' + getComputedStyle(document.getElementById(id)).backgroundColor)
+// the CARDS, not the sections: three of the sections live inside .megacard
+[...document.querySelectorAll('.panel--card, .megacard, .panel--cta, .hero')]
+  .map(e => (e.id || e.className.split(' ')[0]) + ':' +
+            getComputedStyle(e).backgroundColor)
 ```
 
-Expect: paper, wash, paper, wash, paper, wash, paper, ink.
+Expect every card to be `--paper` on the page's own brand ground, with
+`.megacard` counting as **one** card and the closing band as the one dark
+exception. (The old paper/wash **alternation** went when the page ground
+stopped being neutral grey — separation is card-against-ground now, not
+section-against-section.)
+
+- **A shared card is written down or it is a bug.** RULES S2 says one card per
+  section; `.megacard` is the exception and it is named in `system.css`. Three
+  sections on one ground with no reason recorded is just a missing background.
+- **The seam gives back half its padding.** Two sections meeting on one ground
+  otherwise pay `--pad-section-block` twice, which reads as a gap someone
+  forgot to close rather than as a join:
+
+```js
+[...document.querySelectorAll('.megacard__s + .megacard__s')].map(e => {
+  const prev = e.previousElementSibling;
+  return Math.round(parseFloat(getComputedStyle(prev).paddingBottom)
+                  + parseFloat(getComputedStyle(e).paddingTop));
+})   // ≈ one --pad-section-block, not two
+```
 
 ## 3b. Attention budget — run this BEFORE restyling anything called heavy
 

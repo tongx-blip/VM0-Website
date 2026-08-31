@@ -214,6 +214,62 @@ Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · `audit.js`
 
 ---
 
+## 2026-08-31 · one card, three sections, and the logotype takes the hero
+
+Tong: *"把hero的prompt box放到logo墙下边。让logo墙和Achieve more with the team
+you already have. 放到一个大卡一遍，但是它们还是两个section… 这三个section都在一
+个大卡上。然后把我发你的svg图放到hero text下边"*
+
+### The order changed, not just the boxes
+
+The prompt box was the hero's own figure. It is a section of its own now
+(`#ask`), and it sits **under the connector wall** — so the page reads: here is
+everything Okou reaches → here is where you ask it → here is what comes back.
+`#reach` moved up above `#outputs` to make that sentence, which is a reorder of
+the page's narrative and not only a move of two elements.
+
+### One card, three sections
+
+`.megacard` holds `#reach`, `#ask` and `#outputs`. They keep everything that
+makes them sections — their ids, headings, claims and reveals — and give up
+only their three grounds.
+
+RULES S2 says every section is a white card on the page ground, so this is the
+written exception (new **S19**), and the reason is that the three are one
+movement: three cards put a grey gap inside a single sentence.
+
+**The seam gives back half its padding.** Two sections meeting on one ground
+otherwise pay `--pad-section-block` twice — 86px between two headings, which
+reads as a gap someone forgot to close rather than as a join. Each side halves,
+so a seam is exactly one block padding. Measured: 86px, against a full pad of
+86.4.
+
+### The logotype
+
+`Group 1000006428.svg` → `assets/brand/hero-wordmark.svg`, 44 KB, under the
+hero text: the OKOU letterforms with three agents living in them — one painting
+at an easel, one mid-kick, one holding up a finished document. It is the hero's
+figure now that the box has gone down, and it is the one place on the page the
+wordmark is **drawn** rather than set. Capped at 860px and centred.
+
+### Found while checking the grounds
+
+The gate's §3 still expected **paper / wash / paper / wash** alternation. That
+stopped being true when the page ground became the brand's warm off-white:
+every card is now `--paper` and separation is card-against-ground, not
+section-against-section. The check was passing by never being run against a
+page it still described. Rewritten to walk the CARDS rather than the sections,
+with `.megacard` counting as one, plus the seam assertion above.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 166
+rules, all pointers resolve · `audit.js` §1 §3 §6 §7 PASS · axe **0
+violations**, 6 light and 4 dark · 1440 and 390, no horizontal overflow, the
+card verified in both themes.
+
+---
+
 ## 2026-08-31 · the header gets a half-pixel edge, and a dark-theme trap turns up under it
 
 Tong, on the four directions: *"header 加一条 0.5px 的轻的 Stroke 吧，还是保持现在

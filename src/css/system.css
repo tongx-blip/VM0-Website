@@ -1402,10 +1402,59 @@ h3{ font-family:var(--fd); }
   overflow:hidden;
 }
 .panel{ border-top:0; }
+
+/* ── ONE CARD, THREE SECTIONS ────────────────────────────────────────
+   The connector wall, the ask and the outputs share a single card. They
+   remain three sections — three ids, three headings, three claims, their
+   own reveals — and what they stop having is three GROUNDS. S2 says every
+   section is a white card on the grey page; this is the written exception,
+   and the reason is that the three are one movement: here is everything it
+   reaches, here is where you ask it, here is what comes back. Three cards
+   put a grey gap inside a single sentence.
+
+   The card is the wrapper and carries every value `.panel--card` carries,
+   because it IS a section card — one that happens to hold three. The
+   sections inside keep only their block rhythm. */
+.megacard{
+  margin-inline:var(--card-gap);
+  margin-block:var(--card-gap);
+  background:var(--paper);
+  border-radius:var(--r-section);
+  box-shadow:none;
+  overflow:hidden;
+}
+.megacard__s{
+  /* the inline padding is the card's, not each section's — otherwise the
+     three measures drift apart on one ground, which is the thing a shared
+     card was supposed to stop */
+  padding-inline:max(var(--pad-section), calc(var(--edge) - var(--card-gap)));
+  padding-block:var(--pad-section-block);
+  background:none;
+}
+/* THE SEAM IS SPACE, NOT A LINE (S4). Two sections meeting on one ground
+   would otherwise pay their block padding twice — 2 × --pad-section-block
+   between two headings, which reads as a gap someone forgot to close. Each
+   join gives back half. */
+.megacard__s + .megacard__s{ padding-top:calc(var(--pad-section-block) * .5); }
+.megacard__s:not(:last-child){ padding-bottom:calc(var(--pad-section-block) * .5); }
+
+/* the box is no longer the hero's figure, so it stops reserving the hero's
+   air above itself */
+#ask .showcase{ margin-top:0; }
 /* surfaces are always paper; the shadow carries them on a paper ground
    and the fill carries them on a wash ground. Only the small pills flip,
    and never in their active state. */
 .tag,.scenes__tab:not(.is-on){ background:var(--wash-2); }
+
+/* The logotype, drawn. It is the hero's figure now — capped at the measure
+   and given the air the prompt box used to take, and it is a decoration with
+   no words of its own, so it carries no alt text and no reveal of its own
+   beyond the stack's. */
+.hero__mark{
+  display:block; width:100%; height:auto;
+  max-width:min(100%, 860px);
+  margin:clamp(26px, 3.4vw, 52px) auto 0;
+}
 
 /* ─────────────── 8. hero ───────────────
    The composition rule at full size: one centred stack, then the
