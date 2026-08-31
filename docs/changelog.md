@@ -4,6 +4,78 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · the artifact stops being cropped to fit the window it arrives in
+
+Tong: *"你为了让 artifacts 可以放到这个界面里，强行把 artifacts 的高低改矮，没有
+必要，如果 artifacts 放不下，那就在对话过程中把上边的对话顶出去也没问题。另外，
+最后一条对话或者 artifacts 需要和 chat box 或 prompt box 有一些安全距离。"*
+
+### the crop was 40% of the thing the panel exists to deliver
+
+`.ochat--okou .oresult img` was capped at `clamp(76px, 8vw, 110px)` under
+`object-fit:cover`. Measured at 1440 that is **108px of a 180px preview — 72px,
+40%** — and the comment above it said why: an artifact at its natural height
+pushed the user's own message off the top of a bottom-anchored list.
+
+That trade is the wrong way round. The list already hangs from `flex-end` and
+clips; losing the oldest line is what a chat window *does*, and it is the one
+thing in the picture that costs nothing. The deliverable is the object the whole
+panel is built to hand over. Cap and crop removed; the image takes its natural
+height from `.oresult img`, and the ask goes off the top when it has to. Now
+**P14**, the sibling of P9 (*a product visual is cropped, never scaled to fit*).
+
+The crop was also buying headroom nobody was spending: the list had 22–47px
+of unused space above the first row at the very moment it was slicing 72px off
+the bottom.
+
+### a conversation that ends on its composer's edge
+
+`.okw__list` carried `padding:0 18px 0` and a comment arguing for **no** floor —
+a 4px version had read as the message being *unfinished*. The diagnosis was
+right and the conclusion was wrong: 4 is less than the **14px between two
+messages**, and a gap smaller than the one inside the conversation says "this
+is still the conversation". Deleting it instead put the newest message's last
+pixel and the composer's first on the same pixel, so an artifact card ended by
+running into a control.
+
+The floor is the window's own inset — 18px on the Okou window, and
+`clamp(14px,1.4vw,18px)` on the Slack channel, which had the same 0. Four of
+the seven tabs are Slack's and three are ours; leaving one kind with air and
+the other flush would have made the tab strip change the spacing rule as you
+move along it. Now **M8**. **N23** loses the half of it that said "with nothing
+between them" and keeps the half that is still true — no reserved strip for a
+typing indicator that may not be there.
+
+### the sweep found the rule failing its own second clause
+
+M8 says the floor must also beat the row gap. It did at 1440 and did not below
+**1080px**, where `.okw__*` tightens every inset to 13px — and left the 14px
+between messages alone. So the narrow window had *more* air between two
+messages than at the end of the conversation, which is the exact reading the
+rule exists to stop. The gap now narrows with everything else, derived rather
+than picked: the wide window is a 14px gap under an 18px floor, and
+13 × 14/18 = 10.1 → **10px**.
+
+Two process notes came out of finding it:
+
+* **`.slk__list` puts no `padding-inline` on itself** — its rows and composer
+  carry the inset. The first version of the gate check compared the floor to
+  the *list's* `paddingLeft` and reported `0px` on four of seven tabs. The
+  inset is read off the composer.
+* **A headless `--window-size=390,900` is not 390.** It floors at ~500 CSS px
+  and reports `innerWidth: 500` while looking entirely plausible, so the whole
+  narrow block gets measured at the wrong width. 390 is emulated, and
+  `innerWidth` is read back before the row is believed.
+
+Also fixed while in the file: `RULES.md` had **two different rules both
+numbered N23** on one line. `tools/rules.py` anchors its id scan at the line
+start, so the second one was invisible to the duplicate check that exists to
+catch exactly this. The hold rule is now N24.
+
+Gate: tokens/check-html/scopes/rules at 0, audit §1 §6 §7 PASS (outputs
+unchanged at 1131px), §5 PASS under real `prefers-reduced-motion`, and §4m3
+green on all seven tabs at 390 / 1024 / 1120 / 1240 / 1440 / 1920.
+
 ## 2026-08-31 · a hover that answers, and controls that stop shouting
 
 Tong: *"图一，怎么一点hover效果都不给了。我说了header和所有button不要全都大写，

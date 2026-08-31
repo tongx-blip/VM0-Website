@@ -676,12 +676,25 @@ the bottom empty, and the messages that HAVE arrived are the ones pushed off.
   const sc = document.querySelector('.scene.is-on');
   const l = sc.querySelector('.slk__list, .okw__list');
   const lb = l.getBoundingClientRect();
+  const cs = getComputedStyle(l);
   const rows = [...l.children].filter(e => e.getBoundingClientRect().height > .5
     && getComputedStyle(e).position !== 'absolute');
   const last = rows[rows.length - 1].getBoundingClientRect();
   const comp = sc.querySelector('.slk__composer, .okw__composer');
+  const img = l.querySelector('.oresult img');
   return { clipped: Math.round(last.bottom - lb.bottom),          // must be ≤ 0
-           gap: Math.round(comp.getBoundingClientRect().top - lb.bottom) };  // must be 0
+           // the floor is the window's own inset — the number its composer
+           // is inset by. `.okw__list` carries that inset itself; the Slack
+           // list does not (its rows and composer do), so read it off the
+           // composer or this reports 0 on four of the seven tabs.
+           floor: cs.paddingBottom,
+           inset: getComputedStyle(comp).marginLeft,    // must equal floor
+           rowGap: cs.rowGap,                           // floor must beat it
+           gap: Math.round(comp.getBoundingClientRect().top - last.bottom),
+           // the result is at its natural height — no cap, no cover crop
+           crop: img && Math.round(
+             img.getBoundingClientRect().width * img.naturalHeight / img.naturalWidth
+             - img.getBoundingClientRect().height) };               // must be 0
 })()
 ```
 
@@ -689,15 +702,37 @@ the bottom empty, and the messages that HAVE arrived are the ones pushed off.
   conversation is finished (N2), so with no JS and under reduced motion every
   message is present at full height. Check it: reduced motion must show every
   row but the typing one.
-- **Nothing between the last message and the composer.** No list padding-bottom,
-  no composer margin-top, and the typing indicator lives *inside* the list so it
-  takes no room when nobody is typing.
+- **The conversation ends on a floor, and the floor is the window's own inset**
+  (M8). `padding-bottom` on the list — inside the clip, so it survives the
+  oldest line going off the top — equal to the number that window's composer
+  is inset by, and larger than the list's `row-gap` where it has one. Read the
+  inset off the **composer**, not off the list: `.okw__list` carries its own
+  `padding-inline`, the Slack list does not, and comparing against
+  `paddingLeft` reports 0 on four of the seven tabs. It was 0 on both windows,
+  so an artifact card ended by running into a control; a 4px version before
+  that read as the message being unfinished, because 4 is less than the 14px
+  between two messages. Both numbers narrow together at 390 (13px), or the
+  relationship holds at one width only.
+- **The result is never cropped to fit the window** (P14). No `max-height` and
+  no `object-fit:cover` on `.oresult img` — the artifact is the object the
+  panel exists to deliver, and a window that cannot hold it gives up its oldest
+  line instead. A capped preview lost 72px of 180px and nobody could tell,
+  which is why `crop` is measured rather than looked at.
+- **No reserved strip for something that may not be there** (N23). The typing
+  indicator lives *inside* the list, so it takes no room when nobody is
+  typing, and no composer `margin-top` stands in for the floor.
 - **Watch it, do not only measure it.** Two rounds of this were spent reading
   numbers that were describing a mid-animation frame as a bug. Screenshot the
   tab early and late and look at the two.
 - **All seven tabs, and both readings of the window** — four are the Slack
   channel (`.slk__list`), three are Okou's own (`.okw__list`), and they had the
   same two faults. Sweep 1024 / 1120 / 1240 / 1440 / 1920 / 390.
+- **390 does not come from a headless window.** `--window-size=390,900` floors
+  at ~500 CSS px and reports `innerWidth: 500` while looking plausible, so the
+  narrow block (`max-width:1080px`) is measured at the wrong width and the
+  sweep passes without ever visiting 390. Emulate the viewport, and read
+  `innerWidth` back before believing the row. The floor-under-the-gap fault
+  below was found at 1024 and would have been missed at a fake 390.
 
 ## 4m. An auto-advancing carousel yields
 

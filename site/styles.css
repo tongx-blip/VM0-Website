@@ -7415,11 +7415,15 @@ h3{ font-family:var(--fd); }
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
   gap:14px;
-  /* NO FLOOR PADDING. The conversation comes off the top edge of the
-     composer, with nothing between them — 4px here plus the composer's own
-     10px top margin was a 14px strip of ground under the newest message,
-     which reads as the message being unfinished rather than as air. */
-  padding:0 18px 0;
+  /* A FLOOR, AND IT HAS TO BEAT THE ROW GAP. 4px was tried and read as the
+     message being unfinished — because 4 is *less* than the 14px between two
+     messages, and a gap smaller than the one inside the conversation says
+     "this is still the conversation". The answer was not to delete it: with
+     no floor at all the newest message's last pixel and the composer's first
+     are the same pixel, and an artifact ends by running into a control.
+     18px is the list's own inset, so the newest object clears the composer
+     by exactly what it clears the window's sides by. */
+  padding:0 18px 18px;
 }
 
 .okw__list > *{ flex:none; }
@@ -7511,20 +7515,16 @@ h3{ font-family:var(--fd); }
   overflow:hidden; background:var(--vm-card);
 }
 
-/* THE ASK HAS TO SURVIVE. The list hangs from the bottom and clips, so an
-   artifact at its natural height (300px in a 373px list) pushed the user's
-   own message up under the title bar and left a sliver of grey — which
-   reads as a rendering fault, not as scrollback. Capped and cropped from
-   the TOP, so what is lost is the tail of the page rather than its
-   headline (the crop-through-the-headline fault from the tab windows). */
-.ochat--okou .oresult img{
-  /* 144 left the Spec Writing thread one pixel over its list, so the user's
-     own prompt was sliced through its first line by the title bar. Sized for
-     HEADROOM rather than for a fit: ~34px of slack, checked on all three. */
-  max-height:clamp(76px, 8vw, 110px);
-  object-fit:cover; object-position:top center;
-}
-
+/* THE ARTIFACT IS NOT CROPPED TO FIT ITS WINDOW. It was capped at
+   `clamp(76px, 8vw, 110px)` with `object-fit:cover`, so that the user's own
+   message would survive at the top of the list. Measured, that cap was
+   taking 72px off a 180px preview — 40% of the one object the whole panel
+   exists to deliver — to protect scrollback the window is built to lose.
+   Tong: *"你为了让 artifacts 可以放到这个界面里，强行把 artifacts 的高低改矮，
+   没有必要，如果 artifacts 放不下，那就在对话过程中把上边的对话顶出去也没问题"*.
+   The list already hangs from the bottom and clips; an old line going off
+   the top is what a chat window does, and a bisected deliverable is not.
+   Natural height, from `.oresult img`. */
 
 /* the assistant's mark, in the rail's own tile shape */
 .ochat__ava--agent{
@@ -7647,7 +7647,12 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 .slk__list{
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
-  padding-bottom:0;
+  /* THE SAME FLOOR AS THE OKOU WINDOW, stated in this mock's own inset so
+     each window clears its composer by what it clears its sides by. It was
+     0 here and 0 there, and four of the seven tabs would otherwise keep a
+     conversation that ends on its composer while three got air — the tab
+     strip changing the spacing rule as you move along it. */
+  padding-bottom:clamp(14px, 1.4vw, 18px);
 }
 
 .slk__list > *{ flex:none; }
@@ -8421,6 +8426,19 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
   .okw__nav i{ width:34px; height:30px; }
 
   .okw__bar,.okw__list{ padding-inline:13px; }
+
+  /* THE FLOOR IS THE INSET, so it narrows with it. Stated as a relationship
+     ("the newest object clears the composer by what it clears the sides
+     by"), an 18px floor left behind at a 13px inset is the relationship
+     holding at one width only.
+
+     AND THE RHYTHM NARROWS WITH THEM. This block tightens every inset in the
+     window to 13 and left the 14px between two messages alone, so the floor
+     came out UNDER the gap — which is the exact reading M8 exists to stop:
+     air at the end that is smaller than air in the middle says "this is
+     still the conversation". 10px is derived, not picked: the wide window is
+     a 14px gap under an 18px floor, and 13 × 14/18 = 10.1. */
+  .okw__list{ padding-bottom:13px; gap:10px; }
 
   .okw__composer{ margin-inline:13px; }
 
