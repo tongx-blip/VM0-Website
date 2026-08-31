@@ -10,7 +10,7 @@
      system.css by tools/build-fonts.py; the sources live in src/fonts/ and
      are not committed. No Google Fonts request at all now — six families
      were being fetched and three of them were fallbacks for each other. -->
-<link rel="stylesheet" href="styles.css?r=24c303d6">
+<link rel="stylesheet" href="styles.css?r=e75c8603">
 </head>
 <body>
 
@@ -45,11 +45,12 @@
 <main id="top">
 
 <!-- ═══════════════ HERO ═══════════════ -->
-<section class="panel hero" id="hero" data-hero="fold">
-
-  <!-- brand texture, decorative only -->
-  <img class="hero__cloud hero__cloud--a" src="assets/brand/clouds.png?v=82c5f163" alt="" aria-hidden="true">
-  <img class="hero__sun" src="assets/brand/sun.png?v=7d42f7e0" alt="" aria-hidden="true">
+<!-- THE FOLD. The hero is a full-viewport panel that narrows to the section
+     cards' width as you scroll and then leaves. The wrapper is the travel: the
+     hero is sticky inside it, so the narrowing happens while the page is
+     already moving and nothing is pinned longer than it needs to be. -->
+<div class="herofold" id="herofold">
+<section class="panel hero" id="hero" data-hero="fold" data-ground="brand">
 
   <div class="stack">
     <h1 class="display" data-reveal="mask" data-in>
@@ -123,12 +124,9 @@
       <a href="#cta"><img src="assets/mockup/slack.svg?v=55532dd8" alt="" width="16" height="16">Add Okou to your workspace</a>
     </p>
 
-    <img class="showcase__sticker showcase__sticker--tl" src="assets/brand/sticker-idea.png?v=085a9c42" alt="" aria-hidden="true">
-    <img class="showcase__sticker showcase__sticker--tr" src="assets/brand/avatar-2.jpg?v=7a0acfc5" alt="" aria-hidden="true">
-    <img class="showcase__sticker showcase__sticker--bl" src="assets/brand/avatar-4.jpg?v=582f5842" alt="" aria-hidden="true">
-    <img class="showcase__sticker showcase__sticker--br" src="assets/brand/sticker-star.png?v=e52e3af9" alt="" aria-hidden="true">
   </div>
 </section>
+</div>
 
 <!-- ═══════════════ 01 / OUTPUTS ═══════════════ -->
 <section class="panel panel--card" id="outputs">
@@ -1239,6 +1237,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=baae0c63"></script>
+<script src="app.js?r=00577602"></script>
 </body>
 </html>

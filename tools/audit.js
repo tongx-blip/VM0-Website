@@ -208,7 +208,12 @@
   };
 
   const rows = [], bad = [], noted = [];
-  [...document.querySelectorAll('main > section[id], body > section[id]')].forEach(s => {
+  /* `section[id]` wherever it sits, not only as a direct child. The hero
+     moved inside `.herofold` — the wrapper that carries the fold's scroll
+     travel — and a child selector quietly dropped the page's largest
+     section out of its own attention budget. A budget that stops counting
+     the thing it was written for reports PASS by omission. */
+  [...document.querySelectorAll('main section[id], body section[id]')].forEach(s => {
     const h       = s.getBoundingClientRect().height;
     const screens = h / vh;
     const share   = h / doc * 100;

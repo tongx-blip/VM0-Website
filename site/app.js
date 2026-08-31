@@ -953,7 +953,12 @@
      and the observer's rootMargin puts the trigger line exactly where the
      header's midline sits. A band that moves, or a new one, still needs no
      number changed here — the geometry is expressed once, in the margin. */
+  /* Two kinds of ground the header has to answer to, watched the same way:
+     the page's dark bands, and the hero's brand orange. Both are read from
+     what is actually BEHIND the bar's midline rather than from a scroll
+     offset, so moving a section never leaves the header lying about it. */
   var darkGrounds = [].slice.call(doc.querySelectorAll('[data-ground="dark"]'));
+  var brandGrounds = [].slice.call(doc.querySelectorAll('[data-ground="brand"]'));
 
   var sentinel = doc.createElement('div');
   sentinel.setAttribute('aria-hidden', 'true');
@@ -980,8 +985,9 @@
       entries.forEach(function (e) { e.target.__overNav = e.isIntersecting; });
       if (!nav) return;
       nav.classList.toggle('is-dark', darkGrounds.some(function (el) { return el.__overNav; }));
+      nav.classList.toggle('is-brand', brandGrounds.some(function (el) { return el.__overNav; }));
     }, { rootMargin: -mid + 'px 0px ' + (mid - window.innerHeight) + 'px 0px' });
-    darkGrounds.forEach(function (el) { darkObserver.observe(el); });
+    darkGrounds.concat(brandGrounds).forEach(function (el) { darkObserver.observe(el); });
   }
 
   function readScroll() {
@@ -1303,11 +1309,15 @@
        finished frame on screen, and *"用户还没看完内容就切tab了"*. 13s gives
        the settled frame about 7.8s, which is the part anyone actually reads. */
     var DWELL = 13000;                // ms per tab
-    var reelT0 = null, tRaf = 0, onScreen = false, held = false, kbd = false;
+    /* `reelHeld`, not `reelHeld`: the hero rotator two hundred lines up already
+       declares one, and `var` is function-scoped in this single IIFE. They
+       were one flag — hovering the hero headline paused this reel, and a
+       click here parked the hero rotator for good (tools/scopes.py). */
+    var reelT0 = null, tRaf = 0, onScreen = false, reelHeld = false, kbd = false;
 
     function tick(now) {
       tRaf = 0;
-      if (!onScreen || held || kbd || document.hidden || reduce) { reelT0 = null; return; }
+      if (!onScreen || reelHeld || kbd || document.hidden || reduce) { reelT0 = null; return; }
       if (reelT0 === null) reelT0 = now;
       var p = (now - reelT0) / DWELL;
       if (p >= 1) {
@@ -1494,9 +1504,18 @@
 
     /* one frame per scroll burst. A scroll event can fire many times per
        frame, and depth() reads layout on every card — unthrottled it is
-       six forced reflows per event. */
+       six forced reflows per event.
+
+       `qOnScroll`, not `onScroll`: this file is one IIFE and not in strict
+       mode, so a `function onScroll` in this block is copied out to the
+       enclosing scope and overwrites the ladder's. `addEventListener` holds
+       the function OBJECT so the ladder kept working — but its
+       `removeEventListener(…, onScroll)` runs later, on resize, and by then
+       the name resolved here. The ladder's scroll listener could never be
+       detached, which is precisely what its own comment says it does.
+       `tools/scopes.py` checks for this now. */
     var qTick = false;
-    function onScroll() {
+    function qOnScroll() {
       if (qTick) return;
       qTick = true;
       requestAnimationFrame(function () { qTick = false; sync(); });
@@ -1526,7 +1545,7 @@
     }
 
     var qEnd;
-    qrail.addEventListener('scroll', onScroll, { passive: true });
+    qrail.addEventListener('scroll', qOnScroll, { passive: true });
     if ('onscrollend' in window) {
       qrail.addEventListener('scrollend', normalise);
     } else {
@@ -1784,5 +1803,57 @@
         if (seen) run(); else stop();
       }, { threshold: 0.3 }).observe(ctrl);
     } else { seen = true; run(); }
+  }
+
+  /* ───────────────────────────────────────────────────────────────────
+     17. the hero folds to card width
+
+     One number, written to one custom property: 0 while the hero is full
+     bleed, 1 once it has narrowed to the section cards' width. The CSS
+     does everything else — the clip is `--fold * --card-gap` on each side
+     and `--fold * --r-section` on the corners, so this file never names a
+     pixel and the geometry stays in the stylesheet where it can be read
+     next to the thing it belongs to.
+
+     Written on `scroll` rather than driven by an animation timeline: this
+     page supports browsers without `scroll()` and the fallback for a
+     scroll-linked animation is no animation at all, which here means a
+     hero that never folds. It is one property write per frame on one
+     element, and the property only feeds a clip — no layout (N1).
+     ─────────────────────────────────────────────────────────────────── */
+  var fold = doc.getElementById('herofold');
+  if (fold) {
+    var heroEl = fold.querySelector('.hero');
+    /* `foldTick`, not `ticking`: the ladder declares one at the top of this
+       IIFE and `var` is function-scoped. Sharing it meant the ladder's
+       handler set the flag first on every scroll event and this one read
+       it as "already scheduled" and returned — the hero never folded. */
+    var foldAt = -1, foldTick = false;
+
+    function foldTravel() {
+      /* the wrapper is one viewport plus the travel; the travel is what is
+         left once the sticky hero has been read at full size */
+      return Math.max(1, fold.offsetHeight - (heroEl ? heroEl.offsetHeight : 0));
+    }
+
+    function foldPaint() {
+      foldTick = false;
+      var top = fold.getBoundingClientRect().top;
+      var p = Math.min(1, Math.max(0, -top / foldTravel()));
+      /* three decimals: the clip is sub-pixel and writing every float
+         change repaints for nothing */
+      p = Math.round(p * 1000) / 1000;
+      if (p === foldAt) return;
+      foldAt = p;
+      fold.style.setProperty('--fold', p);
+    }
+
+    window.addEventListener('scroll', function () {
+      if (foldTick) return;
+      foldTick = true;
+      requestAnimationFrame(foldPaint);
+    }, { passive: true });
+    window.addEventListener('resize', foldPaint, { passive: true });
+    foldPaint();
   }
 })();

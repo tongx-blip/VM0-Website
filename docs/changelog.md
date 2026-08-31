@@ -4,6 +4,117 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · the hero becomes a full viewport that folds to card width
+
+Tong: *"可以把 hero 的高度保持 full viewport，不管用户的屏幕多大。给 hero 一个我们
+brand 颜色当背景。滚动的时候，整个 hero 的左右宽度会变窄，最后变成和其他 section 的
+宽度一样宽然后划走。hero 上边的头像还有品牌元素先删掉。第二，我觉得现在所有 section
+的 spacing 留的都太小了，整个网站都感觉有点局促。"*
+
+### the fold
+
+`.herofold` is one viewport plus `--hero-travel` (55svh); the hero is
+`position:sticky` inside it at `min-height:100svh`. `app.js` §17 writes one
+number — `--fold`, 0 to 1 — and the stylesheet does the rest.
+
+**The narrowing is a CLIP, not a margin.** `left`/`right`/`margin-inline` all
+interpolate, and all three relayout the hero on every frame of a scroll. The
+one thing that must not move is the centred stack, and a changing content box
+moves it. `clip-path` is paint-only: the ground narrows, the type stays exactly
+where it is. At `--fold:1` the clip is
+`inset(0 var(--card-gap) round var(--r-section))` — measured at 1440 that is
+`inset(0 25.92px round 16px)`, which **is** `.panel--card`'s geometry, so it
+lands on the width of the section under it rather than near it.
+
+The hero is centred in the window rather than padded from the top: a fixed
+`padding-top` is a guess about one window height, and it put the composer below
+the fold on a short laptop. The showcase's 180px popover reserve is now
+`padding-bottom` plus a negative `margin-bottom` of the same token — paint room
+that does not count as layout, because inside a centred block it was pushing
+the optical centre up by half of itself.
+
+Deleted: the two hero doodles and the four showcase stickers (two of which were
+avatars).
+
+### the brand ground, and the two things it broke
+
+`--hero-ground: var(--accent)` — #ED4E01. Measured before choosing: the page's
+own `--ink` is **5.21:1** on it, white is 3.69 (legal only at display size) and
+`--ink-soft` is 2.36. So the hero's type stays dark.
+
+**The header was failing on it.** At rest the bar has no ground of its own, so
+its tokens were sitting straight on the orange: `--ink-soft` at **2.36:1**, and
+the primary button's `--accent-solid` fill at **1.22** — an orange button on an
+orange field. `.nav.is-brand` is the same token swap the dark bands already
+get, in the other direction; `data-ground="brand"` on the hero drives it from
+the same observer that reads what is behind the bar's midline.
+
+**And the dark theme.** `--ink` flips to #EEF1F3 there, so light type landed on
+the orange at 3.25:1 — the lede, the rotator and the Slack link all failed the
+moment the theme was checked. The hero's ground does not follow the theme, so
+nothing painted on it may either: `--hero-ink` is pinned. The rotator needed it
+named twice, because `.hero[data-hero="fold"] .display--tail` out-specifies the
+hero's own colour.
+
+### three bugs of one kind, found by fixing the check
+
+The fold did not work at first, and the cause was `function paint()` declared
+in two blocks. This file is one IIFE and **not** in strict mode, so a function
+declared inside `if (…) { }` is copied out to the enclosing scope (Annex B);
+the #control stepper and the fold shared one binding.
+
+`tools/scopes.py` only looked at `var`. Extended, it immediately found two
+more — and the second is worse than mine:
+
+* **`onScroll`**, declared by the ladder and by the quote rail. `addEventListener`
+  holds the function object so both listeners worked, but the ladder's
+  `removeEventListener(…, onScroll)` runs later, on resize, and by then the
+  name resolved to the rail's. **The ladder's scroll listener could never be
+  detached** — precisely what its own comment claims it does at narrow widths.
+* **`held`**, shared by the hero rotator's hover-pause and the Outputs tab
+  reel's. Hovering the headline paused the reel three sections down, and a
+  click on the reel parked the headline rotator for good.
+
+It also missed my own `ticking` because `VAR` only captured the first name in a
+`var a, b;` list. That is what actually stopped the fold: the ladder's handler
+set the shared flag first on every scroll event, and the fold's read it as
+"already scheduled" and returned, forever. Both gaps are closed — declarator
+lists are walked at depth 0, and named `function` declarations are recorded.
+
+**A `var` collision steals a value; a `function` collision steals behaviour**,
+across two features that have nothing to do with each other.
+
+### the spacing
+
+Measured at 1440: 58px of block padding inside each card and a 20px grey gap —
+**137px between one section's last line and the next section's first**, a tenth
+of a window between two whole arguments.
+
+| | before | after |
+|---|---|---|
+| `--pad-section-block` | ×1.35 → 58px | **×2.25 → 97px** |
+| card `margin-block` | 10–22px | 14–32px |
+| section to section | **137px** | **258px** |
+| lede under the heading | 20–28px | 26–40px |
+| full-bleed panel padding | 78–124px | 96–152px |
+
+The horizontal padding is untouched: it caps the measure, and widening it
+would narrow the text.
+
+### and the budget stopped counting the hero
+
+`audit.js` §7 selected `main > section[id]`. The hero moved inside
+`.herofold`, so the child selector silently dropped the page's opening
+section out of its own attention budget — **a budget that stops counting the
+thing it was written for reports PASS by omission.** Descendant selector now;
+the hero is back on the table at 1.00 screens.
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · `audit.js`
+§1–§11 pass · axe 0 in light and dark other than the known `.wfo--list` fade
+(QA §4af, open) · 1440 and 390 clean, hero exactly one viewport at both.
+
+---
+
 ## 2026-08-31 · the header gets a half-pixel edge, and a dark-theme trap turns up under it
 
 Tong, on the four directions: *"header 加一条 0.5px 的轻的 Stroke 吧，还是保持现在

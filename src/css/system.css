@@ -169,11 +169,30 @@
      edge and its content. Every section gets the same two, so nothing on this
      page ever sits closer to an edge than anything else. */
   --card-gap:    clamp(12px, 1.8vw, 26px);
+  /* how far the page scrolls to fold the hero to card width. .55 of a
+     viewport: long enough to read as a move, short enough that nobody is
+     held at the top of the page waiting for it. */
+  --hero-travel: 55svh;
+  --hero-ground: var(--accent);
+  /* PINNED, like the ground it sits on. The hero is a brand panel in both
+     themes, so its ink cannot be `--ink`: that flips to #EEF1F3 in dark and
+     light type on #ED4E01 measures 3.25:1 — the lede and the Slack link both
+     failed AA the moment the dark theme was checked. #0C0F12 on the brand
+     orange is 5.21:1 and does not move. */
+  --hero-ink: #0C0F12;
   /* ONE section padding, and the block padding is DERIVED from it rather than
      picked separately — a card whose top gap has no relationship to its side
      gap reads as two decisions instead of one. */
   --pad-section: clamp(20px, 3vw, 48px);
-  --pad-section-block: calc(var(--pad-section) * 1.35);
+  /* ×2.25, not ×1.35. Measured at 1440 the old ratio gave 58px inside each
+     card top and bottom and a 20px grey gap between them: 137px between one
+     section's last line and the next section's first. That is a tenth of a
+     window between two whole arguments, and it is what *"整个网站都感觉有点
+     局促"* is describing. At 2.25 it is 97 + 32 + 97 = 226 — a quarter of a
+     screen, which is the distance a reader needs to accept that one thing
+     ended and another began. The horizontal padding is NOT touched: it caps
+     the measure, and widening it would narrow the text. */
+  --pad-section-block: calc(var(--pad-section) * 2.25);
   --edge:   max(
     calc(var(--card-gap) + var(--pad-section)),
     calc((100vw - 1320px) / 2)
@@ -581,7 +600,10 @@ h3{ font-family:var(--fd); }
 
 .section-body{
   max-width:62ch;
-  margin:clamp(20px,2.2vw,28px) 0 0;
+  /* the lede moves with the section's own air. At 28px under a 96px
+     headline the two read as one block of type; the heading needs to
+     finish before the sentence explaining it starts. */
+  margin:clamp(26px,3vw,40px) 0 0;
   font-size:var(--t-lead);
   line-height:1.5;
   color:var(--ink-soft);
@@ -829,6 +851,35 @@ h3{ font-family:var(--fd); }
   --nav-stroke:rgb(var(--paper-rgb) / .18);
 }
 .nav.is-dark.is-stuck{ --nav-ground:var(--nav-fill-dark); }
+
+/* ── the header over the brand ground ────────────────────────────────
+   The hero is #ED4E01 now, and the header at rest has no ground of its
+   own, so its tokens are sitting directly on the brand orange. Measured:
+   `--ink-soft` is **2.36:1** there and the primary button's
+   `--accent-solid` fill is **1.22** against it — the links failed AA and
+   the CTA was invisible, an orange button on an orange field.
+
+   The fix is the same token swap the dark bands get, in the other
+   direction: ink goes to FULL `--ink` (5.21:1) rather than reversing to
+   white (3.69, legal only at display size), and the primary inverts to
+   the page's near-black so it is the one dark object on the field. */
+.nav.is-brand{
+  --nav-ink:rgb(var(--ink-rgb) / .78);
+  --nav-ink-hi:var(--ink);
+  --nav-accent:var(--ink);
+  --nav-chip:rgb(var(--paper-rgb) / .22);
+  --nav-stroke:rgb(var(--ink-rgb) / .22);
+  --nav-edge:rgb(var(--ink-rgb) / .16);
+}
+/* The primary is `--accent-solid` on `--accent`: 1.22:1, an orange button on
+   an orange field. It inverts to the page's near-black here — 5.2:1 on the
+   brand ground, and the one dark object on it, which is what a primary is
+   supposed to be. */
+.nav.is-brand .nav__auth .btn{
+  background:var(--g-100);
+  color:var(--paper-ink);
+}
+.nav.is-brand.is-stuck{ --nav-ground:rgb(var(--paper-rgb) / .9); }
 
 .nav__logo{
   justify-self:start;
@@ -1086,7 +1137,7 @@ h3{ font-family:var(--fd); }
   column-gap:var(--gutter);
   align-content:start;
   margin:0;
-  padding:clamp(78px, 7.6vw, 124px) var(--edge);
+  padding:clamp(96px, 9.4vw, 152px) var(--edge);
   background:var(--paper);
   border:0;
   overflow:visible;
@@ -1132,7 +1183,7 @@ h3{ font-family:var(--fd); }
 .chip{
   display:inline-flex; align-items:center; gap:9px;
   width:max-content;
-  margin:0 auto clamp(18px, 2vw, 26px);
+  margin:0 auto clamp(22px, 2.5vw, 34px);
   padding:7px calc(14px - .16em) 7px 14px;
   border:0;
   border-radius:var(--r-btn);
@@ -1187,7 +1238,7 @@ h3{ font-family:var(--fd); }
 /* ── a section as one object on the grey page ── */
 .panel--card{
   margin-inline:var(--card-gap);
-  margin-block:clamp(10px, 1.4vw, 22px);   /* grey shows above and below */
+  margin-block:clamp(14px, 2.2vw, 32px);   /* grey shows above and below */
   /* --pad-section is the FLOOR; past 1320px of content the padding grows
      instead, which is what keeps the measure capped. Setting the padding
      to --pad-section alone silently removed that cap and let a 1920 card
@@ -1210,24 +1261,67 @@ h3{ font-family:var(--fd); }
 /* ─────────────── 8. hero ───────────────
    The composition rule at full size: one centred stack, then the
    product shot directly underneath it. */
-.hero{
+/* ── THE FOLD ────────────────────────────────────────────────────────
+   The hero is a full viewport at every screen size, on the brand ground,
+   and it NARROWS to the section cards' width as you scroll before it
+   leaves. The wrapper carries the travel; the hero is sticky inside it.
+
+   The narrowing is a CLIP, not a margin. `left`/`right`/`margin-inline`
+   all interpolate, but they also relayout the whole hero on every frame
+   of a scroll — and the one thing inside it that must not move is the
+   centred stack, which a changing content box would shift. `clip-path`
+   is paint-only: the panel's ground narrows and the type stays exactly
+   where it is, which is also the better effect. The content is narrower
+   than the card width, so the inset never cuts anything (N1). */
+.herofold{
   position:relative;
-  /* +36px at every size. With the header no longer painting a ground, the
-     hero's first line sat directly under the window edge with nothing
-     between them, and the whole block read as having ridden up. */
-  padding-top:clamp(156px, 17vh, 212px);
-  padding-bottom:0;
+  /* one viewport to read it in, then --hero-travel to fold it. Short on
+     purpose: the fold is a transition between two states, not a scene
+     with its own scroll budget. */
+  height:calc(100svh + var(--hero-travel));
+}
+.hero{
+  position:sticky; top:0;
+  min-height:100svh;
+  /* CENTRED IN THE WINDOW, not padded from the top. A fixed top padding
+     is a guess about one window height; on a short laptop the composer
+     fell off the fold and on a tall monitor the stack floated. The panel
+     is the viewport now, so the content sits in the middle of it and the
+     header's height is the only thing reserved. */
+  align-content:center;
+  padding-top:calc(var(--nav-h) + clamp(18px, 3vh, 44px));
+  padding-bottom:clamp(24px, 4vh, 56px);
   border-top:0;
   overflow:hidden;
-  /* THE PAGE'S OWN GROUND, not a white slab. Every other section here is a
-     white card floating on --wash; the hero was the one full-bleed white
-     panel, so it ended in a hard seam against the first grey gap. On --wash
-     the hero reads as page rather than as a section, the cards below start
-     cleanly, and the prompt box — white, like the app's composer on the
-     app's off-white background — gets the separation it needs to read as a
-     surface at all. */
-  background:transparent;
+  /* THE BRAND GROUND. --accent, not --accent-solid: at #ED4E01 the page's
+     own ink clears 5.21:1 on it, which is the whole reason the hero's type
+     stays dark here instead of reversing out. White would be 3.69 and only
+     legal at display sizes — a hero whose lede fails AA is not a hero. */
+  background:var(--hero-ground);
+  color:var(--hero-ink);
+  /* fold 0 = full bleed and square. fold 1 = inset by --card-gap with
+     --r-section corners, which IS `.panel--card`'s geometry, so it lands
+     exactly on the width of the section under it. */
+  clip-path:inset(0 calc(var(--fold, 0) * var(--card-gap))
+                  0 calc(var(--fold, 0) * var(--card-gap))
+                  round calc(var(--fold, 0) * var(--r-section)));
 }
+/* ── the hero's ink, on the brand ground ─────────────────────────────
+   Measured: #0C0F12 on #ED4E01 is 5.21:1 and clears AA; the page's own
+   --ink-soft is 2.36 and does not, so the lede cannot stay soft here. It
+   goes to full ink at a lighter weight instead — the hierarchy is carried
+   by weight and size, which is what it should have been carrying anyway.
+   White is 3.69: legal at display size, illegal for the lede, and mixing
+   the two would be the worst of both. */
+.hero .display,
+.hero .hero__body,
+.hero .hero__slack,
+.hero .hero__slack a{ color:var(--hero-ink); }
+.hero .hero__body{ opacity:.86; }
+/* the composer is the one white surface on the orange, which is most of
+   why it reads as the product rather than as a form field */
+.hero .pbox{ background:var(--paper); }
+
 .stack{
   grid-column:1 / 13;
   display:flex; flex-direction:column; align-items:center;
@@ -1351,7 +1445,12 @@ h3{ font-family:var(--fd); }
   font-size:var(--t-body); line-height:1.6;
   letter-spacing:-.005em;
   font-weight:600;
-  color:var(--ink);
+  /* `--hero-ink`, not `--ink`: this rule is `.hero[data-hero] .display--tail`
+     and out-specifies the hero's own colour, so `--ink` here survived the
+     brand ground and flipped to #EEF1F3 in the dark theme — 3.06:1 on the
+     orange. The hero's ground does not follow the theme, so nothing painted
+     on it may either. */
+  color:var(--hero-ink);
   white-space:normal;
 }
 .hero[data-hero="fold"] #rotator{ min-height:1.6em; }
@@ -1391,7 +1490,18 @@ h3{ font-family:var(--fd); }
      anything escaping anyway — so the room has to be inside. The box moves
      up by what the reserve grows, which leaves the hero's height alone. */
   margin-top:clamp(28px, 3vw, 44px);
-  padding-bottom:clamp(168px, 12vw, 190px);
+  /* THE RESERVE IS PAINT ROOM, NOT LAYOUT. The popover still needs somewhere
+     to open — the hero clips, and now it clips with a `clip-path` for the
+     fold, which clips descendants just as `overflow` did. But the hero is a
+     full viewport centred on its content now, and 180px of reserve inside
+     the centred block pushes the optical centre up by half of it: the type
+     sat high and the bottom third was empty orange. Negative margin of the
+     same token takes the reserve out of the layout height and leaves the
+     padding box where the popover needs it. One token, so the two cannot
+     drift apart. */
+  --showcase-reserve:clamp(168px, 12vw, 190px);
+  padding-bottom:var(--showcase-reserve);
+  margin-bottom:calc(-1 * var(--showcase-reserve));
 }
 
 /* ── the hero's prompt box ───────────────────────────────────────────
