@@ -4740,33 +4740,81 @@ h3{ font-family:var(--fd); }
    Two copies are what make the wrap invisible: the reset moves the track
    back by exactly one copy's width, onto a frame identical to the one it
    left. */
-.lanes{
-  /* START, not STRETCH. The lanes are meant to be taller than the band and
-     cropped by it — but stretch sized each card to the band instead, so the
-     card's white surface stopped exactly at the crop while its last row went
-     on for another 26px. In light that is invisible; in dark the row's ink
-     landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`.
-     At content height the surface reaches past the crop, so the row that is
-     cut is cut over the card it belongs to. Every lane holds the same eight
-     steps, so they are all the same height and the crop stays a straight
-     edge. */
-  display:flex; align-items:flex-start; gap:14px;
-  width:max-content; height:100%;
-  transform:translate3d(var(--pan,0px),0,0);
+/* NO LEFT INSET ON THIS ONE. The band pads its content 26px from the left,
+   which is right for a device that starts at the edge and wrong for one
+   that is centred: `margin-inline-start:50%` resolves against the CONTENT
+   box, so the padding would push the focused card half of itself to the
+   right of the band's middle. Removing it makes the centring one term
+   instead of two. */
+.vs__viz--parallel{ padding-left:0; }
+
+
+/* THE UNIT IS DERIVED FROM THE BAND, NOT TYPED. The old `flex:0 0 320px`
+   carried its own reasoning — "two lanes and 14 of gap leave a 72px peek of
+   the third" — and that arithmetic needs a 974px band. This band is
+   `clamp(214px, 21vw, 276px)` tall and fluid across 428 / 422 / 363 / 300,
+   so a constant is wrong here at every width but one. 17vw between 196 and
+   250 holds the peek between 40 and 77 across the whole range; the pitch is
+   stated once and everything else reads it.
+
+   ANYTHING THAT CHANGES THE CARD'S WIDTH CHANGES `--lane-w`, never `flex`.
+   The pan is derived from the pitch, so a `flex` override at a breakpoint
+   would move the cards and leave the centring behind — the focused card
+   would sit off-centre by the difference, at that breakpoint only. */
+.vs__viz--parallel{
+  --lane-w:clamp(196px, 17vw, 250px);
+  --lane-gap:12px;
+  --lane-pitch:calc(var(--lane-w) + var(--lane-gap));
 }
 
 
+/* CENTRED ON THE FOCUSED CARD. `margin-inline-start:50%` is half the band
+   (percentage margins resolve against the containing block), and the
+   translate takes the focused card's own centre off that — so the pan is
+   stated as one expression that re-derives itself at every width instead of
+   a px number measured at one.
+
+   START, not STRETCH. The lanes are meant to be taller than the band and
+   cropped by it — but stretch sized each card to the band instead, so the
+   card's white surface stopped exactly at the crop while its last row went
+   on for another 26px. In light that is invisible; in dark the row's ink
+   landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`. */
+.lanes{
+  display:flex; align-items:flex-start; gap:var(--lane-gap);
+  width:max-content;
+  margin-inline-start:50%;
+  transform:translate3d(
+    calc(-1 * (var(--lane-i, 1) * var(--lane-pitch) + var(--lane-w) / 2)), 0, 0);
+  transition:transform var(--t-reveal) var(--e-spring);
+}
+
+
+/* TALLER THAN THE BAND, AND TALL ENOUGH TO SURVIVE THE STEP DOWN. The band
+   tops out at 276 and insets 26, so 250 is visible; a card stepped to .94
+   about its own centre has to clear that or the two beside the focus would
+   show a bottom edge the focused one does not have — and the crop would
+   read as belonging to the focus rather than to the band. */
 .lane{
-  /* 320 is the product's column. It also sets the composition: two lanes
-     and 14 of gap leave a 72px peek of the third — an avatar, a name and
-     the first word of a task, which is unmistakably a third agent. At the
-     336 a first pass used, the peek was 40px and read as a clipping bug. */
-  flex:0 0 320px;
+  flex:0 0 var(--lane-w);
+  /* `min-width:auto` IS A FLOOR, and on a flex item it resolves to
+     min-content — here the longest unbreakable step row. The basis computed
+     correctly at every width (244.8 / 210.8 / 174.08) and the card rendered
+     247 at all three, because the floor beat the basis and `flex-shrink:0`
+     meant nothing ever pushed back. Same shape as M5: a size on a flex or
+     grid parent is not a ceiling until the child says `min-*:0`. */
+  min-width:0;
+  min-height:300px;
   display:flex; flex-direction:column;
   padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
   border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
+  opacity:.42; transform:scale(.94);
+  transition:opacity var(--t-reveal) var(--e-out),
+             transform var(--t-reveal) var(--e-spring);
 }
+
+/* the one being read. Nothing else in the band changes. */
+.lane.is-focus{ opacity:1; transform:none; }
 
 
 /* THE RUN IS LONGER THAN THE CARD, and that is the whole picture: a lane
@@ -4781,7 +4829,46 @@ h3{ font-family:var(--fd); }
 .lane__h{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
 
 
-.lane__h img{ width:32px; height:32px; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+/* THE OWNER, WITH THE RUNNER BADGED ON IT. B4: an agent is DRAWN and a
+   person is PHOTOGRAPHED, so a photograph alone in a run card's seat says a
+   human is doing the task — the opposite of the sentence under it, which is
+   that Okou splits the work between several agents. B6 wants the agent on a
+   run card's mark, and `#parallel` already puts it on all four of its run
+   cards; this card was simply not in that sweep.
+
+   Neither mark alone carries it. Four photographs read as several and say
+   the wrong thing; four copies of one drawn face say the right thing and
+   read as one thing repeated. The copy has three nouns — one person's
+   know-how, several agents, shared capability — so the seat carries two:
+   the photograph gives the row its plurality, the badge names the runner. */
+.lane__ava{ position:relative; display:inline-flex; flex:none; width:30px; height:30px; }
+
+.lane__h img{ width:30px; height:30px; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+
+/* half the seat. The avatar round settled 16px as the floor where this face
+   still reads; at a 30px seat the badge is 15, which is that floor. */
+.lane__bot{
+  position:absolute; right:-3px; bottom:-3px;
+  width:15px; height:15px; border-radius:5px;
+  box-shadow:0 0 0 1.5px var(--p-card);
+}
+
+
+/* THE COUNT IS NOT PART OF THE CARDS. Anything the same material as the
+   surface behind it reads as a label printed on that surface. Ink fill,
+   light type and the lift shadow make it a different object; anchored into
+   the band's own corner it belongs to the band, and what it covers is the
+   strip the crop was already taking. Fill and shadow, never an outline. */
+.lanes__count{
+  position:absolute; right:0; bottom:0; z-index:2; margin:0;
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.05em;
+  text-transform:uppercase; line-height:1;
+  color:rgb(255 255 255 / .72); background:var(--p-fg);
+  box-shadow:var(--e-lift);
+  padding:8px 12px 9px; border-radius:10px 0 0 0;
+}
+
+.lanes__count b{ color:#FFFFFF; font-weight:500; }
 
 
 /* THE AGENT IS NAMED. Four lanes headed by an avatar and the word "now"
@@ -4900,25 +4987,25 @@ h3{ font-family:var(--fd); }
    an axe run — it is the newest step in the markup, and it has to be that
    whatever class the loop happened to leave behind when it stopped. */
 .lanes:not(.is-live) .lane__s--now,
-.lanes.is-live .lane__s.is-run{ color:var(--p-fg); }
+.lane.is-live .lane__s.is-run{ color:var(--p-fg); }
 
 
 /* the step being worked on is a selected row, which is what the product
    draws and what gives each lane one place for the eye to land */
 .lanes:not(.is-live) .lane__s--now,
-.lanes.is-live .lane__s.is-run{ background:var(--p-tint); }
+.lane.is-live .lane__s.is-run{ background:var(--p-tint); }
 
 
 .lanes:not(.is-live) .lane__s--now .vsui__ind,
-.lanes.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
+.lane.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
 
 
 .lanes:not(.is-live) .lane__s--now .lane__tick,
-.lanes.is-live .lane__s.is-run .lane__tick{ transform:scale(0); }
+.lane.is-live .lane__s.is-run .lane__tick{ transform:scale(0); }
 
 
 .lanes:not(.is-live) .lane__s--now i,
-.lanes.is-live .lane__s.is-run i{ clip-path:inset(0 100% 0 0); }
+.lane.is-live .lane__s.is-run i{ clip-path:inset(0 100% 0 0); }
 
 
 /* only the live row's ring animates. Three rows per lane carry an
@@ -4927,8 +5014,8 @@ h3{ font-family:var(--fd); }
    glyph scaled to nothing. */
 .lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-c,
 .lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-r,
-.lanes.is-live .lane__s:not(.is-run) .vsui__ind-c,
-.lanes.is-live .lane__s:not(.is-run) .vsui__ind-r{ animation:none; }
+.lane.is-live .lane__s:not(.is-run) .vsui__ind-c,
+.lane.is-live .lane__s:not(.is-run) .vsui__ind-r{ animation:none; }
 
 
 /* ── the loop ────────────────────────────────────────────────────────
@@ -4936,16 +5023,16 @@ h3{ font-family:var(--fd); }
    frame — no JS, reduced motion, the moments before the observer fires —
    is the whole run, every step present, exactly as it was before this
    was a loop at all. */
-.lanes.is-live .lane__s{ grid-template-rows:0fr; }
+.lane.is-live .lane__s{ grid-template-rows:0fr; }
 
 
-.lanes.is-live .lane__s.is-on{ grid-template-rows:1fr; }
+.lane.is-live .lane__s.is-on{ grid-template-rows:1fr; }
 
 
 /* one painted frame later — see app.js §3b2. The opening state has nine of
    eleven rows already open, and arming the transition in the same frame
    plays the other two sliding shut in front of the reader. */
-.lanes.is-warm .lane__s{ transition:grid-template-rows var(--t-reveal) var(--e-out); }
+.lane.is-warm .lane__s{ transition:grid-template-rows var(--t-reveal) var(--e-out); }
 
 
 
@@ -6344,13 +6431,6 @@ h3{ font-family:var(--fd); }
   .hero .display .line{ white-space:normal; }
 
   .versus{ grid-template-columns:1fr; }
-
-  /* 76vw, not the 320px the wide layout uses: at 390 the band is 342
-     wide, so a 320px lane leaves an eight-pixel sliver of the next one —
-     the same non-peek the desktop width was fixed for. 76vw keeps a 68px
-     peek at every phone size, and the track's arithmetic is measured
-     rather than assumed, so it follows the narrower lane on its own. */
-  .lane{ flex:0 0 min(320px,76vw); }
 
   .scene.is-on{ grid-template-columns:1fr; }
 

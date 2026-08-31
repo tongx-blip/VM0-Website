@@ -31,8 +31,14 @@ PINNED_PREFIXES = (
 # selectors that draw a product surface: pinned by design, see P1
 # `\b` does not fire after a BEM `__`, so .slackui__rail never matched and
 # every third-party mock in base.css was reported as a token violation.
+#
+# AND IT DOES NOT FIRE BEFORE A PLURAL EITHER. `lane` cannot match `.lanes`
+# or `.lanes__count`: the boundary needs a non-word character after `lane`
+# and finds `s`. Same bug as the line above, one letter further along — the
+# block a mock's own track and its count sit in was outside the exemption
+# while every card inside it was in. A name is listed here, not a stem.
 MOCK_SELECTORS = re.compile(
-    r'\.(vsui|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
+    r'\.(vsui|lanes|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
     r'|okoui|ochat|ochip|ocard|ostage|oresult|appui|tplwin|tpl|step|mock|shot|slk'
     r'|acard|a2a|wfo|wfsc|par|pbox|unlock|pgrant|cbro|state|okw'
     r'|pcard|perms|cpane|ctrl__who|ctrl__ava)'

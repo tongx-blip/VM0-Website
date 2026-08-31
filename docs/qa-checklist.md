@@ -713,7 +713,7 @@ the bottom empty, and the messages that HAVE arrived are the ones pushed off.
   that read as the message being unfinished, because 4 is less than the 14px
   between two messages. Both numbers narrow together at 390 (13px), or the
   relationship holds at one width only.
-- **The result is never cropped to fit the window** (P14). No `max-height` and
+- **The result is never cropped to fit the window** (P15). No `max-height` and
   no `object-fit:cover` on `.oresult img` — the artifact is the object the
   panel exists to deliver, and a window that cannot hold it gives up its oldest
   line instead. A capped preview lost 72px of 180px and nobody could tell,
@@ -1936,6 +1936,64 @@ dark before assuming it inverts.**
 
 Expect: ring present when `.is-stuck`, absent at rest, light on the dark bands
 (`.nav.is-dark`) and in the dark theme, and the bar's width unchanged.
+
+## 4ak. A focus carousel: the unit is derived, and the peek is the message
+
+RULES M9, F49. The parallel card holds six cards on one track and centres one
+of them. Everything below is stated once and re-derived at every width — the
+old `flex:0 0 320px` carried the reasoning "two lanes and 14 of gap leave a
+72px peek of the third", which needs a **974px** band, and the band is fluid
+between 300 and 428.
+
+```js
+// every beat, at every width. Transitions OFF — a sample taken mid-move
+// describes an animation frame, not a composition.
+(() => {
+  const band = document.querySelector('.vs__viz--parallel');
+  const track = band.querySelector('.lanes');
+  const lanes = [...track.querySelectorAll('.lane')];
+  const st = document.createElement('style');
+  st.textContent = '.lanes,.lane{transition:none !important}';
+  document.head.appendChild(st);
+  const R = e => e.getBoundingClientRect(), out = [];
+  for (let i = 1; i <= lanes.length - 2; i++) {          // the padded ends are never focused
+    track.style.setProperty('--lane-i', String(i));
+    lanes.forEach((l, k) => l.classList.toggle('is-focus', k === i));
+    const bb = R(band), f = R(lanes[i]);
+    out.push({ i,
+      off: Math.round((f.left + f.width / 2) - (bb.left + bb.width / 2)),   // must be 0
+      past: Math.round(f.bottom - bb.bottom),                              // must be > 0
+      sidePast: Math.round(R(lanes[i + 1]).bottom - bb.bottom),            // must be > 0
+      lPeek: Math.round(R(lanes[i - 1]).right - bb.left),                  // both >= ~40
+      rPeek: Math.round(bb.right - R(lanes[i + 1]).left) });
+  }
+  return out;
+})()
+```
+
+- **`off` is 0 on every beat.** A pan derived from a pitch that is not the
+  card's real pitch drifts by the difference *and it compounds*: measured at
+  390, a 242px card panned by a 209px pitch put the focused card 69 / 114 /
+  160 / 206px off centre across four beats. One card off-centre is a bug you
+  can see; the first one is not.
+- **`--lane-w` is declared where BOTH readers inherit it** — the card takes
+  its width from it and the track takes its pan from it. That is the band,
+  never `.lane`. Restating the width as `flex` at a breakpoint moves the
+  cards and leaves the centring behind, at that breakpoint only.
+- **A flex item's `min-width:auto` is its min-content**, and it beats the
+  basis. The basis computed correctly at 244.8 / 210.8 / 174.08 and the card
+  rendered **247 at all three** until `min-width:0` was added — the same
+  shape as M5, one axis over.
+- **Both peeks stay near 50px.** `--q-card` already records why: at 390 a
+  ten-pixel sliver reads as a clipping bug, and about fifty "is a card". The
+  peek is what carries "there are more" now that nothing pans past.
+- **Every card runs past the crop, focused and dimmed alike** — including
+  after the 6% step down, or the two beside the focus show a bottom edge the
+  focused one does not have and the crop reads as belonging to the focus.
+- **The resting frame is the finished figure.** `.is-focus` starts in the
+  markup, not in JS, or no-JS and reduced motion leave every card at 42%.
+  Check under `prefers-reduced-motion`: exactly one focused card, centred,
+  every step row present, no `.is-live` anywhere.
 
 ## 5. Type scale
 

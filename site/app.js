@@ -295,78 +295,66 @@
     }
   }
 
-  /* ── 3b2. the four lanes, played as four independent runs ─────
-     The Codex card claims that several AIs get more done AT ONCE, and a
-     frozen picture of four task lists cannot say "at once" — it says
-     "four task lists". So each lane runs: its live step finishes, the
-     tick takes the pulse's place, its duration wipes in, and the next
-     step opens above it and pushes the older ones down past the cut.
+  /* ── 3b2. the four agents, one at a time, on a track that does not run ─
+     The card claims that several agents get more done AT ONCE, and it used
+     to say so by TRAVELLING: the board panned left at 22px a second so all
+     four went past without shrinking any of them. Tong: *"动画不用滚动了，让
+     每个 member 的 card 轮流切换，切换后停留一小段时间，再切切换。中间的 card
+     清晰，两边的 cards 加透明度并稍稍按比例缩小一点点。"*
 
-     THE IRREGULARITY IS AUTHORED, and it is the only thing about this
-     that is irregular. Each lane finishes a step on its own FIXED
-     interval — 3.3, 3.6, 3.9, 4.3 seconds — starting from its own offset
-     and looping on its own whole number of seconds. Every lane is
-     therefore perfectly predictable on its own, and the four never
-     coincide: 11 · 12 · 13 · 14 seconds realign once every 42 minutes.
-     One even stagger across all four would read as a single progress bar
-     drawn four times, which is the opposite of the sentence.
+     So the focus steps and DWELLS instead. The centred card is at full
+     strength; the two beside it are dimmed and stepped down 6%, which tells
+     the eye where to read without drawing a line to say it. The peek either
+     side is what carries "there are more" now that nothing is moving past.
 
-     THE BOARD ALSO TRAVELS, leftward, at a constant 22px a second, and
-     it never stops and never comes back. At the product's own size only
-     two agents fit in the band, and a card whose sentence is "several"
-     should not have to be taken on trust — the track shows all four
-     without shrinking any of them. 22 rather than the connector rails'
-     26 (§7): those rails carry logos and nothing on them has to be read,
-     while every row on this one is a sentence.
+     PING-PONG, NOT WRAP. Going 4 -> 1 rewinds the whole strip in one move,
+     which would be the longest and fastest thing in the figure and would
+     land on the same seam every cycle. Reversing at the ends means the
+     largest step is always one card, so nothing here ever moves faster than
+     the thing it is asking you to read. The track is padded with a copy of
+     the last agent before the first and the first after the last, so the
+     focused card always has a neighbour on both sides.
+
+     ONE LANE RUNS AT A TIME, and it is the one being read (§13.4: one
+     gesture per beat, everything else still). That also retires the four
+     irregular clocks — 3.3 / 3.6 / 3.9 / 4.3 seconds, chosen so four
+     simultaneous lanes never coincided. Nothing is simultaneous any more,
+     so the cadence is stated once and restarts with the focus, which is
+     what puts the steps inside the dwell where they can be seen.
 
      The resting frame is the finished run. `.is-live` is added here and
      nowhere else, so no-JS, reduced motion and the moments before the
      observer fires all get the complete figure. */
   var lanesEl = doc.querySelector('.vs__viz--parallel .lanes');
   if (lanesEl && !reduce) {
-    var LANE_CLOCK = [[2000, 3600, 12000],    // [first step, every, loop]
-                      [1100, 3300, 11000],
-                      [3800, 4300, 14000],
-                      [2900, 3900, 13000]];
-    // the two newest steps stand down a beat apart at the end of a lane's
-    // loop, so the wrap reads as the list settling back rather than as a cut
-    var LANE_FOLD = [700, 300];
-
-    var LANE_PX_PER_SEC = 22;
-    var LANE_SETS = 4;                        // agents in one copy of the track
+    var LANE_DWELL = 2200;                 // how long a card is held
+    var LANE_MOVE = 560;                   // and how long the move takes
+    var LANE_STEP_IN = [1500, 600];        // newest row, then the one under it
 
     var laneEls = [].slice.call(lanesEl.querySelectorAll('.lane'));
     var laneRows = laneEls.map(function (lane) {
       return [].slice.call(lane.querySelectorAll('.lane__s'));
     });
+    // the padded copies at either end are neighbours, never the subject
+    var LANE_FIRST = 1, LANE_LAST = laneEls.length - 2;
 
-    // elapsed time SURVIVES a pause. Without this, scrolling the card away
-    // and back restarts the clock at zero, which snaps the track to its
-    // start and rewinds every lane — the observer fires at 25% visible, so
-    // you would watch it happen.
     var lRaf = 0, lT0 = null, lAcc = 0, lVis = false;
+    var laneAt = LANE_FIRST, laneDir = 1, laneSince = 0;
 
-    /* SET is the distance from a lane to its own twin, gaps included, and
-       LEAD is why the wrap is invisible rather than merely arithmetically
-       correct. The band insets its content by --pad, and the track starts
-       at that inset: with the travel running from zero, the strip to the
-       LEFT of it has the previous agent's card behind it for the whole
-       cycle and nothing behind it at the instant the travel resets. A
-       26px sliver of white popping in the corner is not much, and it is
-       the only thing in frame moving discontinuously, which is exactly
-       what the eye is built to catch. Starting one lane in puts the whole
-       visible window, inset included, inside the track's interior.
-
-       Measured, not assumed: a lane and its twin land on the same
-       `getBoundingClientRect()` to four decimals, and a pixel diff of the
-       frame before and after a wrap is empty across every fully-visible
-       lane. See docs/qa-checklist.md §4l2. */
-    var laneSet = 0, laneLead = 0;
-
-    function laneMeasure() {
-      laneSet = laneEls.length > LANE_SETS
-        ? laneEls[LANE_SETS].offsetLeft - laneEls[0].offsetLeft : 0;
-      laneLead = laneSet / LANE_SETS;
+    function laneFocus(n) {
+      laneAt = n;
+      lanesEl.style.setProperty('--lane-i', String(n));
+      laneEls.forEach(function (l, k) {
+        l.classList.toggle('is-focus', k === n);
+        if (k !== n) l.classList.remove('is-live', 'is-warm');
+      });
+      /* N12: the shutter is armed one painted frame after the state class.
+         Added together, `.is-live` and the transition play the loop's
+         OPENING state as an animation — eight open rows sliding shut in
+         front of the reader, because the resting frame has every row open. */
+      var lane = laneEls[n];
+      lane.classList.add('is-live');
+      requestAnimationFrame(function () { lane.classList.add('is-warm'); });
     }
 
     function lanePaint(now) {
@@ -375,27 +363,23 @@
       if (lT0 === null) lT0 = now - lAcc;
       var t = lAcc = now - lT0;
 
-      if (!laneSet) laneMeasure();
-      if (laneSet) {
-        lanesEl.style.setProperty('--pan',
-          -(laneLead + (t / 1000 * LANE_PX_PER_SEC) % laneSet).toFixed(2) + 'px');
+      if (t - laneSince >= LANE_DWELL + LANE_MOVE) {
+        laneSince = t;
+        if (laneAt + laneDir > LANE_LAST || laneAt + laneDir < LANE_FIRST) {
+          laneDir = -laneDir;
+        }
+        laneFocus(laneAt + laneDir);
       }
 
-      laneRows.forEach(function (rows, i) {
-        // `% LANE_CLOCK.length`: the second copy of the board runs on the
-        // first copy's clock, so lane 4 is lane 0's twin down to which step
-        // is live. That is what leaves the wrap nothing to show.
-        var c = LANE_CLOCK[i % LANE_CLOCK.length], lt = t % c[2], live = null;
-        rows.forEach(function (row, r) {
-          // everything below the top two is already on the board; the two
-          // newest arrive on this lane's clock, newest last
-          var on = r > 1 ||
-            (lt >= c[0] + (1 - r) * c[1] && lt < c[2] - LANE_FOLD[r]);
-          row.classList.toggle('is-on', on);
-          if (on && !live) live = row;      // the newest step present is the live one
-        });
-        rows.forEach(function (row) { row.classList.toggle('is-run', row === live); });
+      // only the focused lane runs; the rest are finished lists at rest
+      var rows = laneRows[laneAt], lt = t - laneSince, live = null;
+      rows.forEach(function (row, r) {
+        var on = r > 1 || lt >= LANE_STEP_IN[r];
+        row.classList.toggle('is-on', on);
+        if (on && !live) live = row;       // the newest step present is the live one
       });
+      rows.forEach(function (row) { row.classList.toggle('is-run', row === live); });
+
       lRaf = requestAnimationFrame(lanePaint);
     }
 
@@ -411,18 +395,7 @@
         if (lRaf) { cancelAnimationFrame(lRaf); lRaf = 0; }
         return;
       }
-      if (!lanesEl.classList.contains('is-live')) {
-        lanesEl.classList.add('is-live');
-        // The shutter is armed one painted frame late. Added together,
-        // `.is-live` and the transition would play the loop's opening
-        // state as an animation — nine rows sliding shut in front of the
-        // reader — because the resting frame has every row open.
-        lRaf = requestAnimationFrame(function (ts) {
-          lanePaint(ts);
-          requestAnimationFrame(function () { lanesEl.classList.add('is-warm'); });
-        });
-        return;
-      }
+      if (!laneEls[LANE_FIRST].classList.contains('is-focus')) laneFocus(LANE_FIRST);
       if (!lRaf) lRaf = requestAnimationFrame(lanePaint);
     }
 
@@ -436,7 +409,6 @@
     doc.addEventListener('visibilitychange', function () {
       if (!document.hidden && lVis && !lRaf) lRaf = requestAnimationFrame(lanePaint);
     });
-    window.addEventListener('resize', laneMeasure);
   }
 
   /* ── 3b3. the other two comparison figures, on a cue list ─────

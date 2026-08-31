@@ -4,6 +4,97 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · the parallel card stops panning and starts focusing
+
+Tong, on the Codex card's figure: *"这个文字表达的是我们可以在云端同时多 agent，多
+任务工作。这个图表达的看起来有点弱"* — then, on the direction picked out of four:
+*"右下角的那个 tag 和后边的界面融在一起了，让 tag 视觉上区分出来。另外把 team
+member 的卡片宽度加宽。动画不用滚动了，让每个 member 的 card 轮流切换，切换后停留
+一小段时间，再切切换。中间的 card 清晰，两边的 cards 加透明度并稍稍按比例缩小一点
+点。"*
+
+### the finding was a number, not a taste
+
+The band is **334×214** at the width it was first measured and the lane drawn
+into it is **296×387**. So the card showed **1.08 agents** and cut 45% off the
+one it showed, under a sentence that says *several*. The `.lane` rule explains
+its own width as "two lanes and 14 of gap leave a 72px peek of the third" —
+arithmetic that needs a **974px** band. The section went three-up, the band
+did not, and the object was never re-derived. §13.6 with the two swapped: a
+ground is re-decided when the thing standing on it changes, and so is the
+thing when the ground does.
+
+Four directions were drawn at the real size under the real copy in
+`options-parallel/` (the count · the split · the comparison · the overflow).
+The overflow won.
+
+### what shipped
+
+The track no longer travels. The focus steps between the four agents and
+**dwells** — 2200ms held, 640ms to move (`--t-reveal`, not a new token) — and
+ping-pongs at the ends rather than wrapping, so the largest movement is always
+one card and nothing in the figure ever moves faster than the thing it is
+asking you to read. The track is padded with a copy of the last agent before
+the first and the first after the last, so the focused card always has a
+neighbour on both sides.
+
+**The unit is derived now.** `--lane-w: clamp(196px, 17vw, 250px)`, the pitch
+reads it, and the pan is one expression — `margin-inline-start:50%` for the
+band's own middle, then the focused card's centre taken off it. The narrow
+`flex:0 0 min(320px,76vw)` override is gone: the clamp already answers it, and
+the override that briefly replaced it cut the 390 peek to 27px, which is the
+sliver `--q-card` already records as reading like a clipping bug.
+
+**One lane runs at a time**, and it is the one being read (§13.4). That
+retired the four irregular clocks — 3.3 / 3.6 / 3.9 / 4.3 seconds, chosen so
+four simultaneous lanes never coincided. Nothing is simultaneous any more.
+
+**The avatar seat carries two marks.** B4 is that an agent is drawn and a
+person is photographed, so four photographs in a run card's seat say humans
+are doing the work — the opposite of the sentence. Four copies of one drawn
+face say the right thing and read as one thing repeated. The copy has three
+nouns, so the photograph gives the row its plurality and the Okou avatar
+badged on it names the runner. `#parallel` already put the agent on all four
+of its run cards; this card was not in that sweep.
+
+### three bugs, all of them measured rather than seen
+
+* **`min-width:auto` beat the basis.** `--lane-w` computed at 244.8 / 210.8 /
+  174.08 across three widths and the card rendered **247 at all three** — a
+  flex item's automatic minimum size is its min-content, and `flex-shrink:0`
+  meant nothing ever pushed back. Same shape as M5, one axis over.
+* **The token was declared on the wrong element.** `--lane-w` is read twice —
+  by the card for its width and by the track for its pan — so the breakpoint
+  override on `.lane` gave the card 242 and left the track on 209. Measured at
+  390 the focused card drifted 69 / 114 / 160 / 206px off centre across four
+  beats. It compounds, which is why the first beat looked fine.
+* **`.lanes` was outside the token exemption.** `tools/tokens.py` matches
+  `.lane` then requires `__`, `--` or a word boundary, and finds `s`. Exactly
+  the bug the regex's own comment already documents one letter earlier
+  ("`\b` does not fire after a BEM `__`"), so a mock's own track and its count
+  were being held to page tokens while every card inside them was exempt.
+
+### the one thing that is worse
+
+The dimmed neighbours' ink measures **1.65:1**, and that number cannot be
+tuned: any visible dimming of dark text on a light card fails 4.5:1 long
+before it reads as out of focus. The effect and §12 are in direct tension.
+The band is `aria-hidden`, the cards are decoration, and the exception is now
+written down and scoped by name as **F49** rather than left for the next round
+to rediscover — but it is an exception, not a pass.
+
+**axe was not run** for this change: there is no axe in the repo and the
+`agent-browser a11y` this gate names was not available. Everything else in the
+gate was.
+
+### gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 171
+rules, all pointers resolve · `audit.js` §1 §6 §7 PASS (positioning unchanged
+at 883px / 8.2%) · reduced motion lands on one centred card with every row
+present and no `.is-live` · §4ak green on all four beats at 390 / 1024 / 1080
+/ 1120 / 1240 / 1440 / 1920.
+
 ## 2026-08-31 · the artifact stops being cropped to fit the window it arrives in
 
 Tong: *"你为了让 artifacts 可以放到这个界面里，强行把 artifacts 的高低改矮，没有
