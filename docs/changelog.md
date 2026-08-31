@@ -214,6 +214,65 @@ Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · `audit.js`
 
 ---
 
+## 2026-08-31 · the greeting, a bigger drawing, and the card reads the other way round
+
+Tong, with two screenshots: *"图一把咱们产品里那句话放到网站的prompt box上边，再配上
+我们新的agent avatar。第二，把hero上的插画放大，要强视觉，插画甚至被下边的section盖
+住一点点都ok的。把LOGO墙和prompt box放到图二 section的下面，不要放上边。"*
+
+### The greeting, and the product already answered the hard part
+
+`AgentChatPage` puts the agent's avatar at 64px beside a `text-3xl
+font-semibold tracking-tight` tagline, `gap-4` between them and `gap-6` down to
+the composer. All of that is transcribed.
+
+The interesting bit is the words. The screenshot says *"What's cooking, Tong?"*
+— a name from a signed-in session, which a marketing page does not have. The
+product has **`taglines.anonymous`** for exactly that: seven strings with no
+name in them. So the page uses one rather than inventing a stranger's greeting,
+and it is **"What are we working on?"** because the first person plural is the
+page's own argument — *Same team*, *the team you already have*.
+
+Two deliberate deviations from the component, both because this is page type
+rather than type inside a mock: `--t-d3` instead of a raw 30px (T3), and 500
+instead of 600 (T4 — nothing outside a mock is 600). The scale agrees with the
+product anyway, `clamp(23px, 2.2vw, 30px)` against `text-3xl` / `text-2xl`.
+
+**It also had to move into the box's column.** First pass put the greeting at
+the section's left edge — 69px — while the thing it greets you into starts at
+340. Two unrelated objects. It takes `min(760px, 100%)` now, the same measure
+as `.pbox`, so they share a left edge exactly as the product has them.
+
+### The drawing
+
+860 → **1320px**, past the page's own measure cap, which nothing else on the
+page is allowed through — a drawing is not a column of prose. It renders 1302
+wide in a 1440 window and it is the whole hero now.
+
+The lap comes free: the hero is `position:sticky` and the card scrolls up over
+it, so the bottom of the drawing goes under the next section as it arrives. A
+negative bottom margin pulls it toward the fold, but only ~18px of the 128 —
+the hero is `align-content:center`, so shortening the stack re-centres it and
+gives most of the pull straight back. Recorded because it looked like a bug in
+the value and is not: **you cannot push one child down in a centred box by
+making the box shorter.**
+
+### The order reversed
+
+`#outputs → #reach → #ask`. Yesterday it was the wall, the ask, the outputs;
+it is the outputs, the wall, the ask. Same card, same three sections, moved
+with the same asserted-distance splice (R2) — 57, 52 and 438 lines, checked
+before anything was cut.
+
+### Gate
+
+`tokens.py` 0 — it caught both raw type sizes in `.greet` before they shipped ·
+`check-html.py` balanced · `scopes.py` 0 · `rules.py` 166 rules, all pointers
+resolve · `audit.js` §1 §6 §7 PASS · axe **0 violations**, 6 light and 4 dark ·
+1440 and 390, no horizontal overflow, the greeting verified in both themes.
+
+---
+
 ## 2026-08-31 · one card, three sections, and the logotype takes the hero
 
 Tong: *"把hero的prompt box放到logo墙下边。让logo墙和Achieve more with the team

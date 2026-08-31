@@ -2251,10 +2251,63 @@ h3{ font-family:var(--fd); }
    and given the air the prompt box used to take, and it is a decoration with
    no words of its own, so it carries no alt text and no reveal of its own
    beyond the stack's. */
+/* BIG. Tong: "把hero上的插画放大，要强视觉，插画甚至被下边的section盖住一点点
+   都ok的". It runs the full measure now instead of stopping at 860, and the
+   hero's own `overflow:hidden` is what laps it — the hero is sticky and the
+   card below scrolls up over it, so the bottom of the drawing goes under the
+   card exactly as the next section arrives. Nothing is positioned to make
+   that happen; it is what a sticky panel and a scrolling card already do.
+   The top margin comes down as the drawing goes up: the hero is one viewport
+   and centred in it, so height it does not spend on air it spends on this. */
 .hero__mark{
   display:block; width:100%; height:auto;
-  max-width:min(100%, 860px);
-  margin:clamp(26px, 3.4vw, 52px) auto 0;
+  /* PAST THE MEASURE. The rest of the page is capped at 1320 and this is the
+     one thing allowed through it — a drawing is not a column of prose, and
+     the brief was "要强视觉". */
+  max-width:min(100%, 1320px);
+  /* The negative bottom is the lap. It pulls the drawing past the hero's own
+     content box so its feet sit below the fold, where the hero's
+     `overflow:hidden` cuts it at exactly the line the next section starts —
+     and then the card, scrolling up over a sticky hero, keeps covering it.
+     Without this the drawing stopped 110px short of the bottom and the
+     overlap only ever happened on scroll. */
+  margin:clamp(10px, 1.4vw, 22px) auto calc(-1 * clamp(40px, 7vw, 128px));
+}
+
+
+/* ── the product's greeting, above the box ───────────────────────────
+   `AgentChatPage`: `flex items-center gap-4`, the avatar `h-16 w-16`
+   rounded-full, the tagline `text-3xl font-semibold tracking-tight`, and
+   `gap-6` from there down to the composer. */
+/* THE BOX'S COLUMN, NOT THE SECTION'S. `.pbox` is `min(760px, 100%)` centred,
+   and a greeting spanning the full card while the thing it greets you into is
+   760px wide reads as two unrelated objects. Same measure, same left edge —
+   which is also how the product has it. */
+.greet{
+  width:min(760px, 100%); margin:0 auto 24px;
+  display:flex; align-items:center; gap:16px;
+}
+
+.greet img{
+  width:64px; height:64px; flex:none;
+  border-radius:50%; object-fit:cover; object-position:top;
+}
+
+/* --t-d3, not the product's raw 30px. This is the PAGE's heading above the
+   page's own box, not type inside a mock, so it takes the page's scale (T3)
+   and its weight (T4: nothing outside a mock is 600). The scale agrees with
+   the product anyway — clamp(23px, 2.2vw, 30px) against text-3xl/text-2xl —
+   which is why the deviation costs nothing to look at. */
+.greet b{
+  font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
+  letter-spacing:-.02em; line-height:1.2; color:var(--ink);
+}
+
+@media (max-width:600px){
+  .greet{ gap:12px; margin-bottom:18px; }
+
+  .greet img{ width:56px; height:56px; }
+
 }
 
 
