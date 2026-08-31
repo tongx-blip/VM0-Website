@@ -32,6 +32,12 @@ it is 300+ files of somebody else's build output). The composed avatars ARE
 committed: they are what the page ships, and regenerating them must not need
 the network.
 
+OKOU'S OWN AVATAR IS SUPPLIED, NOT COMPOSED. `tools/agent-avatar.svg` is the
+official file from branding (Avatar_Container.svg — yellow ground, blue high
+bun, gold face) and it wins over anything this tool would pick. It is committed
+as the SOURCE and rasterised to the shipped PNG by `--okou`. The composer below
+is still the rule for any OTHER agent, and for checking a candidate.
+
 ADDING AN AGENT: put it in ROSTER and re-run. Nothing else.
 
 AND THE PEOPLE ARE PHOTOGRAPHS. `--people` regenerates the six human avatars
@@ -296,12 +302,27 @@ def rasterise(svg_path, png_path, size=RASTER):
         shutil.rmtree(work, ignore_errors=True)
 
 
+SUPPLIED = os.path.join(ROOT, 'tools', 'agent-avatar.svg')
+
+
+def build_okou():
+    """Rasterise the supplied official avatar. Same pipeline as a composed one
+    — the SVG is the source and the PNG ships — so the two cannot drift in
+    size, colour handling or sharpness."""
+    out = os.path.join(OUT, 'agent-okou.png')
+    rasterise(SUPPLIED, out)
+    print('agent-okou   supplied (tools/agent-avatar.svg)   %.1f KB'
+          % (os.path.getsize(out) / 1024))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--list', action='store_true', help='print every dimension')
     ap.add_argument('--svg', action='store_true', help='also keep the source SVG')
     ap.add_argument('--people', action='store_true',
                     help='regenerate the human portraits (costs credits)')
+    ap.add_argument('--compose', action='store_true',
+                    help='compose ROSTER instead of using the supplied file')
     args = ap.parse_args()
     if args.people:
         build_people()
@@ -317,6 +338,9 @@ def main():
         return 0
 
     os.makedirs(OUT, exist_ok=True)
+    if not args.compose:
+        build_okou()
+        return 0
     for name, sel in ROSTER.items():
         svg = compose(m, sel)
         work = tempfile.mkdtemp()

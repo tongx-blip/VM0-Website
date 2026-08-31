@@ -817,7 +817,7 @@ and the only difference that survives at that size is the medium. The invariant
 is greppable:
 
 ```bash
-# agents: composed by tools/build-avatars.py, under assets/avatars/
+# agents: built by tools/build-avatars.py, under assets/avatars/
 grep -o 'assets/avatars/[a-z-]*\.png' site/index.html | sort -u
 # people: photographs, under assets/brand/, and JPEG because they are photographs
 grep -o 'assets/brand/avatar-[0-9]\.jpg' site/index.html | sort -u
@@ -828,6 +828,17 @@ grep -c 'assets/brand/avatar-[0-9]\.png' site/index.html    # must be 0
 - **Look at it at 22px, not at 256.** Both media read fine large; the whole point
   is the small size. Crop a Slack row from a screenshot and check that the
   agent row is obvious.
+- **The cube names the ORG, never the colleague** (B6). Walk every remaining
+  `okou-icon.svg` and say out loud which of the two it means — workspace tile,
+  link unfurl, org tile, comparison logo, footer and nav are the org; a message
+  avatar, a run card, a workflow's mark and an identity line are the colleague,
+  and those are the avatar.
+
+```bash
+# every survivor, with the class that holds it
+grep -o 'class="[^"]*"[^>]*><img src="assets/okou-icon' site/index.html
+```
+
 - **A person is never drawn in the page's own register.** That was the first
   attempt and it was coherent and wrong — the agent avatar is built from the
   same flat vector faces.

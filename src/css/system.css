@@ -2423,11 +2423,16 @@ h3{ font-family:var(--fd); }
 }
 .par.is-in .par__c{ opacity:1; transform:none; }
 .par__hd{ display:flex; align-items:center; gap:.5em; }
+/* Four runs, four cards, one agent doing all of them. At 19px the avatar
+   reads — checked at 16 — and it says "Okou is on this" where the cube only
+   said "this is an Okou thing". The lane's hue moves to the card, which is
+   what it identified in the first place. */
 .par__ic{
   width:1.45em; height:1.45em; flex:none;
-  border-radius:var(--r-xs); background:color-mix(in srgb, var(--h) 12%, var(--tile));
+  border-radius:var(--r-xs); overflow:hidden;
   display:grid; place-items:center;
 }
+.par__ic img{ width:100%; height:100%; object-fit:cover; display:block; }
 .par__hd b{ font-size:var(--t-meta); font-weight:500; flex:1; min-width:0;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 /* ONE campaign, four chats. Four unrelated titles read as four errands;
@@ -2780,12 +2785,24 @@ h3{ font-family:var(--fd); }
    read as the same kind of object at two sizes instead of "a square and
    a circle". People stay circles — an avatar is not an app. Both went up
    a size: at 1.35em a connector mark is a smudge. */
+/* Okou's identity line in the control section. It shipped with no rule of its
+   own, so the image was a bare 40px square in a row of round things. */
+.ctrl__ava{
+  width:40px; height:40px; flex:none;
+  border-radius:50%; overflow:hidden;
+}
+.ctrl__ava img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* THE WORKFLOW'S MARK IS THE AGENT, not the product. It was the cube in a
+   tinted tile — the same "a logo standing in for a teammate" this avatar
+   system exists to end. The tile keeps its corner because it is a tile in a
+   card, but the avatar fills it: a face inset inside a ground is two grounds. */
 .wfo__ic{
   width:2em; height:2em; flex:none;
-  border-radius:.58em; background:var(--tile);
+  border-radius:.58em; overflow:hidden;
   display:grid; place-items:center;
 }
-.wfo__ic img{ width:1.15em; height:1.15em; object-fit:contain; }
+.wfo__ic img{ width:100%; height:100%; object-fit:cover; display:block; }
 /* THREE type sizes in this whole scene: 1em for a card's name, .88em for
    anything read as a sentence, .68em for anything read as a label. It
    carried six — 17.6 / 16.7 / 16.2 / 15.9 / 12.0 / 11.4 — and three of

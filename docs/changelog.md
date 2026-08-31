@@ -177,6 +177,60 @@ border · axe 0 in light and dark other than the known `.wfo--list` fade
 
 ---
 
+## 2026-08-31 · the supplied avatar, and the last seven seats the cube was sitting in
+
+Tong, with a crop of a workflow card and `Avatar_Container.svg`: *"这些icon也要
+替换成agent头像。但是agent头像可以用我发你的svg"*
+
+### The avatar is supplied now, not composed
+
+`tools/agent-avatar.svg` is the official file — yellow ground, blue high bun,
+gold face — and it replaces the one I composed yesterday. It goes through the
+same pipeline (SVG is the source, `rasterise()` ships a 192px PNG) so the two
+cannot drift, and `build-avatars.py` defaults to it; `--compose` still runs the
+composer, which stays the rule for **any other** agent.
+
+Worth recording because it went against my own pick: I had chosen a teal ground
+partly to keep the accent unique, and read the supplied yellow one as the
+weaker choice at small size. Rendered side by side at 44 / 22 / **16px** the
+supplied one is clearly better — the blue bun gives the yellow a second value,
+where my black hair closes up into the dark green below 22px. **The candidate I
+argued for lost on the measurement I said mattered.**
+
+### Seven more seats
+
+The cube was still standing in for Okou-as-a-teammate in three places I had
+left alone yesterday, and Tong's crop points straight at the first:
+
+| | was | is |
+|---|---|---|
+| `.wfo__ic` ×2 | the workflow card's mark, cube on a tint | the avatar, filling the tile |
+| `.par__ic` ×4 | the four parallel run cards, 13px cube in a hue-tinted tile | the avatar at 25px |
+| `.ctrl__ava` | "Okou · Your AI teammate" — a **bare unstyled 40px square** in a row of round things | the avatar, in a circle |
+
+I had argued `.par__ic` should stay a mark because a face does not read at
+13px. It was 13px *inside* a 19px tile — filling the tile makes it 25px, and 16
+already reads. The reasoning was right and the measurement was of the wrong
+box.
+
+`.ctrl__ava` had **no CSS rule at all** — it came in with the control section
+another thread merged, and shipped as a raw image.
+
+### Where the cube stays, and the line
+
+16 uses, and every one names the **org** rather than the colleague: the Slack
+workspace tile, the link unfurl ("Okou · Published"), Okou's own org tile, the
+comparison card, the hub, the footer, the nav. New rule B6, and the test is not
+*where* it appears but *what it names*.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 160
+rules, all pointers resolve · `audit.js` §1 §6 §7 PASS · axe **0 violations**,
+8 light and 5 dark · 0 broken images · 26 agent seats, 16 product marks.
+
+---
+
 ## 2026-08-31 · four ways to separate the header, none of them shadow
 
 Tong: *"我感觉 header 的颜色和背景有点混在一起了。但是我又不想给 header 加太多的阴
