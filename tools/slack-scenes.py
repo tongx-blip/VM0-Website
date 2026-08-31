@@ -41,7 +41,11 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML = os.path.join(ROOT, 'site', 'index.html')
 
-AVA = 'assets/brand/avatar-%d.png'
+# .jpg, not .png — the people became photographs in `51e4d5a` and the files
+# were renamed with them. This constant still said .png, so the next run of
+# this generator silently re-broke every facepile: six 404s that no gate
+# looks for. If the set changes format again, this is the line.
+AVA = 'assets/brand/avatar-%d.jpg'
 
 # One face per person, everywhere they appear. Okou is not in here: it is
 # an app in this workspace and wears the product's mark, not a face.
@@ -514,7 +518,8 @@ def restage(html, key):
     # the opening beat centres them together and the cards are anchored to
     # the window's edge, not to the frame's.
     new = ('<div class="ostage">'
-           + I + '<div class="ostage__frame" style="--tab:var(--hue-%s)">' % key
+           + I + '<div class="ostage__frame" style="--tab:var(--hue-%s);'
+                 '--tab-mark:var(--mark-%s)">' % (key, key)
            + I + '  <div class="ostage__row">'
            + I + '    <div class="ostage__app">'
            + I + '      ' + chat

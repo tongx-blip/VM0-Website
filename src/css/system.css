@@ -48,14 +48,17 @@
   /* ground + ink: cool neutral, never warm */
   --paper:      #FFFFFF;
   --paper-ink:  #FFFFFF;   /* text/marks that sit ON ink or on the accent */
-  --wash:       #F4F6F7;
-  --wash-2:     #EAEEF0;
-  --ink:        #0C0F12;
-  --ink-soft:   #464C52;
-  --ink-mute:   #636A70;   /* the lightest text allowed: 5.5:1 on paper,
+  --wash:       #FAF5F3;   /* the brand off-white: the page's ground */
+  --wash-2:     #EFEAE8;
+  /* THE BRAND'S OWN NEAR-BLACK, not a cold one. #242121 is warm, and the
+     whole ramp follows it — every grey on the page is a mix of this and
+     the brand off-white, so nothing reads cool against the paper. */
+  --ink:        #242121;
+  --ink-soft:   #4B4949;
+  --ink-mute:   #666464;   /* the lightest text allowed: 5.5:1 on paper,
                               5.1:1 on --wash, 4.7:1 on --wash-2 — AA on
                               every ground this page uses */
-  --mat:        #171B1F;   /* the ground a product screen is matted on */
+  --mat:        #1A1818;   /* the ground a product screen is matted on */
 
   /* ── CHANNELS ─────────────────────────────────────────────────────
      Every shadow, scrim and state layer on this page is one of these
@@ -65,10 +68,10 @@
      moved. A hex cannot carry an alpha, so the channels are declared
      separately and consumed as `rgb(var(--ink-rgb) / .05)`.
      If you change --ink, change --ink-rgb in the same edit. */
-  --ink-rgb:          12 15 18;
+  --ink-rgb:          36 33 33;
   --paper-rgb:        255 255 255;
-  --accent-rgb:       237 78 1;
-  --accent-solid-rgb: 214 67 0;
+  --accent-rgb:       248 161 1;
+  --accent-solid-rgb: 154 90 0;
   --ok-rgb:           14 124 74;
   --wait-rgb:         180 83 9;
   /* A surface INSIDE a white card — the outputs panels, the KPI tiles.
@@ -76,7 +79,7 @@
      the page grey on a white card reads as a hole, not as a surface. It was
      living as a hard-coded literal inside one component, which is how the
      KPI row ended up unable to match the panels sitting six inches above it. */
-  --tile:      #F6F6F6;
+  --tile:      #F7F3F1;
   --tile-pad:  clamp(16px, 1.9vw, 24px);
   --tile-gap:  clamp(14px, 1.6vw, 20px);
   /* The header's own ground. It has to separate from BOTH things it sits
@@ -93,7 +96,7 @@
   /* how far the veil reaches PAST the header. Not a fade zone — the whole
      veil is the fade now, so this is only its tail. */
   --veil-tail: clamp(14px, 1.5vw, 22px);
-  --hairline:   #DFE4E7;
+  --hairline:   #E6DFDB;
   --rule:       #C9D0D5;
   --grid:       #EDF0F2;
 
@@ -103,8 +106,17 @@
                      white text as a fill and still be legible as text on
                      paper. Every interactive fill and every accent phrase
                      below display size uses this one. */
-  --accent:       #ED4E01;
-  --accent-solid: #D64300;
+  /* THE ACCENT IS TWO COLOURS DOING TWO JOBS, and the brand palette is
+     what forced the split. #F8A101 is the brand orange; as TEXT it is
+     2.08:1 on white, so it can only ever be a FILL — and the thing on it
+     is --accent-ink, never white (7.68:1 against 2.08:1). Accent text
+     takes --accent-solid, the same orange carried down until it clears
+     AA on all three grounds: 5.47 paper, 5.06 wash, 4.59 wash-2.
+     This is also the answer to *"hero用的橙色有点太夸张，太亮了"* —
+     nothing bright is asked to carry weight any more. */
+  --accent:       #F8A101;
+  --accent-ink:   #242121;   /* what sits ON the accent fill */
+  --accent-solid: #9A5A00;
   /* --accent-solid is tuned to EXACTLY 4.5:1 on paper, which means it clears
      AA on white and on nothing else. The moment a ground goes grey it fails
      (3.86:1 on --wash-2). This is its sibling for accent text on a grey:
@@ -114,8 +126,8 @@
      everywhere else, including on a dark card (3.96:1), so every accent
      PHRASE reads this token and only the two accent FILLS keep the other.
      It swaps to #FF7A3D in dark, where the correction runs upward. */
-  --accent-wash:  #B93A00;
-  --accent-2:     #FFF1EA;
+  --accent-wash:  #9A5A00;
+  --accent-2:     #FEF4E2;
 
   /* status hues: real, because the product screens are real.
      Each has an -ink sibling for the same reason --accent does: the hue
@@ -141,13 +153,32 @@
      At #F8A100 it was MORE saturated than the brand orange and only 19deg
      from it, so the first tab read as a second accent rather than as one
      scene's identity. Every other hue here already sits below the accent. */
-  --hue-marketing:   #E8AC33;
-  --hue-ads:         #E24E4A;
-  --hue-sales:       #C77BA6;
-  --hue-engineering: #3758A2;
-  --hue-product:     #0E8C99;
-  --hue-ops:         #6E8C3A;
-  --hue-leadership:  #6E5AA8;
+  /* STRAIGHT FROM THE BRAND PALETTE. Two of the seven were already there —
+     ads was #E24E4A against the brand's #E3504B and engineering #3758A2
+     against #3858A2 — so this is less a change than finishing a job that
+     had drifted. Leadership was the one scene with no brand equivalent
+     (the palette has no purple) and takes the yellow. */
+  --hue-marketing:   #F8A101;   /* brand orange     */
+  --hue-ads:         #E3504B;   /* brand red        */
+  --hue-sales:       #E5ACC8;   /* brand pink       */
+  --hue-engineering: #3858A2;   /* brand blue       */
+  --hue-product:     #027562;   /* brand green      */
+  --hue-ops:         #B5D32A;   /* brand lime       */
+  --hue-leadership:  #F4E33B;   /* brand yellow     */
+
+  /* AND A SIBLING THAT CAN CARRY A MARK. Five of the ten brand colours are
+     bright — measured against --wash-2 the raw hues run 1.11:1 (yellow) to
+     1.74 (orange), so a 3px marker bar in them is invisible. Carried toward
+     the ink until each clears 3:1 they read as the same colour with weight.
+     The dark four need nothing. This is the whole of *"太亮的颜色不适合大面
+     积使用"* expressed as a rule: bright is for fields, deep is for marks. */
+  --mark-marketing:   #A36E0E;   /* 3.67 on --wash-2 */
+  --mark-ads:         #E3504B;   /* 3.19, unchanged  */
+  --mark-sales:       #987485;   /* 3.40             */
+  --mark-engineering: #3858A2;   /* 5.71, unchanged  */
+  --mark-product:     #027562;   /* 4.73, unchanged  */
+  --mark-ops:         #7B8C26;   /* 3.13             */
+  --mark-leadership:  #8C822E;   /* 3.29             */
   /* the ladder's four steps borrow three of those and add one pale pink
      of their own — kept explicit rather than silently reusing --hue-sales,
      because they are a different set of four things */
@@ -173,13 +204,21 @@
      viewport: long enough to read as a move, short enough that nobody is
      held at the top of the page waiting for it. */
   --hero-travel: 55svh;
-  --hero-ground: var(--accent);
-  /* PINNED, like the ground it sits on. The hero is a brand panel in both
-     themes, so its ink cannot be `--ink`: that flips to #EEF1F3 in dark and
-     light type on #ED4E01 measures 3.25:1 — the lede and the Slack link both
-     failed AA the moment the dark theme was checked. #0C0F12 on the brand
-     orange is 5.21:1 and does not move. */
-  --hero-ink: #0C0F12;
+  /* NOT THE ACCENT AT FULL STRENGTH. A whole viewport of #F8A101 is the
+     exact thing the brand's own bright colours are wrong for — Tong:
+     *"太亮的颜色不适合大面积使用"* and, on the old vivid orange, *"hero用的
+     橙色有点太夸张，太亮了"*. The hero keeps its warmth by taking the brand
+     off-white and letting the orange appear only where it is small: the
+     button, the accent phrase, the mark. The largest field on the page is
+     now the calmest colour in the palette. */
+  --hero-ground: var(--wash);
+  /* IT FOLLOWS THE THEME NOW, because the ground does. The pin existed for
+     a pinned ground: a full-bleed #ED4E01 hero is the same orange in both
+     modes, so its ink had to be a fixed near-black. With the hero on
+     `--wash` the ground goes dark in dark mode, and a pinned near-black ink
+     put six nodes of #242121 on #161414 — the whole headline, the lede and
+     the Slack line, all invisible, caught by axe on the first dark pass. */
+  --hero-ink: var(--ink);
   /* ONE section padding, and the block padding is DERIVED from it rather than
      picked separately — a card whose top gap has no relationship to its side
      gap reads as two decisions instead of one. */
@@ -460,18 +499,18 @@
 
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:      #171C21;
-    --wash:       #0E1217;
-    --wash-2:     #242C34;
-    --tile:       #1D232A;
-    --ink:        #EEF1F3;
-    --ink-soft:   #B4BCC3;
-    --ink-mute:   #9AA3AB;
-    --hairline:   #2A323A;
+    --paper:      #1F1D1D;
+    --wash:       #161414;
+    --wash-2:     #2B2828;
+    --tile:       #252222;
+    --ink:        #FAF5F3;   /* the brand off-white becomes the ink */
+    --ink-soft:   #C3BCB9;
+    --ink-mute:   #A69E9B;
+    --hairline:   #332F2F;
     --rule:       #3C464F;
     --grid:       #1B2027;
-    --mat:        #05070A;
-    --accent-wash:#FF7A3D;
+    --mat:        #0D0C0C;
+    --accent-wash:#F8A101;   /* 8.06:1 on the dark paper */
     /* Third time this correction has reversed on a dark ground. --ok-ink and
        --wait-ink are tuned to sit on their own 12% tint over WHITE; on the
        same tint over a dark card they fall to 2.3:1 and 2.1:1. */
@@ -656,13 +695,17 @@ h3{ font-family:var(--fd); }
 /* at display size the phrase BECOMES the accent; an underline under a 96px
    line is a second emphasis on something already emphasised */
 .display .mark{ background-image:none; }
-.display .mark.is-lit{ color:var(--accent); }
+/* --accent-solid, not --accent. The old vivid orange cleared 3:1 at display
+   size so a headline phrase could carry it; the brand orange is 2.08:1 on
+   white and fails at EVERY size. Under this palette nothing bright is text
+   — which is C1 rewritten, not bent. */
+.display .mark.is-lit{ color:var(--accent-solid); }
 /* the mid-section statement is already the loudest type on the ground;
    giving it colour as well made two accent phrases per section */
 .sentence .mark{ background-image:none; }
 .sentence .mark,.sentence .mark.is-lit{ color:var(--ink); }
 .panel--cta .mark,.footer .mark{ background-image:none; }
-.panel--cta .mark.is-lit,.footer .mark.is-lit{ color:var(--accent); }
+.panel--cta .mark.is-lit,.footer .mark.is-lit{ color:var(--accent-solid); }
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 
 /* ─────────────── 5. the header, in two states ───────────────
@@ -827,9 +870,18 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-section);
 }
 
-/* ── the header over a dark ground ──────────────────────────────────
-   The page ends on two dark bands (the closing CTA and the footer), and a
-   pale grey bar sitting on them read as a leftover from the section above.
+/* ── the header over a dark ground — CURRENTLY UNUSED ───────────────
+   NOTHING ON THE PAGE CARRIES `data-ground="dark"` ANY MORE. The closing
+   band and the footer were dark when this was written; they are white and
+   transparent now, and the marker outlived the design — so the bar was
+   inverting to its dark version over a light footer, which is what Tong
+   saw. The markers are gone; this stays, because the capability is sound
+   and the next dark band on the page should use it rather than rebuild it.
+   If a section goes dark again, give it `data-ground="dark"` and this
+   works. Do not "fix" it by deleting it because it appears unreferenced.
+
+   The page used to end on two dark bands, and a pale grey bar sitting on
+   them read as a leftover from the section above.
    The header carries a second version of itself instead, and crosses into
    it: `is-dark` is set from the ground actually behind the bar's midline,
    not from a scroll offset, so it stays right if a section is ever moved.
@@ -852,34 +904,14 @@ h3{ font-family:var(--fd); }
 }
 .nav.is-dark.is-stuck{ --nav-ground:var(--nav-fill-dark); }
 
-/* ── the header over the brand ground ────────────────────────────────
-   The hero is #ED4E01 now, and the header at rest has no ground of its
-   own, so its tokens are sitting directly on the brand orange. Measured:
-   `--ink-soft` is **2.36:1** there and the primary button's
-   `--accent-solid` fill is **1.22** against it — the links failed AA and
-   the CTA was invisible, an orange button on an orange field.
-
-   The fix is the same token swap the dark bands get, in the other
-   direction: ink goes to FULL `--ink` (5.21:1) rather than reversing to
-   white (3.69, legal only at display size), and the primary inverts to
-   the page's near-black so it is the one dark object on the field. */
-.nav.is-brand{
-  --nav-ink:rgb(var(--ink-rgb) / .78);
-  --nav-ink-hi:var(--ink);
-  --nav-accent:var(--ink);
-  --nav-chip:rgb(var(--paper-rgb) / .22);
-  --nav-stroke:rgb(var(--ink-rgb) / .22);
-  --nav-edge:rgb(var(--ink-rgb) / .16);
-}
-/* The primary is `--accent-solid` on `--accent`: 1.22:1, an orange button on
-   an orange field. It inverts to the page's near-black here — 5.2:1 on the
-   brand ground, and the one dark object on it, which is what a primary is
-   supposed to be. */
-.nav.is-brand .nav__auth .btn{
-  background:var(--g-100);
-  color:var(--paper-ink);
-}
-.nav.is-brand.is-stuck{ --nav-ground:rgb(var(--paper-rgb) / .9); }
+/* THE HERO IS NO LONGER A BRAND FIELD, so the nav's inversion goes with it.
+   `.nav.is-brand` existed for one reason: over a full-bleed #ED4E01 hero the
+   primary was "an orange button on an orange field" at 1.22:1, so it flipped
+   to near-black. On the brand off-white the normal treatment is right again —
+   and better, because the orange button is now the one bright object on a
+   calm field, which is the only size a bright colour should ever be.
+   `app.js` still toggles the class; it styles nothing and should come out
+   with this if the direction is kept. */
 
 .nav__logo{
   justify-self:start;
@@ -1100,7 +1132,10 @@ h3{ font-family:var(--fd); }
 }
 .btn--sm{ }
 .btn--lg{ }
-.btn--dark{ background:var(--accent-solid); border-color:var(--accent-solid); color:var(--paper-ink); }
+/* brand orange with the brand near-black on it (7.68:1). White on this
+   orange is 2.08 and was never an option; the old vivid accent could
+   carry white, and losing that is what makes the button calmer. */
+.btn--dark{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
 .btn--dark:hover{
   /* the fill does not change on hover: any brighter orange drops white
      text under 4.5:1. The lift and the shadow carry the feedback. */
@@ -1602,7 +1637,7 @@ h3{ font-family:var(--fd); }
 .pbox__sliders{ display:none; width:18px; height:18px; }
 .pbox__send{
   width:var(--pbox-ctrl-h); padding:0;
-  background:var(--accent-solid); color:var(--paper-ink);
+  background:var(--accent); color:var(--accent-ink);
 }
 .pbox__send:hover{ background:var(--accent-wash); }
 
@@ -1806,7 +1841,8 @@ h3{ font-family:var(--fd); }
 .tab__fill{
   position:absolute; left:0; right:0; bottom:0;
   height:3px;
-  background:var(--tab);
+  /* the deep sibling: the raw brand hue is 1.1-1.7:1 here and vanishes */
+  background:var(--tab-mark, var(--tab));
   transform:scaleX(var(--p, 0)); transform-origin:left;
   opacity:0;
 }
@@ -1816,7 +1852,7 @@ h3{ font-family:var(--fd); }
   content:"";
   position:absolute; left:0; right:0; bottom:0;
   height:3px;
-  background:color-mix(in srgb, var(--tab) 26%, transparent);
+  background:color-mix(in srgb, var(--tab-mark, var(--tab)) 26%, transparent);
 }
 
 .scenes__stage{ position:relative; margin-top:clamp(24px,2.8vw,38px); }
@@ -5788,9 +5824,13 @@ h3{ font-family:var(--fd); }
   border-radius:var(--r-lg);
   background:
     radial-gradient(118% 132% at 4% 0%,
-      color-mix(in srgb, var(--oframe-hue) 20%, var(--paper)) 0%,
-      color-mix(in srgb, var(--oframe-hue) 11%, var(--paper)) 44%,
-      color-mix(in srgb, var(--oframe-hue) 5%, var(--paper)) 100%);
+      /* 13/8/4, down from 20/11/5. The stops were tuned under muted hues;
+         the brand set is brighter, and the same percentage of #F4E33B is a
+         different picture from the same percentage of #E8AC33. A large
+         field takes less of a bright colour to say the same thing. */
+      color-mix(in srgb, var(--oframe-hue) 13%, var(--paper)) 0%,
+      color-mix(in srgb, var(--oframe-hue) 8%, var(--paper)) 44%,
+      color-mix(in srgb, var(--oframe-hue) 4%, var(--paper)) 100%);
   display:grid;
   grid-template-columns:minmax(0,1fr);
   /* THE ROW TRACK MUST FILL, NOT FIT. Left as `auto` the window is sized by

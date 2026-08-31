@@ -1626,6 +1626,85 @@ inline lead-ins. Wording is Tong's, so those want a read.
 
 ---
 
+## 2026-08-31 · the brand palette, and nothing bright carrying weight
+
+Tong shared the Brand Guidelines file — logos, ten colours, six textures — and
+took the palette direction: brand off-white is fine because it is brand-defined,
+leadership swaps to a brand colour since there is no purple, and the product's
+orange will follow later. Plus two constraints: *"hero用的橙色有点太夸张，太亮
+了"* and *"太亮的颜色不适合大面积使用"*.
+
+**The measurements decided most of it.** As text on white, only three brand
+colours clear AA — near-black 15.98, blue 6.81, green 5.64. Orange is 2.08,
+yellow 1.32, lime 1.71, pink 1.90. As *fills with near-black on them* the same
+five are comfortable: orange 7.68, yellow 12.09, lime 9.37, pink 8.42. So the
+rule is not a preference, it is arithmetic: **bright is for fields, deep is for
+marks, and nothing bright is ever text** (C13).
+
+- `--ink` → `#242121`; the whole grey ramp is now mixes of it and the brand
+  off-white, so no grey on the page reads cool.
+- `--wash` → `#FAF5F3`, `--wash-2` → `#EFEAE8`, `--tile` → `#F7F3F1`.
+- `--accent` → `#F8A101`, **fill only**, with the new `--accent-ink` on it.
+- Accent text → `--accent-solid` `#9A5A00`, the same orange carried down until
+  it clears AA on all three grounds. **C1 rewritten**: the old vivid orange
+  could carry white and clear 3:1 at display size; this one can do neither.
+- Seven scene hues from the palette. Two barely moved — ads was `#E24E4A`
+  against the brand's `#E3504B`, engineering `#3758A2` against `#3858A2` — so
+  this finished a job that had drifted rather than starting one.
+- Seven `--mark-*` siblings, each carried toward the ink until it clears 3:1 on
+  `--wash-2`, because the raw brights vanish at 3px.
+- The Outputs frame gradient drops 20/11/5% → **13/8/4%**: those stops were
+  tuned under muted hues and the same percentage of `#F4E33B` is a different
+  picture.
+- Dark is warm now, with the brand off-white as the ink.
+
+**The hero was the "too bright" complaint, and the cause was structural.**
+`--hero-ground: var(--accent)` made it a full-bleed accent panel, so swapping
+palettes would only have changed which orange filled a whole viewport. It takes
+`--wash`, and the orange survives in the two places it is small: the primary
+button and the composer's send. That also retired `.nav.is-brand`, which existed
+solely so the CTA was not "an orange button on an orange field".
+
+### Three faults the change surfaced
+
+**The hero ink was pinned** to a near-black because the ground was pinned. With
+the ground following the theme, dark mode put six nodes of `#242121` on
+`#161414` — the headline, the lede and the Slack line, all invisible. axe caught
+it on the first dark pass.
+
+**`.display .mark` still took `--accent`.** Display marks were allowed the brand
+orange because at 66px they only need 3:1; `#F8A101` is 2.08 and fails there
+too. One node, every sample, until it moved to `--accent-solid`.
+
+**`data-ground="dark"` outlived its ground** (C14). The closing band and footer
+were dark when the header's dark version was written; they are white and
+transparent now, so the bar was inverting over a light footer — *"滚动到footer
+时候，header不需要dark版本"*. The markers are gone. The `.nav.is-dark` rules stay,
+documented as unused, because the capability is sound and the next dark band
+should use it rather than rebuild it.
+
+### And one that was not mine
+
+`tools/slack-scenes.py` hardcoded `assets/brand/avatar-%d.png`. The other thread
+renamed the set to `.jpg` in *"The people are photographs"*, so the next run of
+that generator — mine — silently re-broke every facepile: six 404s that no gate
+looks for. Fixed at the constant, with a note naming the line to change if the
+format moves again.
+
+**Also.** The header's logotype holds for 2200ms before gathering, up from 1150
+— *"再长一些"*. The old hold started the gather while the eye was still arriving.
+
+**Gate.** axe 0 across 14 samples in both themes; `audit.js` §1, §6, §8, §9,
+§10, §11 PASS; `tokens.py` 0, `scopes.py` 0, `rules.py` 160 rules resolving;
+footer header verified light at 390, 768 and 1920 with zero broken images.
+
+**Not done:** the six textures are not in yet — that was idea B/D from the
+proposal and the larger visual step. `--accent-2`, the doodles and the sticker
+set are still tuned to the old palette; they read fine but they are not *from*
+the brand file.
+
+---
+
 ## 2026-08-30 · the hero's two buttons come out, Slack stays as a line
 
 Tong: *"把hero上的那两个button去掉，但是add to slack这个入口还是需要留下，不过现

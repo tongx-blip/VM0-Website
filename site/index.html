@@ -10,7 +10,7 @@
      system.css by tools/build-fonts.py; the sources live in src/fonts/ and
      are not committed. No Google Fonts request at all now — six families
      were being fetched and three of them were fallbacks for each other. -->
-<link rel="stylesheet" href="styles.css?r=97aba352">
+<link rel="stylesheet" href="styles.css?r=f5e0f0e1">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
      hero is sticky inside it, so the narrowing happens while the page is
      already moving and nothing is pinned longer than it needs to be. -->
 <div class="herofold" id="herofold">
-<section class="panel hero" id="hero" data-hero="fold" data-ground="brand">
+<section class="panel hero" id="hero" data-hero="fold">
 
   <div class="stack">
     <h1 class="display" data-reveal="mask" data-in>
@@ -144,19 +144,19 @@
   <div class="scenes" id="scenes" data-reveal="scale">
       <div class="tabs" id="sceneTabs">
           <div class="tabs__rail" role="tablist" aria-label="What Okou can be asked for">
-            <button class="tab is-on" role="tab" data-scene="marketing" style="--tab:var(--hue-marketing)"
+            <button class="tab is-on" role="tab" data-scene="marketing" style="--tab:var(--hue-marketing);--tab-mark:var(--mark-marketing)"
                     aria-selected="true" tabindex="0"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Storefront Launch</span></button>
-            <button class="tab" role="tab" data-scene="ads" style="--tab:var(--hue-ads)"
+            <button class="tab" role="tab" data-scene="ads" style="--tab:var(--hue-ads);--tab-mark:var(--mark-ads)"
                     aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Ad Campaign</span></button>
-            <button class="tab" role="tab" data-scene="sales" style="--tab:var(--hue-sales)"
+            <button class="tab" role="tab" data-scene="sales" style="--tab:var(--hue-sales);--tab-mark:var(--mark-sales)"
                     aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Lead Scoring</span></button>
-            <button class="tab" role="tab" data-scene="engineering" style="--tab:var(--hue-engineering)"
+            <button class="tab" role="tab" data-scene="engineering" style="--tab:var(--hue-engineering);--tab-mark:var(--mark-engineering)"
                     aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Incident Triage</span></button>
-            <button class="tab" role="tab" data-scene="product" style="--tab:var(--hue-product)"
+            <button class="tab" role="tab" data-scene="product" style="--tab:var(--hue-product);--tab-mark:var(--mark-product)"
                     aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Spec Writing</span></button>
-            <button class="tab" role="tab" data-scene="ops" style="--tab:var(--hue-ops)"
+            <button class="tab" role="tab" data-scene="ops" style="--tab:var(--hue-ops);--tab-mark:var(--mark-ops)"
                     aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Team Digest</span></button>
-            <button class="tab" role="tab" data-scene="leadership" style="--tab:var(--hue-leadership)"
+            <button class="tab" role="tab" data-scene="leadership" style="--tab:var(--hue-leadership);--tab-mark:var(--mark-leadership)"
                     aria-selected="false" tabindex="-1"><span class="tab__fill" aria-hidden="true"></span><span class="tab__label">Board Deck</span></button>
           </div>
         </div>
@@ -166,7 +166,7 @@
                connectors · the conversation on the painted ground · the page
                it shipped, in a window the visitor can actually scroll -->
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-marketing)">
+            <div class="ostage__frame" style="--tab:var(--hue-marketing);--tab-mark:var(--mark-marketing)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--slack" id="ochat" role="group"
@@ -175,13 +175,13 @@
               <div class="slk__pane"><p class="slk__bar"><b class="slk__ch"><i>#</i>launch-litoral</b><span class="slk__faces"><img src="assets/brand/avatar-2.jpg?v=7a0acfc5" alt="" width="22" height="22"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="22" height="22"><img src="assets/brand/avatar-5.jpg?v=b4d9746e" alt="" width="22" height="22"><img src="assets/brand/avatar-6.jpg?v=5c40a0b2" alt="" width="22" height="22"><em>8</em></span></p>
               <div class="slk__list">
               <div class="ochat__row slk__msg" data-beat="ask" data-cue="0"><span class="slk__av"><img src="assets/brand/avatar-2.jpg?v=7a0acfc5" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Maya</b><time>9:24 AM</time></p><p class="slk__say"><mark class="slk__at">@Okou</mark> build the Litoral one-pager — hero, the story, three room tiles. Brand kit is in Drive.</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>9:24 AM</time></p><p class="slk__say">Read the brand brief. Publishing as soon as it reads right.</p></div></div>
+              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>9:24 AM</time></p><p class="slk__say">Read the brand brief. Publishing as soon as it reads right.</p></div></div>
               <div class="ochat__row slk__msg slk__msg--cont" data-beat="result" data-cue="1980"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__say">Published. Live now:</p><div class="slk__unfurl"><p class="slk__unfurl-h"><span class="slk__unfurl-ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="14" height="14"></span>Okou&#8202;·&#8202;Published</p><p class="slk__unfurl-t">Litoral Coastal Hotel Site</p><p class="slk__unfurl-u">okou-artifact-litoral-hotel.sites.vm0.io</p></div></div></div>
               <div class="ochat__row slk__react" data-beat="react" data-cue="2700"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__pills"><span class="slk__pill"><img class="slk__emoji" src="assets/icons/emoji-2705.svg?v=4d69c4a3" alt="" width="15" height="15"><b>4</b></span></p></div></div>
               <div class="ochat__row slk__msg" data-beat="ask2" data-cue="3400"><span class="slk__av"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Dan</b><time>9:31 AM</time></p><p class="slk__say">Reads well. Can you send the launch note to the list?</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>9:31 AM</time></p><p class="slk__say">Drafted in Gmail — unsent, yours to send.</p></div></div>
-                <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
+              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>9:31 AM</time></p><p class="slk__say">Drafted in Gmail — unsent, yours to send.</p></div></div>
               </div>
+              <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
               <p class="slk__composer"><span>Message #launch-litoral</span><i class="slk__send" aria-hidden="true"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/></svg></i></p>
               </div>
             </div>
@@ -217,7 +217,7 @@
         </div>
         <div class="scene scene--built" data-scene="ads" role="tabpanel">
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-ads)">
+            <div class="ostage__frame" style="--tab:var(--hue-ads);--tab-mark:var(--mark-ads)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--slack" role="group"
@@ -226,13 +226,13 @@
               <div class="slk__pane"><p class="slk__bar"><b class="slk__ch"><i>#</i>paid-acquisition</b><span class="slk__faces"><img src="assets/brand/avatar-2.jpg?v=7a0acfc5" alt="" width="22" height="22"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="22" height="22"><img src="assets/brand/avatar-4.jpg?v=582f5842" alt="" width="22" height="22"><img src="assets/brand/avatar-5.jpg?v=b4d9746e" alt="" width="22" height="22"><em>6</em></span></p>
               <div class="slk__list">
               <div class="ochat__row slk__msg" data-beat="ask" data-cue="0"><span class="slk__av"><img src="assets/brand/avatar-2.jpg?v=7a0acfc5" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Maya</b><time>11:02 AM</time></p><p class="slk__say"><mark class="slk__at">@Okou</mark> our CPC is drifting on the AI-tools keywords. Tell me where the money is going and draft the shift.</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>11:03 AM</time></p><p class="slk__say">Two ad sets are carrying the drift. Moved $183 out of them and left the rest alone.</p></div></div>
+              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>11:03 AM</time></p><p class="slk__say">Two ad sets are carrying the drift. Moved $183 out of them and left the rest alone.</p></div></div>
               <div class="ochat__row slk__msg slk__msg--cont" data-beat="result" data-cue="1980"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__say">Draft is in Meta, waiting on approval:</p><div class="slk__unfurl"><p class="slk__unfurl-h"><span class="slk__unfurl-ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="14" height="14"></span>Okou&#8202;·&#8202;Meta Ads</p><p class="slk__unfurl-t">$183 budget shift — draft</p><p class="slk__unfurl-u">business.facebook.com/adsmanager</p></div></div></div>
               <div class="ochat__row slk__react" data-beat="react" data-cue="2700"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__pills"><span class="slk__pill"><img class="slk__emoji" src="assets/icons/emoji-2705.svg?v=4d69c4a3" alt="" width="15" height="15"><b>4</b></span></p></div></div>
               <div class="ochat__row slk__msg" data-beat="ask2" data-cue="3400"><span class="slk__av"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Dan</b><time>11:20 AM</time></p><p class="slk__say">Approved. Push it.</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>11:21 AM</time></p><p class="slk__say">Live. I will flag it here if the pacing drifts again.</p></div></div>
-                <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
+              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>11:21 AM</time></p><p class="slk__say">Live. I will flag it here if the pacing drifts again.</p></div></div>
               </div>
+              <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
               <p class="slk__composer"><span>Message #paid-acquisition</span><i class="slk__send" aria-hidden="true"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/></svg></i></p>
               </div>
             </div>
@@ -268,7 +268,7 @@
         </div>
         <div class="scene scene--built" data-scene="sales" role="tabpanel">
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-sales)">
+            <div class="ostage__frame" style="--tab:var(--hue-sales);--tab-mark:var(--mark-sales)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--okou" role="group"
@@ -331,7 +331,7 @@
         </div>
         <div class="scene scene--built" data-scene="engineering" role="tabpanel">
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-engineering)">
+            <div class="ostage__frame" style="--tab:var(--hue-engineering);--tab-mark:var(--mark-engineering)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--slack" role="group"
@@ -340,13 +340,13 @@
               <div class="slk__pane"><p class="slk__bar"><b class="slk__ch"><i>#</i>incident-checkout</b><span class="slk__faces"><img src="assets/brand/avatar-5.jpg?v=b4d9746e" alt="" width="22" height="22"><img src="assets/brand/avatar-6.jpg?v=5c40a0b2" alt="" width="22" height="22"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="22" height="22"><img src="assets/brand/avatar-1.jpg?v=efc2232d" alt="" width="22" height="22"><em>13</em></span></p>
               <div class="slk__list">
               <div class="ochat__row slk__msg" data-beat="ask" data-cue="0"><span class="slk__av"><img src="assets/brand/avatar-5.jpg?v=b4d9746e" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Lin</b><time>2:06 AM</time></p><p class="slk__say"><mark class="slk__at">@Okou</mark> something broke overnight. Group the Sentry noise by cause and open issues for anything that actually matters.</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>2:07 AM</time></p><p class="slk__say">1,111 events, eight root causes. Two crossed the threshold.</p></div></div>
+              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>2:07 AM</time></p><p class="slk__say">1,111 events, eight root causes. Two crossed the threshold.</p></div></div>
               <div class="ochat__row slk__msg slk__msg--cont" data-beat="result" data-cue="1980"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__say">Issues opened for those two:</p><div class="slk__unfurl"><p class="slk__unfurl-h"><span class="slk__unfurl-ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="14" height="14"></span>Okou&#8202;·&#8202;GitHub</p><p class="slk__unfurl-t">checkout/session — 2 issues opened</p><p class="slk__unfurl-u">github.com/vm0-ai/vm0/issues</p></div></div></div>
               <div class="ochat__row slk__react" data-beat="react" data-cue="2700"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__pills"><span class="slk__pill"><img class="slk__emoji" src="assets/icons/emoji-2705.svg?v=4d69c4a3" alt="" width="15" height="15"><b>4</b></span></p></div></div>
               <div class="ochat__row slk__msg" data-beat="ask2" data-cue="3400"><span class="slk__av"><img src="assets/brand/avatar-6.jpg?v=5c40a0b2" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Sam</b><time>7:40 AM</time></p><p class="slk__say">Taking the checkout one.</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>7:40 AM</time></p><p class="slk__say">Assigned to you, with the Sentry group linked on it.</p></div></div>
-                <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
+              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>7:40 AM</time></p><p class="slk__say">Assigned to you, with the Sentry group linked on it.</p></div></div>
               </div>
+              <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
               <p class="slk__composer"><span>Message #incident-checkout</span><i class="slk__send" aria-hidden="true"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/></svg></i></p>
               </div>
             </div>
@@ -382,7 +382,7 @@
         </div>
         <div class="scene scene--built" data-scene="product" role="tabpanel">
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-product)">
+            <div class="ostage__frame" style="--tab:var(--hue-product);--tab-mark:var(--mark-product)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--okou" role="group"
@@ -445,7 +445,7 @@
         </div>
         <div class="scene scene--built" data-scene="ops" role="tabpanel">
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-ops)">
+            <div class="ostage__frame" style="--tab:var(--hue-ops);--tab-mark:var(--mark-ops)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--slack" role="group"
@@ -454,13 +454,13 @@
               <div class="slk__pane"><p class="slk__bar"><b class="slk__ch"><i>#</i>team</b><span class="slk__faces"><img src="assets/brand/avatar-4.jpg?v=582f5842" alt="" width="22" height="22"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="22" height="22"><img src="assets/brand/avatar-2.jpg?v=7a0acfc5" alt="" width="22" height="22"><img src="assets/brand/avatar-6.jpg?v=5c40a0b2" alt="" width="22" height="22"><em>24</em></span></p>
               <div class="slk__list">
               <div class="ochat__row slk__msg" data-beat="ask" data-cue="0"><span class="slk__av"><img src="assets/brand/avatar-4.jpg?v=582f5842" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Noah</b><time>Fri 4:50 PM</time></p><p class="slk__say"><mark class="slk__at">@Okou</mark> put together what the team shipped this week and post it here every Monday morning.</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>Fri 4:51 PM</time></p><p class="slk__say">Digest is written and the schedule is set — Mondays at nine, in here.</p></div></div>
+              <div class="ochat__row slk__msg" data-beat="reply" data-cue="1240"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>Fri 4:51 PM</time></p><p class="slk__say">Digest is written and the schedule is set — Mondays at nine, in here.</p></div></div>
               <div class="ochat__row slk__msg slk__msg--cont" data-beat="result" data-cue="1980"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__say">Week of 24 August:</p><div class="slk__unfurl"><p class="slk__unfurl-h"><span class="slk__unfurl-ic"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="14" height="14"></span>Okou&#8202;·&#8202;Scheduled</p><p class="slk__unfurl-t">Weekly team digest</p><p class="slk__unfurl-u">okou-artifact-team-digest.sites.vm0.io</p></div></div></div>
               <div class="ochat__row slk__react" data-beat="react" data-cue="2700"><span class="slk__av slk__av--gap" aria-hidden="true"></span><div class="slk__body"><p class="slk__pills"><span class="slk__pill"><img class="slk__emoji" src="assets/icons/emoji-2705.svg?v=4d69c4a3" alt="" width="15" height="15"><b>4</b></span></p></div></div>
               <div class="ochat__row slk__msg" data-beat="ask2" data-cue="3400"><span class="slk__av"><img src="assets/brand/avatar-3.jpg?v=e7492f36" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Ravi</b><time>Mon 9:14 AM</time></p><p class="slk__say">Useful. Can you add the Linear board next week?</p></div></div>
-              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/avatars/agent-okou.png?v=4f2c6fcc" alt="" width="36" height="36"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>Mon 9:14 AM</time></p><p class="slk__say">Added — it will be in Monday&#8217;s.</p></div></div>
-                <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
+              <div class="ochat__row slk__msg" data-beat="reply2" data-cue="4100"><span class="slk__av slk__av--okou"><img src="assets/okou-icon.svg?v=77e4663f" alt="" width="22" height="22"></span><div class="slk__body"><p class="slk__meta"><b>Okou</b><i class="slk__badge">AGENT</i><time>Mon 9:14 AM</time></p><p class="slk__say">Added — it will be in Monday&#8217;s.</p></div></div>
               </div>
+              <p class="ochat__row slk__ghost" data-beat="typing" data-cue="480" data-until="1240" aria-hidden="true"><span class="slk__ghost-d"><i></i><i></i><i></i></span>Okou is typing…</p>
               <p class="slk__composer"><span>Message #team</span><i class="slk__send" aria-hidden="true"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/></svg></i></p>
               </div>
             </div>
@@ -496,7 +496,7 @@
         </div>
         <div class="scene scene--built" data-scene="leadership" role="tabpanel">
           <div class="ostage">
-            <div class="ostage__frame" style="--tab:var(--hue-leadership)">
+            <div class="ostage__frame" style="--tab:var(--hue-leadership);--tab-mark:var(--mark-leadership)">
               <div class="ostage__row">
                 <div class="ostage__app">
                   <div class="ochat ochat--okou" role="group"
@@ -1117,7 +1117,7 @@
 <div class="close">
   <img class="close__art" src="assets/brand/scene-close.png?v=8b75f5b2" alt="" aria-hidden="true">
 
-  <section class="panel panel--cta" id="cta" data-ground="dark" aria-labelledby="cta-title">
+  <section class="panel panel--cta" id="cta" aria-labelledby="cta-title">
     <h2 class="display display--center" id="cta-title" data-reveal="mask">
       <span class="line">Make your team’s</span>
       <span class="line">expertise <mark class="mark mark--tan">self-running.</mark></span>
@@ -1132,7 +1132,7 @@
     </p>
   </section>
 
-  <footer class="footer" data-ground="dark">
+  <footer class="footer">
     <div class="footer__grid">
       <div class="footer__brand">
         <a class="footer__mark" href="#top">
@@ -1237,6 +1237,6 @@
   </footer>
 </div>
 
-<script src="app.js?r=00577602"></script>
+<script src="app.js?r=62dd70bf"></script>
 </body>
 </html>

@@ -37,8 +37,12 @@
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         wm.classList.add('is-armed');
-        // long enough to read OKOU, short enough not to be a splash screen
-        setTimeout(function () { wm.classList.remove('is-intro'); }, 1150);
+        /* THE HOLD. 1150 was long enough to READ "OKOU" and not long enough
+           to look deliberate — the gather started while the eye was still
+           arriving. 2200 lets the whole logotype sit as a state before it
+           becomes a mark, which is the point of showing it at all, and is
+           still well short of a splash screen. */
+        setTimeout(function () { wm.classList.remove('is-intro'); }, 2200);
       });
     });
   }
