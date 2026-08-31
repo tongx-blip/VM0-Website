@@ -93,7 +93,7 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .mark--pink,.mark--tan,.mark--purple,.mark--red,.mark--green{ --hl:var(--accent); }
 
 
-/* ─────────────── monospace metadata ─────────────── */.footer__copy{
+/* ─────────────── monospace metadata ─────────────── */.state,.footer__copy{
   font-family:var(--fm); font-variant-numeric:tabular-nums;
 }
 
@@ -245,6 +245,17 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 @keyframes slide{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
 
+.state{
+  margin-left:auto; font-style:normal;
+  font-size:9.5px; letter-spacing:.10em; text-transform:uppercase;
+  padding:4px 9px; border:1px solid currentColor;
+  white-space:nowrap;
+}
+
+.state--ok{   background:transparent; color:var(--ok);   }
+
+.state--wait{ background:transparent; color:var(--wait); }
+
 
 /* ─────────────── versus ─────────────── */
 .versus{
@@ -381,220 +392,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 /* the sticky column in the workflow ladder now holds a screenshot */
 .ladder__stage .shot{ margin-top:0; }
-
-
-/* ─────────────── the grant dialog, 1:1 from the product ───────────────
-   This is `PermissionAllowPage` in `turbo/apps/platform`, the page a
-   person actually lands on when Okou asks for a scope — not an
-   illustration of one. Read out of the component rather than a
-   screenshot, because app.vm0.ai is behind a login:
-
-     shell        548px = w-[500px] + px-6, rounded-[20px], py-12, gap-10
-     greeting     text-lg / leading-7 / font-medium, centred
-     target pill  rounded-lg, bg-muted/30, pl-2 pr-8 py-3, 40px avatar
-     grant card   rounded-lg, px-4 py-3, 40px icon slot at rounded-[10px]
-     duration     h-8 w-[116px] select, default value 1h
-     confirm      h-9, rounded-[10px], full width
-
-   The connector, the scope name and its description are the real ones —
-   `google-ads` / `campaign-budgets.write` / "Create and update campaign
-   budgets." — read from the connector catalog, not invented. The avatar
-   is Okou's own (`svg:r1s0h1c5f4h`), composited from the three layers the
-   app stacks. Two colours deviate on purpose: the product paints the
-   scope chip sky-700 and the tick green-600, and neither has a dark
-   sibling on this page, so both take page tokens that do. */
-/* Every tint inside these two mocks is --tile, not --wash. The product
-   paints them `bg-muted/30`, a tint that goes LIGHTER on a dark ground;
-   --wash is the grey the PAGE sits on and in dark mode it is DARKER than
-   --paper, so the target pill, the icon slot and the scope chip all came
-   out as holes punched in the card. --tile is the token for a surface
-   inside a card and it inverts the right way. */
-.pgrant{
-  width:min(548px,100%);
-  display:flex; flex-direction:column; align-items:center; gap:40px;
-  padding:48px 24px;
-  border:1px solid var(--hairline);
-  border-radius:20px;
-  background:var(--paper);
-}
-
-.pgrant__brand{
-  font-size:20px; line-height:24px; font-weight:600;
-  letter-spacing:-.02em; color:var(--ink);
-}
-
-.pgrant__col{
-  width:min(500px,100%); padding:0 26px;
-  display:flex; flex-direction:column; align-items:center; gap:16px;
-}
-
-.pgrant__hi{
-  text-align:center;
-  font-size:18px; line-height:28px; font-weight:500; color:var(--ink);
-}
-
-.pgrant__who{
-  width:100%; display:flex; align-items:center; gap:8px;
-  padding:12px 32px 12px 8px;
-  border:1px solid var(--hairline); border-radius:8px;
-  background:var(--tile);
-  font-size:14px; font-weight:500; color:var(--ink);
-}
-
-.pgrant__who img{
-  width:40px; height:40px; flex:none;
-  border-radius:50%; object-fit:cover; object-position:top;
-}
-
-.pgrant__lbl{ width:100%; font-size:14px; font-weight:500; color:var(--ink); }
-
-.pgrant__perm{
-  width:100%; padding:12px 16px;
-  border:1px solid var(--hairline); border-radius:8px;
-}
-
-.pgrant__conn{
-  display:flex; align-items:center; gap:8px;
-  padding:4px 0 16px;
-  border-bottom:1px solid var(--hairline);
-  font-size:14px; font-weight:500; color:var(--ink);
-}
-
-.pgrant__mark{
-  width:40px; height:40px; flex:none;
-  display:inline-flex; align-items:center; justify-content:center;
-  border-radius:10px; background:var(--tile);
-}
-
-.pgrant__mark img{ width:20px; height:20px; object-fit:contain; }
-
-.pgrant__act{
-  display:flex; align-items:center; gap:8px;
-  padding:8px 0 0;
-  font-size:14px; color:var(--ink);
-}
-
-/* The product truncates this line; we let it wrap. `campaign-budgets.write`
-   is a real scope and its sentence is 240px wide in a 210px slot, so the
-   faithful render is "Create and update campaign b…" — a card whose whole
-   job here is to be READ, ending in an ellipsis. Wrapping is the one place
-   this mock leaves the component. */
-.pgrant__act span{ flex:1; min-width:0; }
-
-.pgrant__tick{
-  width:20px; height:20px; flex:none;
-  stroke:var(--ok-ink); fill:none;
-}
-
-.pgrant__act code{
-  flex:none; white-space:nowrap;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:12px;
-  padding:2px 6px;
-  border:1px solid var(--hairline); border-radius:4px;
-  background:var(--tile); color:var(--ink-soft);
-}
-
-.pgrant__dur{
-  width:100%;
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding:8px 12px;
-  border:1px solid var(--hairline); border-radius:8px;
-  font-size:14px; font-weight:500; color:var(--ink);
-}
-
-.pgrant__dur em{
-  flex:none;
-  display:inline-flex; align-items:center; justify-content:space-between;
-  gap:6px; width:116px; height:32px; padding:0 10px;
-  border:1px solid var(--hairline); border-radius:8px;
-  font-style:normal; font-size:12px; font-weight:400; color:var(--ink);
-}
-
-.pgrant__dur em svg{
-  width:14px; height:14px; flex:none;
-  stroke:var(--ink-mute); fill:none;
-}
-
-/* Narrow: the scope chip is a fixed 22-character object and the sentence
-   beside it is elastic, so on a 390 screen the sentence was being wrapped
-   into four two-word lines AROUND the chip — "Create / and / u▮ / campaign
-   / budgets." The chip takes its own line under the sentence instead, and
-   the tick moves to the first line of text rather than the middle of it. */
-@media (max-width:560px){
-  .pgrant__act{ flex-wrap:wrap; align-items:flex-start; }
-
-  .pgrant__tick{ margin-top:1px; }
-
-  /* 11px, the page's mono floor: at 12px the scope is 171px wide and the
-     line it now has to itself is 170px, so it broke at its own hyphen —
-     `campaign-` over `budgets.write`. A scope name that wraps is not a
-     scope name. */
-  .pgrant__act code{
-    flex:0 0 auto; width:auto; font-size:11px;
-    margin:8px 0 0 28px;
-  }
-
-}
-
-.pgrant__go{ width:min(500px,100%); padding:0 26px; }
-
-.pgrant__go span{
-  display:flex; align-items:center; justify-content:center;
-  height:36px; border-radius:10px;
-  background:var(--accent-solid); color:var(--paper-ink);
-  font-size:14px; font-weight:500;
-}
-
-
-/* ─────────────── the cloud browser card ───────────────
-   `BrowserSessionCard`: the thing the product puts in the thread when a
-   run is working in a machine of ours rather than on your computer. Its
-   own numbers — w-[min(100%,400px)], rounded-lg, a 40px title row over a
-   16:10 preview, and the status as a 6px dot beside an 11px label.
-
-   The preview is a page Okou built and is looking at, so the window has
-   something true in it rather than a stock screenshot of somebody else's
-   product. */
-.cbro{
-  width:min(400px,100%);
-  border:1px solid var(--hairline); border-radius:8px;
-  background:var(--paper);
-  overflow:hidden;
-}
-
-.cbro__bar{
-  display:flex; align-items:center; gap:8px;
-  min-height:40px; padding:8px 12px;
-  border-bottom:1px solid var(--hairline);
-}
-
-.cbro__bar b{
-  flex:1; min-width:0;
-  font-size:14px; font-weight:500; color:var(--ink);
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-
-.cbro__bar em{
-  flex:none; display:inline-flex; align-items:center; gap:6px;
-  font-style:normal; font-size:11px; font-weight:500; color:var(--ok-ink);
-}
-
-.cbro__bar em i{
-  width:6px; height:6px; flex:none;
-  border-radius:50%; background:var(--ok-ink);
-}
-
-.cbro__view{
-  position:relative; display:block;
-  width:100%; aspect-ratio:16 / 10;
-  overflow:hidden; background:var(--tile);
-}
-
-.cbro__view img{
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  object-fit:cover; object-position:top;
-}
 
 
 /* ─────────────── Slack, rebuilt to spec ───────────────
@@ -811,6 +608,180 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   .wfstage .slackui{ height:560px; min-height:560px; }
 
 }
+
+
+/* ── the product's in-chat permission card ───────────────────────────
+   `PermissionActionCard`, turbo/apps/platform/src/views/okou-page/
+   chat-body-cards.tsx, copied class for class and checked against it again
+   on 2026-08-31 (QA §4ah):
+
+     shell     min-h-[88px] w-full flex-col gap-3 rounded-lg
+               border-border/70 bg-background/85 p-3 shadow-sm
+               sm:flex-row sm:items-center sm:justify-between
+     icon      h-10 w-10 rounded-lg border-border/70 bg-muted/40, mark at 22
+     title     truncate text-[0.9375rem] font-medium
+     detail    mt-0.5 line-clamp-2 text-sm leading-5 muted
+     duration  h-8 w-[116px] rounded-lg text-xs
+     confirm   h-9 rounded-lg BORDER + bg-background hover:bg-state-hover
+
+   The confirm is NEUTRAL. The orange primary belongs to the standalone
+   /permission-allow page, which is a different component — using it is what
+   made an earlier version of this section the wrong screen. */
+.pcard{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  min-height:88px; padding:12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--paper);
+  box-shadow:0 1px 2px rgb(var(--ink-rgb) / .05);
+  text-align:left;
+}
+
+.pcard__l{ display:flex; align-items:center; gap:12px; min-width:0; }
+
+.pcard__ic{
+  width:40px; height:40px; flex:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--hairline); border-radius:8px; background:var(--tile);
+}
+
+.pcard__ic img{ width:22px; height:22px; object-fit:contain; }
+
+.pcard__t{ display:flex; flex-direction:column; min-width:0; }
+
+.pcard__t b{
+  font-size:15px; font-weight:500; color:var(--ink);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+.pcard__t i{
+  margin-top:2px; font-style:normal; font-size:14px; line-height:20px;
+  color:var(--ink-mute);
+}
+
+.pcard__c{ display:flex; align-items:center; gap:8px; flex:none; }
+
+.pcard__sel{
+  display:inline-flex; align-items:center; justify-content:space-between; gap:6px;
+  width:116px; height:32px; padding:0 10px;
+  border:1px solid var(--hairline); border-radius:8px;
+  font-size:12px; color:var(--ink);
+}
+
+.pcard__sel svg{ width:14px; height:14px; flex:none; stroke:var(--ink-mute); }
+
+.pcard__go{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:36px; padding:0 12px;
+  border:1px solid var(--hairline); border-radius:8px;
+  background:var(--paper); color:var(--ink);
+  font-size:15px; font-weight:500;
+}
+
+/* the product's own responsive shape: `flex-col … sm:flex-row`. Left as a row
+   at every width the card's min-content is ~450px — the title is nowrap — and
+   it pushes a 390 phone sideways. */
+@media (max-width:640px){
+  .pcard{ flex-direction:column; align-items:stretch; }
+
+  .pcard__c{ width:100%; }
+
+  .pcard__go{ flex:1; }
+
+  .pcard__t b{ white-space:normal; }
+
+}
+
+
+/* ── #control · the agent screen the frame draws ─────────────────────
+   Product-mock internals, so they live here and not in the design layer:
+   the sizes are the app's own (14.5/13/16px rows, a 40px avatar tile),
+   not the page's type scale. */
+.ctrl__who{
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  grid-template-rows:auto auto;
+  column-gap:12px; align-items:center;
+  margin:0; padding:0 2px;
+}
+
+.ctrl__ava{
+  grid-row:1 / span 2; width:40px; height:40px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:var(--p-r-item, 10px); background:var(--paper);
+}
+
+.ctrl__ava img{ width:26px; height:26px; }
+
+.ctrl__who b{ align-self:end; font-size:16px; font-weight:600; color:var(--ink); }
+
+.ctrl__who i{
+  align-self:start; font-style:normal;
+  font-size:var(--t-sm); color:var(--ink-mute);
+}
+
+
+/* 1 · the authorization list */
+.perms{
+  list-style:none; margin:0; padding:0;
+  background:var(--paper); border-radius:var(--r-card);
+  overflow:hidden;
+}
+
+.perms li{
+  display:grid; grid-template-columns:24px minmax(0,1fr) auto;
+  align-items:center; gap:14px;
+  padding:11px clamp(12px,1.2vw,16px);
+  border-bottom:1px solid var(--hairline);
+}
+
+.perms li:last-child{ border-bottom:0; }
+
+.perms img{ width:24px; height:24px; object-fit:contain; }
+
+.perms__what{ display:flex; flex-direction:column; min-width:0; }
+
+.perms__what b{ font-size:14.5px; font-weight:600; color:var(--ink); }
+
+.perms__what i{
+  font-style:normal; font-size:13px; line-height:1.35; color:var(--ink-mute);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+
+/* 2 · the ask, mid-run */
+.cpane--ask{ display:flex; flex-direction:column; gap:12px; }
+
+.cpane__said{
+  margin:0; padding:11px 14px;
+  background:var(--paper); border-radius:var(--r-card);
+  font-size:14.5px; line-height:1.5; color:var(--ink);
+}
+
+.cpane__wait{
+  display:flex; align-items:center; gap:.6em; margin:0;
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
+  font-size:var(--t-mono); letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-mute);
+}
+
+.cpane__wait i{
+  width:.5em; height:.5em; border-radius:var(--r-pill); flex:none;
+  background:rgb(var(--wait-rgb) / .85);
+}
+
+
+/* 3 · isolated execution, drawn */
+/* THE DRAWING IS CAPPED, or it sizes the whole section. It is a 900x900 PNG
+   and the panes share one grid cell, so at `max-width:100%` it took the
+   column's width — 657px tall — and the frame was sized by the picture rather
+   than by the list, which is 314. The cap is a little over the list's height
+   so the list stays the tallest thing and the frame keeps one height. */
+.cpane--iso{ display:flex; align-items:center; justify-content:center; height:100%; }
+
+.cpane--iso img{
+  width:auto; height:auto;
+  max-width:min(100%, 340px); max-height:340px;
+}
+
 
 
 /* ==== FONTS: generated by tools/build-fonts.py — do not edit ==== */
@@ -1335,6 +1306,7 @@ img{ filter:none; }
 .btn{ border-radius:var(--r-btn); }
 
 .step{ border-radius:0; }
+.state{ border-radius:var(--r-btn); }
 
 
 /* every page-level rule inherited from the component layer comes off:
@@ -1378,7 +1350,7 @@ h3{ font-family:var(--fd); }
    string is metadata and not prose */
 /* .metrics span is NOT here: a stat tile's label is the first line you read
    in that tile, and uppercase mono above a 54px numeral competes with it for
-   the top of the box instead of introducing it. It is set as prose. */.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
+   the top of the box instead of introducing it. It is set as prose. */.state,.nav__links a,.nav__signin,.btn,.footer__links,.footer__links a,.footer__copy{
   font-family:var(--fm); font-variant-numeric:tabular-nums;
   font-weight:500;
   text-transform:uppercase;
@@ -2384,6 +2356,11 @@ h3{ font-family:var(--fd); }
 .showcase__sticker{
   position:absolute; z-index:2;
   width:clamp(52px, 6.2vw, 88px); height:auto;
+  /* The avatars are square tiles now — every other slot on the page clips
+     them to a circle and this one was relying on the OLD files having
+     transparent corners. A badge floating over the hero is a circle; state
+     it here rather than depend on what is inside the file. */
+  border-radius:50%; overflow:hidden;
   filter:drop-shadow(0 12px 26px rgb(var(--ink-rgb) / .18));
   pointer-events:none;
 }
@@ -3651,7 +3628,10 @@ h3{ font-family:var(--fd); }
   font-size:.88em;
   width:1.7em; height:1.7em; border-radius:.49em;
   display:grid; place-items:center;
-  background:var(--accent-solid);
+  overflow:hidden;
+  /* the halo stays — it is what says this thing is travelling — but the puck
+     underneath it is the avatar now, not an orange tile with a mark cut out
+     of it in white */
   box-shadow:0 0 0 .18em color-mix(in srgb, var(--accent-solid) 22%, transparent);
   opacity:0;
   transform:translateY(var(--ry, 0px)) scale(.7);
@@ -3659,7 +3639,7 @@ h3{ font-family:var(--fd); }
   pointer-events:none;
 }
 
-.wfo__runner img{ width:1em; height:1em; filter:brightness(0) invert(1); }
+.wfo__runner img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 .wfsc[data-step="1"] .wfo--run.is-running .wfo__runner{
   opacity:1; transform:translateY(var(--ry, 0px)) scale(1);
@@ -4013,36 +3993,135 @@ h3{ font-family:var(--fd); }
    the three things in it one aligned block. The pair is then centred in
    the section rather than stretched across it. */
 .ctrl{
-  display:grid; grid-template-columns:auto minmax(0,400px);
-  justify-content:center;
-  gap:clamp(28px,4.2vw,72px);
-  margin-top:clamp(34px,3.8vw,56px);
+  /* Left column claims, right column shows. The text column is narrower than
+     the frame on purpose: a claim is read once and the frame is looked at for
+     the whole of the beat, so they are not peers. */
+  display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1fr);
+  gap:clamp(28px,4.2vw,68px); align-items:center;
+  margin-top:clamp(30px,3.4vw,50px);
 }
 
-.ctrl__dialog{ min-width:0; }
 
-/* The column spans the dialog rather than floating in the middle of it.
-   Centred, the three things in it stopped 100px above the dialog's floor
-   and the section ended on a hole; space-between hangs the first caption
-   off the top edge and the last off the bottom, so the two halves read as
-   one block. The gap is the FLOOR, not the spacing. */
-.ctrl__side{
-  min-width:0;
-  display:flex; flex-direction:column; justify-content:space-between;
-  gap:clamp(20px,2.4vw,30px);
+/* ── the three steps ─────────────────────────────────────────────────
+   The same shutter the workflow ladder uses (RULES N13): the body is a
+   1-track grid opened from 0fr, so a closed step collapses to its title and
+   the rule under it is the row's OWN bottom edge, travelling with it. NO
+   padding on the body — a 0fr track is floored at the padding box of the
+   item inside it, which is what kept closed rows 6px tall the first time
+   this mechanic was built. */
+.ctrl__steps{ list-style:none; margin:0; padding:0; }
+
+.cstep{
+  position:relative;
+  padding:clamp(14px,1.6vw,20px) 0;
 }
 
-.ctrl__cap{
+/* NO RULE BETWEEN THE STEPS. The first version gave every step a
+   `border-bottom` and let the progress bar sit on top of it, which is three
+   hairlines of furniture to make one of them mean something — and S4 forbids
+   exactly that. The steps separate by space; the only line on screen is the
+   ACTIVE step's track, which is a state and not a divider. It is drawn under
+   the step that is playing and nowhere else, so it also says which one that
+   is without a second marker. */
+.cstep__bar{
+  position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:var(--hairline);
+  opacity:0; transition:opacity var(--t-state) var(--e-out);
+}
+
+.cstep__bar::after{
+  content:""; position:absolute; inset:0;
+  transform-origin:left center; transform:scaleX(var(--p,0));
+  background:var(--accent-solid);
+}
+
+.cstep.is-on .cstep__bar{ opacity:1; }
+
+.cstep__h{ margin:0; font-size:inherit; font-weight:inherit; }
+
+.cstep__t{
+  display:block; width:100%; padding:0; border:0; background:none;
+  text-align:left; cursor:pointer;
+  font-family:var(--fd); font-weight:500;
+  font-size:var(--wf-title); line-height:1.24;
+  letter-spacing:-.01em;
+  color:var(--ink-mute);
+  transition:color var(--t-state) var(--e-out);
+}
+
+.cstep.is-on .cstep__t,.cstep__t:hover{ color:var(--ink); }
+
+.cstep__body{
+  display:grid; grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows var(--t-reveal) var(--e-out),
+             opacity var(--t-state) var(--e-out);
+}
+
+.cstep.is-on .cstep__body{ grid-template-rows:1fr; opacity:1; }
+
+.cstep__body > p{
+  overflow:hidden; min-height:0; margin:0; padding:0;
   font-size:var(--t-sm); line-height:1.62; color:var(--ink-soft);
 }
 
-.ctrl__cap b{ font-weight:600; color:var(--ink); }
+/* the air under an open paragraph is CONTENT height, which a 0fr track does
+   collapse — padding is not */
+.cstep__body > p::after{ content:""; display:block; height:.7em; }
 
 
-/* Narrow: one column. Neither mock scales — both already cap themselves
-   against the measure they are given, exactly as they do in the app. */
+/* ── the frame: one object, three states ─────────────────────────────
+   ONE HEIGHT for all three panes. A frame that resizes between beats is a
+   section that jumps while it plays itself, and the three panes are a list,
+   a card and a drawing — three natural heights. They share a grid cell. */
+.ctrl__stage{ min-width:0; }
+
+.ctrl__frame{
+  border-radius:var(--r-lg);
+  background:var(--tile);
+  padding:clamp(14px,1.5vw,20px);
+  display:flex; flex-direction:column; gap:clamp(12px,1.3vw,16px);
+}
+
+/* THE AGENT IS THE CONSTANT. Breadcrumb and tabs are gone (feedback 15) —
+   they explained a screen the reader is not navigating. What is left is who
+   this is, and it stays put across all three states, so the thing that
+   changes is what the agent may do rather than which screen you are on. */
+/* ONE HEIGHT, set by the tallest pane, and the two shorter ones sit in the
+   middle of it rather than hanging from the top. The list is five rows for the
+   same reason: at six it was 761px and the other two beats left 500px of empty
+   ground under themselves. */
+/* TOP-ALIGNED. The identity row is the frame's constant and the pane starts
+   directly under it — centred in the cell, beat 2 opened with 130px of grey
+   between the agent's name and the first thing it said, which reads as two
+   objects rather than one screen. Only the drawing centres: it is a picture,
+   not a list, and a picture hanging from a top edge looks dropped. */
+.ctrl__panes{ display:grid; align-items:start; }
+
+.cpane{
+  grid-area:1 / 1; min-width:0;
+  opacity:0; pointer-events:none;
+  transition:opacity var(--t-state) var(--e-out);
+}
+
+/* the pane that is not showing is taken out of the reader's way with `inert`
+   from app.js §16, not with `visibility` — a visibility transition needs a
+   delay to work, and a delay is a duration nobody tokenised */
+.ctrl__frame[data-beat="1"] .cpane[data-pane="1"],
+.ctrl__frame[data-beat="2"] .cpane[data-pane="2"],
+.ctrl__frame[data-beat="3"] .cpane[data-pane="3"]{
+  opacity:1; pointer-events:auto;
+}
+
+
+/* Narrow: one column, and the frame goes first — the picture is the reason
+   to keep reading on a phone, and three collapsed titles are not. */
 @media (max-width:1000px){
-  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(24px,4.4vw,34px); }
+  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(20px,3.4vw,28px); }
+
+  .ctrl__stage{ order:-1; }
+
+  .cpane--iso img{ max-height:260px; }
 
 }
 .vs,.quote{
@@ -5862,6 +5941,17 @@ h3{ font-family:var(--fd); }
 .slackui{ box-shadow:var(--e-3); }
 
 
+/* status is carried by a tinted fill, not an outline */
+/* 11px, not 10.5: the page has an 11px floor and a mock is still read. */
+.state{ border:0; padding:5px calc(11px - .08em) 5px 11px; font-size:11px; letter-spacing:.08em; }
+
+.state--ok{   background:rgb(var(--ok-rgb) / .12);  color:var(--ok-ink) !important; }
+
+.state--wait{ background:rgb(var(--wait-rgb) / .14);   color:var(--wait-ink) !important; }
+
+.state--off{  background:var(--wash-2);        color:var(--ink-mute) !important; }
+
+
 /* ================================================================
    22. BRAND LAYER + PLACEHOLDERS
    The new branding is warmer and more illustrated than the page it
@@ -6967,14 +7057,12 @@ h3{ font-family:var(--fd); }
 
 /* the assistant's mark, in the rail's own tile shape */
 .ochat__ava--agent{
-  display:grid; place-items:center;
   width:28px; height:28px; flex:none;
   border-radius:var(--vm-r-lg);
-  background:var(--vm-gray-50);
   overflow:hidden;
 }
 
-.ochat__ava--agent img{ width:16px; height:16px; }
+.ochat__ava--agent img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 
 /* ── dark, from globals.css's own dark block ───────────────────────
@@ -7170,10 +7258,12 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
 
 /* Okou is an app in this workspace, not one of the faces */
-.slk__av--okou{ display:grid; place-items:center; background:var(--slk-tint); }
-
-
-.slk__av--okou img{ width:22px; height:22px; object-fit:contain; }
+/* THE AGENT IS A FACE NOW, in the same 36px circle a person gets. It used to
+   be the brand MARK on a tint — a logo standing in for a teammate, which is
+   the thing the new avatar system exists to replace. The mark still means the
+   product: the workspace tile, the unfurl, the comparison card, the footer.
+   Composed at tools/build-avatars.py, from the branding's Avatar Composer. */
+.slk__av--okou{ background:none; }
 
 
 /* the spacer holds the INDENT, not a row height. At 36px square it was

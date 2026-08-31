@@ -307,7 +307,7 @@ def build():
     # to — a review build with holes in it is worse than a slow one.
     css = open(os.path.join(OUT, 'styles.css'), encoding='utf-8').read()
     wanted = {'brand/spot-permission-key.png', 'brand/spot-cloud-computer.png',
-              'brand/agent-okou.svg', 'connectors/google-ads.svg',
+              'avatars/agent-okou.png', 'connectors/google-ads.svg',
               'fonts/roobert-var.woff2'}
     wanted |= {m.split('?')[0] for m in
                re.findall(r'url\(\s*assets/([^)\'"\s]+)', css)}

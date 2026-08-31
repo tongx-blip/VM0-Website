@@ -2356,6 +2356,11 @@ h3{ font-family:var(--fd); }
 .showcase__sticker{
   position:absolute; z-index:2;
   width:clamp(52px, 6.2vw, 88px); height:auto;
+  /* The avatars are square tiles now — every other slot on the page clips
+     them to a circle and this one was relying on the OLD files having
+     transparent corners. A badge floating over the hero is a circle; state
+     it here rather than depend on what is inside the file. */
+  border-radius:50%; overflow:hidden;
   filter:drop-shadow(0 12px 26px rgb(var(--ink-rgb) / .18));
   pointer-events:none;
 }
@@ -3623,7 +3628,10 @@ h3{ font-family:var(--fd); }
   font-size:.88em;
   width:1.7em; height:1.7em; border-radius:.49em;
   display:grid; place-items:center;
-  background:var(--accent-solid);
+  overflow:hidden;
+  /* the halo stays — it is what says this thing is travelling — but the puck
+     underneath it is the avatar now, not an orange tile with a mark cut out
+     of it in white */
   box-shadow:0 0 0 .18em color-mix(in srgb, var(--accent-solid) 22%, transparent);
   opacity:0;
   transform:translateY(var(--ry, 0px)) scale(.7);
@@ -3631,7 +3639,7 @@ h3{ font-family:var(--fd); }
   pointer-events:none;
 }
 
-.wfo__runner img{ width:1em; height:1em; filter:brightness(0) invert(1); }
+.wfo__runner img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 .wfsc[data-step="1"] .wfo--run.is-running .wfo__runner{
   opacity:1; transform:translateY(var(--ry, 0px)) scale(1);
@@ -7049,14 +7057,12 @@ h3{ font-family:var(--fd); }
 
 /* the assistant's mark, in the rail's own tile shape */
 .ochat__ava--agent{
-  display:grid; place-items:center;
   width:28px; height:28px; flex:none;
   border-radius:var(--vm-r-lg);
-  background:var(--vm-gray-50);
   overflow:hidden;
 }
 
-.ochat__ava--agent img{ width:16px; height:16px; }
+.ochat__ava--agent img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 
 /* ── dark, from globals.css's own dark block ───────────────────────
@@ -7252,10 +7258,12 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
 
 /* Okou is an app in this workspace, not one of the faces */
-.slk__av--okou{ display:grid; place-items:center; background:var(--slk-tint); }
-
-
-.slk__av--okou img{ width:22px; height:22px; object-fit:contain; }
+/* THE AGENT IS A FACE NOW, in the same 36px circle a person gets. It used to
+   be the brand MARK on a tint — a logo standing in for a teammate, which is
+   the thing the new avatar system exists to replace. The mark still means the
+   product: the workspace tile, the unfurl, the comparison card, the footer.
+   Composed at tools/build-avatars.py, from the branding's Avatar Composer. */
+.slk__av--okou{ background:none; }
 
 
 /* the spacer holds the INDENT, not a row height. At 36px square it was
