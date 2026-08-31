@@ -110,6 +110,7 @@ add a rule, add it here too, or it will be re-litigated in three rounds' time.
 
 | # | Rule | Why | Checked |
 |---|---|---|---|
+| P14 | **A component tells you WHAT the parts are; the page tells you HOW they are arranged.** Transcribe sizes, colours, strings and structure from the `.tsx`; take alignment, measure and rhythm from the page. | The greeting came over from `AgentChatPage` left-aligned, because a chat page is a left-aligned column — and it was then the only thing on a page of centred stacks reading against its own grid. Twice this week a faithful transcription has been the wrong answer for the same reason. | QA §4b |
 | P1 | **Read the component, not the design system.** Open the `.tsx` and copy its class list — and the values that matter most are the ones a screenshot cannot show you. | "It uses our tokens" is not "it is our component". The comparison cards shipped with invented status pills and progress bars that exist nowhere in the app; the real row is an avatar, a title, a fixed 14px indicator slot and a timestamp, and the product's own comment says the slot is fixed so the timestamp never shifts. | QA §4f |
 | P2 | **A mock has two sizes**: it is laid out at the product's own size and *scaled* to the page's. | Laying out at the marketing column's width gives a cramped window with desktop-sized text, and every clip it then needs is a symptom. | QA §4f |
 | P3 | **Nothing inside a mock may be clipped, faded or height-absorbed.** If it needs that, it is laid out at the wrong size. | | QA §4f |

@@ -2279,13 +2279,19 @@ h3{ font-family:var(--fd); }
    `AgentChatPage`: `flex items-center gap-4`, the avatar `h-16 w-16`
    rounded-full, the tagline `text-3xl font-semibold tracking-tight`, and
    `gap-6` from there down to the composer. */
-/* THE BOX'S COLUMN, NOT THE SECTION'S. `.pbox` is `min(760px, 100%)` centred,
-   and a greeting spanning the full card while the thing it greets you into is
-   760px wide reads as two unrelated objects. Same measure, same left edge —
-   which is also how the product has it. */
+/* CENTRED, AND THE AVATAR IS ON TOP. The product sets this row beside the
+   composer because a chat page is a left-aligned column; this page is not —
+   its one composition rule is a centred stack, and every other section on it
+   obeys that (RULES §composition). A left-aligned greeting over a centred box
+   was the only thing on the page reading against its own grid.
+
+   It keeps the box's measure: `.pbox` is `min(760px, 100%)` centred, and a
+   greeting spanning the whole card while the thing it greets you into is
+   760px wide reads as two unrelated objects. */
 .greet{
   width:min(760px, 100%); margin:0 auto 24px;
-  display:flex; align-items:center; gap:16px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  text-align:center;
 }
 
 .greet img{
@@ -2304,7 +2310,7 @@ h3{ font-family:var(--fd); }
 }
 
 @media (max-width:600px){
-  .greet{ gap:12px; margin-bottom:18px; }
+  .greet{ gap:10px; margin-bottom:18px; }
 
   .greet img{ width:56px; height:56px; }
 

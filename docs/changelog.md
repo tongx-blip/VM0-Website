@@ -214,6 +214,35 @@ Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · `audit.js`
 
 ---
 
+## 2026-08-31 · the greeting centres, and the avatar goes on top
+
+Tong: *"中对其，agent avatar放在text上边 也中对其"*
+
+The product sets the avatar beside the tagline because a chat page is a
+left-aligned column. **This page is not.** Its one composition rule is a
+centred stack, every other section obeys it, and a left-aligned greeting over
+a centred box was the only thing on the page reading against its own grid —
+which is what Tong saw. Avatar on top, text under it, both centred, 12px
+between them.
+
+It keeps the box's measure: `min(760px, 100%)`, so the greeting and the thing
+it greets you into are one object rather than two. Verified by centre line —
+avatar, text and box all at 720 in a 1440 window.
+
+Recorded because it is the second time this week a 1:1 transcription of a
+product component has been the wrong answer on this page: the component is
+right about **what** the parts are and their sizes, and the page is right
+about **how they are arranged**. P1 governs the first, the composition rule
+governs the second.
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 166
+rules, all pointers resolve · `audit.js` §1 §3 §6 PASS · axe **0 violations**,
+5 light and 3 dark · 1440 and 390.
+
+---
+
 ## 2026-08-31 · the greeting, a bigger drawing, and the card reads the other way round
 
 Tong, with two screenshots: *"图一把咱们产品里那句话放到网站的prompt box上边，再配上
