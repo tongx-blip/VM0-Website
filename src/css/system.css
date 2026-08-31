@@ -3843,7 +3843,12 @@ h3{ font-family:var(--fd); }
    fits, and the card reads as four short lists that happen to have ended. */
 .lane > *{ flex:none; }
 
-.lane__h{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+/* COMPACT. At 30px with a 12px gap and the timestamp pushed to the far edge,
+   the header took as much vertical room as two step rows and split the card's
+   top into three widely separated things. The card is 196–250 wide now, not
+   320: the seat comes down to 22 and the name sits against it, so the header
+   reads as one object — who — and the task title under it gets the weight. */
+.lane__h{ display:flex; align-items:center; gap:8px; margin-bottom:12px; }
 
 /* THE OWNER, WITH THE RUNNER BADGED ON IT. B4: an agent is DRAWN and a
    person is PHOTOGRAPHED, so a photograph alone in a run card's seat says a
@@ -3857,13 +3862,33 @@ h3{ font-family:var(--fd); }
    read as one thing repeated. The copy has three nouns — one person's
    know-how, several agents, shared capability — so the seat carries two:
    the photograph gives the row its plurality, the badge names the runner. */
-.lane__ava{ position:relative; display:inline-flex; flex:none; width:30px; height:30px; }
-.lane__h img{ width:30px; height:30px; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
-/* half the seat. The avatar round settled 16px as the floor where this face
-   still reads; at a 30px seat the badge is 15, which is that floor. */
-.lane__bot{
-  position:absolute; right:-3px; bottom:-3px;
-  width:15px; height:15px; border-radius:5px;
+/* THE SEAT IS A BOX, NOT A FLEX ROW. As `inline-flex` the photograph was a
+   flex item at `width:100%` and came out 14 of 22 — measured, with only two
+   rules matching it and neither of them explaining it. A seat holding one
+   image and one badge does not need flex layout at all: the photograph fills
+   the box, the badge is positioned on it, and neither can be resized by the
+   other. */
+.lane__ava{ position:relative; display:block; flex:none; width:22px; height:22px; }
+.lane__ava > img{ position:absolute; inset:0; width:100%; height:100%;
+  border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+/* HALF THE SEAT. The 16px floor the avatar round settled is the size this
+   face reads as a PORTRAIT — a corner badge is not being read as a face, it
+   is being read as a mark, and it has the photograph underneath it for
+   contrast. Held at 14 on a 22px seat it covered most of the person and the
+   pair stopped saying "whose work, run by what". */
+/* `img.lane__bot`, NOT `.lane__bot`. The seat's own `img` rule is (0,1,1) and
+   a bare class is (0,1,0), so the generic one won and the badge rendered at
+   the full 22 — covering 100% of the seat and squeezing the photograph to
+   14 wide. The pair stopped saying "whose work, run by what" and just showed
+   the mark. Same shape as the `#outputs .thing` / `.thing.is-on` trap the
+   conventions already name: a descendant selector out-specifies a class. */
+img.lane__bot{
+  /* ALL FOUR SIDES, because the rule above sets `inset:0` and this one only
+     overrode two of them — `top:0; left:0` survived and won the anchor, so
+     the badge sat over the face's top-left instead of the corner. An inset
+     is one shorthand; overriding half of it leaves the other half in place. */
+  position:absolute; inset:auto -3px -3px auto;
+  width:11px; height:11px; border-radius:4px;
   box-shadow:0 0 0 1.5px var(--p-card);
 }
 

@@ -4,6 +4,51 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the lane header gets its seat back
+
+Tong, on the shipped card against the option that was picked: *"你之前这个做的
+挺好的为什么要改掉呢？展示多少个 agents 多少个 tasks，头像左对齐等等"*.
+
+The rotation, the widths, the dimming and the ink count all shipped. What did
+not was the option's **header**: I kept the existing `.lane__h` — a 30px seat
+with a 12px gap and the timestamp pushed to the far edge — on a card that is
+no longer 320 wide but 196–250. It took as much height as two step rows and
+split the card's top into three separated things. Seat down to 22, gap to 8,
+margin to 12, so the header reads as one object and the task title gets the
+weight.
+
+**Three bugs on the way, none of them visible without measuring.**
+
+* `.lane__h img` is (0,1,1) and `.lane__bot` is (0,1,0), so the generic seat
+  rule won and the badge rendered at the full **22 — covering 100% of the
+  seat**. The pair stopped saying "whose work, run by what" and just showed
+  the mark. Same trap the conventions already name for `#outputs .thing`
+  against `.thing.is-on`: a descendant selector out-specifies a class.
+* The photograph came out **14 of 22** as a flex item at `width:100%`, with
+  only two rules matching it and neither explaining it. A seat holding one
+  image and one badge does not need flex layout: the photograph fills the box
+  absolutely and neither element can resize the other.
+* Fixing that introduced the third — `inset:0` on the seat's image rule sets
+  all four sides, and the badge rule overrode only `right` and `bottom`, so
+  `top:0; left:0` survived and won the anchor. The badge sat over the face's
+  top-left. An inset is one shorthand; overriding half of it leaves the other
+  half in place.
+
+The badge is half the seat again (11 on 22). The 16px floor the avatar round
+settled is the size that face reads as a **portrait** — a corner badge is read
+as a mark and has the photograph under it for contrast, so the floor does not
+apply to it. Held at 14 it covered most of the person.
+
+**Still open, and it is copy, not design.** The option showed six agents and
+`6 AGENTS 11 TASKS`. Four of those people (Kwame, Sofia, Dana, Leo), their
+task titles and their step lines were written for the comparison page, and the
+11 corresponded to nothing — so none of it could ship (§7). The card carries
+the four agents that exist — Mira, Kai, Ines, Ravi — and a count that is true.
+
+Gate: `tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py`
+172 rules, all pointers resolve · §4ak green on all four beats at 1024 / 1240
+/ 1440.
+
 ## 2026-08-31 · the parallel card stops panning and starts focusing
 
 Tong, on the Codex card's figure: *"这个文字表达的是我们可以在云端同时多 agent，多
