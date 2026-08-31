@@ -21,3 +21,7 @@ generated/
 # the supplied font originals — only the built woff2 ships
 src/fonts/*
 !src/fonts/README.md
+
+# the header review build — a full copy of site/, rebuilt by
+# tools/build-header-options.py whenever it is needed
+options-header/

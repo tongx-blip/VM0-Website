@@ -4,6 +4,75 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · four ways to separate the header, none of them shadow
+
+Tong: *"我感觉 header 的颜色和背景有点混在一起了。但是我又不想给 header 加太多的阴
+影，感觉会有点廉价。"*
+
+**https://okou-header-options.sites.vm0.io** — the real page with a switcher.
+Nothing merged.
+
+### the number says which channel is broken
+
+| | | contrast | ΔL |
+|---|---|---|---|
+| stuck bar `#EAEEF0` | page ground `#F4F6F7` | **1.077** | 6.9% |
+| stuck bar `#EAEEF0` | section card `#FFFFFF` | 1.168 | 15.1% |
+| page ground `#F4F6F7` | section card `#FFFFFF` | 1.084 | 8.1% |
+
+The third row is the diagnosis. **The header separates from the page by exactly
+as much as the page separates from itself.** It is not a different order of
+thing sitting on top; it is one more grey in a stack of greys, and at 1.077 it
+is not an edge anyone can see. He is also right about the shadow: heavy enough
+to beat 1.077 is the bruise S3 refused once already.
+
+So each direction moves a **different channel**:
+
+| | channel | what it is |
+|---|---|---|
+| **A** Glass | material | no opaque fill — a 74% white veil over `blur(20px) saturate(1.7)`. The edge is what goes out of focus behind it |
+| **B** Inverted | value | 1.077 → 14.4. Not a new register: the page already ends on two dark bands and the header already crosses into them |
+| **C** Smaller | silhouette | **not one colour changed.** 46px instead of 58, 22px from the top instead of 12 |
+| **D** Deeper | tone | two rungs down the same cool ramp — `#DBE2E7`, 1.207 on the ground, 1.309 on a card |
+
+**C is the control experiment.** If moving nothing but size and air reads as
+separated, then contrast was never the fault and A, B and D are all answering
+the wrong question. It is on the list to be falsifiable, not because it is
+expected to win.
+
+**D is the boring answer and it earns its slot the same way.** The fault was
+never that tone is the wrong channel — it was that half a step is not a step.
+
+### two things fixed while building
+
+**Glass at 55% disappeared over the gaps between cards.** The 20px strips of
+flat page ground have nothing behind them to defocus, and glass with nothing to
+refract is just a fainter version of the fault. At 74% the pane still reads as
+a pane on empty ground and still lets type and colour through where there is
+something to show. **A material effect has to be judged on its worst ground,
+not its best.**
+
+**The chroma direction was cut before it shipped.** Same lightness, warm tint,
+the only warm surface on a cool page — it measured well and it is not on the
+list, because this page has already called warm off-white *"太 AI"*, and a
+cream header applies that note to the one element on every screen. Recorded
+here rather than silently dropped: the mechanism is sound, the colour is not
+available to us.
+
+### judged on the real page, in motion
+
+A header has two states and the change between them is the information (S6), so
+four static bars prove nothing. The build copies `site/` whole and injects a
+switcher — same scroll position, same content behind the bar, 1–5 on the
+keyboard, and the choice survives a reload because comparing the two states
+means scrolling and losing the variant on every refresh makes the page useless
+for the one thing it is for.
+
+`options-header/` is gitignored: it is an 11MB copy of `site/` and
+`tools/build-header-options.py` rebuilds it in a second.
+
+---
+
 ## 2026-08-31 · control becomes a left-right stepper that plays itself
 
 Tong: *"我们还是用之前这个界面吧，只是删掉顶部的信息，顶部只留 agent 头像和名称&

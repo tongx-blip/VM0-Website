@@ -1,0 +1,144 @@
+/* ══════════════════════════════════════════════════════════════════
+   options-header — four ways to separate the header from the page,
+   on the real page, over the real content. Nothing here ships; it
+   loads AFTER styles.css and only overrides the header's ground.
+
+   The fault, measured: the stuck bar is #EAEEF0 and the page ground is
+   #F4F6F7 — contrast 1.077. The page's own step from ground to a white
+   section card is 1.084. So the header separates by exactly as much as
+   the page's ambient noise, which is why it reads as one more grey
+   rather than as an object on top. Shadow was refused for the right
+   reason (S3): heavy enough to beat 1.077 is a bruise.
+
+   Each variant moves a DIFFERENT channel.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── the switcher (review chrome, not a direction) ─────────────────── */
+.hsw{
+  position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+  z-index:900; max-width:calc(100vw - 24px);
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:12px 14px 11px;
+  border-radius:var(--r-card);
+  background:var(--g-100); color:rgb(var(--paper-rgb) / .82);
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.5);
+  text-align:center;
+}
+.hsw__k{
+  margin:0; font-family:var(--fm); font-variant-numeric:tabular-nums;
+  font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:rgb(var(--paper-rgb) / .5);
+}
+.hsw__row{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; }
+.hsw button{
+  padding:7px 12px; border:0; border-radius:8px; cursor:pointer;
+  background:rgb(var(--paper-rgb) / .1); color:rgb(var(--paper-rgb) / .8);
+  font-family:var(--fm); font-size:12px; letter-spacing:.04em;
+}
+.hsw button:hover{ background:rgb(var(--paper-rgb) / .18); }
+.hsw button.is-on{ background:var(--accent); color:#fff; }
+.hsw__n{
+  margin:0; max-width:52ch; font-size:12.5px; line-height:1.45;
+  color:rgb(var(--paper-rgb) / .62);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   A · MATERIAL — the bar has no fill, and what is behind it defocuses
+
+   The separation stops being a colour difference and becomes a
+   refraction: text and pictures passing under the bar go soft, which is
+   an edge the eye reads instantly and which no grey can fake. It is
+   also self-scaling — strongest exactly where the problem is worst
+   (over busy content) and invisible over empty ground, where there is
+   nothing to separate from.
+
+   `saturate` is the part that stops it looking like fog: a plain blur
+   greys everything under it, and lifting chroma back keeps the page's
+   colour alive through the glass. The fill is a thin white veil, not a
+   ground — enough to hold AA on the links, not enough to be a slab.
+   ══════════════════════════════════════════════════════════════════ */
+[data-v="a"] .nav.is-stuck{
+  /* .55 was the first try and it disappeared over the 20px gaps between
+     section cards, which is flat grey with nothing behind it to defocus —
+     glass with nothing to refract is just a weaker version of the fault. .74
+     keeps the pane readable as a pane on empty ground and still lets type and
+     pictures show through, blurred, wherever there is something behind it. */
+  --nav-ground:rgb(var(--paper-rgb) / .74);
+  -webkit-backdrop-filter:blur(20px) saturate(1.7);
+  backdrop-filter:blur(20px) saturate(1.7);
+}
+[data-v="a"] .nav.is-stuck.is-dark{
+  --nav-ground:rgb(var(--g-100-rgb, 23 27 31) / .55);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4) brightness(.72);
+  backdrop-filter:blur(20px) saturate(1.4) brightness(.72);
+}
+/* the top-of-page blur ramp is doing the same job twice under a glass
+   bar, and two blurs stacked is where "frosted" turns into "smeared" */
+[data-v="a"] .veil{ opacity:.35; }
+
+/* ══════════════════════════════════════════════════════════════════
+   B · VALUE — it inverts
+
+   1.077 becomes 14.4. The page already ends on two dark bands and the
+   header already carries a dark version of itself for crossing them
+   (`.nav.is-dark`), so this is not a new register — it is the register
+   the page already owns, used from the top.
+
+   The cost is stated rather than hidden: a dark bar is the loudest
+   object on a white page, and it will be the first thing seen on every
+   screen. That is either the point or the objection.
+   ══════════════════════════════════════════════════════════════════ */
+[data-v="b"] .nav.is-stuck{
+  --nav-ground:var(--nav-fill-dark);
+  --nav-ink:rgb(var(--paper-rgb) / .72);
+  --nav-ink-hi:var(--paper-ink);
+  --nav-accent:var(--accent);
+  --nav-chip:rgb(var(--paper-rgb) / .1);
+  --nav-stroke:rgb(var(--paper-rgb) / .18);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   C · SILHOUETTE — no colour change at all
+
+   The bet is that the problem is not the grey but the SIZE: a 58px bar
+   at 880px wide sitting 12px from the top is still reading as part of
+   the page's chrome. Take 12px off its height, put it 22px from the
+   top, tighten it to its content, and the air around it does the
+   separating.
+
+   Nothing here touches a colour, which is the whole point of including
+   it — if this reads as separated, the fault was never contrast.
+   ══════════════════════════════════════════════════════════════════ */
+[data-v="c"]{
+  --nav-top:22px;
+  --nav-h-stuck:46px;
+}
+[data-v="c"] .nav.is-stuck{
+  --nav-pad-x:20px;
+  border-radius:14px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   D · A REAL TONAL STEP — the same channel, used properly
+
+   The first version of this slot was chroma: same lightness, warm tint,
+   the only warm surface on a cool page. It measured well and it is not
+   here, because the page has already rejected warm off-white once —
+   *"太 AI"* — and a cream header is that note applied to the one element
+   on every screen.
+
+   So instead: stop being timid with the grey. The fault was never that
+   tone is the wrong channel, it was that 1.077 is not a step. Two rungs
+   down the same cool ramp — #DBE2E7 — is 1.207 against the page ground
+   and 1.309 against a white card — a real edge, still neutral, still a fill, and
+   nothing added.
+
+   This is the boring answer and it deserves to be on the list, because
+   if it is enough then A, B and C are all solving a problem that a
+   colour value already solved.
+   ══════════════════════════════════════════════════════════════════ */
+[data-v="d"] .nav.is-stuck{
+  --nav-ground:#DBE2E7;
+  --nav-chip:rgb(var(--ink-rgb) / .07);
+  --nav-stroke:rgb(var(--ink-rgb) / .16);
+}
