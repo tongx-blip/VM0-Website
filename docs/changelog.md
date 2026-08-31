@@ -4,6 +4,68 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-08-31 · the header gets a half-pixel edge, and a dark-theme trap turns up under it
+
+Tong, on the four directions: *"header 加一条 0.5px 的轻的 Stroke 吧，还是保持现在
+的样式"*. So: the ground stays exactly as it is, and the separation comes from an
+outline. Merged and live.
+
+### written as a ring, not a border
+
+`box-shadow:inset 0 0 0 .5px var(--nav-edge)` — and the choice of property is
+not cosmetic. `app.js` §3c computes the stuck bar's width from its three
+content groups plus the padding, and a `border` adds to the box on both sides:
+the computed number would be a pixel short every time, and the last button
+wraps when it is. The bar measures **880px before and after**, so the ring
+costs no layout at all.
+
+`.10` ink, not the `.14` the sign-in button's ring uses. That one sits *inside*
+the bar with the bar's own fill behind it; this one is the outline of the whole
+object and runs its full width, so the same alpha reads about half a step
+heavier.
+
+**It arrives with the ground.** At rest the bar is full-bleed and is not an
+object yet — a hairline ruled across the whole window above an unscrolled hero
+is the structural line S4 forbids, not the outline of a card. `box-shadow`
+joins the transition list, so it fades in with the fill rather than snapping on.
+
+This is a **named exception** to "a surface is a fill, never an outline" —
+RULES S14, QA §4ai. Written down, because an unexplained outline on the one
+element that appears on every screen is how a convention quietly dies.
+
+### and the trap it landed on
+
+In the dark theme the ring came out **darker than the bar it was edging**.
+
+`--ink-rgb` and `--paper-rgb` are declared once, in light, and the dark theme
+never flips them — it overrides `--ink` as a hex and leaves the channels alone.
+So every `rgb(var(--ink-rgb) / a)` keeps light-mode ink in dark. For scrims and
+state tints that is correct and deliberate. For an **edge** it is exactly
+backwards.
+
+**`--nav-stroke` has had this since it was written.** The sign-in button's ring
+has been reading as a groove rather than an outline in the dark theme for as
+long as it has existed; nobody caught it because a dark line on a dark bar is
+subtle enough to look intentional. Both are declared explicitly now, in a
+`@media (prefers-color-scheme: dark) .nav{…}` block — fixed where they are
+wrong rather than by flipping `--ink-rgb` globally, which has ~40 consumers and
+most of them want to stay dark. RULES S15.
+
+Checked in all four combinations: light theme / dark theme × light ground /
+`.nav.is-dark` over the page's dark bands. The `.is-dark` state stays more
+specific than the theme, which is right — that state is about the ground behind
+the bar, not the theme the reader is in.
+
+The other three directions stay unmerged at
+https://okou-header-options.sites.vm0.io.
+
+Gate: `tokens.py`, `check-html.py`, `scopes.py`, `rules.py` 0 · `audit.js`
+§1–§11 pass, including §1, which the ring does not trip because it is not a
+border · axe 0 in light and dark other than the known `.wfo--list` fade
+(QA §4af, open) · 1440 and 390 clean.
+
+---
+
 ## 2026-08-31 · four ways to separate the header, none of them shadow
 
 Tong: *"我感觉 header 的颜色和背景有点混在一起了。但是我又不想给 header 加太多的阴

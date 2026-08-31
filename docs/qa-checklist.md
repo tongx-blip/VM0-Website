@@ -1833,6 +1833,41 @@ card, `mt-0.5 text-xs font-medium text-amber-700` — not a caption underneath.
 A line under a card that mixes a real product string with a marketing phrase
 reads as UI and is not.
 
+## 4ai. The header's edge, and the token that does not flip
+
+**Why there is an outline at all**, on a page whose conventions say a surface
+is a fill. The stuck bar measures **1.077** against the page ground and the
+page's own step from ground to a white card is **1.084** — the header separated
+from the page by exactly as much as the page separates from itself. Four
+directions were built for it (`tools/build-header-options.py`: glass, inverted,
+smaller, a deeper grey) and the answer chosen was a 0.5px stroke on the
+existing ground. It is a **named exception** (RULES S10), not drift.
+
+**Write it as `box-shadow:inset`, never `border`.** `app.js` §3c computes the
+stuck bar's width from its three content groups plus the padding; a border adds
+to the box on both sides, so the computed number would be short every time and
+the last button wraps when it is. An inset ring costs no layout — the bar
+measured 880px before and after.
+
+**It arrives with the ground.** At the top of the page the bar is full-bleed and
+is not an object yet; a hairline ruled across the whole window above an
+unscrolled hero is the structural line S4 forbids, not the outline of a card.
+
+**And the trap underneath it.** `--ink-rgb` / `--paper-rgb` are declared once,
+in light, and the dark theme never flips them — it overrides `--ink` as a hex.
+So `rgb(var(--ink-rgb) / a)` keeps light-mode ink in dark, and an "ink" hairline
+comes out **darker than the surface it is meant to edge**. `--nav-stroke` had
+had this since it was written; the sign-in ring was a groove, not an outline.
+
+Fixed per-token in a `@media (prefers-color-scheme: dark) .nav{…}` block rather
+than by flipping `--ink-rgb` globally: that variable has ~40 consumers and most
+are scrims and state tints, which are *meant* to stay dark on a dark ground. An
+edge is the one kind that is not. **Check any new `rgb(var(--ink-rgb) / a)` in
+dark before assuming it inverts.**
+
+Expect: ring present when `.is-stuck`, absent at rest, light on the dark bands
+(`.nav.is-dark`) and in the dark theme, and the bar's width unchanged.
+
 ## 5. Type scale
 
 `docs/design-system.md` §2.

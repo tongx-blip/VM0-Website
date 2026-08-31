@@ -1454,6 +1454,25 @@ h3{ font-family:var(--fd); }
      make, so it is written down here: an inset ring at 14% ink, one token,
      no layout, and it swaps with the ground like everything else in here. */
   --nav-stroke:rgb(var(--ink-rgb) / .14);
+  /* THE BAR'S OWN EDGE, at half a pixel. Measured, the fault it answers is
+     that the stuck bar is #EAEEF0 on a #F4F6F7 page — contrast 1.077, which
+     is the same size as the page's own step from grey to a white card, so
+     the header separated from the page by exactly as much as the page
+     separates from itself.
+
+     A shadow was refused twice and both times for the right reason (S3):
+     heavy enough to beat 1.077 is a bruise, and Tong's word for reaching
+     for one anyway was 廉价. This is the third option — a stroke, which the
+     conventions do not normally allow, requested explicitly and written
+     down here as the exception rather than left to look like drift. It is
+     the same idiom `--nav-stroke` already is: an inset ring, one token,
+     swapping with the ground.
+
+     .10 ink, not .14. The sign-in button's ring sits INSIDE the bar and has
+     the bar's own fill behind it; this one is the outline of the object and
+     runs the full width of the header, so the same alpha reads about half
+     a step heavier. */
+  --nav-edge:rgb(var(--ink-rgb) / .1);
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -1485,6 +1504,11 @@ h3{ font-family:var(--fd); }
   background:var(--nav-ground);
   color:var(--nav-ink);
   border:0; border-radius:0;
+  /* NOT `border`. The stuck bar's width is computed in app.js §3c from the
+     three groups plus the padding, and a border adds to the box on both
+     sides — the number would be a pixel short every time and the last
+     button wraps when it is. An inset ring costs no layout at all.
+     `box-shadow` is the property; a drop shadow is still not on the table. */
   box-shadow:none;
   /* N1 says transform and opacity only, and this transitions five layout
      properties. It is a WRITTEN exception (RULES N1): a one-shot 420ms state
@@ -1497,8 +1521,35 @@ h3{ font-family:var(--fd); }
              right var(--t-state) var(--e-out),
              height var(--t-state) var(--e-out),
              border-radius var(--t-state) var(--e-out),
+             box-shadow var(--t-state) var(--e-out),
              background var(--t-state) var(--e-out);
 }
+
+/* ── the two rings, in the dark THEME ────────────────────────────────
+   `--ink-rgb` is declared once, in light, and the dark theme never flips
+   it — it overrides `--ink` as a hex and leaves the channels alone. So
+   anything built on `rgb(var(--ink-rgb) / a)` keeps LIGHT-mode ink here,
+   and an "ink" hairline comes out DARKER than the surface it is supposed
+   to be the edge of. Found while adding `--nav-edge`; `--nav-stroke` has
+   had it since it was written, which is why the sign-in button's ring
+   reads as a groove in dark rather than as an outline.
+
+   Fixed where it is wrong rather than by flipping `--ink-rgb` globally:
+   that variable has ~40 consumers and most of them are scrims and state
+   tints, which are *meant* to stay dark on a dark ground. An edge is the
+   one kind that is not.
+
+   `.nav.is-dark` (crossing the page's dark bands) is more specific and
+   still wins, which is correct — that state is about the ground behind
+   the bar, not the theme. */
+@media (prefers-color-scheme: dark){
+  .nav{
+    --nav-edge:rgb(var(--paper-rgb) / .12);
+    --nav-stroke:rgb(var(--paper-rgb) / .16);
+  }
+
+}
+
 
 /* floating: inset to a section card's width, so it takes a section card's
    corner. The old --r-nav derived the corner from the CONTROL inside plus
@@ -1518,6 +1569,11 @@ h3{ font-family:var(--fd); }
    growing past the screen. */
 .nav.is-stuck{
   --nav-ground:var(--nav-fill);
+  /* the edge arrives with the ground, for the same reason the ground does:
+     at the top of the page the bar is not an object yet, and a hairline
+     ruled across the whole window above an unscrolled hero is the
+     structural line S4 forbids rather than the outline of a card */
+  box-shadow:inset 0 0 0 .5px var(--nav-edge);
   top:var(--nav-top);
   left:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
   right:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
@@ -1542,6 +1598,7 @@ h3{ font-family:var(--fd); }
    be DARKENED to clear AA (--accent-wash); on this one --accent itself
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
+  --nav-edge:rgb(var(--paper-rgb) / .14);
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
