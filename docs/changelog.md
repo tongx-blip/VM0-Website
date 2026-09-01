@@ -170,11 +170,11 @@ at paren depth zero — a `:is(a, b, c)` is one selector, and splitting inside i
 detaches every branch from the `:root:not(…)` guarding them all, which is how
 the first version of the check reported ten false positives on the connector
 inversions. Proved non-vacuous by putting the bug back: 1 with, 0 without.
-RULES **C15**.
+RULES **C17**.
 
 **`build-css.py`: the page says which build it is.** `data-build="<css-hash> ·
 <date>"` on `<html>`, so `document.documentElement.dataset.build` answers
-"which site is this" in one line instead of a guess. RULES **C16**, and
+"which site is this" in one line instead of a guess. RULES **C18**, and
 `CLAUDE.md` now says to check it *before* answering visual feedback.
 
 The stroke itself stays at `#D4D0CE` — 1.28:1, the light end, which is what the
