@@ -4,6 +4,72 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the band frames its figure, the carousel slows, and a live contrast failure
+
+Tong, on the comparison cards: *"上下空间要一致，你看看是增加卡片上图的高度，还是缩小
+图例内容的比例，或者both，如果你改高度，其他卡片也记得改"* and *"这里边卡片的切换动
+画有点太快了，可以再慢一点"*
+
+### The band had padding on three sides
+
+`.vs__viz` padded top and left and **nothing at the bottom**. Invisible on two
+of the three figures, because they bleed past the edge on purpose — the lanes
+crop 130px, the connector grid 14 at both ends. Very visible on the third:
+`.arti` is `height:100%`, so the browser window filled the box exactly and sat
+with 26px of tint above it and none below. It read as sunk.
+
+Both remedies Tong offered, in the order he offered them: the padding goes
+symmetric **and** the height grows by the same 26, so the mock keeps the
+product's own size (P2/P9) rather than shrinking to fit. 26 above, 26 below,
+measured.
+
+**The height is one shared value and there are two of them.** `.vs__viz` sets
+`clamp(214px, 21vw, 276px)` and `.versus--three .vs__viz` overrides it with the
+same numbers at higher specificity. Changing only the first shrank the mock
+instead of growing the band — the second remedy, not the first. Both stops
+moved: `clamp(240px, 23vw, 302px)`.
+
+### The carousel
+
+640ms → **1000ms** on the slide, 2200 → **3200ms** on the dwell. Slowing only
+the slide leaves the same pause between two slower moves and reads as *more*
+hurried; the cadence is dwell + move, and that is the number being watched.
+2.84s per card → 4.2s.
+
+It gets **its own duration** rather than `--t-reveal`. That token is the page's
+entrance timing and eight other things read it; a loop is watched repeatedly,
+which is exactly when 640ms starts to feel snatched. `--lane-move` is declared
+on `.lanes` and **read back** by `app.js` — the constant used to be retyped
+there, and a retyped duration is how `--nav-h-stuck` ended up as a stale 54 in
+an observer earlier this week.
+
+### And a serious contrast failure that was already live
+
+Found by the gate, not by the brief. `.lane:not(.is-focus)` carried
+`opacity:.42`, which is a contrast change on every word inside the card — C11
+and QA §4p2, both already written down. **18 serious axe failures, and 15 of
+them on the deployed page**, from the parallel-card animation that landed this
+week.
+
+Opacity cannot be raised out of it: the card's own meta grey needs **0.95**
+before it clears 4.5:1, which is no dim at all. So the fade comes out and the
+recession is carried by things the contrast floor is not measured on — the
+scale step it already had, deepened .94 → .9; the surface going flat while the
+focus takes `--e-fig`; and `saturate(.55)`, applied after paint, which leaves
+every computed colour alone.
+
+The first attempt removed the fade and stopped there, and the neighbours then
+read as loudly as the focus. **Hierarchy has to be replaced, not just removed.**
+
+### Gate
+
+`tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py` 172
+rules, all pointers resolve · `audit.js` §1 §6 §7 PASS · axe **0 violations**
+across 12 consecutive samples light and 4 dark, including one taken warm
+straight off a cold walk · 1440 and 390.
+
+---
+
 ## 2026-09-01 · the parallel card has never animated, and now it does
 
 Tong: *"线上没有动画，怎么回事"* and *"卡片的动画为什么一直没有？动画里，卡片一直
