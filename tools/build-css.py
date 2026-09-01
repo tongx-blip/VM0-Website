@@ -153,6 +153,20 @@ def stamp(css_text):
     new = re.sub(r'styles\.css\?r=[0-9a-z]+', 'styles.css?r=' + css_hash, html)
     new = re.sub(r'app\.js\?r=[0-9a-z]+', 'app.js?r=' + js_hash, new)
 
+    # WHICH BUILD AM I LOOKING AT. Three copies of this page were live at once
+    # on three different slugs, and a screenshot of any of them looks the same —
+    # four rounds of design feedback went into a build that did not have the
+    # property being discussed. `?r=` already identifies the CSS, but only if
+    # you read the HTML source. This puts it on the element:
+    #
+    #     document.documentElement.dataset.build     // "5cbef630 · 2026-09-01"
+    #
+    # so "which site is this" is one line in the console instead of a guess.
+    build = '%s \u00b7 %s' % (css_hash, __import__('datetime').date.today().isoformat())
+    if 'data-build=' in new:
+        new = re.sub(r'(<html[^>]*?)\sdata-build="[^"]*"', r'\1', new, count=1)
+    new = re.sub(r'<html(\s|>)', '<html data-build="%s"\\1' % build, new, count=1)
+
     # Every local asset carries the hash of its own bytes.
     #
     # styles.css and app.js were versioned; images were not. So replacing an

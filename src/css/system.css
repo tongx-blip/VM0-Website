@@ -932,8 +932,17 @@ h3{ font-family:var(--fd); }
    `.nav.is-dark` (crossing the page's dark bands) is more specific and
    still wins, which is correct — that state is about the ground behind
    the bar, not the theme. */
+/* GUARDED, like every other dark block in this file. Without
+   `:root:not([data-theme="light"])` this matches on the OS preference alone —
+   so anyone whose machine is in dark mode but who is looking at the page in
+   LIGHT (the toggle, or a build pinned to light) got the dark edge on a light
+   bar: `#535151` on `rgb(238,234,232)` is **6.6:1**, twice the heaviest value
+   anyone had asked for, and it is why the stroke read as *"就是黑色的"* at
+   every setting. Sampled straight off Tong's screenshot; nothing on my side
+   renders it, because my captures set `colorScheme` and `data-theme` together.
+   `tokens.py` now fails on an unguarded dark block. */
 @media (prefers-color-scheme: dark){
-  .nav{
+  :root:not([data-theme="light"]) .nav{
     --nav-edge:#3B3939;   /* 1.27:1 on rgb(43,40,40) — the same step as light */
     --nav-stroke:rgb(var(--paper-rgb) / .16);
   }

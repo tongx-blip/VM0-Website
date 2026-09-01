@@ -122,6 +122,64 @@ timeline that was not saying what it looked like it said:
   box, so the rows travelled straight through it.
 
 
+## 2026-09-01 · the header's stroke was a dark-mode leak, and four rounds read it
+
+*"真绝了。到底是哪个网站啊？"* — fair. Two separate faults, stacked, and neither
+was the number I kept moving.
+
+### Fault one: three live copies of this page
+
+| URL | serving | has `--nav-edge` |
+|---|---|---|
+| `okou-ai-teammate-swiss` (production) | `styles.css?r=42` | no |
+| `okou-ai-teammate-swiss-draft` | `styles.css?r=6a0bb5a9` | no |
+| `tongx-blip.github.io/VM0-Website` | current | yes |
+
+Neither of the first two can be published to from this thread — `okou host
+versions okou-ai-teammate-swiss` 404s, and the draft slug resolves to a
+suffixed alias owned by whichever thread created it. So they cannot be merged,
+only retired by their owner.
+
+### Fault two: the dark edge on a light page
+
+Sampled off Tong's screenshot: the stroke is `rgb(83,81,81)` on a fill of
+`rgb(238,234,232)` — **6.6:1**, twice the heaviest value anyone had asked for
+and not a value I ever set for light. `rgb(83,81,81)` is `#535151`, which was
+the **dark theme's** edge.
+
+`@media (prefers-color-scheme: dark){ .nav{ … } }` — with no
+`:root:not([data-theme="light"])` guard, which every other dark block in this
+file carries. It matches on the **OS preference alone**, so on a machine set to
+dark, looking at the page in light, the nav takes the dark edge while every
+fill around it stays light.
+
+It is invisible from this side by construction: a screenshot script sets
+`colorScheme` and `data-theme` together, so the two can only disagree on a real
+machine. Verified after the fix across all three combinations —
+OS-dark/page-light, OS-light/page-light, OS-dark/page-dark — which now agree.
+
+**This is what four rounds of "lighter" / "heavier" were reading.** The number
+went `.10 → .18 → 1px → 2.34:1 → 3.02:1 → 1.84:1 → 1.28:1` and none of it
+mattered, because for the first three he was on a page without the property and
+for the last three the light value was being overwritten on his machine.
+
+### Two checks so this cannot repeat
+
+**`tokens.py`: a dark-media rule with no light guard.** Comma-splitting is done
+at paren depth zero — a `:is(a, b, c)` is one selector, and splitting inside it
+detaches every branch from the `:root:not(…)` guarding them all, which is how
+the first version of the check reported ten false positives on the connector
+inversions. Proved non-vacuous by putting the bug back: 1 with, 0 without.
+RULES **C15**.
+
+**`build-css.py`: the page says which build it is.** `data-build="<css-hash> ·
+<date>"` on `<html>`, so `document.documentElement.dataset.build` answers
+"which site is this" in one line instead of a guess. RULES **C16**, and
+`CLAUDE.md` now says to check it *before* answering visual feedback.
+
+The stroke itself stays at `#D4D0CE` — 1.28:1, the light end, which is what the
+first ask and the last ask both said.
+
 ## 2026-09-01 · the header's stroke, measured
 
 Third round on one hairline, and the first two were me moving a number without

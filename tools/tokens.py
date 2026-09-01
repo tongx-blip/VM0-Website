@@ -400,6 +400,67 @@ def shorthand_eats_longhand(paths):
     return hits
 
 
+def unguarded_dark_blocks(paths):
+    """A rule inside `@media (prefers-color-scheme: dark)` with no light guard.
+
+    The page has TWO ways to be dark — the OS preference and the toggle — and
+    therefore two ways to be light. A bare `@media (prefers-color-scheme: dark)`
+    rule matches on the OS alone, so on a machine set to dark it also applies to
+    a page the reader has put in LIGHT. Every fill around it is light; the one
+    rule that missed the guard is not.
+
+    `.nav`'s `--nav-edge` was the one that got out: `#535151` on a light bar is
+    **6.6:1**, twice the heaviest value anyone had asked for, and it is why four
+    rounds of "lighter"/"heavier" all came back wrong. It is invisible from this
+    side because a screenshot script sets `colorScheme` and `data-theme`
+    together; it only shows on a machine where the two disagree.
+
+    The guard this file uses everywhere else is `:root:not([data-theme="light"])`.
+    """
+    hits = []
+    for path in paths:
+        css = strip_comments(path.read_text(encoding='utf-8'))
+        depth, dark_depth = 0, None
+        for m in re.finditer(r'@[\w-]+[^{]*\{|([^{}]+)\{([^{}]*)\}|\}', css):
+            tok = m.group(0)
+            if tok.startswith('@'):
+                if 'prefers-color-scheme' in tok and 'dark' in tok and dark_depth is None:
+                    dark_depth = depth
+                depth += 1
+                continue
+            if tok == '}':
+                depth -= 1
+                if dark_depth is not None and depth == dark_depth:
+                    dark_depth = None
+                continue
+            if dark_depth is None:
+                continue
+            sel = ' '.join((m.group(1) or '').split())
+            if not sel:
+                continue
+            line = css[:m.start()].count('\n') + 1
+            # split on commas at DEPTH ZERO only — a `:is(a, b, c)` is one
+            # selector, and splitting inside it detaches every branch from the
+            # `:root:not(...)` that guards them all.
+            parts, buf, par = [], '', 0
+            for ch in sel:
+                if ch == '(':
+                    par += 1
+                elif ch == ')':
+                    par -= 1
+                if ch == ',' and par == 0:
+                    parts.append(buf); buf = ''
+                else:
+                    buf += ch
+            parts.append(buf)
+            for one in parts:
+                one = one.strip()
+                if not one or '[data-theme="light"]' in one:
+                    continue
+                hits.append((path.name, line, one[:60]))
+    return hits
+
+
 def dark_themes_disagree(path):
     """The two dark palettes must declare the same values.
 
@@ -503,6 +564,12 @@ def main():
     for name, line, sel, h in grids:
         print(f'  {name}:{line}  {sel:<44} height:{h}')
     total += len(grids)
+
+    bare = unguarded_dark_blocks([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
+    print(f'\n=== dark-media rules with no `:not([data-theme="light"])` guard: {len(bare)}')
+    for f0, line, sel in bare[:14]:
+        print(f'  {f0}:{line}  {sel}')
+    total += len(bare)
 
     drift = dark_themes_disagree(ROOT / 'src/css/system.css')
     print(f'\n=== tokens where the two dark themes disagree: {len(drift)}')

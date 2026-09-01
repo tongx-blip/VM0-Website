@@ -34,6 +34,20 @@ and every rule in it comes from a decision that has already been argued once.
 
 ## Hard rules
 
+- **There is exactly one review URL and it is
+  https://tongx-blip.github.io/VM0-Website/.** Before answering any visual
+  feedback, check the reviewer is on it — `document.documentElement.dataset.build`
+  in their console, or `curl <url> | grep data-build`, against
+  `python3 tools/build-css.py` locally. Four rounds of feedback on the header's
+  stroke were spent on two older slugs (`okou-ai-teammate-swiss`,
+  `okou-ai-teammate-swiss-draft`) that never carried the property at all: every
+  value looked identical from where it was being reviewed, so "heavier" kept
+  coming back until the number was twice past the answer. **A screenshot is not
+  evidence about this page until you know which build it is of.** Neither of
+  those slugs can be published to from a different chat thread — `okou host
+  versions okou-ai-teammate-swiss` 404s, and the draft resolves to a suffixed
+  alias — so they cannot be fixed, only retired by whoever owns them.
+
 - **Never hand someone an `okou host` URL as the thing to review.** A host slug
   belongs to the chat thread that created it, so a second thread asking for the
   same `--site` gets a *different* URL with a suffix. Three threads once meant
