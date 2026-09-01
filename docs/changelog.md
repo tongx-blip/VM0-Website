@@ -41,6 +41,14 @@ timeline that was not saying what it looked like it said:
   with `el.getAnimations()[0].currentTime` instead — and `scroll-behavior:smooth`
   means the bounding box has to be read *after* the scroll settles, or the crop
   is 300px off.
+- **A review build has to pin its theme.** `options*/` borrows
+  `site/styles.css`, which honours `prefers-color-scheme` — so on a machine set
+  to dark the whole comparison arrived in dark and the figures were being judged
+  against a ground the decision is not about. Tong: *"展示的html给我做成light
+  mode"*. `<html data-theme="light">` is the site's own switch (the dark block is
+  `:root:not([data-theme="light"])`), so this turns it off by design rather than
+  overriding it, and the older `options/` and `options-control/` builds got the
+  same line. The page itself keeps both themes. QA §4aq.
 - **A scroller's header has to sit outside the scroller.** B2's count — the whole
   argument of that variant — was a sibling of the track inside one `overflow`
   box, so the rows travelled straight through it.

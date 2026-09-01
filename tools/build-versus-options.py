@@ -352,10 +352,18 @@ def build():
                             title, bet, blurb, row_html(fn(), viz_class)))
 
     html = '''<!doctype html>
-<html lang="en">
+<!-- PINNED LIGHT. This build is a review surface, not the page: it borrows
+     site/styles.css, and that stylesheet honours `prefers-color-scheme`, so on
+     a machine set to dark the whole comparison arrived in dark and the figures
+     were being judged against grounds the decision is not about. `data-theme`
+     is the site's own switch — the dark block is `:root:not([data-theme=
+     "light"])` — so this is the page's mechanism, not an override of it.
+     The real page keeps both themes; only the review pins one. -->
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
 <meta name="robots" content="noindex, nofollow">
 <title>Zapier · n8n card — B, three ways</title>
 <link rel="stylesheet" href="styles.css">

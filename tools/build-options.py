@@ -361,7 +361,12 @@ GROUP = """
 """
 
 HEAD = """<!doctype html>
-<html lang="en"><head>
+<!-- pinned light: a review build borrows site/styles.css, which honours
+     `prefers-color-scheme`, so on a dark machine the comparison arrived in
+     dark and the options were judged against a ground the decision is not
+     about. `data-theme` is the site's own switch, not an override of it. -->
+<html lang="en" data-theme="light"><head>
+<meta name="color-scheme" content="light">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Comparison cards · directions</title>

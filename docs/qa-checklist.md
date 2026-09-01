@@ -2396,6 +2396,33 @@ Target ~2.3:1, and **state it as a colour**: the same alpha over a different
 fill is a different line, which is what made two rounds of this unfalsifiable
 (RULES S24).
 
+## 4aq. A review build is pinned to one theme
+
+Anything under `options*/` borrows `site/styles.css`, and that stylesheet
+honours `prefers-color-scheme`. So a comparison built to decide one figure
+arrives in **dark** on a machine set to dark, and the options get judged
+against a ground the decision is not about — Tong opened the versus options on
+a dark machine and asked for it in light.
+
+Pin it with the site's own switch, not with an override:
+
+```html
+<html lang="en" data-theme="light">
+<meta name="color-scheme" content="light">
+```
+
+The dark block is `:root:not([data-theme="light"])`, so the attribute turns it
+off by design. Check it the only way that means anything — with the OS
+preference set the other way:
+
+```bash
+agent-browser --color-scheme dark open http://localhost:8898/
+# getComputedStyle(document.body).backgroundColor === 'rgb(250, 245, 243)'
+```
+
+The **page** keeps both themes; this is only for the review surfaces, and the
+figures themselves still have to be checked in both before anything merges.
+
 ## 4aj. Every control answers, and none of them shouts
 
 Two failures, one sweep. Both were shipped and neither was visible in a
