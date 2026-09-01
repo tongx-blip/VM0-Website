@@ -349,15 +349,17 @@ def build(key, first):
                 '<i class="slk__send" aria-hidden="true">%s</i></p>'
                 % (sc['channel'], SEND))
 
-    rail = ('\n              <div class="slk__rail" aria-hidden="true">'
-            '<span class="slk__ws"><img src="assets/okou-icon.svg" alt="" '
-            'width="17" height="17"></span>'
-            '<i></i><i class="is-here"></i><i></i><i></i></div>')
+    # NO WORKSPACE RAIL. Tong: *"去掉侧边栏"* — 44px of aubergine carrying four
+    # grey placeholder squares. It was put here to stop the panel blending into
+    # the page, which the frame's own gradient ground now does; what was left
+    # was a block of colour with no information in it, taking width off the one
+    # thing in the picture anybody reads. Okou's own window keeps its rail: the
+    # labels there are real product navigation, not placeholders.
 
     return ('<div class="ochat ochat--slack"%s role="group"\n'
             '                 aria-label="The Slack channel this ran in">'
             % (' id="ochat"' if first else '')
-            + rail + '\n              <div class="slk__pane">'
+            + '\n              <div class="slk__pane">'
             + bar + '\n              <div class="slk__list">'
             + body + '\n              </div>' + composer
             + '\n              </div>\n            </div>')
@@ -451,32 +453,11 @@ METRICS = {
 }
 
 
-def metrics(key):
-    """The strip that lands with the artifact.
-
-    The first is the LEAD — the number the scene is actually about — and it
-    is set at display size; the rest support it. Three identical boxes is
-    what feedback 05 called 太多层 in the first place, and evening them out
-    again under a per-scene value would have kept the shape that was wrong.
-    """
-    rows = ''
-    for i, (label, value, unit) in enumerate(METRICS[key]):
-        # only a quantity counts up; "Mondays" and "nightly" are not
-        num = value.replace(',', '').replace('$', '').isdigit()
-        # `data-count` carries the DISPLAY string, separators and all.
-        # countUp() parses the digits out of it for the maths and writes
-        # `target` back at the end, so stripping the comma here is what left
-        # "1,111" reading "1111" once the animation finished.
-        # VALUE FIRST, then the label. Inline, the DOM order IS the reading
-        # order — "6 backlog issues linked", not "backlog issues linked 6".
-        rows += ('<li%s><b><i%s>%s</i>%s</b><span>%s</span></li>'
-                 % (' class="is-lead"' if i == 0 else '',
-                    ' data-count="%s"' % value if num else '',
-                    value,
-                    '<em>%s</em>' % unit if unit else '',
-                    label))
-    return ('<ul class="ometrics" aria-label="What this run produced">%s</ul>'
-            % rows)
+# NO OUTCOME STRIP. Tong: *"去掉…下方的数据"*. `METRICS` above is kept — the
+# numbers are per-scene and were researched, and a summary of what a run
+# produced may well come back somewhere — but nothing renders it. The picture
+# is the run; three counters under it were the run explained a second time,
+# and they cost the windows 63px of height on every tab to say it.
 
 
 def restage(html, key):
@@ -527,7 +508,6 @@ def restage(html, key):
            + I + '    </div>'
            + I + '    ' + win
            + I + '  </div>'
-           + I + '  ' + metrics(key)
            + I + '</div>'
            + '\n          </div>')
     return html[:a] + new + html[b:]

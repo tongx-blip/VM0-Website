@@ -4,6 +4,130 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · three deletions, and what each of them was hiding
+
+Three screenshots, three notes, and all three fixes turned out to be *removing*
+something rather than restyling it.
+
+### 1 · `#outputs` — the rail and the strip
+
+*"去掉侧边栏，和下方的数据，那界面就可以按比例稍微放大一点点了。去掉侧边栏之后，
+左边两张card，你看看怎么排布一下视觉上更舒适？"*
+
+**The Slack rail** was 44px of aubergine carrying four grey placeholder
+squares. It was put there for a real reason — a panel that blended into the
+page — but the frame's gradient ground has done that job since the frame
+existed, so what was left was a block of saturated colour holding no
+information, standing in front of the one thing in the picture anybody reads.
+Gone. Okou's own window keeps `.okw__rail`: those labels are the product's real
+navigation, not placeholders (RULES F52, P1).
+
+**The outcome strip** (`.ometrics`) said what the picture already said — the
+unfurl names the page, the cards name what it touched, the window shows it —
+and it cost `--o-mh` (42px) plus `--o-mgap` (21) of reserved height on **every**
+tab for the whole five seconds a run takes. `METRICS` stays in
+`tools/slack-scenes.py`; nothing renders it.
+
+**The enlargement is the point of both deletions**, so the height went to the
+windows rather than to the page: `--o-h` from `553 + 42` to a flat 574. The
+frame comes out 21px shorter and the two windows inside it 36px (+7%) taller,
+and the Slack pane gains 44px of width. The section: 1.30 → 1.18 screens.
+
+**The two cards.** The pair filled 43% of a 248 x 520 strip at a 30px gap — air
+inside the pair *and* around it, which is the reading with nothing holding it
+together. The gap is halved so the air is all on the outside, the card is
+bigger (40px tile, 16/17 padding), the column is 12px wider, and the two now lap
+the window by **two different amounts** — `--o-lap` and `--o-lap2`. One distance
+twice reads as a bracket drawn on the window; two read as objects lying on it
+(RULES F53).
+
+That inset was first put on `.slk__pane`, which was wrong: it moved the
+window's own fills too, so the channel bar's rule stopped 31px short of the
+left edge and the composer sat 75px from one side of its window and 30 from the
+other. It belongs on the rows a card can actually reach — the bar and the
+messages — and not on the composer, which nothing lies across.
+
+Both laps zero below 1080. Zeroing only `--o-lap` left 8px of `--o-lap2`
+behind, which showed up as the second connector card sitting 8px right of the
+first in a stacked column.
+
+### 2 · `#workflows` — the loop was deleting its own premise
+
+*"这个动画会给用误解，为什么一开始的chat，在之后消失了变成了一个slack里agent的
+反馈。你看看保持视觉和动效最优的同时，让chat和agent的回复同时存在"*
+
+He is describing exactly what it animated. `.wfo--post` was authored at
+`left:15cqw; top:19cqh` — the ask's box — and `chainTo()` toggled `is-away` on
+the ask at the same cue that wiped the reply in. One card out, one card in, same
+place: the question turning into the answer. In the product the ask stays in the
+channel and the reply arrives under it.
+
+The fix is not a longer transition. **If an object has to leave for the next one
+to arrive, the composition is one object too big for the canvas** (RULES F51).
+The reply went from `44cqw` to `30cqw` — a notification rather than a second
+subject — and moved to the canvas's bottom left at `3cqw / 63cqh`. The ask moved
+up to `6cqw / 6cqh` and narrowed to `40cqw`. All three objects now clear each
+other:
+
+| | x | y | w | h |
+|---|---|---|---|---|
+| ask | 5.8 | 5.5 | 40.3 | 25.0 |
+| run | 35.8 | 35.6 | 46.4 | 43.6 |
+| post | 3.0 | 63.0 | 30.0 | 24.9 |
+
+`is-away` is deleted from the CSS and from `app.js`. The ask's recede for beats
+2–4 was re-measured against the new origin — from `19cqh` a `-18cqh` recede put
+it just off the top edge, from `6cqh` the same number puts it 65px past it and
+the fade has nothing left to do.
+
+### 3 · `#control` — a stepper for two things
+
+*"去掉第三段内容和图片，然后你看看有什么方式把两段内容展示的更舒适一些，不用非得
+切tab的方式，感觉没必要。你自己critic一下，从视觉和交互层面"*
+
+The critique, since it was asked for:
+
+- **Visually it was never a pair.** Left was a stack of one-line titles with
+  three quarters of its column empty; right was one large picture. A table of
+  contents beside a photograph does not balance at any spacing.
+- **It moved, and it hid.** An auto-advancing player changes the page under a
+  reader mid-sentence and keeps half of what it has to say behind a timer. On a
+  section whose subject is *trust*, a figure that will not show you everything
+  at once is arguing against its own claim.
+- **The machinery cost more than it saved.** A control the reader has to
+  discover, an `aria-expanded` contract, an `inert` cycle, a 5.2s timer, an
+  IntersectionObserver, a `visibilitychange` handler and an N4 park rule — about
+  ninety lines — to show one of three pictures. At two, not a trade at all.
+
+So: `Its own machine` and its cloud drawing are gone, and the two claims that
+are left sit side by side, each with its picture under it, on the same ground,
+at the same size. `#control` has no JS at all now — deleting the behaviour
+satisfied N4, N8 and N16 at once (design-principles §15, RULES F50).
+
+Both figures open with the same identity row, so the pair reads as two views of
+one agent rather than a screenshot beside a card — and that is also what anchors
+the shorter one's top edge, since the exchange is a third of the height of the
+five-row list and centred under nothing it read as an object floating in a
+field. The permission card is capped at the product's own 548px: stretched to
+the full width of the ground, its 88px row came out thin.
+
+**One thing is now unsaid.** Isolation — each run on its own cloud computer,
+destroyed when the work finishes — was a real differentiator and it has no
+clause left anywhere on the page. That was the instruction, and it is recorded
+here rather than quietly re-added; the closing note about the activity trail is
+where a one-clause version would go if it is wanted.
+`site/assets/brand/spot-cloud-computer.png` stays in the tree because
+`tools/build-control-options.py` still renders it.
+
+### Gate
+
+`tokens` 0 · `check-html` balanced · `scopes` 0 · `rules` 176/77/11 all resolve ·
+`audit.js` §1 §3 §5 §6 §7 §9 §10 §11 pass · axe 0 violations in **both** themes,
+walked the whole page · 1440 and 390, light and dark. §2 still reports 17
+distinct type sizes against T3's eleven — that is the variable-font swap from
+another thread, unchanged by this round. §8's `.ochat__row` stack and the
+`#workflows` 3.19-screen budget are the two standing exceptions.
+
 ## 2026-09-01 · the fade comes back, and I should not have removed it
 
 Tong: *"中间实，两边卡虚，你怎么把这个设计给改了？"*

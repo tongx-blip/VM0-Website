@@ -1320,7 +1320,7 @@ whatever height is left.
 
 ```js
 // nothing that has to be read whole may be taller than the window
-['.ctrl__frame','.ladder__view','.wfsc'].map(s => {
+['.cbit__fig','.ladder__view','.wfsc'].map(s => {
   const el = document.querySelector(s); if (!el) return s + ':—';
   return s + ':' + (el.getBoundingClientRect().height <= innerHeight);
 })   // all true, at 1440×620 as well as 1440×900
@@ -1407,10 +1407,15 @@ If a pinned stage swaps content per beat, measure it in **every** state, not
 just the one that happens to be showing:
 
 ```js
-const f = document.querySelector('.ctrl__frame');
-[1,2,3,4,5].map(b => { f.dataset.beat = b; return b + ':' + f.offsetHeight; })
-// one number, five times
+const f = document.querySelector('.wfsc');            // the one stage left
+[1,2,3,4].map(b => { f.dataset.step = b; return b + ':' + f.offsetHeight; })
+// one number, four times
 ```
+
+The example this section was written from — `#control`'s five-beat stepper —
+**no longer exists**: the section is two figures side by side and swaps
+nothing (2026-09-01). The rule outlives it, because the ladder above it is
+still a pinned stage that changes what is in its frame.
 
 A stage that shrinks at one beat is not just ugly. If anything derives a
 layout value from its height — here `--ctrl-beat`, which sets all five step
@@ -1428,7 +1433,7 @@ Two rules that came out of it:
   fires the ResizeObserver too; only a real viewport change alters the width.
 
 ```js
-[...document.querySelectorAll('.ctrl__step')].map(s => Math.round(s.offsetHeight))
+[...document.querySelectorAll('.ladder__stage')].map(s => Math.round(s.offsetHeight))
 // identical at every beat, and equal to the frame
 ```
 
@@ -1620,7 +1625,9 @@ border in em too.
 ## 4q8. A stage may not measure itself
 
 If a script writes a size onto an element, it may not read that element's size
-as the input. `--ctrl-h` was written onto `.ctrl__frame{height}` and read back
+as the input. (The machinery below was deleted with `#control`'s stepper on
+2026-09-01; the rule is what is being kept.) `--ctrl-h` was written onto
+`.ctrl__frame{height}` and read back
 from the same element, with `Math.max` on the read — so it ratcheted one
 padding per ResizeObserver callback and settled on 963px of frame around 622px
 of content. It converges, which is what makes it invisible: no error, no
@@ -2201,6 +2208,60 @@ const q = document.querySelector('.quote'), r = q.getBoundingClientRect();
   live on a themed surface, or the component only works in one mode.
 - **`margin-inline:auto` on a grid item** turns stretch into shrink-to-fit.
   With a `flex:1 1 0%` child that resolves to zero width.
+
+## 4al. A stepper has to be cheaper than showing everything
+
+Before building — or keeping — a tabbed, stepped or auto-playing figure, count
+the states.
+
+    document.querySelectorAll('#control .cbit').length          // 2
+    document.querySelectorAll('#control [aria-expanded]').length // 0
+
+**Two states do not earn a stepper.** The machinery is a control the reader has
+to discover, an aria contract, an `inert` cycle, a timer, an observer and a
+park-on-interaction rule — and what it buys is hiding half of a short section.
+`#control` carried all of that for three states and then for two; the section
+now has no JS at all.
+
+Three questions, in order:
+
+1. **Would both states fit side by side at 1440?** If yes, the stepper is
+   buying nothing. Measure it, do not estimate it.
+2. **Are the two sides the same kind of object?** A column of collapsed titles
+   beside one large picture is a table of contents next to a photograph, and no
+   amount of spacing makes that pair balance.
+3. **Does it move on its own?** An auto-advancing player changes the page under
+   a reader mid-sentence and keeps content behind a timer. On a section whose
+   subject is *trust*, that is the argument working against itself.
+
+A figure that survives all three keeps its stepper — the workflow ladder does,
+because it has four beats that are a **sequence** and a reader driving it by
+scrolling rather than by finding a button.
+
+## 4am. A loop may not delete its own premise
+
+Any looping scene: list what is on the canvas at the first frame and at the
+last, and diff them.
+
+```js
+const cv = document.querySelector('.wfsc__cv');
+[...cv.children].filter(e => getComputedStyle(e).opacity !== '0')
+  .map(e => e.className)
+// the ask is in this list at every frame of beat 1, including the landing
+```
+
+The workflow scene used to swap the person's ask for Okou's reply **in the
+same box** — one card out, one card in, on the same cue. Read as
+*"为什么一开始的chat，在之后消失了变成了一个slack里agent的反馈"*, and that is
+literally what it animated: the question turning into the answer. Nothing of
+the sort happens in the product; the ask stays in the channel and the reply
+arrives under it.
+
+**A sequence needs its earlier steps still on screen.** If an object has to
+leave for the next one to arrive, the composition is one object too big for
+the canvas — resize the arriving one rather than deleting the premise. Here the
+reply went from 44cqw to 30cqw, which is the difference between a second
+subject and a notification, and all three objects now clear each other.
 
 ## 4aj. Every control answers, and none of them shouts
 

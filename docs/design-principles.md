@@ -363,6 +363,41 @@ Reading both as "delete" throws away a claim the reader wanted. Reading both as
 "shrink" leaves an implementation detail on the page after being told twice it
 did not belong. The words are different; the edits are different.
 
+## 15. Machinery has to cost less than what it hides
+
+`#control` was a three-step auto-player: a column of collapsed titles, a
+progress rule under whichever one was playing, and a frame beside it that
+swapped pictures every 5.2 seconds. Tong, once two of the claims were left:
+*"你看看有什么方式把两段内容展示的更舒适一些，不用非得切tab的方式，感觉没必要"*.
+
+Count the states before building a stepper. This one cost a control the reader
+has to discover, an `aria-expanded` contract, an `inert` cycle, a timer, an
+IntersectionObserver, a `visibilitychange` handler and a park-on-interaction
+rule — about ninety lines — and what it bought was **hiding half of a section
+that fits on one screen**. At three states that was already a bad trade. At two
+it is not a trade at all.
+
+Two faults travel with the pattern and both are worse on a section like this
+one:
+
+**It is not a pair.** Left was a stack of one-line titles with three quarters
+of its column empty; right was one large picture. A table of contents beside a
+photograph does not balance at any spacing, because the two sides are not the
+same kind of object.
+
+**It moves, and it hides.** An auto-advancing player takes the page away from
+the reader mid-sentence and keeps content behind a timer. The subject of this
+section is *trust*. A section about control that will not show you everything
+at once is arguing against itself.
+
+What replaced it is two claims side by side, each with its own picture under
+it, on the same ground, at the same size — and no JS in the section at all.
+Deleting behaviour was the cheapest way to satisfy N4, N8 and N16 at once.
+
+The exception is a real sequence with a reader driving it: the workflow ladder
+keeps its four beats, because they are steps of one story and the control is
+the scroll the reader was already using.
+
 ---
 
 **On being asked to redesign.** *"重构"* means replacing the **argument** —

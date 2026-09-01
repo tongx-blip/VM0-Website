@@ -33,7 +33,7 @@
   // unfurl's left bar, a composer field and the panel's own window edge.
   // Every one is another application's chrome, which is the exception S4
   // states and the same reason `.vs__viz` is already on this list.
-  // `.ctrl__frame` draws the agent's own Authorization screen and the
+  // `.cbit__fig` draws the agent's own Authorization screen and the
   // product's in-chat permission card. Every line in it is the app's:
   // `PermissionActionCard` is `border-border/70` on the shell, the icon tile
   // and both controls, and the permission rows are separated the way the
@@ -41,7 +41,7 @@
   // the frame rather than the four classes inside it means the next pane
   // added to it does not fail this audit on its first day.
   const MOCK = '.absui,.slackui,.flowui,.okoui,.mock,.appui,.tplwin,.tpl,.step,' +
-               '.vs__viz,.wfo,.pbox,.ochat,.pgrant,.cbro,.ctrl__frame,.pcard';
+               '.vs__viz,.wfo,.pbox,.ochat,.pgrant,.cbro,.cbit__fig,.pcard';
   const bad = [];
   document.querySelectorAll('body *').forEach(el => {
     if (el.closest(MOCK)) return;
