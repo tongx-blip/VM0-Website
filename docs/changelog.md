@@ -4,6 +4,47 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the third comparison card now draws how you ask
+
+Tong: *"ok push上线"*. B1 is merged into `site/`; the connector hub it replaces
+is deleted.
+
+**What changed.** The Zapier · n8n card's figure was a wall of connector logos
+with our cube lit at the centre, which argued *"we have integrations"* — a claim
+every alternative on this page can also make, while the sentence under it has
+always argued something else. The figure now draws the two **invocations**:
+their language as the ground (four rows of step names running off all four
+edges, drifting in alternate directions, 68–100s) and ours as one sentence on
+the product's own composer, written once when the card arrives and then left
+alone with the caret blinking.
+
+**Three things the merge turned up, none of them visible in the review build:**
+
+- **The wall failed AA and axe caught 24 nodes of it.** The chips were a
+  translucent white inside a row at `opacity:.62` — which composites the *ink*
+  as well, so the labels landed at an effective #929997 on an effective
+  #F5F5E5: **2.67:1**. Decorative or not, a label is text to a checker, and
+  `aria-hidden` does not exempt it. Both values are stated opaque now with the
+  ink carried to the floor: #66707E on #F5F5E5, **4.73:1** — and opaque is also
+  the only version whose ratio does not move when the band's tint swaps with
+  the theme. Now RULES C15.
+- **The sentence was black on black in dark mode.** The card drew `--paper`
+  while its ink stayed `--p-fg`, so the surface inverted and the text did not.
+  A mock keeps its own LIGHT chrome in both themes (P1) — `--p-card`, like the
+  browser window and the lane stack beside it. Every screenshot of it had been
+  taken in light.
+- The judder Tong caught is written down as **N25**: a marquee's copy has to be
+  built out of whole tiles, and `gap` on the track puts a gap between the copies
+  too, so −50% lands half a gap short and jumps once per cycle.
+
+Gate: tokens/check-html/scopes/rules at 0, `audit.js` §1 §2 §5 §6 §7 §8 §9 §10
+§11 PASS (positioning unchanged at 1.01 screens), axe **0 violations in both
+themes**, reduced motion shows the finished state, and 390 checked — the band is
+240px there and the figure keeps its four rows.
+
+The heading is untouched and still worth one more look: *"A doer with context,
+not a trigger"* argues context, and the figure under it now argues the ask.
+
 ## 2026-09-01 · B1 chosen, and the marquee judder was arithmetic (not merged)
 
 Tong: *"Option1挺不错的。可以让图一的内容一次性动画出现，然后打字的竖线一直闪烁，

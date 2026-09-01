@@ -41,7 +41,13 @@ MOCK_SELECTORS = re.compile(
     r'\.(vsui|lanes|lane|arti|tsh|hub|absui|slackui|flowui|flowchat|flowsave|flowlist'
     r'|okoui|ochat|ochip|ocard|ostage|oresult|appui|tplwin|tpl|step|mock|shot|slk'
     r'|acard|a2a|wfo|wfsc|par|pbox|unlock|pgrant|cbro|state|okw'
-    r'|pcard|perms|cpane|ctrl__who|ctrl__ava)'
+    r'|pcard|perms|cpane|ctrl__who|ctrl__ava'
+    # the third comparison card's figure: `wall`/`wchip` draw a WIRING
+    # vocabulary that belongs to the alternative being compared (the same
+    # argument as the terminal on card one), and `wsay` is the product's
+    # own composer at the app's sizes. Both are pinned by P1, which is why
+    # the connector hub they replaced was on this list too.
+    r'|wall|wchip|wsay)'
     r'(?:__|--|\b)'
 )
 

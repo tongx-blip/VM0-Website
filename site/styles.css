@@ -5544,44 +5544,26 @@ img.lane__bot{
 
 
 
-/* ── the connector hub ──────────────────────────────────────────────
-   The Zapier card's claim is "reads the goal, picks the tools", so the
-   picture is the reach itself: every connector laid out on one regular
-   grid with Okou at the exact centre, and the rim masked away so a
-   9 x 5 crop reads as "and the rest of the thousand".
+/* ── the third card's figure: wired, or spoken ───────────────────────
+   WHAT WAS HERE. A connector hub: every mark on one regular grid with our
+   cube at the centre, a wave travelling out from it, and the rim masked
+   away so a 9x5 crop read as "and the rest of the thousand". It was well
+   built and it argued the wrong thing — *"we have integrations"*, which
+   every alternative on this page also has — while the sentence under it
+   argued how you ask for the work. The figure is the argument now; the
+   lessons from that pass that still hold are kept below.
 
-   LIGHT, deliberately. The reference for this was a dark grid; a dark
-   panel here would be the only inverted surface on a light page and would
-   fight the Page Theme Lock. The tiles use the product's own gray-50
-   (#F3F5F8) and its 8px item radius, so they are the same chip the app
-   puts a connector mark in.
+   NEUTRAL-ISH GROUND, and cool. An amber tint over --tile is a warm cream
+   and C2 is "cool neutrals, never warm"; `--hue-ops` sits between the
+   engineering blue on card one and the product teal on card two.
 
-   MULTI-STEP. Three tiles next to the centre light in sequence — read,
-   draft, post — and the ring leaves the centre on the same cycle. One
-   pass every 4.2s, so it reads as a run rather than as decoration. */
-/* NEUTRAL GROUND, no hue. An amber tint over --tile is a warm cream, and
-   C2 is "cool neutrals, never warm" — I introduced the one warm surface on
-   the page. It was also the wrong call independently: this band carries 55
-   brand marks, so the ground's job is to stay out of their way. The other
-   three tints are cool and stay. */
-/* THE MASK LIVES ON THE BAND, not on the grid. On .hub its percentages
-   were relative to the 682px grid, so the fade only finished 171px from
-   centre while the band edge is at 108px — the tiles were still ~60%
-   opaque where the card sliced them, and the rim read as a straight cut
-   rather than a fade. It was invisible while this card was six columns
-   wide and obvious as soon as it became five, worst in dark mode where
-   the tiles are the bright thing.
-
-   Inscribed in the band (50%/50%, transparent at 100%) it reaches zero
-   exactly at the edge at every card width instead of at one. */
-/* THE MASK BELONGS TO THE HUB, NOT TO THE BAND. Masking the band masked
-   its own fill, so this card could not carry a tint — it was pinned to
-   `--tile`, the same value as the card body under it, and the figure and
-   the sentence ran into each other with no edge between them. Its three
-   siblings have had a hue-tinted band since they were built; this one
-   lost it to the vignette. `--hue-ops` because green sits between the
-   engineering blue above it and the leadership violet beside it, and
-   because the warm hues are out on a cool page (design-principles §4). */
+   NO MASK ANYWHERE. The hub needed a rim fade and it went through three
+   homes — the grid (percentages relative to a 682px object, so it faded
+   171px out while the band ends at 108), then the band (which masks the
+   band's own FILL, so the card lost its tint), then the grid again. The
+   wall does not need one: it is type on a ground, it is CUT by the band
+   like the two product surfaces beside it, and a fade over discrete
+   objects has to reach zero before anything clips them anyway (N19). */
 .vs__viz--context{
   position:relative; padding:0;
   --vs-hue:var(--hue-ops);
@@ -5598,139 +5580,193 @@ img.lane__bot{
 }
 
 
-.hub{
-  /* Pinned light in both modes like every product mock (P1), so these are
-     literals on purpose and must NOT follow --ink-rgb: in dark mode that
-     channel inverts and the outline would go pale on a pale tile. */
-  /* A CHIP, NOT A HIGHLIGHT. At gray-50 these read as white cut-outs on
-     the tinted band, and the one tile that is meant to be white — ours,
-     at the centre — was only twelve levels brighter than the fifty-four
-     around it, so it had to earn its place on size alone. Two steps down
-     the ramp: the wall goes quiet, our mark is the only lit thing on it,
-     and the wave has somewhere to travel to. */
-  --hub-tile:#EDF0F4;   /* the product's gray-100 */
-  --hub-line:#E0E5EB;   /* one step down — the outline           */
-  --hub-lit:#FFFFFF;
-  --hub-cycle:3.2s;
-  --hub-step:.085s;     /* per cell of radius: the wave's speed  */
+/* ── WIRED, OR SPOKEN ────────────────────────────────────────────────
+   The figure this card used to carry was a wall of connector logos with
+   our cube lit at the centre, and it argued *"we have integrations"* —
+   which every alternative on this page also has. The sentence under it
+   has always argued something else: *"Zapier and n8n run the rule you
+   wired. Okou reads the goal in plain language, picks the tools."*
+   Tong: *"一个是传统工具调用方式，一个是自然语言调用方式 … 我们是自然语言，
+   门槛低"*. So the figure draws the two INVOCATIONS.
 
-  /* CENTRED EXPLICITLY, not by alignment. The grid is deliberately WIDER and
-     TALLER than its band, and both `place-items:center` and flex centring
-     fall back to start-alignment once a child overflows — that is the spec's
-     safe-alignment behaviour, and it left the hub sitting left of centre.
-     An absolute 50% + translate has no such fallback. */
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%, -50%);
-  display:grid;
+   Their language becomes the GROUND — four rows of step names running off
+   all four edges, drifting in alternate directions, dense enough that you
+   stop reading them and start seeing wallpaper. Ours is one sentence on a
+   real surface in front of it, written once and then left alone.
+
+   Chosen from four directions, then three variants of the winner:
+   `tools/build-versus-options.py` → okou-versus-options.sites.vm0.io.
+
+   PINNED LIGHT, like every product mock (P1). These are literals on
+   purpose and must not follow `--ink-rgb`: in dark mode that channel
+   inverts and a chip drawn from it would go pale on a pale band. They are
+   also NOT Zapier's palette or n8n's — a wiring vocabulary in the
+   abstract, so the figure argues about the method rather than about a
+   competitor's brand, the same way card 1 draws a generic terminal. */
+.wall{
+  /* A CHIP IS TEXTURE, NOT AN OBJECT: no ring, because a ringed white box
+     reads as one more thing to look at and there are eighty of them.
+
+     BOTH VALUES ARE OPAQUE, AND THAT IS AN ACCESSIBILITY FIX, not a taste
+     one. The first pass drew a translucent white chip and dropped the whole
+     row to `opacity:.62`, which is the same picture — but an alpha on an
+     ancestor composites the LABEL with whatever is behind it, so the ink
+     landed at an effective #929997 on an effective #F5F5E5: **2.67:1**, and
+     axe failed 24 nodes of it. These are the same two colours the composite
+     produced, stated directly, with the ink carried down to the AA floor:
+     #66707E on #F5F5E5 is **4.73:1**. Opaque also means the ratio does not
+     move with the theme — the band's tint is behind it and that tint does
+     swap (P1: a mock keeps its own light chrome, and this one has to). */
+  --w-chip:#F5F5E5;
+  --w-ink:#66707E;
+
+  position:absolute; inset:-6px -6px 0;
+  overflow:hidden;
+}
+
+.wchip{
+  display:inline-flex; align-items:center; flex:none;
+  height:30px; padding:0 13px;
+  /* THE GAP IS A TRAILING MARGIN, NOT `gap` ON THE ROW, AND THAT IS THE
+     WHOLE FIX FOR A JUDDER Tong caught: *"有时候滚动一会儿，还会抖动一下"*.
+     The row is doubled and travels −50%, which tiles only if the second
+     copy starts exactly one copy-width along. With `gap` on the row there
+     is also a gap BETWEEN the two copies, so the width is 2·copy + one
+     extra gap and −50% lands half a gap short — every wrap jumped 4px,
+     once per cycle, which is exactly why it read as intermittent rather
+     than as broken. A copy has to be built out of whole tiles (N14, one
+     level down). Measured after: half the row width and one copy's
+     advance differ by 0.0002px, and the rendered frames either side of
+     the wrap are pixel-identical. */
+  margin-right:10px;
+  border-radius:var(--r-xs, 6px);
+  background:var(--w-chip);
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
+  font-size:10.5px; letter-spacing:.085em; text-transform:uppercase;
+  color:var(--w-ink); white-space:nowrap;
+}
+
+.wall__row{
+  display:flex; align-items:center;
   width:max-content;
-  grid-template-columns:repeat(11, 52px);
-  gap:11px;
-
-  /* THE FADE HAS TO FINISH BEFORE THE CUT. Two things were wrong and
-     they were the same thing: `#000 45%, transparent 100%` is a straight
-     line in alpha, and it still had the edge tiles at about 40% when the
-     band's `overflow:hidden` sliced them — so a half-painted tile was
-     chopped in half, which is what read as abrupt. Widening the ellipse
-     only made it worse: the tiles then arrived at the edge at 0.9 and
-     were cut at full strength.
-
-     Ten stops on an ease-out curve, sized so alpha is ~0.03 by the time
-     a tile reaches the band's edge — 266 of the hub's 355px horizontal
-     radius, 108 of its 140px vertical one, both about 76%. Nothing is
-     ever cut while it is still visible, and no tile is more than about a
-     fifth lighter than its neighbour.
-
-     It also gives the card its boundary back: with the outer tiles gone
-     rather than faint, the band's own tint shows as a clean strip under
-     them, which is the edge the figure and the sentence were missing. */
-  -webkit-mask-image:radial-gradient(ellipse 54% 48% at 50% 50%,
-    #000 0%, #000 22%,
-    rgb(0 0 0 / .95) 34%, rgb(0 0 0 / .84) 44%,
-    rgb(0 0 0 / .66) 53%, rgb(0 0 0 / .45) 62%,
-    rgb(0 0 0 / .25) 70%, rgb(0 0 0 / .10) 78%,
-    rgb(0 0 0 / .03) 86%, transparent 94%);
-          mask-image:radial-gradient(ellipse 54% 48% at 50% 50%,
-    #000 0%, #000 22%,
-    rgb(0 0 0 / .95) 34%, rgb(0 0 0 / .84) 44%,
-    rgb(0 0 0 / .66) 53%, rgb(0 0 0 / .45) 62%,
-    rgb(0 0 0 / .25) 70%, rgb(0 0 0 / .10) 78%,
-    rgb(0 0 0 / .03) 86%, transparent 94%);
+  margin-bottom:10px;
+  /* the one linear exception a marquee takes, the same one `.rail__track`
+     takes, and paused until the card is on screen (N8) */
+  animation:wallSlide var(--dur, 78s) linear infinite paused;
 }
 
+.wall__row:nth-child(even){ animation-direction:reverse; }
 
-.hub__t{
-  display:grid; place-items:center;
-  width:52px; height:52px;
-  border-radius:8px;                      /* the product's item radius */
-  background-color:var(--hub-tile);
-  /* the outline is an INSET shadow, not a border: the tiles are on a fixed
-     52px pitch and a border would grow every one of them by 2px */
-  box-shadow:inset 0 0 0 1px var(--hub-line);
-  /* Pinned light in BOTH modes, like every other product mock on this
-     page (P1). The first dark pass followed --paper and inverted only the
-     centre tile, so the hub became the darkest thing on its own grid — the
-     exact opposite of what it is for. */
+.vs.is-in .wall__row{ animation-play-state:running; }
+
+@keyframes wallSlide{ to{ transform:translate3d(-50%,0,0); } }
+
+
+/* ── ours: the sentence, on a surface cropped by the band ─────────────
+   It starts at the band's own inset and runs PAST the right edge, because
+   the two figures beside it are oversized product surfaces cropped by
+   their bands — the lane stack loses 130px, the browser window runs past
+   both edges — and a figure that fits politely inside its frame reads as
+   emptier than its neighbours whatever is in it (*"不够饱满"*). */
+.wsay{
+  position:absolute; left:26px; right:-44px; bottom:26px;
+  padding:16px 18px 14px;
+  border-radius:var(--p-r-card);
+  /* --p-card, NOT --paper, and the same for the ink on it. This is the
+     product's composer, and a mock keeps its own LIGHT chrome in both themes
+     (P1) — the surfaces around it go dark, the app does not. Drawn from
+     `--paper` it inverted to a dark card while `--p-fg` stayed near-black,
+     so in dark mode the sentence was black on black. Invisible in every
+     screenshot taken in light, which is where it was checked. */
+  background:var(--p-card);
+  box-shadow:var(--e-lift);
 }
 
-
-.hub__t img{ width:22px; height:22px; object-fit:contain; }
-
-
-
-/* Okou at the centre, and the only tile with the accent on it */
-/* The hub reads as the hub by SIZE and a soft lift, not by glow. A heavy
-   accent halo under one tile was the loudest thing in the card and the
-   craft floor is explicit that a shadow carries an offset and a soft blur
-   while a coloured halo is decoration. */
-.hub__t--me{
-  position:relative;
-  width:62px; height:62px;
-  margin:-5px;
-  border-radius:14px;                     /* the product's card radius */
-  background-color:var(--hub-lit);
-  /* no lift. It reads as the centre by being bigger, whiter and more
-     rounded than everything around it; the shadow was a fourth signal
-     saying what three already said. */
-  box-shadow:inset 0 0 0 1px var(--hub-line);
+.wsay__p{
+  margin:0;
+  font-family:var(--fb); font-size:var(--t-sm); line-height:1.46; color:var(--p-fg);
 }
 
-
-.hub__t--me img{ width:30px; height:30px; }
-
-
-
-/* ── the wave ────────────────────────────────────────────────────────
-   Every tile runs the SAME animation and the only thing that differs is
-   when it starts: --d is the tile's distance from the centre in grid
-   cells, written onto each one, so the delay grows with the radius and
-   the whitening reads as a ring travelling outward. Three hand-picked
-   tiles lighting in sequence could never do that — it needs all 55.
-
-   Background only. The previous pass lifted each tile with a shadow as it
-   lit; a shadow on a chip inside a flat grid is a second material idea
-   doing the same job the colour already does. */
-.hub__t{
-  animation:hubWave var(--hub-cycle) var(--e-inout) infinite;
-  animation-delay:calc(var(--d, 0) * var(--hub-step));
-  animation-play-state:paused;
+/* ONE CLIP PER LINE, NEVER A FADE (N3) — and one line per element, because
+   a single wipe across a two-line paragraph uncovers both lines at once,
+   which is not how a sentence is written. */
+.wsay__l{
+  display:block;
+  animation:wsayType .82s var(--e-out) both paused;
 }
 
-/* the centre is the source of the wave, so it never joins it */
-.hub__t--me{ animation:none; }
+.wsay__l + .wsay__l{ animation-delay:.62s; }
 
-
-@keyframes hubWave{
-  0%, 4%    { background-color:var(--hub-tile); }
-  12%, 20%  { background-color:var(--hub-lit); }
-  34%, 100% { background-color:var(--hub-tile); }
+@keyframes wsayType{
+  from{ clip-path:inset(0 100% 0 0); }
+  to  { clip-path:inset(0 0 0 0); }
 }
 
+/* IT PLAYS ONCE. Tong: *"让图一的内容一次性动画出现，然后打字的竖线一直闪烁，
+   不用循环播放"*. A loop asks to be watched and this card is meant to be
+   read — and it sits in a row with two other cards that are already
+   moving. `animation-delay` is safe on a single pass and was not on the
+   looping version: a delay phase-shifts a repeating timeline forever, so
+   the two lines ran on cycles 1.1s apart and the card spent part of every
+   loop showing the back half of a sentence whose front half was gone. */
+.wsay__c{
+  display:inline-block; width:1.6px; height:14px; margin-left:2px;
+  vertical-align:-2px; background:var(--accent-solid);
+  animation:wsayCaret 1.05s steps(1) infinite paused;
+}
 
-.vs.is-in .hub__t{ animation-play-state:running; }
+@keyframes wsayCaret{ 0%,55%{ opacity:1 } 56%,100%{ opacity:0 } }
+
+/* the tools arrive after the sentence does — they are what it picked. A
+   mark is an object, not text, so this one may fade (N3 is about type). */
+.wsay__f{
+  display:flex; align-items:center; gap:9px;
+  margin:14px 0 0;
+}
+
+.wsay__f img{ width:19px; height:19px; object-fit:contain; }
+
+.wsay__f img,.wsay__f em{
+  animation:wsayMark .42s var(--e-out) both paused;
+}
+
+.wsay__f img:nth-of-type(1){ animation-delay:1.62s; }
+
+.wsay__f img:nth-of-type(2){ animation-delay:1.74s; }
+
+.wsay__f img:nth-of-type(3){ animation-delay:1.86s; }
+
+.wsay__f em{
+  font-style:normal;
+  font-family:var(--fm); font-size:9.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--p-mute);
+  animation-delay:1.98s;
+}
+
+@keyframes wsayMark{
+  from{ opacity:0; transform:translateY(3px); }
+  to  { opacity:1; transform:none; }
+}
+
+/* N24: the entrance starts when the card is on screen, not when the page
+   loads — otherwise the one pass is spent long before anyone scrolls to
+   it and the card is already finished by the time it is looked at. */
+.vs.is-in .wsay__l,
+.vs.is-in .wsay__c,
+.vs.is-in .wsay__f img,
+.vs.is-in .wsay__f em{ animation-play-state:running; }
 
 
+/* N2: the resting state is the finished state — the whole sentence,
+   painted, with its tools under it and a wall that is simply there. */
 @media (prefers-reduced-motion:reduce){
-  .hub__t{ animation:none; }
+  .wall__row{ animation:none; }
+
+  .wsay__l{ animation:none; clip-path:none; }
+
+  .wsay__c{ animation:none; opacity:1; }
+
+  .wsay__f img,.wsay__f em{ animation:none; opacity:1; transform:none; }
 
 }
 

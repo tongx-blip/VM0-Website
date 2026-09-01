@@ -2396,6 +2396,49 @@ Target ~2.3:1, and **state it as a colour**: the same alpha over a different
 fill is a different line, which is what made two rounds of this unfalsifiable
 (RULES S24).
 
+## 4ar. A marquee tiles, and decorative text still has to clear AA
+
+Both of these came out of one figure — the wall on the third comparison card —
+and both are invisible in a screenshot.
+
+**a. A copy is built out of whole tiles** (RULES §N25). A marquee doubles its
+content and travels −50%, which is seamless only if the second copy starts
+exactly one copy-width along. Put the space between items in `gap` on the track
+and it also lands *between the two copies*, so the width is 2·copy + one extra
+gap and −50% stops half a gap short. The content jumps by that half-gap once
+per cycle — at 76s that reads as an occasional judder, not as a bug, which is
+how it survives review. The gap belongs to the item, as a trailing margin.
+
+```js
+const r = document.querySelector('.wall__row');
+const n = r.children.length / 2;
+const adv = r.children[n].getBoundingClientRect().left
+          - r.children[0].getBoundingClientRect().left;
+r.getBoundingClientRect().width / 2 - adv        // must be ~0, not ~gap/2
+```
+
+And prove it by rendering, not only by arithmetic — seek the animation to
+either side of the wrap and diff the two frames:
+
+```js
+const a = el.getAnimations()[0]; a.pause();
+a.currentTime = duration - 1;   // screenshot
+a.currentTime = 1;              // screenshot — must be pixel-identical
+```
+
+**b. Decorative text is still text to axe** (RULES §C15). A figure's labels are
+wallpaper to a reader and a 4.5:1 requirement to a checker, and `aria-hidden`
+does not exempt them. The trap is **`opacity` on an ancestor**: it composites
+the ink with whatever is behind it, so a wall drawn at `.62` had an effective
+ink of #929997 on an effective #F5F5E5 — **2.67:1**, 24 nodes, none of it
+visible as a mistake. State the composite as opaque values instead and carry
+the ink down to the floor. Opaque is also the only version whose ratio does not
+move when the band's tint swaps with the theme.
+
+```bash
+agent-browser a11y     # violations must be 0 in BOTH themes, not just light
+```
+
 ## 4aq. A review build is pinned to one theme
 
 Anything under `options*/` borrows `site/styles.css`, and that stylesheet
