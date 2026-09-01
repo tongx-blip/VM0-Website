@@ -1,0 +1,351 @@
+/* ══════════════════════════════════════════════════════════════════
+   options-versus — four figures for the third comparison card, drawn on
+   the real stylesheet, at real size, inside the real three-card row.
+
+   Nothing here ships. The direction that wins gets rewritten into
+   src/css/system.css §the four devices, next to the other three.
+
+   THE ARGUMENT EVERY FIGURE HAS TO MAKE (Tong): *"zapier /n8n 通过传统的
+   工具方式调用，我们是自然语言，门槛低"* — the alternative is invoked by
+   WIRING it, we are invoked by SAYING it, and ours has the lower floor.
+   The card's sentence already says exactly that ("Okou reads the goal in
+   plain language, picks the tools"); it is the picture above it, a wall
+   of connector logos, that is still arguing "we have integrations".
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── review chrome ───────────────────────────────────────────────── */
+body.opts{ background:var(--wash); }
+.opts__head{
+  max-width:66ch; margin:0 auto;
+  padding:clamp(48px,7vw,96px) 24px clamp(20px,3vw,36px);
+  text-align:center;
+}
+.opts__k{
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-mute); margin:0 0 14px;
+}
+.opts__h{
+  font-family:var(--fd); font-size:clamp(30px,3.4vw,46px); font-weight:500;
+  letter-spacing:-.025em; line-height:1.06; color:var(--ink); margin:0 0 18px;
+}
+.opts__l{ font-size:var(--t-sm); line-height:1.65; color:var(--ink-soft); margin:0 0 14px; }
+.opts__l b{ font-weight:600; color:var(--ink); }
+.opts__l:last-child{ margin-bottom:0; }
+
+.opt{ padding:clamp(30px,4vw,58px) 0 0; }
+.opt__head{ max-width:64ch; margin:0 auto; padding:0 24px clamp(16px,2vw,22px); }
+.opt__k{
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent-wash); margin:0 0 8px;
+}
+.opt__t{
+  font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
+  letter-spacing:-.02em; color:var(--ink); margin:0 0 6px;
+}
+.opt__bet{
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-mute); margin:0 0 12px;
+}
+.opt__blurb{ font-size:var(--t-sm); line-height:1.62; color:var(--ink-soft); margin:0; }
+.opt__blurb b{ font-weight:600; color:var(--ink); }
+.opt__frame{ padding:0 var(--card-gap, 12px); }
+.opts__foot{
+  padding:clamp(48px,6vw,90px) 24px; text-align:center;
+  font-size:var(--t-sm); color:var(--ink-mute);
+}
+/* the two cards either side are not what is being decided — they are here so
+   the new figure is judged in the row it has to live in, which is the only
+   place it is ever seen */
+.opt__frame .vs:not(.vs--subject){ opacity:.5; }
+.opt__frame .vs--subject{ outline:2px solid rgb(var(--accent-rgb) / .5); outline-offset:3px; }
+
+/* ══════════════════════════════════════════════════════════════════
+   SHARED — the alternative's chrome.
+   Card 1 already establishes the convention: the surface that belongs to
+   the thing we are compared with is drawn in its OWN neutral, never in
+   ours (there it is a terminal). These are the greys for a generic node
+   editor: not Zapier's palette, not n8n's, and not the product's — a
+   wiring canvas in the abstract, so the figure argues about the METHOD
+   rather than about a competitor's brand.
+   ══════════════════════════════════════════════════════════════════ */
+.vs__viz--ask,.vs__viz--chain,.vs__viz--form{
+  --w-card:#FFFFFF;
+  --w-line:#D8DEE6;     /* the noodle, and a node's edge */
+  --w-node:#F1F4F8;     /* a node's fill                 */
+  --w-ink:#5A6472;      /* their labels                  */
+  --w-dim:#96A0AE;      /* their placeholder / chevron    */
+  --w-grid:#E4E9F0;     /* the canvas dots                */
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   A · TWO SURFACES — a form, and a sentence
+   The literal answer: both invocations, side by side, at the size each
+   one really is. Theirs is a canvas with three wired nodes and a panel of
+   fields to fill in; ours is one line typed into the composer, lapping
+   over it and in front. Nothing is labelled — the shapes are the claim.
+   ══════════════════════════════════════════════════════════════════ */
+.vs__viz--ask{ --vs-hue:var(--hue-ops); padding:0; }
+.ask{ position:absolute; inset:0; }
+
+.ask__canvas{
+  position:absolute; left:20px; top:18px; right:74px; bottom:86px;
+  border-radius:var(--p-r-card);
+  background:var(--w-card);
+  background-image:radial-gradient(var(--w-grid) 1.1px, transparent 1.1px);
+  background-size:13px 13px;
+  box-shadow:0 0 0 1px rgb(90 100 114 / .10);
+  overflow:hidden;
+}
+/* three nodes in a row, wired. The noodle is drawn as one SVG so the
+   curve is a real curve — a border-radius elbow reads as a table rule. */
+.ask__j{
+  position:absolute; top:38px; height:1.6px;
+  background:var(--w-line);
+}
+.ask__j--1{ left:76px; width:28px; }
+.ask__j--2{ left:164px; width:28px; }
+.ask__node{
+  position:absolute; top:20px;
+  width:60px; height:38px;
+  display:flex; flex-direction:column; justify-content:center; gap:4px;
+  padding:0 8px;
+  border-radius:8px; background:var(--w-node);
+  box-shadow:0 0 0 1px rgb(90 100 114 / .12);
+}
+.ask__node i{ display:block; height:4px; border-radius:2px; background:var(--w-dim); opacity:.6; }
+.ask__node i:first-child{ width:70%; background:var(--w-ink); opacity:.55; }
+.ask__node i:last-child{ width:44%; }
+.ask__node--1{ left:16px; }
+.ask__node--2{ left:104px; }
+.ask__node--3{ left:192px; }
+
+/* the panel of fields under them — the part that actually takes the time */
+.ask__panel{
+  position:absolute; left:16px; right:16px; top:78px;
+  display:grid; gap:6px;
+}
+.ask__row{
+  display:grid; grid-template-columns:64px 1fr; align-items:center; gap:8px;
+  font-family:var(--fb); font-size:9.5px; line-height:1.2; color:var(--w-ink);
+}
+.ask__row b{ font-weight:500; }
+.ask__row span{
+  display:flex; align-items:center; justify-content:space-between;
+  height:19px; padding:0 6px;
+  border-radius:5px; background:var(--w-card);
+  box-shadow:0 0 0 1px rgb(90 100 114 / .16);
+  color:var(--w-dim);
+}
+.ask__row span::after{
+  content:""; width:5px; height:5px; flex:none;
+  border-right:1.3px solid var(--w-dim); border-bottom:1.3px solid var(--w-dim);
+  transform:translateY(-1px) rotate(45deg);
+}
+
+/* ours, in front: the composer, and one sentence in it */
+.say{
+  position:absolute; right:0; bottom:16px; width:268px;
+  padding:11px 12px 9px;
+  border-radius:14px 0 0 14px;
+  background:var(--paper);
+  box-shadow:var(--e-lift);
+}
+.say__t{
+  margin:0 0 10px;
+  font-family:var(--fb); font-size:12.5px; line-height:1.45; color:var(--p-fg);
+}
+.say__t em{ font-style:normal; color:var(--p-fg); }
+.say__caret{
+  display:inline-block; width:1.5px; height:12px; margin-left:1px;
+  vertical-align:-2px; background:var(--accent-solid);
+  animation:askCaret 1.05s steps(1) infinite;
+}
+@keyframes askCaret{ 0%,55%{ opacity:1 } 56%,100%{ opacity:0 } }
+.say__r{ display:flex; align-items:center; justify-content:space-between; }
+.say__ic{ display:flex; align-items:center; gap:9px; color:var(--p-mute); }
+.say__ic svg{ width:13px; height:13px; }
+.say__go{
+  width:24px; height:24px; border-radius:7px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--accent); color:var(--accent-ink);
+}
+.say__go svg{ width:13px; height:13px; }
+@media (prefers-reduced-motion:reduce){ .say__caret{ animation:none } }
+
+/* ══════════════════════════════════════════════════════════════════
+   B · FIVE STEPS, OR ONE SENTENCE
+   No product chrome at all: the two languages, set as type. Theirs is
+   five chips of jargon wired in a row, in the utility face, small and
+   grey — the register this page reserves for MACHINE labels. Ours is one
+   line of prose you could say out loud, at reading size, and the tools it
+   picked sit under it as marks rather than as a wall.
+   ══════════════════════════════════════════════════════════════════ */
+.vs__viz--chain{ --vs-hue:var(--hue-ops); padding:26px 0 0 26px; }
+/* the stack is optically centred in the band rather than hung from the top:
+   the group is ~190px in a 276px frame, and pinned to the top it left a third
+   of the card empty under it */
+.chain{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:0 0 0 24px;
+}
+.chain__wire{
+  display:flex; align-items:center; gap:0;
+  width:max-content;
+  opacity:.72;
+}
+.chain__chip{
+  display:inline-flex; align-items:center; height:23px; padding:0 9px;
+  border-radius:6px; background:var(--w-card);
+  box-shadow:0 0 0 1px rgb(90 100 114 / .16);
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
+  font-size:9px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--w-ink); white-space:nowrap;
+}
+.chain__j{ width:16px; height:1.4px; background:var(--w-line); flex:none; }
+.chain__and{
+  margin-top:9px; margin-left:2px;
+  font-family:var(--fm); font-size:9px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--w-dim);
+}
+
+/* the sentence, in the composer's own box */
+.chain__say{
+  margin-top:24px; margin-right:26px;
+  padding:15px 16px 13px;
+  border-radius:14px; background:var(--paper);
+  box-shadow:var(--e-fig);
+}
+.chain__say p{
+  margin:0;
+  font-family:var(--fb); font-size:14px; line-height:1.45; color:var(--p-fg);
+}
+.chain__picked{
+  display:flex; align-items:center; gap:8px;
+  margin-top:15px; margin-left:2px;
+}
+.chain__picked img{ width:17px; height:17px; object-fit:contain; }
+.chain__picked em{
+  font-style:normal;
+  font-family:var(--fm); font-size:9px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-mute);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   C · THE DRAWING
+   The R2 brand register, which is where this page puts anything that has
+   to be understood before it is read: a knot of patch cables on one side,
+   a person just saying it on the other, and the cube taking the one cable
+   and plugging it in for them. Generated to match `spot-permission-key`
+   exactly — same outline weight, same orange face, cobalt beanie, lime
+   jumpsuit, flat fills, no noise.
+   ══════════════════════════════════════════════════════════════════ */
+.vs__viz--drawn{ --vs-hue:var(--hue-ops); padding:0; }
+.drawn{ position:absolute; inset:0; display:block; }
+.drawn img{
+  /* TRIMMED TO ITS INK, then bled off both sides. The file came back with a
+     third of its height empty — dropped into the band untrimmed it left a
+     150px shelf of tint above the cables and the drawing sat on the floor.
+     Cropped to the drawing's own bounds it is a 2.4:1 strip, so it fills the
+     width, runs off both edges like the product surfaces beside it, and sits
+     optically centred rather than parked. */
+  position:absolute; left:-8%; top:50%;
+  width:120%; height:auto;
+  transform:translateY(-50%);
+  object-fit:contain;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   D · THE SETUP EMPTIES
+   One surface, and the argument is the TRANSITION rather than a
+   comparison: their setup sheet fills itself in field by field, then the
+   whole thing collapses to the one line that replaces it. It loops, so
+   the card is the only one in the row that is still moving after you have
+   read it — which is also the risk.
+   ══════════════════════════════════════════════════════════════════ */
+.vs__viz--form{ --vs-hue:var(--hue-ops); padding:0; }
+.setup{
+  position:absolute; left:22px; top:20px; right:-34px; bottom:22px;
+  border-radius:var(--p-r-card);
+  background:var(--w-card);
+  box-shadow:0 0 0 1px rgb(90 100 114 / .10), var(--e-fig);
+  overflow:hidden;
+}
+/* THE ENTRANCE IS STAGGERED, THE EXIT IS NOT — and they are on different
+   elements for that reason. Both beats used to live in one keyframe on the
+   row, with `animation-delay` doing the stagger; a delay shifts the WHOLE
+   timeline, so the sixth row was still leaving 1.7s after the first and the
+   sentence arrived into a sheet that was still half-there. Rows only arrive
+   now; the sheet leaves as one object. */
+.setup__hd{
+  display:flex; align-items:center; gap:7px;
+  padding:11px 14px 9px;
+  font-family:var(--fm); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--w-dim);
+}
+.setup__hd b{ font-weight:500; color:var(--w-ink); }
+.setup__sheet{
+  animation:sheetOut 8s var(--e-out) infinite both;
+}
+.setup__rows{ display:grid; gap:7px; padding:0 14px; }
+.setup__row{
+  display:grid; grid-template-columns:58px 1fr; align-items:center; gap:9px;
+  font-family:var(--fb); font-size:9.5px; color:var(--w-ink);
+  opacity:0;
+  animation:setupIn 8s var(--e-out) infinite both;
+  animation-delay:calc(var(--i) * .3s);
+}
+.setup__row span{
+  display:flex; align-items:center; justify-content:space-between;
+  height:20px; padding:0 7px;
+  border-radius:5px; background:var(--w-card);
+  box-shadow:0 0 0 1px rgb(90 100 114 / .16); color:var(--w-dim);
+}
+.setup__row span::after{
+  content:""; width:5px; height:5px; flex:none;
+  border-right:1.3px solid var(--w-dim); border-bottom:1.3px solid var(--w-dim);
+  transform:translateY(-1px) rotate(45deg);
+}
+@keyframes setupIn{
+  0%  { opacity:0; transform:translateY(4px); }
+  9%  { opacity:1; transform:none; }
+  100%{ opacity:1; transform:none; }
+}
+/* one field every .3s, six of them, then it holds — and at 56% the whole
+   sheet goes at once, which is the beat the sentence lands in */
+@keyframes sheetOut{
+  0%,56%  { opacity:1; }
+  63%,92% { opacity:0; }
+  100%    { opacity:1; }
+}
+/* centred in the sheet it replaces, not parked at the top of it */
+.setup__said{
+  position:absolute; left:14px; right:14px; top:50%;
+  padding:15px 16px 13px;
+  border-radius:12px; background:var(--paper);
+  box-shadow:var(--e-fig);
+  opacity:0;
+  animation:saidIn 8s var(--e-out) infinite both;
+}
+.setup__said p{
+  margin:0;
+  font-family:var(--fb); font-size:13px; line-height:1.42; color:var(--p-fg);
+}
+.setup__said em{
+  display:block; margin-top:9px;
+  font-style:normal;
+  font-family:var(--fm); font-size:9px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-mute);
+}
+@keyframes saidIn{
+  0%,63%   { opacity:0; transform:translate(0,calc(-50% + 5px)); }
+  71%,92%  { opacity:1; transform:translateY(-50%); }
+  100%     { opacity:0; transform:translate(0,calc(-50% + 5px)); }
+}
+/* RESTING IS THE FINISHED STATE (N2): with motion off, the card shows the
+   sentence that replaced the form, not the form. */
+@media (prefers-reduced-motion:reduce){
+  .setup__row{ animation:none; opacity:1; }
+  .setup__sheet{ animation:none; opacity:.3; }
+  .setup__said{ animation:none; opacity:1; transform:translateY(-50%); }
+}

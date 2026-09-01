@@ -1,0 +1,10 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Zapier's six-spoke asterisk, in Zapier's orange. The file that was here
+       held a single path, "M12 6H0V9H12V6Z" — one horizontal bar of the mark
+       and nothing else, so every place it appeared rendered an orange dash. -->
+  <g stroke="#FF4F00" stroke-width="4.6" stroke-linecap="round" fill="none">
+    <path d="M12 2.6v18.8"/>
+    <path d="M3.86 7.3 20.14 16.7"/>
+    <path d="M3.86 16.7 20.14 7.3"/>
+  </g>
+</svg>

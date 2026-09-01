@@ -4,6 +4,46 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · four figures for the Zapier · n8n card (not merged)
+
+Tong: *"这个卡片你可以想下怎么表达，一个是传统工具调用方式，一个是自然语言调用
+方式 … 给我出四个 Option 我先看看"*, and on the screenshot itself: *"zapier /n8n
+通过传统的工具方式调用，我们是自然语言，门槛低"*.
+
+**The card already says it; the picture does not.** The paragraph reads "Zapier
+and n8n run the rule you wired. Okou reads the goal in plain language, picks the
+tools" — and the figure above it is a wall of connector logos with our cube lit
+in the middle, which argues *we have integrations*. Every alternative on this
+page has those, so the figure is not wrong, it is answering a question nobody
+asked.
+
+`tools/build-versus-options.py` → **https://okou-versus-options.sites.vm0.io/**.
+Four figures, each rendered at real size inside the real three-card row with the
+two neighbours dimmed, because a figure for this card is only ever seen in that
+row.
+
+| | route | what it is |
+|---|---|---|
+| **A** Two surfaces | their canvas · our composer | Three wired nodes over four fields to fill in, and one sentence in the composer lapping over it. Both invocations at the size they really are |
+| **B** Five steps, or one sentence | type only | The two *languages*: five chips of jargon in the utility face running off the edge, one line of prose, and the tools it picked underneath |
+| **C** The drawing | 插画 · R2 register | A knot of patch cables into a switchboard, a person just saying it, and the cube plugging in the one cable for them |
+| **D** The setup empties | 交互 · 8s loop | The sheet fills in field by field, then collapses into the line that replaces it — 门槛低 as a subtraction |
+
+Found while building: **a staggered `animation-delay` shifts the whole timeline,
+not just the entrance.** D's rows arrived and left in one keyframe, so the sixth
+row was still leaving 1.7s after the first and the sentence landed in a sheet
+that was still half there. The entrance staggers on the rows; the exit lives on
+their container and happens once.
+
+The illustration is generated to match `spot-permission-key` — `nano-banana-2`,
+raw prompt, no style compiler — then keyed off its white ground and **trimmed to
+its own ink**: a third of the file's height was empty, and dropped into the band
+untrimmed it left a 150px shelf of tint above the cables.
+
+Nothing is merged, and `site/` is unchanged apart from the new asset. If a
+direction wins, the heading wants one more look: *"A doer with context, not a
+trigger"* argues context, and all four of these argue the ask.
+
 ## 2026-09-01 · the hero asks, the register converges, and one radius ladder
 
 Five items off the check list, decided in one message.
