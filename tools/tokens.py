@@ -309,6 +309,91 @@ def dead_declarations(paths):
     return {k: v for k, v in seen.items() if len(v) > 1}
 
 
+SHORTHAND = {
+    'margin':        ('margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+                      'margin-block', 'margin-inline'),
+    'padding':       ('padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+                      'padding-block', 'padding-inline'),
+    'border-radius': ('border-top-left-radius', 'border-top-right-radius',
+                      'border-bottom-right-radius', 'border-bottom-left-radius'),
+    'inset':         ('top', 'right', 'bottom', 'left'),
+    'background':    ('background-color', 'background-image', 'background-position',
+                      'background-size', 'background-repeat'),
+    'border':        ('border-width', 'border-style', 'border-color'),
+    'gap':           ('row-gap', 'column-gap'),
+    'overflow':      ('overflow-x', 'overflow-y'),
+    'flex':          ('flex-grow', 'flex-shrink', 'flex-basis'),
+    'grid-template': ('grid-template-rows', 'grid-template-columns'),
+    'font':          ('font-size', 'font-weight', 'font-family', 'line-height'),
+}
+
+
+def shorthand_eats_longhand(paths):
+    """A longhand a LATER shorthand on the same selector silently resets.
+
+    Three times in one day, in three different components:
+
+      * `.okw__bar` restated `padding-left` above a block whose `padding`
+        shorthand followed it — the connector card's lap inset never applied.
+      * `.panel--lead-left > .section-body{margin-inline:0}` lost to
+        `.panel > .section-body{margin-inline:auto}` (equal specificity, later
+        position) and the heading went left while the lede stayed centred.
+      * `.wfo__replyhd{margin-top:2.1em}` was reset to 0 by the `margin:0 0
+        .35em` in the very next rule, so *"两段离着太近了"* stayed 7px after the
+        fix that was supposed to make it 33.
+
+    None of these is a specificity mistake, which is why reading the selectors
+    does not find them: the two rules are IDENTICAL selectors and the later one
+    simply wins. `dead_declarations` misses it because the property names
+    differ. The fix is always the same — fold the value into the shorthand —
+    and the check is cheap, so it lives here rather than in prose.
+    """
+    hits = []
+    for path in paths:
+        css = strip_comments(path.read_text(encoding='utf-8'))
+        # (media, selector) -> {prop: [lines]}
+        seen, media, media_depth, depth, in_kf, kf_depth = {}, '', None, 0, False, None
+        for m in re.finditer(r'@[\w-]+[^{]*\{|([^{}]+)\{([^{}]*)\}|\}', css):
+            tok = m.group(0)
+            if tok.startswith('@'):
+                if tok.startswith('@keyframes'):
+                    in_kf, kf_depth = True, depth
+                elif tok.startswith('@media'):
+                    media, media_depth = ' '.join(tok[:-1].split()), depth
+                depth += 1
+                continue
+            if tok == '}':
+                depth -= 1
+                if kf_depth is not None and depth == kf_depth:
+                    in_kf, kf_depth = False, None
+                if media_depth is not None and depth == media_depth:
+                    media, media_depth = '', None
+                continue
+            sel = ' '.join((m.group(1) or '').split())
+            if not sel or sel.startswith('@') or in_kf:
+                continue
+            line = css[:m.start()].count('\n') + 1
+            for d in (m.group(2) or '').split(';'):
+                if ':' not in d:
+                    continue
+                prop = d.split(':')[0].strip()
+                if not prop or prop.startswith('--'):
+                    continue
+                seen.setdefault((media, sel), {}).setdefault(prop, []).append(line)
+        for (media, sel), props in seen.items():
+            for short, longs in SHORTHAND.items():
+                if short not in props:
+                    continue
+                last_short = max(props[short])
+                for lg in longs:
+                    if lg not in props:
+                        continue
+                    dead = [n for n in props[lg] if n < last_short]
+                    if dead:
+                        hits.append((path.name, media, sel, lg, dead, last_short))
+    return hits
+
+
 def dark_themes_disagree(path):
     """The two dark palettes must declare the same values.
 
@@ -424,6 +509,13 @@ def main():
     for name, (f, line) in missing:
         print(f'  {f}:{line}  var({name})')
     total += len(missing)
+
+    eaten = shorthand_eats_longhand([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
+    print(f'\n=== longhands reset by a later shorthand on the same selector: {len(eaten)}')
+    for f0, media, sel, lg, dead_lines, short_line in eaten[:14]:
+        m = f' @{media[:18]}' if media else ''
+        print(f'  {f0}{m}  {sel[:32]:<32} {lg:<16} line(s) {dead_lines} < shorthand line {short_line}')
+    total += len(eaten)
 
     dead = dead_declarations([ROOT / 'src/css/base.css', ROOT / 'src/css/system.css'])
     n_dead = sum(len(v) - 1 for v in dead.values())

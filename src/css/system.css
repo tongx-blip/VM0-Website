@@ -942,7 +942,16 @@ h3{ font-family:var(--fd); }
      at the top of the page the bar is not an object yet, and a hairline
      ruled across the whole window above an unscrolled hero is the
      structural line S4 forbids rather than the outline of a card */
-  box-shadow:inset 0 0 0 .5px var(--nav-edge);
+  /* 1px, NOT .5px. Tong: *"stroke 还是看不出来"* — and the alpha was not the
+     problem the second time either. Sampled across the bar's top edge, the
+     ring WAS painting: one row at rgb(220,215,214) against a fill of
+     rgb(239,234,232) at 1x, and rgb(202,197,196) at 2x. A half-pixel ring is
+     antialiased into whatever it lands on, so it spends most of its contrast
+     on the blend — and against a white section card, where this bar is
+     actually read, a light fill separated from white by a line that is itself
+     half-there reads as no line at all. At 1px it is one device pixel at 1x
+     and two at 2x, which is what a hairline has to be to survive both. */
+  box-shadow:inset 0 0 0 1px var(--nav-edge);
   top:var(--nav-top);
   left:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
   right:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
@@ -2206,8 +2215,11 @@ h3{ font-family:var(--fd); }
   letter-spacing:-.045em;
   font-variant-numeric:tabular-nums;
 }
+/* NO `margin-top` HERE. The label's spacing is set further down, in a rule
+   whose `margin:0` shorthand resets whatever this one says — found by
+   `tokens.py`'s shorthand check the day it was written. */
 .metrics span{
-  display:block; margin-top:12px;
+  display:block;
 }
 
 /* ─────────────── 12. what Okou reaches ───────────────
@@ -2993,10 +3005,24 @@ h3{ font-family:var(--fd); }
    half as big again as its top. Tong: *"图1那个 chat 下边留的空间有点大了，和
    上边 padding 对齐吧"*. A margin inside an `overflow:hidden` box cannot
    collapse out and is clipped to nothing at 0fr. Measured: 18 over, 18 under. */
-.wfo__replyhd{ margin-top:1.05em; }
+/* A MESSAGE BOUNDARY, NOT A LINE BREAK. Tong: *"两段离着太近了"*. At 1.05em
+   the gap between the ask and the reply was 16px against the 11px that
+   separates the caption from its own sentence — a 1.5x step, which is not
+   enough to say "different person, different message". The card has three
+   gaps and they have to rank: inside a message (.35em) < caption to its text
+   (.7em) << message to message. */
 .wfo__replyhd{
   display:flex; align-items:center; gap:.5em;
-  margin:0 0 .35em;
+  /* A MESSAGE BOUNDARY, NOT A LINE BREAK. Tong: *"两段离着太近了"*. Measured
+     ink-to-ink, the ask ran into the reply at 7px — SMALLER than the 13px
+     between the caption and its own sentence, and smaller than the 8-12px
+     between two lines of the same paragraph. The card has three gaps and they
+     have to rank: inside a message (.35em) < caption to its text (.7em) <<
+     message to message.
+     IN THE SHORTHAND, because a separate `margin-top` above this block is
+     silently reset by this `margin` — the third time that has bitten this
+     file today. `tokens.py` checks for it now. */
+  margin:2.1em 0 .35em;
   color:var(--ink-soft);
   /* same row, same register as the caption above it (RULES S20) */
   font-family:var(--fb); font-variant-numeric:tabular-nums;

@@ -2344,6 +2344,34 @@ And the same counting works for radii (RULES S22) — three roles, three values:
 // ground · surface · inside-a-surface, plus 50%/999px for things that are round
 ```
 
+## 4ap. Two ways a rule that is written can still not be doing anything
+
+Both bit in the same session, both after a change that read as correct in the
+diff, and neither is a specificity mistake.
+
+**A longhand above a shorthand on the same selector.** `padding-left` above a
+`padding`; `margin-top` above a `margin`; `margin-inline:0` above a
+`margin-inline:auto` at equal specificity. The later rule wins, the selectors
+are identical, and reading them finds nothing. `tokens.py` now fails on it —
+the check knows the shorthand families and reports the line numbers:
+
+    === longhands reset by a later shorthand on the same selector: 0
+
+It found one nobody had noticed the day it was written (`.metrics span`).
+The fix is always the same: fold the value into the shorthand (RULES S23).
+
+**A hairline authored at `.5px`.** Do not argue about the alpha until you have
+sampled the pixels. A half-pixel ring is antialiased into whatever it lands on,
+so it renders at roughly half the colour you asked for:
+
+```js
+// screenshot at deviceScaleFactor 1 AND 2, then read the row at the edge
+// fill rgb(239,234,232) · .5px @ .18 → rgb(220,215,214) · 1px @ .18 → rgb(202,197,196)
+```
+
+`.1 → .18` did not make the header's stroke visible, because the alpha was
+never what was wrong. Raise the width first (RULES S24).
+
 ## 4aj. Every control answers, and none of them shouts
 
 Two failures, one sweep. Both were shipped and neither was visible in a

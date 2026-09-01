@@ -4,6 +4,69 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the stroke was never the alpha, and a check that finds the rest
+
+Two notes, and both of my earlier fixes had been written correctly and were
+doing nothing.
+
+### F-03 again · *"stroke 还是看不出来"*
+
+Correct, and the interesting part is that the ring was painting the whole time.
+Sampled across the bar's top edge, at `.18`:
+
+| | fill | edge |
+|---|---|---|
+| 1x | `rgb(239,234,232)` | `rgb(220,215,214)` |
+| 2x | `rgb(239,234,232)` | `rgb(202,197,196)` |
+
+Two different values for one declaration is the tell: **it was authored at
+`.5px`**, so at 1x it is antialiased into the fill and renders at about half
+the colour it asks for. Raising `.1 → .18` this morning moved the number and
+not the problem. At `1px` it is one device pixel at 1x, two at 2x, and it lands
+at the full `rgb(202,197,196)` in both — visible against the white section card,
+which is where this bar is actually read. RULES **S24: a hairline is 1px**;
+raise the width before the alpha.
+
+### *"两段离着太近了"*
+
+Measured ink-to-ink inside the thread card, the gaps were:
+
+    caption → ask      13px
+    ask line → line     8 / 12px
+    ask → reply         7px      ← the message boundary
+    reply hd → text     6px
+    reply line → line  10px
+
+The boundary between two people was the **smallest** gap on the card. And the
+`margin-top:2.1em` I had just added to fix it was dead: `.wfo__replyhd` has a
+`margin:0 0 .35em` shorthand in the very next rule, which resets it.
+
+Folded into the shorthand. Now `13 / 8 / 12 / **37** / 6 / 10` — inside a
+message < caption to its text << message to message.
+
+### The check that came out of it
+
+That is the **third** time in one day a longhand has been silently reset by a
+later shorthand on the same selector — `.okw__bar`'s lap inset, then
+`.panel--lead-left`'s `margin-inline`, then this. None of them is a specificity
+mistake, which is exactly why reading the selectors never finds them: the
+selectors are identical and the later rule simply wins.
+
+`tools/tokens.py` grows a check for it. It knows eleven shorthand families and
+reports the dead line numbers against the shorthand's:
+
+    === longhands reset by a later shorthand on the same selector: 0
+
+It found one on its first run that nobody had noticed — `.metrics span` had a
+`margin-top:12px` at line 2217 reset by a `margin:0` at 6181, on a component
+that is not even on the page any more. Removed. RULES **S23**.
+
+### Gate
+
+`tokens` 0 (with the new check) · `check-html` balanced · `scopes` 0 · `rules`
+184/80/11 resolve · `audit.js` §1 §3 §5 §6 §9 §10 §11 pass · axe 0 violations in
+both themes, whole page walked · nav edge verified by pixel sample in light and
+dark, card gaps verified by ink-band measurement.
 ## 2026-09-01 · four figures for the Zapier · n8n card (not merged)
 
 Tong: *"这个卡片你可以想下怎么表达，一个是传统工具调用方式，一个是自然语言调用
