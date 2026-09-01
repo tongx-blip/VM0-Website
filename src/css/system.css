@@ -3805,9 +3805,12 @@ h3{ font-family:var(--fd); }
   width:max-content;
   margin-inline-start:50%;
   transform:translate3d(
-    calc(-1 * (var(--lane-i, 1) * var(--lane-pitch) + var(--lane-w) / 2)), 0, 0);
+    calc(-1 * (var(--lane-i, 4) * var(--lane-pitch) + var(--lane-w) / 2)), 0, 0);
   transition:transform var(--t-reveal) var(--e-spring);
 }
+/* the whole-copy jump: same frame either side, so it must not animate */
+.lanes.is-snap,
+.lanes.is-snap .lane{ transition:none; }
 
 /* TALLER THAN THE BAND, AND TALL ENOUGH TO SURVIVE THE STEP DOWN. The band
    tops out at 276 and insets 26, so 250 is visible; a card stepped to .94
@@ -3848,7 +3851,14 @@ h3{ font-family:var(--fd); }
    top into three widely separated things. The card is 196–250 wide now, not
    320: the seat comes down to 22 and the name sits against it, so the header
    reads as one object — who — and the task title under it gets the weight. */
-.lane__h{ display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+/* ONE ROW, THREE THINGS, TWO EDGES. The seat sits on the card's left inset,
+   the name is against it, and the timestamp is pushed to the right inset by
+   `margin-left:auto` — so every card's avatar starts on the same x and every
+   card's `now` ends on the same x, which is what makes the stack read as a
+   column rather than as four separately arranged headers. `align-items` is
+   centre so the name's line box centres on the seat instead of sitting on
+   its baseline, which rode the text high against a 30px square. */
+.lane__h{ display:flex; align-items:center; gap:9px; margin-bottom:11px; }
 
 /* THE OWNER, WITH THE RUNNER BADGED ON IT. B4: an agent is DRAWN and a
    person is PHOTOGRAPHED, so a photograph alone in a run card's seat says a
@@ -3867,8 +3877,13 @@ h3{ font-family:var(--fd); }
    rules matching it and neither of them explaining it. A seat holding one
    image and one badge does not need flex layout at all: the photograph fills
    the box, the badge is positioned on it, and neither can be resized by the
-   other. */
-.lane__ava{ position:relative; display:block; flex:none; width:22px; height:22px; }
+   other.
+
+   BACK TO 30. 22 was cut to buy header height on a narrower card and it took
+   the face with it — at 22 the person stopped being recognisable, which is
+   the whole reason a photograph is there rather than a mark. The height comes
+   out of the gap and the margin instead. */
+.lane__ava{ position:relative; display:block; flex:none; width:30px; height:30px; }
 .lane__ava > img{ position:absolute; inset:0; width:100%; height:100%;
   border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
 /* HALF THE SEAT. The 16px floor the avatar round settled is the size this
@@ -3888,7 +3903,7 @@ img.lane__bot{
      the badge sat over the face's top-left instead of the corner. An inset
      is one shorthand; overriding half of it leaves the other half in place. */
   position:absolute; inset:auto -3px -3px auto;
-  width:11px; height:11px; border-radius:4px;
+  width:15px; height:15px; border-radius:5px;
   box-shadow:0 0 0 1.5px var(--p-card);
 }
 
@@ -3918,8 +3933,16 @@ img.lane__bot{
 }
 
 /* the timestamp moves to the right edge, which is where the product puts
-   a row's meta — and it gives the name the whole left side */
-.lane__h span{
+   a row's meta — and it gives the name the whole left side.
+
+   `:not(.lane__ava)`, BECAUSE THE SEAT IS A SPAN TOO. This rule predates the
+   paired avatar, and the moment the seat became `<span class="lane__ava">` it
+   started collecting `margin-left:auto` as well — so the avatar was pushed
+   52px off the card's left edge and every card's header started at a
+   different x, depending on how long the name was. Read as *"头像要做对齐"*.
+   A bare element selector inside a component will find every new element
+   that component grows. */
+.lane__h > span:not(.lane__ava){
   margin-left:auto; padding-left:8px;
   font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:12px; letter-spacing:.02em;
   color:var(--p-mute); white-space:nowrap;

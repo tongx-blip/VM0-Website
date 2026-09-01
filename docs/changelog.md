@@ -4,6 +4,74 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the parallel card has never animated, and now it does
+
+Tong: *"线上没有动画，怎么回事"* and *"卡片的动画为什么一直没有？动画里，卡片一直
+从右边往左划出，无限循环，不要往右滑。"*
+
+### the figure could never start, and that predates this rotation
+
+`app.js` observed **`.lanes`** — the track — with `threshold: 0.25`. The track
+is `width:max-content`: twelve cards is about 3000px, of which only the band's
+~420 is ever unclipped by `overflow:hidden`. Measured, its intersection ratio
+tops out at **0.09**, so a 0.25 threshold can never be met and `laneRun(true)`
+was never called. The observer sat there reporting the track off screen while
+it was directly in front of the reader.
+
+    band  observer   hit=true   ratio=1.00
+    track observer   hit=false  ratio=0.09
+
+The old panning track had the same shape, which is why the answer to *"为什么
+一直没有"* is that it never ran — the pan was as dead as the rotation that
+replaced it. A threshold is a fraction **of the observed element**, so it can
+only be asked of an element whose size means something; the band is either on
+screen or not, the track is mostly off the side of it by construction.
+
+### one direction, forever
+
+The first pass ping-ponged at the ends to avoid rewinding the strip, and the
+return leg slid the cards **right** — a board of running work that backs up
+reads as undoing itself. The track now carries three copies of the four agents
+and the focus lives in the middle one: it always advances, always leftward,
+and when it lands on the twin of where it started the index is snapped back a
+whole copy with the transition off. The frame either side of that snap is
+identical, checked rather than assumed — `i=4` and `i=8` both render
+`Ines / Ravi / Mira` at off-centre 0.
+
+**The snap gets its own tick.** Doing it in the same turn as the next move put
+the whole thing on a forced reflow landing between two writes to one property;
+if it does not, the browser coalesces them and the card slides right by three
+pitches. Scheduling it into the middle of the dwell means every *animated*
+change is one card to the left and the only silent one happens while nothing
+else moves. Simulated over 23 moves: 0 slid right.
+
+### the seat, and a bare element selector
+
+Seat back to 30 (22 was cut to buy header height and took the face with it —
+at 22 the person stopped being recognisable, which is the whole reason a
+photograph is there rather than a mark); badge back to half of it, 15.
+
+`.lane__h span { margin-left:auto }` was written for the timestamp. The paired
+avatar arrived later as `<span class="lane__ava">` — and started collecting
+`margin-left:auto` too, so the seat was pushed **52px** off the card's left
+edge and every header started at a different x depending on how long the name
+was. Read as *"头像要做对齐"*. Now `.lane__h > span:not(.lane__ava)`, and the
+seat sits at x=17 with the timestamp 17 from the right on **every** card at
+1024 and 1440. A bare element selector inside a component finds every new
+element that component grows.
+
+### what could not be checked here, and how it was checked instead
+
+rAF runs **3 frames in 5 seconds** under headless virtual time, so no
+screenshot or DOM probe in this environment can show the rotation advancing —
+two earlier "the index never changed" readings were the measurement, not the
+code. The advance rule is verified by simulating its own expressions (23
+moves, none rightward, cadence 2840ms = dwell 2200 + move 640) and the
+geometry per beat by pinning `--lane-i` with transitions off.
+
+Gate: `tokens.py` 0 · `check-html.py` balanced · `scopes.py` 0 · `rules.py`
+172 rules, all pointers resolve · audit §1 §6 §7 PASS.
+
 ## 2026-09-01 · the lane header gets its seat back
 
 Tong, on the shipped card against the option that was picked: *"你之前这个做的

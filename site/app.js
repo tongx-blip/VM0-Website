@@ -307,13 +307,20 @@
      the eye where to read without drawing a line to say it. The peek either
      side is what carries "there are more" now that nothing is moving past.
 
-     PING-PONG, NOT WRAP. Going 4 -> 1 rewinds the whole strip in one move,
-     which would be the longest and fastest thing in the figure and would
-     land on the same seam every cycle. Reversing at the ends means the
-     largest step is always one card, so nothing here ever moves faster than
-     the thing it is asking you to read. The track is padded with a copy of
-     the last agent before the first and the first after the last, so the
-     focused card always has a neighbour on both sides.
+     ONE DIRECTION, FOREVER. Tong: *"卡片一直从右边往左划出，无限循环，不要
+     往右滑。"* The first pass ping-ponged at the ends to avoid rewinding the
+     strip, and the return leg slid the cards RIGHT — which is the one thing
+     the figure must not do: a board of running work that backs up reads as
+     undoing itself.
+
+     So the track carries THREE copies of the four agents and the focus lives
+     in the middle one. It always advances, always leftward; when it steps
+     onto the twin of where it started, the frame it lands on is identical to
+     the one a whole copy back, so the index is snapped back by four with the
+     transition off. Nothing moves during the snap because nothing is
+     different after it. That is the same seamless-wrap argument the old pan
+     used, stated once in indices instead of in pixels — and it is why the
+     focused card always has a real neighbour on both sides.
 
      ONE LANE RUNS AT A TIME, and it is the one being read (§13.4: one
      gesture per beat, everything else still). That also retires the four
@@ -328,18 +335,29 @@
   var lanesEl = doc.querySelector('.vs__viz--parallel .lanes');
   if (lanesEl && !reduce) {
     var LANE_DWELL = 2200;                 // how long a card is held
-    var LANE_MOVE = 560;                   // and how long the move takes
+    var LANE_MOVE = 640;                   // matches --t-reveal, which moves it
     var LANE_STEP_IN = [1500, 600];        // newest row, then the one under it
 
     var laneEls = [].slice.call(lanesEl.querySelectorAll('.lane'));
     var laneRows = laneEls.map(function (lane) {
       return [].slice.call(lane.querySelectorAll('.lane__s'));
     });
-    // the padded copies at either end are neighbours, never the subject
-    var LANE_FIRST = 1, LANE_LAST = laneEls.length - 2;
+    // three copies of the same agents; the focus runs through the middle one
+    var LANE_SET = laneEls.length / 3;
+    var LANE_FIRST = LANE_SET;
 
     var lRaf = 0, lT0 = null, lAcc = 0, lVis = false;
-    var laneAt = LANE_FIRST, laneDir = 1, laneSince = 0;
+    var laneAt = LANE_FIRST, laneSince = 0, laneWrapAt = 0;
+
+    /* the whole-copy jump. Same frame either side of it, so the only thing
+       that must not happen is a transition — which would animate a move the
+       reader has no reason to see. */
+    function laneSnap(n) {
+      lanesEl.classList.add('is-snap');
+      laneFocus(n);
+      void lanesEl.offsetWidth;          // land the value before re-arming
+      lanesEl.classList.remove('is-snap');
+    }
 
     function laneFocus(n) {
       laneAt = n;
@@ -363,12 +381,23 @@
       if (lT0 === null) lT0 = now - lAcc;
       var t = lAcc = now - lT0;
 
+      /* THE SNAP GETS ITS OWN TICK, IN THE MIDDLE OF THE DWELL. Doing it in
+         the same turn as the next move made the whole thing rest on a forced
+         reflow landing between two writes to the same property; if it did
+         not, the browser coalesces them and the card slides RIGHT by three
+         pitches — the one thing this figure must never do. Landing on the
+         twin schedules the jump for after the move has settled, so every
+         ANIMATED change is one card to the left and the only silent one
+         happens while nothing else is moving. */
+      if (laneWrapAt && t >= laneWrapAt) {
+        laneSnap(laneAt - LANE_SET);
+        laneWrapAt = 0;
+      }
+
       if (t - laneSince >= LANE_DWELL + LANE_MOVE) {
         laneSince = t;
-        if (laneAt + laneDir > LANE_LAST || laneAt + laneDir < LANE_FIRST) {
-          laneDir = -laneDir;
-        }
-        laneFocus(laneAt + laneDir);
+        laneFocus(laneAt + 1);
+        if (laneAt >= LANE_FIRST + LANE_SET) laneWrapAt = t + LANE_MOVE + 60;
       }
 
       // only the focused lane runs; the rest are finished lists at rest
@@ -399,10 +428,22 @@
       if (!lRaf) lRaf = requestAnimationFrame(lanePaint);
     }
 
+    /* OBSERVE THE BAND, NOT THE TRACK — and this is why this figure has never
+       animated, before this rotation or after it. `.lanes` is `width:max-content`:
+       twelve cards is about 3000px, of which only the band's ~420 is ever
+       unclipped, so its intersection ratio tops out near 0.14 and a 0.25
+       threshold can NEVER be met. The observer sat there forever saying the
+       track was off screen while it was plainly in front of the reader.
+
+       A threshold is a fraction OF THE OBSERVED ELEMENT, so it can only be
+       asked of an element whose size means something. The band is the thing
+       that is either on screen or not; the track is a strip that is mostly
+       off the side of it by construction. */
+    var laneBand = lanesEl.closest('.vs__viz') || lanesEl;
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { laneRun(e.isIntersecting); });
-      }, { threshold: 0.25 }).observe(lanesEl);
+      }, { threshold: 0.25 }).observe(laneBand);
     } else {
       laneRun(true);
     }
