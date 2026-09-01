@@ -3117,7 +3117,7 @@ h3{ font-family:var(--fd); }
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
   --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
   --wf-rule:.5px;  --wf-rule-ink:var(--hairline);
-  --wf-bar-h-track:3px;                     /* the open row's progress bar */
+  --wf-bar-h-track:2px;                     /* the open row's progress bar */
   /* The reference's own 16px sat outside this page's scale, which is why
      this one column read smaller than everything around it. The roles map
      onto the scale instead: a list title is a lede, its paragraph is prose,
@@ -3310,12 +3310,17 @@ h3{ font-family:var(--fd); }
   background:var(--wf-rule-ink);
 }
 
+/* A REAL WIDTH, NOT A scaleX. Feedback F-06, *"这两个线的圆角不一致"* — and
+   the radius was never missing: `border-radius:var(--r-pill)` is right there.
+   `transform:scaleX(.3)` scales the painted box, **caps included**, so a 1.5px
+   round end came out 0.45px wide and read as a square cut next to the fully
+   round capsule in front of the title. A width cannot squash a corner.
+   One absolutely positioned 2px box changing width lays out nothing else, so
+   the per-frame cost is the same one it was already paying. */
 .step.is-active::before{                /* the fill  */
   z-index:1;
-  width:100%;
+  width:calc(var(--p, 0) * 100%);
   background:var(--marker);
-  transform:scaleX(var(--p, 0));
-  transform-origin:left center;
 }
 
 /* the resting hairline steps aside while the bar is there */
@@ -3869,7 +3874,8 @@ h3{ font-family:var(--fd); }
 
 .wfo--ask figcaption{
   display:flex; align-items:center; gap:.55em;
-  margin-top:.85em; color:var(--ink-mute);
+  /* it is above the question now (F-05), so its air is underneath it */
+  margin-bottom:.7em; color:var(--ink-mute);
   font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
 }
 
@@ -7479,19 +7485,29 @@ img.lane__bot{
   color:var(--vm-gray-950);
 }
 
-.okw__nav i svg{ width:19px; height:19px; opacity:.7; }
+/* IT IS THE ROOM, NOT THE SUBJECT. Feedback F-07, *"这里可以弱化下"*: the
+   nav's ink was `--vm-gray-950` at .7 and its labels at .6 — the same weight
+   as the conversation beside it, so the eye landed on a navigation bar the
+   scene is not about. Glyphs and labels drop a step, and the selected tile's
+   fill comes off: the rail keeps the product's structure (P1) and gives up
+   only its contrast, which is a marketing decision about focus and is scoped
+   to this mock. The rail is `aria-hidden`, so the AA floor does not apply to
+   labels nobody can read out (§12). */
+.okw__nav i svg{ width:19px; height:19px; opacity:.34; }
 
 .okw__nav em{
   font-style:normal;
   font-size:9px; font-weight:500; line-height:14px;
-  color:rgb(20 23 29 / .6);
+  color:rgb(20 23 29 / .34);
   max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 
-/* selected uses the ladder's own step, not a hand-picked grey */
-.okw__nav.is-here i{ background:var(--vm-state-selected); }
+/* the selected item is still the selected item — it is one step less faded,
+   not a filled tile. A highlight block is the loudest thing in a column that
+   has just been told to be quiet. */
+.okw__nav.is-here i svg{ opacity:.55; }
 
-.okw__nav.is-here em{ color:var(--vm-gray-950); }
+.okw__nav.is-here em{ color:rgb(20 23 29 / .55); }
 
 
 .okw__pane{ display:flex; flex-direction:column; min-width:0; min-height:0; }
@@ -7510,16 +7526,26 @@ img.lane__bot{
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-/* the run's state, in the product's muted pill rather than orange caps —
-   the reference's `RUNNING` is this site's workflow-card idiom, and the
-   product's own labels are sentence case with no all-caps */
-.okw__state{
+/* THE HEADER'S RIGHT-HAND CONTROLS. This was a `Done` pill, and the product
+   has no such thing beside a thread title — feedback F-08, *"好像没有这个
+   done"*. Checked against `ChatThreadHeader` in chat-thread-page.tsx: the row
+   is [emoji][title] on the left and three `variant="quiet" size="icon-sm"`
+   buttons on the right — AutomationMenuButton (Clock), BrowserMenuButton
+   (Globe), ArtifactsButton (Package), 18px each. "Done" does exist in the app
+   (`$.chat.run.done.default`) but as a `RunSectionDivider` label inside the
+   conversation, which is a different element in a different place.
+   Quiet means no fill until hover, so at rest these are muted glyphs — which
+   is also what keeps them from competing with the conversation (RULES P1). */
+.okw__acts{
   margin-left:auto; flex:none;
-  display:inline-flex; align-items:center; height:22px; padding:0 8px;
-  border-radius:var(--vm-r-lg);
-  background:var(--vm-gray-100);
-  font-style:normal; font-size:12px; font-weight:500; line-height:16px;
+  display:inline-flex; align-items:center; gap:2px;
+}
+
+.okw__acts svg{
+  width:18px; height:18px;
+  display:block; margin:7px;
   color:var(--vm-muted-fg);
+  opacity:.75;
 }
 
 
@@ -7578,11 +7604,18 @@ img.lane__bot{
 
 .okw__clip svg{ width:18px; height:18px; }
 
-/* and the default variant: bg-primary, rounded-lg, a 16px glyph */
+/* THE COMPOSER IS THE ROOM TOO. Feedback F-10, *"这里可以弱化下"*: a solid
+   `--vm-primary` button is the only saturated object in the picture, and it
+   sat at the bottom of a scene whose subject is what came OUT of the run.
+   The product draws it filled because there it is the thing you press; here
+   nobody presses it. It keeps the shape and the glyph and gives up the fill —
+   the product's own `quiet` treatment, one row down.
+   The page's real primary action stays the nav's Get started and the closing
+   band (K8); an orange square inside a screenshot was a third one. */
 .okw__send{
   display:grid; place-items:center; flex:none;
   width:32px; height:32px; border-radius:var(--vm-r-lg);
-  background:var(--vm-primary); color:#FFFFFF;
+  background:var(--vm-gray-100); color:var(--vm-muted-fg);
 }
 
 .okw__send svg{ width:16px; height:16px; }
@@ -7691,9 +7724,11 @@ html[data-theme="dark"] .ochat--okou{
               0 0 0 .5px hsl(215 100% 19% / .018);
 }
 
-html[data-theme="dark"] .okw__nav em{ color:rgb(232 233 237 / .6); }
+/* the same two steps as light (F-07): the rail recedes, and the selected item
+   is one step less faded rather than full ink */
+html[data-theme="dark"] .okw__nav em{ color:rgb(232 233 237 / .34); }
 
-html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
+html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237 / .55); }
 
 
 /* ── the rail: GONE ────────────────────────────────────────────────

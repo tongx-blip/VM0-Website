@@ -258,8 +258,27 @@ def okou_window(key, rows):
             '<img src="assets/okou-icon.svg" alt="" width="18" height="18">'
             '</span>%s</div>' % items)
 
-    bar = ('\n              <p class="okw__bar"><b>%s</b>'
-           '<i class="okw__state">Done</i></p>' % sc['title'])
+    # THE HEADER'S RIGHT-HAND CONTROLS, 1:1 with `ChatThreadHeader`:
+    # AutomationMenuButton (Clock), BrowserMenuButton (Globe), ArtifactsButton
+    # (Package), each `variant="quiet" size="icon-sm"` at 18px. It used to be a
+    # `Done` pill, which the product does not have there — "Done" in the app is
+    # a `RunSectionDivider` label INSIDE the conversation
+    # (`$.chat.run.done.default`), not a chip beside the thread title.
+    acts = ('<span class="okw__acts" aria-hidden="true">%s%s%s</span>'
+            % (lucide('<circle cx="12" cy="12" r="10"/>',
+                      '<path d="M12 6v6l4 2"/>'),
+               lucide('<circle cx="12" cy="12" r="10"/>',
+                      '<path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>',
+                      '<path d="M2 12h20"/>'),
+               lucide('<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8'
+                      'a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8'
+                      'a2 2 0 0 0 1 1.73z"/>',
+                      '<path d="M12 22V12"/>',
+                      '<polyline points="3.29 7 12 12 20.71 7"/>',
+                      '<path d="m7.5 4.27 9 5.15"/>')))
+
+    bar = ('\n              <p class="okw__bar"><b>%s</b>%s</p>'
+           % (sc['title'], acts))
 
     composer = ('\n              <p class="okw__composer">'
                 '<i class="okw__clip" aria-hidden="true">%s</i>'

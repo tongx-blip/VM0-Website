@@ -2263,6 +2263,47 @@ the canvas — resize the arriving one rather than deleting the premise. Here th
 reply went from 44cqw to 30cqw, which is the difference between a second
 subject and a notification, and all three objects now clear each other.
 
+## 4an. Reading a design review: three things a screenshot cannot settle
+
+From the annotated board (`okou-home-design-feedback`), the three notes whose
+fix was not the fix the note described.
+
+**"This control is not in the product."** Grep the string, then find the
+component that renders it. `Done` is a real product string
+(`$.chat.run.done.default`) and the header pill drawn from it was still wrong:
+the app renders it as a `RunSectionDivider` **inside the conversation**, and
+`ChatThreadHeader` is [emoji][title] plus three `variant="quiet"` icon buttons.
+
+```bash
+grep -rn "chat.run.done" turbo/apps/platform/src/views --include=*.tsx
+# then read the FUNCTION around the hit, not just the line
+```
+
+**"These two radii do not match."** Check the computed value before touching
+the declaration. Both the ladder's progress bar and the marker in front of its
+title were already `--r-pill`; `transform:scaleX(var(--p))` was squashing one
+of them, caps included.
+
+```js
+const f = document.querySelector('.step.is-active');
+f.style.setProperty('--p','0.45');
+getComputedStyle(f,'::before').width     // a real width, not a 100% + scale
+```
+
+**"Weaken this."** Applies to chrome, not to content, and it has to be done in
+**both themes** — a hard-coded `rgb(20 23 29 / .34)` is invisible on a dark
+rail, and the dark override that already existed was still at the old `.6`.
+
+```js
+['.okw__nav em','.okw__nav.is-here em'].map(s =>
+  getComputedStyle(document.querySelector(s)).color)
+// two steps apart, in light AND in dark
+```
+
+The rail and the composer are `aria-hidden` product chrome, so the AA floor
+does not govern them (§12); anything a reader can actually read still fails the
+gate if it is dimmed.
+
 ## 4aj. Every control answers, and none of them shouts
 
 Two failures, one sweep. Both were shipped and neither was visible in a

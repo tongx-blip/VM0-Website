@@ -4,6 +4,105 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the annotated design board, part one — the eight that needed no decision
+
+Source: **https://okou-home-design-feedback.sites.vm0.io/** — 14 items from 11
+annotated screenshots. Split into what could be settled from the product and
+the repo (shipped here) and what needs a call from Tong (listed at the end).
+
+### F-11 · the outcome strips — already gone
+
+Both of them, in the round earlier today. `.ometrics` was removed from all
+seven tabs, not just the two the board annotates.
+
+### F-05 · who spoke, then what they said
+
+`.wfo--ask` had its `<figcaption>` under the question. Every chat interface
+puts the name first; the card read backwards. The caption is the figure's first
+child now and its `margin-top` became a `margin-bottom`.
+
+### F-06 · the two radii that were never different
+
+*"这两个线的圆角不一致"*. Both are `--r-pill`, and have been. The fill was
+`width:100%` + `transform:scaleX(var(--p))`, and **a transform scales the
+painted box, caps included** — at 30% a 1.5px round end is 0.45px wide and
+reads as a square cut next to the fully round capsule in front of the title.
+Driving the fill with a real `width` fixes it and costs nothing: it is one
+absolutely positioned 2px box, so nothing else lays out.
+
+The track also came down 3px → 2px. The resting hairline is 1px, so an active
+row's rule was three times the weight of a closed one; one step is a state, three
+is a different component. RULES F54.
+
+### F-07 / F-10 · the room, not the subject
+
+*"这里可以弱化下"*, twice, about the Okou window's rail and its composer.
+
+The rail's glyphs were at `.7` and its labels at `.6` of `--vm-gray-950` — the
+same weight as the conversation beside them — and the selected item carried a
+filled tile, the loudest thing in a column the scene is not about. Glyphs and
+labels drop to `.34`, the selected one is one step less faded at `.55`, and the
+tile's fill is gone. The dark override was still sitting at the old `.6`/full
+white and now mirrors the two steps.
+
+The composer's send button was `--vm-primary` — the only fully saturated object
+in the picture, at the bottom of a scene whose subject is what came *out* of the
+run, and effectively a third call to action on a page that is allowed two (K8).
+It keeps the shape and the glyph and takes the product's own `quiet` fill.
+
+Both are the scoped exception to P1, now written down as **RULES P17**: chrome
+inside a mock keeps the product's structure and may give up its contrast.
+
+### F-08 · a string existing is not the control existing
+
+*"好像没有这个 done"* — correct, and the interesting part is that `Done` **is** a
+real product string. `$.chat.run.done.default` exists; the app renders it as a
+`RunSectionDivider` label *inside* the conversation. `ChatThreadHeader` in
+`chat-thread-page.tsx` is [emoji][title] on the left and three
+`variant="quiet" size="icon-sm"` buttons on the right — AutomationMenuButton
+(`Clock`), BrowserMenuButton (`Globe`), ArtifactsButton (`Package`), 18px each.
+
+So the pill is not deleted, it is **replaced with the controls that are
+actually there**, paths taken from `lucide-static` rather than drawn (F33).
+RULES P16.
+
+### F-09 · the avatar's stripes come off
+
+*"要不换成纯色吧"*. The supplied `tools/agent-avatar.svg` is a solid `#F4E33C`
+ground with a second `<rect opacity="0.4">` painting an **embedded raster**
+pattern over it — which is why the source file was 1.65 MB. Removing the
+overlay rect, its `<pattern>` and its `<image>` leaves the same yellow, flat:
+
+| | before | after |
+|---|---|---|
+| `tools/agent-avatar.svg` | 1,649,721 B | 5,138 B |
+| `site/assets/avatars/agent-okou.png` | 13,939 B | 4,089 B |
+
+The hue is unchanged, so this needed no colour decision. It appears in seven
+places on the page and they all come from the one build step.
+
+### F-13 · the activity-trail sentence
+
+Deleted. The board asks to re-check the spacing afterwards, so it was measured
+rather than eyeballed: `#control`'s bottom gap is 97px, which is its own
+`padding-bottom` and identical to `workflows`, `parallel`, `positioning` and
+`proof`. Nothing to re-space. The section is 1147 → 1036px (1.27 → 1.15 screens).
+
+### Still open — the six that need a decision
+
+F-01 hero CTA (copy + whether the page asks three times) · F-02 OKOU wordmark
+with texture (asset) · F-03 the floating nav's border (the board itself calls it
+an open question) · F-04 four type styles on one screen (a design-system change,
+not a component one) · F-12 the permission card's radius ladder (in tension with
+P1) · F-14 the testimonial texture (asset). Carried to the next round.
+
+### Gate
+
+`tokens` 0 · `check-html` balanced · `scopes` 0 · `rules` 179/78/11 all resolve ·
+`audit.js` §1 §3 §5 §6 §7 §9 §10 §11 pass · axe 0 violations in both themes,
+whole page walked · 1440 light + dark, 390. §2's 17 type sizes and §8's
+`.ochat__row` stack are the two standing exceptions, both unchanged.
+
 ## 2026-09-01 · three deletions, and what each of them was hiding
 
 Three screenshots, three notes, and all three fixes turned out to be *removing*
