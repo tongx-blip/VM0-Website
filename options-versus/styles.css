@@ -1600,13 +1600,29 @@ h3{ font-family:var(--fd); }
      the bar's own fill behind it; this one is the outline of the object and
      runs the full width of the header, so the same alpha reads about half
      a step heavier. */
-  /* HEAVIER. Tong: *"现在是有 border 的，只是换了颜色，border 颜色有点融合，
-     所以你把 border 的颜色改重一点点"* — the edge was there and doing nothing:
-     at .1 on a bar whose fill is already close to the page's cream, it
-     dissolved exactly where it is needed, which is where the bar laps a white
-     card. .18 is still a hairline and not a rule (S4): it reads as the edge
-     of a surface, and only where two surfaces meet. */
-  --nav-edge:rgb(var(--ink-rgb) / .18);
+  /* THE EDGE, AS A MEASURED COLOUR. Tong, three times: *"stroke 还是看不出来 …
+     你直接改 stroke 颜色吧，然后看一对比度，你这么改永远没啥进展"*. He is right
+     about the method — twice I moved a number without measuring the result.
+
+     Sampled off the rendered page: the bar's fill is rgb(239,234,232) and it
+     sits on a white section card, which is 1.19:1 on its own. The ring's
+     contrast against that fill is the thing that decides whether it reads:
+
+         rgb(var(--ink-rgb) / .18)  →  rgb(202,198,196)   1.42:1   invisible
+         rgb(var(--ink-rgb) / .30)  →  rgb(178,174,172)   1.84:1
+         #9E9A98                        rgb(158,154,152)   2.34:1
+         #8A8684                        rgb(138,134,132)   3.02:1   ← this
+
+     Asked for heavier a third time, so it takes the next step rather than a
+     fraction of one. 3:1 is the AA floor for a non-text boundary, which is the
+     right place for a line whose whole job is to separate two surfaces that
+     are 1.19:1 apart on their own.
+
+     Stated as a colour rather than an alpha over a fill, because the alpha
+     form is what made it hard to reason about twice: the same .18 is a
+     different line on every ground it lands on. 2.34:1 is also exactly where
+     the dark theme's edge already sat, so the two now read the same. */
+  --nav-edge:#8A8684;
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -1678,7 +1694,7 @@ h3{ font-family:var(--fd); }
    the bar, not the theme. */
 @media (prefers-color-scheme: dark){
   .nav{
-    --nav-edge:rgb(var(--paper-rgb) / .20);   /* F-03, the dark half */
+    --nav-edge:#767373;   /* 3.05:1 on rgb(43,40,40) — the same step as light */
     --nav-stroke:rgb(var(--paper-rgb) / .16);
   }
 
@@ -1707,7 +1723,16 @@ h3{ font-family:var(--fd); }
      at the top of the page the bar is not an object yet, and a hairline
      ruled across the whole window above an unscrolled hero is the
      structural line S4 forbids rather than the outline of a card */
-  box-shadow:inset 0 0 0 .5px var(--nav-edge);
+  /* 1px, NOT .5px. Tong: *"stroke 还是看不出来"* — and the alpha was not the
+     problem the second time either. Sampled across the bar's top edge, the
+     ring WAS painting: one row at rgb(220,215,214) against a fill of
+     rgb(239,234,232) at 1x, and rgb(202,197,196) at 2x. A half-pixel ring is
+     antialiased into whatever it lands on, so it spends most of its contrast
+     on the blend — and against a white section card, where this bar is
+     actually read, a light fill separated from white by a line that is itself
+     half-there reads as no line at all. At 1px it is one device pixel at 1x
+     and two at 2x, which is what a hairline has to be to survive both. */
+  box-shadow:inset 0 0 0 1px var(--nav-edge);
   top:var(--nav-top);
   left:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
   right:max(var(--card-gap), calc(50% - var(--nav-w-stuck, 100vw) / 2));
@@ -1741,7 +1766,7 @@ h3{ font-family:var(--fd); }
    be DARKENED to clear AA (--accent-wash); on this one --accent itself
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
-  --nav-edge:rgb(var(--paper-rgb) / .22);   /* F-03, over a dark ground */
+  --nav-edge:#828080;   /* over a dark SECTION, whose fill is lighter again */
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
@@ -3847,11 +3872,24 @@ h3{ font-family:var(--fd); }
    half as big again as its top. Tong: *"图1那个 chat 下边留的空间有点大了，和
    上边 padding 对齐吧"*. A margin inside an `overflow:hidden` box cannot
    collapse out and is clipped to nothing at 0fr. Measured: 18 over, 18 under. */
-.wfo__replyhd{ margin-top:1.05em; }
-
+/* A MESSAGE BOUNDARY, NOT A LINE BREAK. Tong: *"两段离着太近了"*. At 1.05em
+   the gap between the ask and the reply was 16px against the 11px that
+   separates the caption from its own sentence — a 1.5x step, which is not
+   enough to say "different person, different message". The card has three
+   gaps and they have to rank: inside a message (.35em) < caption to its text
+   (.7em) << message to message. */
 .wfo__replyhd{
   display:flex; align-items:center; gap:.5em;
-  margin:0 0 .35em;
+  /* A MESSAGE BOUNDARY, NOT A LINE BREAK. Tong: *"两段离着太近了"*. Measured
+     ink-to-ink, the ask ran into the reply at 7px — SMALLER than the 13px
+     between the caption and its own sentence, and smaller than the 8-12px
+     between two lines of the same paragraph. The card has three gaps and they
+     have to rank: inside a message (.35em) < caption to its text (.7em) <<
+     message to message.
+     IN THE SHORTHAND, because a separate `margin-top` above this block is
+     silently reset by this `margin` — the third time that has bitten this
+     file today. `tokens.py` checks for it now. */
+  margin:2.1em 0 .35em;
   color:var(--ink-soft);
   /* same row, same register as the caption above it (RULES S20) */
   font-family:var(--fb); font-variant-numeric:tabular-nums;
