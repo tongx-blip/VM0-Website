@@ -4797,6 +4797,14 @@ h3{ font-family:var(--fd); }
    on for another 26px. In light that is invisible; in dark the row's ink
    landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`. */
 .lanes{
+  /* HOW FAR THE SIDE CARDS STAND DOWN, and it is a measured floor rather
+     than a taste value. .42 was the original and nothing passes there —
+     even pure black text blends to 3.26:1 against its own card. Probed
+     against axe in steps: .62 leaves one node (the running row, whose
+     tint narrows the gap before the fade starts), .64 is clean, .66 is
+     clean with a margin. Deeper than .66 and the figure fails the
+     contrast floor; shallower and it stops reading as depth. */
+  --lane-dim:.66;
   display:flex; align-items:flex-start; gap:var(--lane-gap);
   width:max-content;
   margin-inline-start:50%;
@@ -4838,23 +4846,29 @@ h3{ font-family:var(--fd); }
   padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
   border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
-  /* STANDS DOWN BY COLOUR AND SCALE, NOT BY FADING. `opacity:.42` on the
-     whole card is a contrast change on every word inside it (C11, QA §4p2):
-     axe read 18 serious failures here, and it is on main right now, not only
-     in this build. Opacity cannot be rescued by raising it either — the
-     card's own meta grey needs .95 before it clears 4.5:1, which is no dim
-     at all. So the fade comes out and the recession is carried by the two
-     things that cost no contrast: the step down in scale it already had,
-     and the surface going flat. */
+  /* MIDDLE SOLID, SIDES FADED — the design, kept. I removed the fade to
+     clear 18 serious contrast failures and that was the wrong trade: the
+     fade is what the figure IS, and Tong had to ask for it back.
+
+     It can be kept and still clear the floor, but not at .42. At that depth
+     nothing passes — even pure black text blends to 3.26:1 — so the fade is
+     as deep as the floor allows and the ink is compensated for it: the small
+     grey rows go to the card's own foreground inside a dimmed lane, so the
+     binding constraint stops being a grey that was already light before the
+     fade touched it. Tuned against axe, not guessed: `--lane-dim` is the
+     lowest value with 0 violations. */
+  /* THE CARD STAYS OPAQUE AND THE INK FADES. `opacity` on the card lets the
+     BAND through, and in dark the band is near-black: axe then measures dark
+     ink against a dark backdrop and reads 18 serious failures at any depth
+     down to .85, while the same value is clean in light. Same fade, one
+     mechanism, both themes — mix each ink toward the card's own white and
+     leave the surface alone, so the geometry the floor is measured on is the
+     light one in both. */
   transform:scale(.9);
   box-shadow:none;
-  transition:transform var(--t-reveal) var(--e-spring),
-             box-shadow var(--t-reveal) var(--e-out),
-             filter var(--t-reveal) var(--e-out);
-  /* a touch of desaturation reads as distance without moving a single ink
-     value — a filter is applied after paint, so the computed colours the
-     contrast floor is measured against are untouched */
-  filter:saturate(.55);
+  transition:color var(--t-reveal) var(--e-out),
+             transform var(--t-reveal) var(--e-spring),
+             box-shadow var(--t-reveal) var(--e-out);
 }
 
 /* the one being read. Nothing else in the band changes. */
@@ -4862,7 +4876,32 @@ h3{ font-family:var(--fd); }
    others are shorter, flat and desaturated. All of the hierarchy is in
    scale, elevation and saturation — none of it in a value the contrast
    floor is measured on. */
-.lane.is-focus{ transform:none; filter:none; box-shadow:var(--e-fig); }
+.lane.is-focus{ transform:none; box-shadow:var(--e-fig); }
+
+/* ONE declaration per selector: `.lane` already sets the ink, so the mix goes
+   on the dimmed variant rather than a second `color` in the same block. */
+.lane:not(.is-focus){
+  color:color-mix(in srgb, var(--p-fg) calc(var(--lane-dim) * 100%), var(--p-card));
+}
+
+/* every ink in a dimmed lane takes the mix above. The greys have to give up
+   their own value first: they were already light before the fade started, so
+   left alone they are what fails while the ink is still fine. */
+.lane:not(.is-focus) .lane__t,
+.lane:not(.is-focus) .lane__h b,
+.lane:not(.is-focus) .lane__h span,
+.lane:not(.is-focus) .lane__s,
+.lane:not(.is-focus) .lane__s i{ color:inherit; }
+
+/* the pictures and the marks may fade the old way — a contrast floor is
+   about text, and an avatar at 66% is just an avatar at 66% */
+.lane:not(.is-focus) img,
+.lane:not(.is-focus) .vsui__ind,
+.lane:not(.is-focus) .lane__tick{ opacity:var(--lane-dim); }
+
+/* the running row's tint goes with them, or a dimmed card keeps one bright
+   band across it and the eye reads that as the focus */
+.lane:not(.is-focus) .lane__s--now{ background:transparent; }
 
 
 /* THE RUN IS LONGER THAN THE CARD, and that is the whole picture: a lane

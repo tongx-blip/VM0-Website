@@ -4,6 +4,65 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the fade comes back, and I should not have removed it
+
+Tong: *"中间实，两边卡虚，你怎么把这个设计给改了？"*
+
+Fair. Earlier today the gate found `opacity:.42` on the side cards producing 18
+serious contrast failures, 15 of them already deployed, and I took the fade out
+to clear them. **That was the wrong trade and it was not mine to make.** The
+fade is what the figure IS — depth of field is the whole reason there are three
+cards — and a rule about contrast is a reason to find another way, not a reason
+to delete somebody's design. It is back.
+
+### Why it could not simply be put back as it was
+
+Measured, per theme, with the failing-node count:
+
+| dim | light | dark |
+|---|---|---|
+| .42 — the original | 18 | 18 |
+| .66 | 0 | **18** |
+| .85 | — | 0 |
+
+Light and dark disagreed by a mile, and the reason is not the ink. **`opacity`
+on the card lets the BAND through**, and in dark the band is near-black: axe
+composites down to the nearest opaque ancestor and reads dark ink on a dark
+backdrop. The card being a light mock on a dark band (P1 — mocks do not invert)
+is exactly what makes the fade behave differently in the two themes.
+
+So the mechanism changed and the design did not: **the card stays opaque and
+the ink fades**, mixed toward the card's own white by `--lane-dim`. One
+mechanism, both themes, the same picture — and the geometry the contrast floor
+measures is the light one in both. 0 violations at .66 in light and dark.
+
+Three details it needed:
+- the two light greys give up their own value first (`color:inherit`), or they
+  are what fails while the ink is still fine — they were already light before
+  the fade started;
+- the avatars and marks keep the old `opacity`, because a contrast floor is
+  about text and an avatar at 66% is just an avatar at 66%;
+- the running row's tint goes with them, or a dimmed card keeps one bright band
+  across it and the eye reads that as the focus.
+
+### The depth is capped, and that part is a real trade
+
+`.42` is not reachable while passing: at that depth even pure black text blends
+to 3.26:1 against its own card. The fade is at **.66**, which is the deepest
+value with a margin, with `scale(.9)` and a flat surface carrying the rest of
+the recession while the focus takes `--e-fig`.
+
+If the original depth matters more than the floor, that is a call to make
+deliberately and write down — not one to discover in a diff.
+
+### Gate
+
+`tokens.py` 0 — it caught a second `color` on `.lane` in the same block ·
+`check-html.py` balanced · `scopes.py` 0 · `rules.py` 172 rules · `audit.js`
+§1 §6 §7 PASS · axe **0 violations**, 8 light and 6 dark · 1440 and 390.
+
+---
+
 ## 2026-09-01 · the band frames its figure, the carousel slows, and a live contrast failure
 
 Tong, on the comparison cards: *"上下空间要一致，你看看是增加卡片上图的高度，还是缩小
