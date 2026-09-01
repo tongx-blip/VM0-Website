@@ -3653,7 +3653,12 @@ h3{ font-family:var(--fd); }
    line it made the third card's mock 60px shallower than its neighbours and
    left a hole under its paragraph. Inside a row the windows are the same
    depth; that was already the rule, the row just changed shape. */
-.versus--three .vs__viz{ height:clamp(214px, 21vw, 276px); }
+/* +26 at every stop, the band's own bottom padding. Without this the
+   symmetric padding shrank the browser mock from 250 to 224 instead of
+   giving it air — which is the fix Tong offered second ("缩小图例内容的
+   比例") rather than the one he offered first. The mock keeps the
+   product's size and the band grows around it. */
+.versus--three .vs__viz{ height:clamp(240px, 23vw, 302px); }
 @media (max-width:900px){
   .versus--three .vs{ grid-column:1 / -1; }
 }
@@ -3682,8 +3687,20 @@ h3{ font-family:var(--fd); }
 /* the media band: an oversized crop of a real product surface */
 .vs__viz{
   position:relative;
-  padding:clamp(20px,2vw,26px) 0 0 clamp(20px,2vw,26px);
-  height:clamp(214px, 21vw, 276px);
+  /* THE BAND FRAMES ITS FIGURE EQUALLY. It had padding on the top and the
+     left and none on the bottom, which is invisible on the two figures that
+     bleed past the edge on purpose (the lanes crop 130px, the connector grid
+     14 at both ends) and very visible on the one that does not: `.arti` is
+     `height:100%`, so the browser window filled the box exactly and sat with
+     26px of tint above it and none below. Read as sunk. Tong: "上下空间要
+     一致".
+
+     The height grows by the same amount rather than the figure shrinking, so
+     the mock keeps the product's own size (P2/P9) — and because the height is
+     one shared value, all three cards take it, which is what Tong asked for
+     when he said the other cards have to change too. */
+  padding:clamp(20px,2vw,26px) 0 clamp(20px,2vw,26px) clamp(20px,2vw,26px);
+  height:clamp(234px, 23vw, 302px);
   overflow:hidden;
   background:var(--vs-tint);
   --vs-tint:color-mix(in srgb, var(--vs-hue) 9%, var(--tile));
@@ -3804,9 +3821,18 @@ h3{ font-family:var(--fd); }
   display:flex; align-items:flex-start; gap:var(--lane-gap);
   width:max-content;
   margin-inline-start:50%;
+  /* ITS OWN DURATION, not --t-reveal. Tong: "切换动画有点太快了，可以再慢一
+     点". --t-reveal is 640ms and it is the page's entrance timing — every
+     reveal on the page reads it, so slowing the carousel by slowing that
+     would slow eight other things to fix one. The carousel is a LOOP rather
+     than an entrance and a loop is watched repeatedly, which is exactly when
+     640ms starts to feel snatched. Declared here and read back by app.js, so
+     the number lives once: retyping it in both places is how --nav-h-stuck
+     ended up as a stale 54 in an observer earlier this week. */
+  --lane-move:1000ms;
   transform:translate3d(
     calc(-1 * (var(--lane-i, 4) * var(--lane-pitch) + var(--lane-w) / 2)), 0, 0);
-  transition:transform var(--t-reveal) var(--e-spring);
+  transition:transform var(--lane-move) var(--e-spring);
 }
 /* the whole-copy jump: same frame either side, so it must not animate */
 .lanes.is-snap,
@@ -3831,12 +3857,30 @@ h3{ font-family:var(--fd); }
   padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
   border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
-  opacity:.42; transform:scale(.94);
-  transition:opacity var(--t-reveal) var(--e-out),
-             transform var(--t-reveal) var(--e-spring);
+  /* STANDS DOWN BY COLOUR AND SCALE, NOT BY FADING. `opacity:.42` on the
+     whole card is a contrast change on every word inside it (C11, QA §4p2):
+     axe read 18 serious failures here, and it is on main right now, not only
+     in this build. Opacity cannot be rescued by raising it either — the
+     card's own meta grey needs .95 before it clears 4.5:1, which is no dim
+     at all. So the fade comes out and the recession is carried by the two
+     things that cost no contrast: the step down in scale it already had,
+     and the surface going flat. */
+  transform:scale(.9);
+  box-shadow:none;
+  transition:transform var(--t-reveal) var(--e-spring),
+             box-shadow var(--t-reveal) var(--e-out),
+             filter var(--t-reveal) var(--e-out);
+  /* a touch of desaturation reads as distance without moving a single ink
+     value — a filter is applied after paint, so the computed colours the
+     contrast floor is measured against are untouched */
+  filter:saturate(.55);
 }
 /* the one being read. Nothing else in the band changes. */
-.lane.is-focus{ opacity:1; transform:none; }
+/* the focus is the one card fully in frame, at full size and lifted; the
+   others are shorter, flat and desaturated. All of the hierarchy is in
+   scale, elevation and saturation — none of it in a value the contrast
+   floor is measured on. */
+.lane.is-focus{ transform:none; filter:none; box-shadow:var(--e-fig); }
 
 /* THE RUN IS LONGER THAN THE CARD, and that is the whole picture: a lane
    cut at the bottom edge is a task list that keeps going, which is what

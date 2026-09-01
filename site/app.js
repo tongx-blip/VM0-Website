@@ -334,8 +334,18 @@
      observer fires all get the complete figure. */
   var lanesEl = doc.querySelector('.vs__viz--parallel .lanes');
   if (lanesEl && !reduce) {
-    var LANE_DWELL = 2200;                 // how long a card is held
-    var LANE_MOVE = 640;                   // matches --t-reveal, which moves it
+    /* READ, not retyped. The slide's duration is `--lane-move` on `.lanes`
+       and CSS is what actually performs it; a copy here is a second opinion
+       that goes stale the first time one of them is edited. */
+    var LANE_MOVE = (function () {
+      var v = parseFloat(getComputedStyle(lanesEl).getPropertyValue('--lane-move'));
+      return v === v ? v : 1000;
+    })();
+    /* The dwell grows with the move. Slowing only the slide leaves the same
+       gap between two slower slides, which reads as MORE hurried rather than
+       less — the cadence is dwell + move, and it is that number Tong is
+       watching. 2200 + 640 → 3200 + 1000. */
+    var LANE_DWELL = 3200;                 // how long a card is held
     var LANE_STEP_IN = [1500, 600];        // newest row, then the one under it
 
     var laneEls = [].slice.call(lanesEl.querySelectorAll('.lane'));
