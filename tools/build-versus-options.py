@@ -151,44 +151,133 @@ def fig_d():
             '</div>' % (rows, SAY))
 
 
+
+# ══════════════════════════════════════════════════════════════════════
+#  ROUND 2 — B, three ways
+#
+#  Tong: *"B的方向可以，但是和其他两个cards比，这个第三张card不够饱满，而且动画
+#  有点看不出来，根据B你可以在修改3个方案么"*.
+#
+#  Both faults have one cause. B was three small objects centred in a
+#  405×302 band with tint showing on all four sides, while the two cards
+#  beside it are oversized product surfaces CROPPED by their bands. A figure
+#  that fits politely inside its frame reads as emptier than its neighbours
+#  whatever is in it. And in a row of three where the other two animate, the
+#  one that does not reads as the one that is broken.
+#
+#  So in all three: the figure is bigger than the band and cropped by it, and
+#  the sentence writes itself on a 9s loop. What differs is the ground it is
+#  written over — their language as wallpaper, as a column that never ends,
+#  or as a chain that folds away under it.
+# ══════════════════════════════════════════════════════════════════════
+
+# the sentence, broken where it breaks, because each line carries its own
+# wipe (RULES N3: looping text is painted or not painted, never faded)
+SAY_L1 = 'When a lead fills the form,'
+SAY_L2 = 'qualify it and tell the owner in Slack.'
+
+STEPS = ['Trigger', 'Filter', 'Format', 'Lookup', 'Action', 'Path',
+         'Delay', 'Webhook', 'Parse', 'Branch']
+
+FIELDS = [
+    ('Trigger', 'New form response'),
+    ('Account', 'Choose an account'),
+    ('Filter', 'Only continue if…'),
+    ('Field map', 'email → Contact.email'),
+    ('Lookup', 'Find owner by region'),
+    ('Format', 'Title case the name'),
+    ('Action', 'Send channel message'),
+    ('Fallback', 'Choose an account'),
+]
+
+
+def sayc():
+    """the sentence card — one component, all three variants"""
+    marks = ''.join('<img src="assets/connectors/%s" alt="" width="19" height="19">' % c
+                    for c in CONNECTORS)
+    return ('<div class="sayc">'
+            '<p class="sayc__p">'
+            '<span class="sayc__l">%s</span>'
+            '<span class="sayc__l">%s<i class="sayc__c"></i></span>'
+            '</p>'
+            '<p class="sayc__f">%s<em>Okou picked these</em></p>'
+            '</div>' % (SAY_L1, SAY_L2, marks))
+
+
+def chips(names, join=False):
+    sep = '<span class="wjoin"></span>' if join else ''
+    return sep.join('<span class="wchip">%s</span>' % n for n in names)
+
+
+def fig_wall():
+    """B1 — their language as the ground, drifting behind ours"""
+    rows = []
+    # each row is DOUBLED and travels exactly one copy (N14): a track that
+    # starts at 0 leaves its own first item's worth of space empty at the reset
+    for i, dur in enumerate(('44s', '52s', '38s', '58s', '48s')):
+        order = STEPS[i * 2:] + STEPS[:i * 2]
+        rows.append('<div class="wall__row" style="--dur:%s">%s%s</div>'
+                    % (dur, chips(order), chips(order)))
+    return '<div class="wall">%s</div>%s' % (''.join(rows), sayc())
+
+
+def fig_split():
+    """B2 — a column of fields that never ends, beside one sentence"""
+    rows = ''.join('<span class="split__row"><b>%s</b><span>%s</span></span>' % f
+                   for f in FIELDS)
+    return ('<div class="split">'
+            '<div class="split__col">'
+            '<p class="split__hd">Set up · <b>6 steps, 24 fields</b></p>'
+            '<div class="split__win"><div class="split__track">%s%s</div></div>'
+            '</div>%s</div>' % (rows, rows, sayc()))
+
+
+def fig_fold():
+    """B3 — the chain folds away as the sentence writes itself over it"""
+    return ('<div class="fold">'
+            '<div class="fold__rows">'
+            '<div class="fold__row">%s</div>'
+            '<div class="fold__row fold__row--2">%s</div>'
+            '<div class="fold__row fold__row--3">%s</div>'
+            '</div>%s</div>'
+            % (chips(STEPS[:5], join=True), chips(STEPS[5:9], join=True),
+               chips(STEPS[2:7], join=True), sayc()))
+
 OPTIONS = [
-    ('A', 'Two surfaces',
-     'their canvas · our composer · static',
-     'The literal answer, and the only one that shows both invocations at the '
-     'size they really are: three wired nodes over a panel of four fields you '
-     'have to fill in, and one sentence typed into the composer, lapping over it '
-     'and in front. Nothing is labelled — <b>a form and a sentence are already '
-     'the argument</b>. Closest in kind to the two cards beside it, which are '
-     'both product surfaces.',
-     'ask', fig_a),
-    ('B', 'Five steps, or one sentence',
-     'type only · no product chrome · static',
-     'The two <b>languages</b>, set as type. Theirs is five chips of jargon '
-     'wired in a row, in the utility face this page reserves for machine '
-     'labels — small, grey, and running off the edge because there is always '
-     'one more field. Ours is one line of prose you could say out loud, with '
-     'the tools it chose sitting under it as marks. The cheapest to build and '
-     'the easiest to read at 214px; the least "product".',
+    ('B', 'Where it started — what you approved',
+     'for reference · unchanged · static',
+     'The direction, as it was: five chips of jargon wired in a row against '
+     'one line of prose. This is the one to compare the three below with — and '
+     'the two faults are visible from here. It sits in the middle of its band '
+     'with tint on all four sides while the cards beside it are cropped by '
+     'theirs, and nothing on it moves.',
      'chain', fig_b),
-    ('C', 'The drawing',
-     '插画 · R2 brand register · static',
-     'A knot of patch cables into a switchboard on one side, a person just '
-     '<b>saying it</b> on the other, and the cube taking the one cable out of '
-     'the speech bubble and plugging it in for them. Generated to match '
-     '<code>spot-permission-key</code> exactly — same outline weight, same '
-     'orange face, cobalt beanie, lime jumpsuit. Understood before it is read, '
-     'and the only option that carries warmth; but it is the one card in the '
-     'row that would not be a product surface.',
-     'drawn', fig_c),
-    ('D', 'The setup empties',
-     '交互 · one surface · 8s loop',
-     'One surface, and the argument is the <b>transition</b> rather than a '
-     'comparison: the setup sheet fills itself in field by field, holds, and '
-     'then the whole thing collapses into the single line that replaces it. '
-     'Says 门槛低 as a subtraction, which is what it is. The risk is honest: '
-     'it is the only thing in this row still moving after you have read the '
-     'sentence under it.',
-     'form', fig_d),
+    ('B1', 'The wall',
+     'their language as the ground · marquee + typing',
+     'Their steps become <b>wallpaper</b> — five rows running off all four '
+     'edges, drifting in alternate directions, dense enough that you stop '
+     'reading them. Our sentence is the one object on the card that is not '
+     'part of it, on a real surface cropped by the band like its neighbours. '
+     'The fullest of the three, and the one where the alternative is scenery '
+     'rather than an opponent.',
+     'wall', fig_wall),
+    ('B2', 'The split',
+     'a column that never ends · scroll + typing',
+     'Side by side, and <b>theirs never finishes</b>: a sheet of fields scrolls '
+     'past forever under the header “6 steps, 24 fields”, while ours writes one '
+     'sentence and stops. The count is the argument in two numbers, and the '
+     'scrolling column is the most literal picture of 门槛 in the set. Closest '
+     'to a product surface, so it sits most naturally with the other two cards.',
+     'split', fig_split),
+    ('B3', 'The fold',
+     'the wiring is replaced · one 9s beat',
+     'One object and one beat: three rows of chain run the full width, then '
+     'close up and dim as the sentence writes itself over the space they were '
+     'taking. It does not delete them — the claim is that the wiring is '
+     '<b>replaced</b>, not that it never existed. The clearest motion of the '
+     'three; also the only one whose card looks different at second 1 and '
+     'second 6.',
+     'fold', fig_fold),
 ]
 
 
@@ -268,27 +357,28 @@ def build():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Zapier · n8n card — four figures</title>
+<title>Zapier · n8n card — B, three ways</title>
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="variants.css">
 </head>
 <body class="opts">
 <header class="opts__head">
-  <p class="opts__k">The third comparison card · four figures</p>
-  <h1 class="opts__h">Wired, or spoken.</h1>
-  <p class="opts__l"><b>The card says it and the picture does not.</b> The
-  paragraph already reads “Zapier and n8n run the rule you wired. Okou reads the
-  goal in plain language, picks the tools” — but the figure above it is a wall of
-  connector logos, which argues <i>we have integrations</i>. Every alternative on
-  this page has those.</p>
-  <p class="opts__l">So all four below draw the same thing: <b>how you ask</b>.
-  Each shows both invocations, draws the alternative in its own neutral rather
-  than in our chrome, and is a different <i>kind</i> of picture from the lane
-  stack and the browser window beside it. Each is the real card at real size in
-  the real row — the two cards either side are dimmed, not changed.</p>
-  <p class="opts__l">Copy is untouched. If one of these wins, the heading is
-  worth one more look: <i>“A doer with context, not a trigger”</i> argues
-  context, and all four of these argue the ask.</p>
+  <p class="opts__k">Round 2 · B, three ways</p>
+  <h1 class="opts__h">Fuller, and it moves.</h1>
+  <p class="opts__l">Tong on round 1: <b>“B的方向可以，但是和其他两个 cards 比，
+  这个第三张 card 不够饱满，而且动画有点看不出来。”</b></p>
+  <p class="opts__l">Both faults have one cause. B was three small objects
+  centred in a 405×302 band with tint showing on all four sides, while the two
+  cards beside it are <b>oversized product surfaces cropped by their bands</b> —
+  the lane stack loses 130px off the right, the browser window runs past both
+  edges. A figure that fits politely inside its frame reads as emptier than its
+  neighbours whatever is in it. And in a row of three where the other two
+  animate, the one that does not reads as the one that is broken.</p>
+  <p class="opts__l">So in all three: the sentence sits on a real surface that
+  <b>runs past the right edge</b>, and it <b>writes itself</b> on a 9s loop —
+  line, line, then the three tools it picked. What differs is the ground it is
+  written over: their language as wallpaper, as a column that never ends, or as
+  a chain that folds away under it. B as you saw it is first, for comparison.</p>
 </header>
 <main>
 %s

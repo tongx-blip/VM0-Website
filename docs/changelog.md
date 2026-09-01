@@ -4,6 +4,48 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · B, three ways — fuller, and it moves (not merged)
+
+Tong on round 1: *"B的方向可以，但是和其他两个cards比，这个第三张card不够饱满，
+而且动画有点看不出来，根据B你可以在修改3个方案么"*.
+
+**Both faults have one cause.** B was three small objects centred in a 405×302
+band with tint showing on all four sides, while the two cards beside it are
+oversized product surfaces *cropped* by their bands — the lane stack loses 130px
+off the right, the browser window runs past both edges. A figure that fits
+politely inside its frame reads as emptier than its neighbours whatever is in
+it. And in a row of three where the other two animate, the one that does not
+reads as the one that is broken.
+
+So in all three: the sentence sits on a real surface that runs past the right
+edge, and it **writes itself** on a 9s loop — line, line, then the three tools
+it picked. What differs is the ground it is written over.
+
+| | route | what it is |
+|---|---|---|
+| **B1** The wall | marquee + typing | Their steps become wallpaper: five rows running off all four edges, drifting in alternate directions, dense enough that you stop reading them |
+| **B2** The split | scroll + typing | Theirs never finishes — a sheet of fields scrolls past forever under “6 steps, 24 fields” while ours writes one sentence and stops |
+| **B3** The fold | one 9s beat | The chain runs the full width; once the sentence is written it slides toward the card and dims. The wiring is *replaced*, not deleted |
+
+Three things found while building, all of them the same class of bug — a
+timeline that was not saying what it looked like it said:
+
+- **`animation-delay` phase-shifts a whole loop, not just its first beat.** The
+  two lines of the sentence ran on two 9s cycles offset by 1.1s, so line one had
+  already reset while line two was still typing and the card spent part of every
+  loop showing the back half of a sentence whose front half was gone. Nothing in
+  this card carries a delay now; every element says when it happens *inside* its
+  keyframes.
+- **A pause freezes the hold time, so changing `animation-delay` afterwards does
+  nothing.** Two rounds of "frozen" screenshots were of the wrong frame. Seek
+  with `el.getAnimations()[0].currentTime` instead — and `scroll-behavior:smooth`
+  means the bounding box has to be read *after* the scroll settles, or the crop
+  is 300px off.
+- **A scroller's header has to sit outside the scroller.** B2's count — the whole
+  argument of that variant — was a sibling of the track inside one `overflow`
+  box, so the rows travelled straight through it.
+
+
 ## 2026-09-01 · the header's stroke, measured
 
 Third round on one hairline, and the first two were me moving a number without
