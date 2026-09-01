@@ -2304,6 +2304,46 @@ The rail and the composer are `aria-hidden` product chrome, so the AA floor
 does not govern them (§12); anything a reader can actually read still fails the
 gate if it is dimmed.
 
+## 4ao. One typeface, three registers — counted on screen, not in the CSS
+
+The complaint is never "you used four families"; it is that one screen shows
+four things that look like different type. Count what a **reader** sees, per
+section:
+
+```js
+[...document.querySelectorAll('main section[id]')].map(s => {
+  const hits = [];
+  s.querySelectorAll('*').forEach(e => {
+    if (![...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) return;
+    if (getComputedStyle(e).fontFamily.includes('Mono'))
+      hits.push('"' + e.textContent.trim().slice(0, 24) + '"');
+  });
+  return s.id + ' → ' + [...new Set(hits)].join(' · ');
+});
+```
+
+**One mono string per screen** is the target (RULES S20). `#parallel` had four
+— a name, a kicker, a timer and a status line — which is how "one typeface,
+three registers" renders as *"四种字体"*.
+
+Two traps:
+
+- **The uppercase and the tracking travel with the family.** S18: mono +
+  uppercase + tracked only work as a set. Moving a string to `--fb` and leaving
+  `text-transform:uppercase` on it looks like a mistake in the third property.
+- **Product mocks are exempt** (RULES F31). `base.css` keeps the app's own type;
+  a Slack URL set in mono is the product being the product. Only sweep
+  `system.css`.
+
+And the same counting works for radii (RULES S22) — three roles, three values:
+
+```js
+[...new Set([...document.querySelectorAll('#control *')]
+  .map(e => getComputedStyle(e).borderRadius)
+  .filter(r => r && r !== '0px'))]
+// ground · surface · inside-a-surface, plus 50%/999px for things that are round
+```
+
 ## 4aj. Every control answers, and none of them shouts
 
 Two failures, one sweep. Both were shipped and neither was visible in a

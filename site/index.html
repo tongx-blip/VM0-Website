@@ -10,7 +10,7 @@
      system.css by tools/build-fonts.py; the sources live in src/fonts/ and
      are not committed. No Google Fonts request at all now — six families
      were being fetched and three of them were fallbacks for each other. -->
-<link rel="stylesheet" href="styles.css?r=a6321aa0">
+<link rel="stylesheet" href="styles.css?r=e30b9693">
 </head>
 <body>
 
@@ -69,6 +69,17 @@
     <p class="hero__body reveal" data-in>
       Okou connects to the tools you already use and does the work across marketing,
       sales, engineering, and operations, under your control.
+    </p>
+
+    <!-- THE HERO ASKS, and it asks with the SAME PAIR the closing band asks
+         with. Feedback F-01, *"这个地方没有 CTA，hero 有 CTA 还是蛮重要的"*, and
+         then *"两个按钮和 footer 上面那两个按钮对齐吧"* — so this is the same
+         component and the same two labels, not a second set of words invented
+         for the top of the page. K8's "the page asks twice" is intact: this is
+         ask one, the closing band is ask two. -->
+    <p class="cta__btns hero__btns reveal" data-in>
+      <a class="btn btn--dark btn--lg" href="#top">Get started for free</a>
+      <a class="btn btn--ghost btn--lg" href="#top"><img src="assets/mockup/slack.svg?v=55532dd8" alt="">Add to Slack</a>
     </p>
 
     <!-- The brand's own logotype, with the agents living in it. It is the

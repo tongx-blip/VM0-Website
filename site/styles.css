@@ -1600,7 +1600,13 @@ h3{ font-family:var(--fd); }
      the bar's own fill behind it; this one is the outline of the object and
      runs the full width of the header, so the same alpha reads about half
      a step heavier. */
-  --nav-edge:rgb(var(--ink-rgb) / .1);
+  /* HEAVIER. Tong: *"现在是有 border 的，只是换了颜色，border 颜色有点融合，
+     所以你把 border 的颜色改重一点点"* — the edge was there and doing nothing:
+     at .1 on a bar whose fill is already close to the page's cream, it
+     dissolved exactly where it is needed, which is where the bar laps a white
+     card. .18 is still a hairline and not a rule (S4): it reads as the edge
+     of a surface, and only where two surfaces meet. */
+  --nav-edge:rgb(var(--ink-rgb) / .18);
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -1672,7 +1678,7 @@ h3{ font-family:var(--fd); }
    the bar, not the theme. */
 @media (prefers-color-scheme: dark){
   .nav{
-    --nav-edge:rgb(var(--paper-rgb) / .12);
+    --nav-edge:rgb(var(--paper-rgb) / .20);   /* F-03, the dark half */
     --nav-stroke:rgb(var(--paper-rgb) / .16);
   }
 
@@ -1735,7 +1741,7 @@ h3{ font-family:var(--fd); }
    be DARKENED to clear AA (--accent-wash); on this one --accent itself
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
-  --nav-edge:rgb(var(--paper-rgb) / .14);
+  --nav-edge:rgb(var(--paper-rgb) / .22);   /* F-03, over a dark ground */
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
@@ -3497,10 +3503,13 @@ h3{ font-family:var(--fd); }
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-out);
 }
 
+/* A NAME IS PROSE. `--fm` marks state; this is a person (RULES S20). Mono +
+   uppercase + tracked came off together — S18: the three only work as a set,
+   and a name in any two of them looks like a mistake in the third. */
 .par__you{
   display:inline-flex; align-items:center; gap:.45em;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono); letter-spacing:.08em;
-  text-transform:uppercase; color:var(--ink-mute);
+  font-family:var(--fb); font-size:var(--t-meta); font-weight:500;
+  letter-spacing:normal; color:var(--ink-soft);
 }
 
 .par__you img{ border-radius:var(--r-pill); }
@@ -3578,16 +3587,21 @@ h3{ font-family:var(--fd); }
    the whole claim of this section. Repeated on purpose — it is a group tag,
    not four labels, so it is set small, mono and muted and the eye reads it
    once. No numbering: a `01 /` on each would read as filing, not sequence. */
+/* A KICKER IS NOT A STATE. It names which job the card belongs to, which is
+   a label, not a reading off the run (RULES S20). */
 .par__seq{
   margin:0 0 .5em;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-meta); font-weight:400;
-  letter-spacing:.08em; text-transform:uppercase;
+  font-family:var(--fb); font-size:var(--t-meta); font-weight:400;
+  letter-spacing:normal;
   color:var(--ink-mute);
 }
 
+/* A VALUE KEEPS ITS TABULAR FIGURES AND GIVES UP THE REGISTER. Four timers
+   in a row still have to hold their column as the digits change; that is what
+   `tabular-nums` is for, and it works in `--fb` (RULES S20). */
 .par__el{
-  font-style:normal; font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono);
-  color:var(--ink-mute);
+  font-style:normal; font-family:var(--fb); font-variant-numeric:tabular-nums;
+  font-size:var(--t-meta); color:var(--ink-mute);
 }
 
 .par__do{ font-size:var(--t-meta); color:var(--ink-soft); }
@@ -3826,15 +3840,22 @@ h3{ font-family:var(--fd); }
 .wfsc[data-step="1"] .wfo--ask:not(.is-in) .wfo__reply{ grid-template-rows:0fr; }
 
 
-/* the air is the inner box's, so it collapses with the track */
-.wfo__replyin{ padding-top:1.05em; }
+/* THE AIR IS A MARGIN ON THE FIRST CHILD, NOT PADDING ON THE TRACK'S ITEM.
+   A 0fr track is floored at the PADDING BOX of the item inside it — the note
+   already on `.step__body` — so `padding-top:1.05em` here left ~17px of the
+   reply still occupying space while closed, and the card's bottom air came out
+   half as big again as its top. Tong: *"图1那个 chat 下边留的空间有点大了，和
+   上边 padding 对齐吧"*. A margin inside an `overflow:hidden` box cannot
+   collapse out and is clipped to nothing at 0fr. Measured: 18 over, 18 under. */
+.wfo__replyhd{ margin-top:1.05em; }
 
 .wfo__replyhd{
   display:flex; align-items:center; gap:.5em;
   margin:0 0 .35em;
-  color:var(--ink-mute);
-  font-family:var(--fm); font-variant-numeric:tabular-nums;
-  font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-soft);
+  /* same row, same register as the caption above it (RULES S20) */
+  font-family:var(--fb); font-variant-numeric:tabular-nums;
+  font-size:.8em; font-weight:500; letter-spacing:normal;
 }
 
 .wfo__replyav{
@@ -3886,8 +3907,10 @@ h3{ font-family:var(--fd); }
 .wfo--ask figcaption{
   display:flex; align-items:center; gap:.55em;
   /* it is above the question now (F-05), so its air is underneath it */
-  margin-bottom:.7em; color:var(--ink-mute);
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
+  margin-bottom:.7em; color:var(--ink-soft);
+  /* WHO SPOKE IS PROSE (RULES S20) */
+  font-family:var(--fb); font-size:.8em; font-weight:500; letter-spacing:normal;
+  font-variant-numeric:tabular-nums;
 }
 
 .wfo--ask figcaption img{ border-radius:var(--r-pill); }
@@ -4163,7 +4186,8 @@ h3{ font-family:var(--fd); }
   padding:.35em .75em; border-radius:var(--r-pill);
   transform:translateY(-50%);
   background:var(--wash-2); color:var(--ink-soft);
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.08em; text-transform:uppercase;
+  /* A COUNT IS A VALUE, not a state (RULES S20) */
+  font-family:var(--fb); font-variant-numeric:tabular-nums; font-size:.76em; letter-spacing:normal;
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-spring);
 }
 
@@ -4279,10 +4303,13 @@ h3{ font-family:var(--fd); }
    they overlapped into "RAN IT RAN IT RAN IT" the moment the canvas got
    small. A label that cannot fit under the thing it labels belongs
    beside the group instead. */
+/* IT IS A SENTENCE. Set mono, uppercase and tracked it was the utility
+   register carrying nine words of prose, which is the register doing the one
+   thing it is worst at (RULES S18, S20). */
 .wfo__ran{
   flex:0 0 100%;
-  font-style:normal; font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--ink-mute); white-space:nowrap;
+  font-style:normal; font-family:var(--fb); font-size:.8em; letter-spacing:normal;
+  color:var(--ink-mute); white-space:nowrap;
 }
 
 .wfsc[data-step="3"] .wfo--team{ opacity:1; }
@@ -4328,8 +4355,9 @@ h3{ font-family:var(--fd); }
    same height regardless of how long the name is. */
 .wfo__sub{
   margin:0; padding:.7em var(--wfo-pad) .1em;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.09em;
-  text-transform:uppercase; color:var(--ink-mute);
+  /* a section label inside a card, not a state (RULES S20) */
+  font-family:var(--fb); font-size:.76em; font-weight:500; letter-spacing:normal;
+  color:var(--ink-mute);
 }
 
 .wfo__row{
@@ -4349,7 +4377,8 @@ h3{ font-family:var(--fd); }
 
 .wfo__row em{
   grid-column:2; justify-self:start; white-space:nowrap; font-style:normal;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.77em; letter-spacing:.07em; text-transform:uppercase;
+  /* whose automation it is — a name (RULES S20) */
+  font-family:var(--fb); font-size:.8em; letter-spacing:normal;
   color:var(--ink-mute);
 }
 
@@ -4528,6 +4557,34 @@ h3{ font-family:var(--fd); }
    of the height of the five-row list, and centred under nothing it read as
    an object floating in an empty field. */
 .cbit__fig--ask{ justify-content:flex-start; }
+
+/* ── ONE RADIUS LADDER, THREE ROLES ────────────────────────────────
+   Feedback F-12, *"圆角和字体可以统一一下"*, and then *"第 12 条你来统一圆角吧"*.
+   Measured, the pair was carrying four values for three jobs: 26 for the
+   ground, 12 for the permission list and the said-bubble, **8** for the
+   permission card, and a stray **10** for the Allowed / Denied chips. Two
+   surfaces at two radii is the thing that reads as untidy; a fourth value on
+   the chips is what makes it countable.
+
+       ground            --r-lg   26   .cbit__fig
+       a surface on it   12            .perms · .cpane__said · .pcard
+       inside a surface   8            .pcard__ic · .pcard__sel · .pcard__go · .state
+
+   THE ONE DEVIATION FROM THE PRODUCT is `.pcard`, which `PermissionActionCard`
+   draws at 8 — the same value it gives its own internals, because there it is a
+   card inside a chat column rather than a surface on a ground. Written at the
+   rule, per P12: on this page it is the middle step of a three-step ladder, and
+   its 8px children keep the product's value. Everything else here already
+   agreed with the product and was left alone. */
+.cbit__fig .pcard,
+.cbit__fig .cpane__said,
+.cbit__fig .perms{ border-radius:12px; }
+
+.cbit__fig .pcard__ic,
+.cbit__fig .pcard__sel,
+.cbit__fig .pcard__go,
+.cbit__fig .state{ border-radius:8px; }
+
 
 /* the exchange takes the space the list takes, and sits in the middle of it */
 .cask{
@@ -6049,7 +6106,12 @@ img.lane__bot{
   padding-top:clamp(64px,5.6vw,96px);
 }
 
-.cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
+/* CENTRED ON THE COMPONENT, not on the panel that happens to hold it. The
+   band gets it from `.panel > .cta__btns`; the hero's pair is nested inside
+   `.stack`, so it was not a direct child and wrapped flush-left at 390 —
+   two buttons of different widths, left-ragged, under a centred hero. The
+   two asks are the same component and must behave the same at every width. */
+.cta__btns{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
 
 
 /* ── the footer panel ────────────────────────────────────────────────

@@ -4,6 +4,108 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the hero asks, the register converges, and one radius ladder
+
+Five items off the check list, decided in one message.
+
+### F-01 · the hero asks, with the closing band's own pair
+
+*"两个按钮和 footer 上面那两个按钮对齐吧"* — so this is the **same component**
+and the same two labels, not a second set of words invented for the top of the
+page: `.cta__btns` with `Get started for free` and `Add to Slack`, under the
+hero's subtitle and above the wordmark. K8 is intact — this is ask one, the
+closing band is ask two, and `audit.js` §7 now prints `2 CTA` against both and
+still passes on *"only the hero and the band ask"*.
+
+Measured against the band's pair: identical fill, ink, radius, height and type.
+The one difference is the ghost button's background — `#EFEAE8` on the hero's
+cream, white on the close band's dark ground — which is the variant adapting to
+its ground, which is what it is for.
+
+**And the centring belongs to the component.** `.panel > .cta__btns` centred
+the band's pair; the hero's is nested inside `.stack`, so it was not a direct
+child and at 390 it wrapped **flush-left** — two buttons of different widths,
+left-ragged, under a centred hero. `justify-content:center` moved onto
+`.cta__btns` itself. RULES S21.
+
+### F-03 · the nav's edge, heavier
+
+*"现在是有 border 的，只是换了颜色，border 颜色有点融合，所以你把 border 的颜色
+改重一点点"* — exactly right, and it is why the four-option comparison was the
+wrong question. The edge was already there at `.1` and dissolving precisely
+where it is needed, which is where the bar laps a white card. `.1 → .18`, and
+the two dark declarations `.12 → .20` / `.14 → .22`. Still a hairline, not a
+rule (S4).
+
+### F-04 · one typeface, three registers — and one mono string per screen
+
+*"你看看直接收敛吧"*. The rule is now written down: **`--fm` marks state, and
+nothing else** (RULES S20). Not a name, not a card kicker, not a count, and
+never a sentence.
+
+Nine declarations moved off the utility register, all in `system.css` —
+`base.css` is product-mock type and stays exempt (F31):
+
+| | was | now |
+|---|---|---|
+| `.par__you` | `MING` | Ming |
+| `.par__seq` | `LAUNCH CAMPAIGN` | Launch campaign |
+| `.par__el` | `0:01` mono | `--fb` + tabular-nums |
+| `.wfo--ask figcaption` | `MING · 09:12` | Ming · 09:12 |
+| `.wfo__replyhd` | `OKOU AGENT 09:14` | Okou AGENT 09:14 |
+| `.wfo__chip` | `3 AUTOMATIONS` | 3 automations |
+| `.wfo__ran` | `ANYONE IN THE WORKSPACE CAN RUN IT` | anyone in the workspace can run it |
+| `.wfo__sub` | `AUTOMATIONS` | Automations |
+| `.wfo__row em` | `MAYA` | Maya |
+
+`var(--fm)` in `system.css`: **31 → 22**. `#parallel`, the screen the board
+annotates, now shows exactly **one** mono string — the status line. The
+uppercase and the tracking came off in the same edit each time: S18 says the
+three only work as a set, and a name in two of them looks like a mistake in the
+third. A value keeps `tabular-nums`, which is what actually holds a column and
+works fine in `--fb`.
+
+Still mono, because they are state: `.par__state`, `.wfo__tag` (Running /
+Public), `.wfo__replybadge` (AGENT), `.state` chips, `.cpane__wait`, the lane
+timers, and `.slk__unfurl-u` (a URL, in a product mock).
+
+### The thread card's floor
+
+*"图1那个 chat 下边留的空间有点大了，和上边 padding 对齐吧"*. My own bug, and one
+this repo already has a note about on `.step__body`: **a `0fr` track is floored
+at the padding box of the item inside it**, so `padding-top:1.05em` on
+`.wfo__replyin` left ~17px of the closed reply still taking space. The air is a
+`margin-top` on the first child now — inside `overflow:hidden` it cannot
+collapse out, and at `0fr` it is clipped to nothing. Measured: **21 over, 21
+under**.
+
+### F-12 · one radius ladder, three roles
+
+*"第 12 条你来统一圆角吧"*. Measured, `#control` was carrying four values for
+three jobs: 26 ground, 12 for the permission list and the said-bubble, **8** for
+the permission card, and a stray **10** on the Allowed / Denied chips. Two
+surfaces at two radii is what reads untidy; the fourth value is what makes it
+countable.
+
+       ground            26   .cbit__fig
+       a surface on it   12   .perms · .cpane__said · .pcard
+       inside a surface   8   .pcard__ic · .pcard__sel · .pcard__go · .state
+
+The one deviation from the product is `.pcard`, which `PermissionActionCard`
+draws at 8 — the same value it gives its own internals, because there it is a
+card in a chat column rather than a surface on a ground. Written at the rule per
+P12; its 8px children keep the product's value. RULES S22.
+
+F-02 skipped per instruction.
+
+### Gate
+
+`tokens` 0 · `check-html` balanced · `scopes` 0 · `rules` 182/79/11 resolve ·
+`audit.js` §1 §3 §5 §6 §7 §9 §10 §11 pass · axe 0 violations in both themes,
+whole page walked · 1440 light + dark, 390. §2 still reports 17 distinct type
+sizes against T3's eleven — the variable-font swap from another thread, and the
+half of F-04 that is still open.
+
 ## 2026-09-01 · the second rail, one thread instead of two cards, and a left edge
 
 Three notes in one round, all on things the board's part one had left half done.
