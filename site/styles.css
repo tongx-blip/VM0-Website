@@ -1625,7 +1625,7 @@ h3{ font-family:var(--fd); }
      form is what made it hard to reason about twice: the same .18 is a
      different line on every ground it lands on. 2.34:1 is also exactly where
      the dark theme's edge already sat, so the two now read the same. */
-  --nav-edge:#B2AEAC;
+  --nav-edge:#D4D0CE;
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -1697,7 +1697,7 @@ h3{ font-family:var(--fd); }
    the bar, not the theme. */
 @media (prefers-color-scheme: dark){
   .nav{
-    --nav-edge:#535151;   /* 1.85:1 on rgb(43,40,40) — the same step as light */
+    --nav-edge:#3B3939;   /* 1.27:1 on rgb(43,40,40) — the same step as light */
     --nav-stroke:rgb(var(--paper-rgb) / .16);
   }
 
@@ -1769,7 +1769,7 @@ h3{ font-family:var(--fd); }
    be DARKENED to clear AA (--accent-wash); on this one --accent itself
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
-  --nav-edge:#5A5858;   /* over a dark SECTION, whose fill is lighter again */
+  --nav-edge:#454343;   /* over a dark SECTION, whose fill is lighter again */
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
