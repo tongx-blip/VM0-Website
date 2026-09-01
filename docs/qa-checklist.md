@@ -2360,17 +2360,41 @@ the check knows the shorthand families and reports the line numbers:
 It found one nobody had noticed the day it was written (`.metrics span`).
 The fix is always the same: fold the value into the shorthand (RULES S23).
 
-**A hairline authored at `.5px`.** Do not argue about the alpha until you have
-sampled the pixels. A half-pixel ring is antialiased into whatever it lands on,
-so it renders at roughly half the colour you asked for:
+**A hairline nobody can see.** Three rounds went into this one and two of them
+moved a number without measuring the result. Do it in this order:
 
-```js
-// screenshot at deviceScaleFactor 1 AND 2, then read the row at the edge
-// fill rgb(239,234,232) · .5px @ .18 → rgb(220,215,214) · 1px @ .18 → rgb(202,197,196)
+1. **Sample the rendered page**, at `deviceScaleFactor` 1 **and** 2. Two
+   different values for one declaration means the line is sub-pixel and being
+   antialiased into its neighbour — fix the width before anything else.
+2. **Compute the ratio against the surface it outlines**, not against the ink
+   it is mixed from.
+
+```python
+def lin(c):
+    c = c / 255
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+def L(rgb):
+    r, g, b = (lin(v) for v in rgb); return .2126*r + .7152*g + .0722*b
+def ratio(a, b):
+    la, lb = L(a), L(b); hi, lo = max(la, lb), min(la, lb)
+    return (hi + .05) / (lo + .05)
 ```
 
-`.1 → .18` did not make the header's stroke visible, because the alpha was
-never what was wrong. Raise the width first (RULES S24).
+The header, measured off the page — fill `rgb(239,234,232)` on a white section
+card, which is **1.19:1** on its own, so the ring is the only thing separating
+them:
+
+| | rendered | vs fill |
+|---|---|---|
+| `ink / .18` at `.5px` | `rgb(220,215,214)` @1x · `rgb(202,197,196)` @2x | 1.42:1 — invisible |
+| `ink / .18` at `1px` | `rgb(202,197,196)` | 1.42:1 |
+| `ink / .30` | `rgb(178,174,172)` | 1.84:1 |
+| **`#9E9A98`** | `rgb(158,154,152)` | **2.34:1** |
+| `ink / .50` | `rgb(138,134,132)` | 3.02:1 — reads as a box |
+
+Target ~2.3:1, and **state it as a colour**: the same alpha over a different
+fill is a different line, which is what made two rounds of this unfalsifiable
+(RULES S24).
 
 ## 4aj. Every control answers, and none of them shouts
 

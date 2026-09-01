@@ -4,6 +4,40 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the header's stroke, measured
+
+Third round on one hairline, and the first two were me moving a number without
+measuring the result. Tong: *"stroke 还是看不出来，你直接改 stroke 颜色吧，然后看
+一对比度，你这么改永远没啥进展"* — right on both counts.
+
+Sampled off the rendered page, at the bar's top and left edges, at 1x and 2x.
+The bar's fill is `rgb(239,234,232)` and it sits on a **white** section card,
+which is `1.19:1` on its own — so the ring is the only thing that can separate
+them, and its contrast against that fill is the whole question:
+
+| | rendered | vs fill | vs the card |
+|---|---|---|---|
+| `ink / .18` at `.5px` | `rgb(220,215,214)` @1x · `rgb(202,197,196)` @2x | 1.42:1 | 1.70:1 |
+| `ink / .18` at `1px` | `rgb(202,197,196)` | 1.42:1 | 1.70:1 |
+| `ink / .30` | `rgb(178,174,172)` | 1.84:1 | 2.20:1 |
+| **`#9E9A98`** | `rgb(158,154,152)` | **2.34:1** | **2.79:1** |
+| `ink / .50` | `rgb(138,134,132)` | 3.02:1 | 3.61:1 |
+
+`1.42:1` is the number that says *"看不出来"*, and both earlier fixes left it
+there — the width change was real and necessary (a `.5px` ring renders two
+different colours at 1x and 2x, which is how you know it is being antialiased)
+but it did not move the contrast at all.
+
+**Stated as a colour, not an alpha.** That is the part that made two rounds of
+this unfalsifiable: the same `.18` is a different line on every ground it lands
+on, so "raise the alpha" was never a claim anyone could check. `#9E9A98` light,
+`#626060` dark — chosen so both themes land on the same 2.34:1 against their own
+fill, and both verified by pixel sample after rendering, not before.
+
+RULES **S24** rewritten around the measurement; the recipe (including the
+contrast function) is in QA §4ap so the next hairline argument starts with a
+number.
+
 ## 2026-09-01 · the stroke was never the alpha, and a check that finds the rest
 
 Two notes, and both of my earlier fixes had been written correctly and were
