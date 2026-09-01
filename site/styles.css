@@ -5804,6 +5804,13 @@ img.lane__bot{
 
 .vs__side--us{ color:var(--ink); }
 
+/* OUR SIDE OF THE PAIR IS THE AGENT, and the agent is a face everywhere else
+   on this page (Tong: *"把这些老的logo都换成agent avatar"*). The avatar art is
+   a painted square, so without this it sat next to three flat competitor
+   marks as a yellow chip; round, at the same 18px, it reads as who is being
+   compared rather than as a fourth logo. */
+.vs__side--us img{ border-radius:50%; }
+
 
 /* --ink-mute is already the lightest ink the page allows, so an opacity on
    top of it is under AA by construction. The word is made quieter by SIZE
@@ -8076,7 +8083,20 @@ html[data-theme="dark"] .ochat--okou{
 }
 
 
-.slk__unfurl-ic{ display:grid; place-items:center; flex:none; }
+/* THE UNFURL'S ICON IS THE AGENT TOO. Slack draws a service mark here and
+   that is what the brand cube was doing, but the line is attributed to the
+   teammate who posted it — "Okou·Published" — so it takes the same face the
+   message above it does (Tong: *"把这些老的logo都换成agent avatar"*). It has
+   to be ROUND and it has to be bigger than Slack's 14px: the avatar is a
+   painted square, so unrounded it read as a yellow chip, and at 14 the face
+   was a blob. 18px in a circle is the smallest size the drawing survives. */
+.slk__unfurl-ic{
+  display:grid; place-items:center; flex:none;
+  width:18px; height:18px;
+  border-radius:50%; overflow:hidden;
+}
+
+.slk__unfurl-ic img{ width:100%; height:100%; object-fit:cover; display:block; }
 
 
 .slk__unfurl-t{

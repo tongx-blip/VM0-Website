@@ -4,6 +4,40 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the agent is a face everywhere the agent speaks
+
+Tong, on the Slack scene: *"检查 把这些老的logo 都换成agent avatar"*.
+
+**Fifteen cubes, three slots, and one of them was already decided.** The
+stylesheet has said *"THE AGENT IS A FACE NOW, in the same 36px circle a person
+gets"* since the avatar system landed — and the markup never followed, so Okou
+was still speaking in Slack as an orange logo next to two photographs.
+
+- **8 ×** the agent's Slack message avatar → `agent-okou.png` at 36px, the same
+  circle Maya and Dan get.
+- **4 ×** the unfurl's service icon → the same face. Slack draws a service mark
+  there, but the line is attributed to the teammate who posted it. It had to be
+  **rounded and enlarged to 18px**: the avatar is a painted square, so at
+  Slack's 14px unrounded it rendered as a yellow chip with a blob in it.
+- **3 ×** the `vs Okou` pair row → the same face, rounded, so our side of the
+  comparison is *who* is being compared rather than a fourth logo.
+
+**And the favicon is the brand mark now** — the wordmark's first glyph, the one
+the header shows once the bar condenses, extracted to `assets/okou-mark.svg`
+with its own dark-mode rule (a tab bar has one and a favicon cannot inherit the
+page's). The cube it replaces is the retired app icon; a face at 16px in a tab
+is a blob, so this is the one slot the avatar does not take.
+
+**The find worth keeping (RULES P18).** `tools/slack-scenes.py` — which
+*generates* those scenes — was still emitting the cube in three places,
+including `AGENT_AVA`, so its next run would have put **32 cubes back** on a
+page that has carried the face for rounds. The page and its generator only ever
+disagree in the future, which is why nothing caught it. Both are fixed in this
+commit, and `tools/build-options.py` with them.
+
+Gate: tokens/check-html/scopes/rules 0, `audit.js` §1 §6 §8 §9 §10 §11 PASS,
+axe 0 violations in both themes, checked at 390.
+
 ## 2026-09-01 · the third comparison card now draws how you ask
 
 Tong: *"ok push上线"*. B1 is merged into `site/`; the connector hub it replaces

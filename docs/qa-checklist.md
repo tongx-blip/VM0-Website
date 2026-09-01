@@ -2439,6 +2439,27 @@ move when the band's tint swaps with the theme.
 agent-browser a11y     # violations must be 0 in BOTH themes, not just light
 ```
 
+## 4as. A generated block has a generator, and it is the file
+
+Parts of `site/index.html` are written by a script — the Slack scenes by
+`tools/slack-scenes.py`, the option pages by their builders. Hand-editing the
+output *works*, and it silently un-works the next time anyone runs the script.
+
+The avatar swap found exactly that: the CSS had said the agent is a face since
+the avatar system landed, `site/index.html` carried the face in the app's chat
+mock, and `slack-scenes.py` was still emitting the brand cube in three places —
+including `AGENT_AVA`, which would have put **32 cubes back** on the page on its
+next run. Nothing catches this: the page is right, the generator is wrong, and
+they only disagree in the future.
+
+```bash
+# before believing an asset or string swap is finished
+grep -rn "<the old value>" tools/ site/ src/
+```
+
+If the generator and the markup disagree, fix both in the same commit and say
+which one is the source.
+
 ## 4aq. A review build is pinned to one theme
 
 Anything under `options*/` borrows `site/styles.css`, and that stylesheet

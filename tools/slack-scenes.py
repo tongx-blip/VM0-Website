@@ -70,8 +70,11 @@ def at(name):
 def unfurl(service, title, url):
     return ('<div class="slk__unfurl">'
             '<p class="slk__unfurl-h">'
-            '<span class="slk__unfurl-ic"><img src="assets/okou-icon.svg" alt="" '
-            'width="14" height="14"></span>%s</p>'
+            # the agent's face, not the brand cube — the line is attributed to
+            # the teammate who posted it. 18px in a circle: the avatar is a
+            # painted square, so at Slack's 14px unrounded it read as a chip.
+            '<span class="slk__unfurl-ic"><img src="assets/avatars/agent-okou.png" '
+            'alt="" width="18" height="18"></span>%s</p>'
             '<p class="slk__unfurl-t">%s</p>'
             '<p class="slk__unfurl-u">%s</p></div>' % (service, title, url))
 
@@ -87,8 +90,12 @@ def msg(beat, who, time, body, agent=False, extra='', cont=False):
                 '<div class="slk__body"><p class="slk__say">%s</p>%s</div></div>'
                 % (beat, CUES[beat], body, extra))
     badge = '<i class="slk__badge">AGENT</i>' if agent else ''
+    # THE AGENT IS A FACE, in the same 36px circle a person gets. The CSS has
+    # said so since the avatar system landed; this generator was still writing
+    # the brand cube, so the markup and the stylesheet disagreed until Tong
+    # pointed at it: *"把这些老的logo都换成agent avatar"*.
     face = ('<span class="slk__av slk__av--okou">'
-            '<img src="assets/okou-icon.svg" alt="" width="22" height="22"></span>'
+            '<img src="assets/avatars/agent-okou.png" alt="" width="36" height="36"></span>'
             if agent else
             '<span class="slk__av"><img src="%s" alt="" width="36" height="36"></span>'
             % (AVA % WHO[who]))
@@ -218,8 +225,11 @@ ARROW = lucide('<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>')
 
 # The assistant's mark sits in the same rounded-lg tile the rail uses for a
 # nav icon — the product's one container shape at this size.
+# ...and in the app's own chat it is the same face. `site/index.html` has
+# carried the avatar here for a while; this generator had not caught up, so
+# re-running it would have put 32 cubes back on the page.
 AGENT_AVA = ('<span class="ochat__ava ochat__ava--agent">'
-             '<img src="assets/okou-icon.svg" alt="" width="16" height="16">'
+             '<img src="assets/avatars/agent-okou.png" alt="" width="28" height="28">'
              '</span>')
 
 

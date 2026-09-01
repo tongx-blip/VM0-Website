@@ -343,7 +343,7 @@ CARD = """
         <article class="vs %(width)s">
           <div class="vs__viz vs__viz--%(hue)s lzc lzc--%(key)s" aria-hidden="true">%(figure)s</div>
           <div class="vs__txt">
-            <p class="vs__pair"><span class="vs__side"><img src="assets/%(logo)s" alt="" width="18" height="18">%(rival)s</span><span class="vs__vs">vs</span><span class="vs__side vs__side--us"><img src="assets/okou-icon.svg" alt="" width="18" height="18">Okou</span></p>
+            <p class="vs__pair"><span class="vs__side"><img src="assets/%(logo)s" alt="" width="18" height="18">%(rival)s</span><span class="vs__vs">vs</span><span class="vs__side vs__side--us"><img src="assets/avatars/agent-okou.png" alt="" width="18" height="18">Okou</span></p>
             <h4>%(head)s</h4>
             <p>%(body)s</p>
           </div>
@@ -413,7 +413,7 @@ def main():
     # Every mark the figures use, PLUS every asset the shipped stylesheet
     # names — `okou host` refuses a bundle with a dangling reference, and
     # styles.css is the whole design layer.
-    want = {'okou-icon.svg'}
+    want = {'avatars/agent-okou.png'}
     want |= {'brand/avatar-%d.png' % n for n in range(1, 7)}
     want |= {'connectors/' + f for f in
              ('openai.svg', 'anthropic.svg', 'google-analytics.svg', 'meta-ads.svg',
