@@ -751,10 +751,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 
-
-/* 2 · the ask, mid-run */
-.cpane--ask{ display:flex; flex-direction:column; gap:12px; }
-
 .cpane__said{
   margin:0; padding:11px 14px;
   background:var(--paper); border-radius:var(--r-card);
@@ -771,20 +767,6 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 .cpane__wait i{
   width:.5em; height:.5em; border-radius:var(--r-pill); flex:none;
   background:rgb(var(--wait-rgb) / .85);
-}
-
-
-/* 3 · isolated execution, drawn */
-/* THE DRAWING IS CAPPED, or it sizes the whole section. It is a 900x900 PNG
-   and the panes share one grid cell, so at `max-width:100%` it took the
-   column's width — 657px tall — and the frame was sized by the picture rather
-   than by the list, which is 314. The cap is a little over the list's height
-   so the list stays the tallest thing and the frame keeps one height. */
-.cpane--iso{ display:flex; align-items:center; justify-content:center; height:100%; }
-
-.cpane--iso img{
-  width:auto; height:auto;
-  max-width:min(100%, 340px); max-height:340px;
 }
 
 
@@ -1618,7 +1600,13 @@ h3{ font-family:var(--fd); }
      the bar's own fill behind it; this one is the outline of the object and
      runs the full width of the header, so the same alpha reads about half
      a step heavier. */
-  --nav-edge:rgb(var(--ink-rgb) / .1);
+  /* HEAVIER. Tong: *"现在是有 border 的，只是换了颜色，border 颜色有点融合，
+     所以你把 border 的颜色改重一点点"* — the edge was there and doing nothing:
+     at .1 on a bar whose fill is already close to the page's cream, it
+     dissolved exactly where it is needed, which is where the bar laps a white
+     card. .18 is still a hairline and not a rule (S4): it reads as the edge
+     of a surface, and only where two surfaces meet. */
+  --nav-edge:rgb(var(--ink-rgb) / .18);
 
   position:fixed; top:0; left:0; right:0; z-index:100;
   height:var(--nav-h);
@@ -1690,7 +1678,7 @@ h3{ font-family:var(--fd); }
    the bar, not the theme. */
 @media (prefers-color-scheme: dark){
   .nav{
-    --nav-edge:rgb(var(--paper-rgb) / .12);
+    --nav-edge:rgb(var(--paper-rgb) / .20);   /* F-03, the dark half */
     --nav-stroke:rgb(var(--paper-rgb) / .16);
   }
 
@@ -1753,7 +1741,7 @@ h3{ font-family:var(--fd); }
    be DARKENED to clear AA (--accent-wash); on this one --accent itself
    clears at 4.7:1 and the darkened sibling would fail at 3.0:1. */
 .nav.is-dark{
-  --nav-edge:rgb(var(--paper-rgb) / .14);
+  --nav-edge:rgb(var(--paper-rgb) / .22);   /* F-03, over a dark ground */
   --nav-ink:rgb(var(--paper-rgb) / .72);
   --nav-ink-hi:var(--paper-ink);
   --nav-accent:var(--accent);
@@ -2128,6 +2116,28 @@ h3{ font-family:var(--fd); }
 
 .panel > .cta__btns{ display:flex; justify-content:center; }
 
+
+/* ── A SECTION WHOSE FIGURE IS A LEFT-ALIGNED GRID ──────────────────
+   Tong, on `#control`: *"这里的section title text都左对齐"*. §9's centred stack
+   is still the page's one composition rule; this is the written exception, and
+   the test for it is under the heading, not in the heading. `#control` is two
+   left-aligned text columns starting at the section's left edge, so a centred
+   title above them has no edge to agree with — it hangs between the columns.
+   Both the heading and the lede move, together: aligning one and not the other
+   is how a section ends up with two axes instead of one.
+   Scoped by a modifier rather than by id, so the next section that needs it
+   says so in its class list — and so flipping the whole page is one line here
+   if that is what we decide. */
+.panel--lead-left > .display,
+.panel--lead-left > .section-body{
+  justify-self:start;
+  text-align:left;
+  margin-inline:0;
+}
+
+/* the lede keeps its measure; it just measures from the left now */
+.panel--lead-left > .section-body{ max-width:56ch; }
+
 /* No dot before the eyebrow. It carried no state — it was there to make the
    label feel designed, which is the definition of the tell. The label is the
    label; if it needs a bullet to read as one, it is the wrong label.
@@ -2198,9 +2208,123 @@ h3{ font-family:var(--fd); }
 
 .panel{ border-top:0; }
 
+
+/* ── ONE CARD, THREE SECTIONS ────────────────────────────────────────
+   The connector wall, the ask and the outputs share a single card. They
+   remain three sections — three ids, three headings, three claims, their
+   own reveals — and what they stop having is three GROUNDS. S2 says every
+   section is a white card on the grey page; this is the written exception,
+   and the reason is that the three are one movement: here is everything it
+   reaches, here is where you ask it, here is what comes back. Three cards
+   put a grey gap inside a single sentence.
+
+   The card is the wrapper and carries every value `.panel--card` carries,
+   because it IS a section card — one that happens to hold three. The
+   sections inside keep only their block rhythm. */
+.megacard{
+  margin-inline:var(--card-gap);
+  margin-block:var(--card-gap);
+  background:var(--paper);
+  border-radius:var(--r-section);
+  box-shadow:none;
+  overflow:hidden;
+}
+
+.megacard__s{
+  /* the inline padding is the card's, not each section's — otherwise the
+     three measures drift apart on one ground, which is the thing a shared
+     card was supposed to stop */
+  padding-inline:max(var(--pad-section), calc(var(--edge) - var(--card-gap)));
+  padding-block:var(--pad-section-block);
+  background:none;
+}
+
+/* THE SEAM IS SPACE, NOT A LINE (S4). Two sections meeting on one ground
+   would otherwise pay their block padding twice — 2 × --pad-section-block
+   between two headings, which reads as a gap someone forgot to close. Each
+   join gives back half. */
+.megacard__s + .megacard__s{ padding-top:calc(var(--pad-section-block) * .5); }
+
+.megacard__s:not(:last-child){ padding-bottom:calc(var(--pad-section-block) * .5); }
+
+
+/* the box is no longer the hero's figure, so it stops reserving the hero's
+   air above itself */
+#ask .showcase{ margin-top:0; }
+
 /* surfaces are always paper; the shadow carries them on a paper ground
    and the fill carries them on a wash ground. Only the small pills flip,
    and never in their active state. */.scenes__tab:not(.is-on){ background:var(--wash-2); }
+
+
+/* The logotype, drawn. It is the hero's figure now — capped at the measure
+   and given the air the prompt box used to take, and it is a decoration with
+   no words of its own, so it carries no alt text and no reveal of its own
+   beyond the stack's. */
+/* BIG. Tong: "把hero上的插画放大，要强视觉，插画甚至被下边的section盖住一点点
+   都ok的". It runs the full measure now instead of stopping at 860, and the
+   hero's own `overflow:hidden` is what laps it — the hero is sticky and the
+   card below scrolls up over it, so the bottom of the drawing goes under the
+   card exactly as the next section arrives. Nothing is positioned to make
+   that happen; it is what a sticky panel and a scrolling card already do.
+   The top margin comes down as the drawing goes up: the hero is one viewport
+   and centred in it, so height it does not spend on air it spends on this. */
+.hero__mark{
+  display:block; width:100%; height:auto;
+  /* PAST THE MEASURE. The rest of the page is capped at 1320 and this is the
+     one thing allowed through it — a drawing is not a column of prose, and
+     the brief was "要强视觉". */
+  max-width:min(100%, 1320px);
+  /* The negative bottom is the lap. It pulls the drawing past the hero's own
+     content box so its feet sit below the fold, where the hero's
+     `overflow:hidden` cuts it at exactly the line the next section starts —
+     and then the card, scrolling up over a sticky hero, keeps covering it.
+     Without this the drawing stopped 110px short of the bottom and the
+     overlap only ever happened on scroll. */
+  margin:clamp(10px, 1.4vw, 22px) auto calc(-1 * clamp(40px, 7vw, 128px));
+}
+
+
+/* ── the product's greeting, above the box ───────────────────────────
+   `AgentChatPage`: `flex items-center gap-4`, the avatar `h-16 w-16`
+   rounded-full, the tagline `text-3xl font-semibold tracking-tight`, and
+   `gap-6` from there down to the composer. */
+/* CENTRED, AND THE AVATAR IS ON TOP. The product sets this row beside the
+   composer because a chat page is a left-aligned column; this page is not —
+   its one composition rule is a centred stack, and every other section on it
+   obeys that (RULES §composition). A left-aligned greeting over a centred box
+   was the only thing on the page reading against its own grid.
+
+   It keeps the box's measure: `.pbox` is `min(760px, 100%)` centred, and a
+   greeting spanning the whole card while the thing it greets you into is
+   760px wide reads as two unrelated objects. */
+.greet{
+  width:min(760px, 100%); margin:0 auto 24px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  text-align:center;
+}
+
+.greet img{
+  width:64px; height:64px; flex:none;
+  border-radius:50%; object-fit:cover; object-position:top;
+}
+
+/* --t-d3, not the product's raw 30px. This is the PAGE's heading above the
+   page's own box, not type inside a mock, so it takes the page's scale (T3)
+   and its weight (T4: nothing outside a mock is 600). The scale agrees with
+   the product anyway — clamp(23px, 2.2vw, 30px) against text-3xl/text-2xl —
+   which is why the deviation costs nothing to look at. */
+.greet b{
+  font-family:var(--fd); font-size:var(--t-d3); font-weight:500;
+  letter-spacing:-.02em; line-height:1.2; color:var(--ink);
+}
+
+@media (max-width:600px){
+  .greet{ gap:10px; margin-bottom:18px; }
+
+  .greet img{ width:56px; height:56px; }
+
+}
 
 
 /* ─────────────── 8. hero ───────────────
@@ -3021,7 +3145,7 @@ h3{ font-family:var(--fd); }
   --wf-bar-w:clamp(4px, .38vw, 5.5px);      /*  4  · the marker rail, r=100      */
   --wf-bar-h:calc(var(--wf-title) * var(--wf-title-lh));   /* 19 = 16 × 1.21    */
   --wf-rule:.5px;  --wf-rule-ink:var(--hairline);
-  --wf-bar-h-track:3px;                     /* the open row's progress bar */
+  --wf-bar-h-track:2px;                     /* the open row's progress bar */
   /* The reference's own 16px sat outside this page's scale, which is why
      this one column read smaller than everything around it. The roles map
      onto the scale instead: a list title is a lede, its paragraph is prose,
@@ -3214,12 +3338,17 @@ h3{ font-family:var(--fd); }
   background:var(--wf-rule-ink);
 }
 
+/* A REAL WIDTH, NOT A scaleX. Feedback F-06, *"这两个线的圆角不一致"* — and
+   the radius was never missing: `border-radius:var(--r-pill)` is right there.
+   `transform:scaleX(.3)` scales the painted box, **caps included**, so a 1.5px
+   round end came out 0.45px wide and read as a square cut next to the fully
+   round capsule in front of the title. A width cannot squash a corner.
+   One absolutely positioned 2px box changing width lays out nothing else, so
+   the per-frame cost is the same one it was already paying. */
 .step.is-active::before{                /* the fill  */
   z-index:1;
-  width:100%;
+  width:calc(var(--p, 0) * 100%);
   background:var(--marker);
-  transform:scaleX(var(--p, 0));
-  transform-origin:left center;
 }
 
 /* the resting hairline steps aside while the bar is there */
@@ -3374,10 +3503,13 @@ h3{ font-family:var(--fd); }
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-out);
 }
 
+/* A NAME IS PROSE. `--fm` marks state; this is a person (RULES S20). Mono +
+   uppercase + tracked came off together — S18: the three only work as a set,
+   and a name in any two of them looks like a mistake in the third. */
 .par__you{
   display:inline-flex; align-items:center; gap:.45em;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono); letter-spacing:.08em;
-  text-transform:uppercase; color:var(--ink-mute);
+  font-family:var(--fb); font-size:var(--t-meta); font-weight:500;
+  letter-spacing:normal; color:var(--ink-soft);
 }
 
 .par__you img{ border-radius:var(--r-pill); }
@@ -3455,16 +3587,21 @@ h3{ font-family:var(--fd); }
    the whole claim of this section. Repeated on purpose — it is a group tag,
    not four labels, so it is set small, mono and muted and the eye reads it
    once. No numbering: a `01 /` on each would read as filing, not sequence. */
+/* A KICKER IS NOT A STATE. It names which job the card belongs to, which is
+   a label, not a reading off the run (RULES S20). */
 .par__seq{
   margin:0 0 .5em;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-meta); font-weight:400;
-  letter-spacing:.08em; text-transform:uppercase;
+  font-family:var(--fb); font-size:var(--t-meta); font-weight:400;
+  letter-spacing:normal;
   color:var(--ink-mute);
 }
 
+/* A VALUE KEEPS ITS TABULAR FIGURES AND GIVES UP THE REGISTER. Four timers
+   in a row still have to hold their column as the digits change; that is what
+   `tabular-nums` is for, and it works in `--fb` (RULES S20). */
 .par__el{
-  font-style:normal; font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono);
-  color:var(--ink-mute);
+  font-style:normal; font-family:var(--fb); font-variant-numeric:tabular-nums;
+  font-size:var(--t-meta); color:var(--ink-mute);
 }
 
 .par__do{ font-size:var(--t-meta); color:var(--ink-soft); }
@@ -3675,93 +3812,92 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* ── where the run lands ─────────────────────────────────────────────
-   It takes the ask's place: the question has done its job by the time the
-   chain finishes, and one object leaving as another arrives keeps three
-   cards from fighting over a 760x545 canvas. Slack's own tokens, so the
-   message reads as Slack and not as one of our surfaces (RULES P1). */
-.wfo--post{
-  /* It takes the ask's exact box, and it lands ON TOP: the newest thing in
-     the picture cannot be under the card that produced it. A 1cqh graze
-     against the card's top edge was the worst of both — either lap or
-     clear (RULES F9). The lap is the composition; I pulled the two apart
-     once on the theory that it was covering too much of the run card's
-     header, and it was not — what actually looked broken was this card's
-     missing shadow (see `--slk-bleed` below). Do not un-lap it again. */
-  left:15cqw; top:19cqh; width:min(44cqw, 29rem); z-index:3;
-  overflow:hidden;
-  background:var(--slk-card);
-  border-radius:var(--r-card);
-  box-shadow:var(--e-lift);
-  --slk-line:#E4E6E9;
-  --slk-ink:#1D1C1D;
-  --slk-mute:#616061;
-  --slk-tint:#F8F8F8;
-  --slk-card:#FFFFFF;
-  /* IT WIPES, IT DOES NOT FADE. Every other object in this scene settles
-     once per beat; this one replays on a loop, so the odds of catching its
-     text at partial alpha are high — and axe composites an inherited
-     opacity, which is why two nodes here failed contrast on two runs in
-     three while measuring 16:1 and 5.6:1 at rest. Entrances of text use
-     clip-path (QA §1). */
-  /* THE CLIP HAS TO CONTAIN THE SHADOW. `inset()` resolves against the
-     BORDER box, and a box-shadow is painted outside it — so `inset(0)`,
-     which reads as "clip to nothing", deletes the drop shadow and leaves a
-     white card with four hard edges sitting on the mat. Every other surface
-     in the scene had one and this one did not, which is what "阴影被截断了"
-     was pointing at.
+/* ── where the run lands: INSIDE THE ASK ────────────────────────────
+   It was its own absolutely positioned card. Tong: *"可不可以把用户的任务和
+   agent给的结果放到一起，在agent出现的时候做一个展开动画"*. Two cards on
+   opposite sides of a canvas are two objects; one question and its answer are
+   one conversation. So the reply is a block inside `.wfo--ask` and the arrival
+   is the card growing by a message.
 
-     The bleed is read off the shadow rather than guessed. Sideways and up,
-     `0 2px 10px` reaches five pixels; down, `0 26px 50px -26px` reaches
-     26 − 26 + 25 = 25. Rounded up to 10 and 34 so a change to the shadow
-     does not silently start clipping it again. The closed state keeps the
-     same bleed on three sides and collapses to zero height AT THE TOP EDGE,
-     so the wipe still starts from nothing. */
-  --slk-bleed:10px;
-  --slk-drop:34px;
-  opacity:1;
-  clip-path:inset(calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed))
-                  calc(100% + var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed)));
-  transform:translate(-2cqw, 3cqh) scale(.94);
-  transition:clip-path var(--t-reveal) var(--e-out),
-             transform var(--t-reveal) var(--e-out);
+   THE SHUTTER, not a fade (RULES N13, N3): a 1-track grid opened from 0fr, so
+   the closed state has literally zero height and the card's own box is what
+   animates. Text never sits at partial alpha, which is the fault that put two
+   nodes of this scene on the contrast gate twice. The inner box carries the
+   air, because a 0fr track is floored at the padding box of the item in it. */
+.wfo__reply{
+  display:grid; grid-template-rows:0fr;
+  transition:grid-template-rows var(--t-reveal) var(--e-out);
 }
 
-.wfo--post .slk__bar{ padding:9px 13px; }
+.wfo__replyin{ overflow:hidden; min-height:0; }
 
-.wfo--post .slk__msg{ padding:9px 13px 13px; }
+/* RESTING IS THE FINISHED CONVERSATION (N2). With no JS, with reduced motion,
+   and on any beat that is not this one, the reply is simply there — `.is-in`
+   is what JS adds at the cue, and its absence must never mean "missing". */
+.wfsc:not([data-step="1"]) .wfo__reply,
+.wfo--ask.is-in .wfo__reply{ grid-template-rows:1fr; }
 
-.wfo--post .slk__say{ color:var(--slk-ink); }
+.wfsc[data-step="1"] .wfo--ask:not(.is-in) .wfo__reply{ grid-template-rows:0fr; }
 
-/* it arrives only when the runner reaches the last step, and the ask gets
-   out of the way in the same beat */
-.wfsc[data-step="1"] .wfo--run.is-delivered ~ .wfo--post,
-.wfsc[data-step="1"] .wfo--post.is-in{
-  clip-path:inset(calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-drop))
-                  calc(-1 * var(--slk-bleed)));
-  transform:none;
+
+/* THE AIR IS A MARGIN ON THE FIRST CHILD, NOT PADDING ON THE TRACK'S ITEM.
+   A 0fr track is floored at the PADDING BOX of the item inside it — the note
+   already on `.step__body` — so `padding-top:1.05em` here left ~17px of the
+   reply still occupying space while closed, and the card's bottom air came out
+   half as big again as its top. Tong: *"图1那个 chat 下边留的空间有点大了，和
+   上边 padding 对齐吧"*. A margin inside an `overflow:hidden` box cannot
+   collapse out and is clipped to nothing at 0fr. Measured: 18 over, 18 under. */
+.wfo__replyhd{ margin-top:1.05em; }
+
+.wfo__replyhd{
+  display:flex; align-items:center; gap:.5em;
+  margin:0 0 .35em;
+  color:var(--ink-soft);
+  /* same row, same register as the caption above it (RULES S20) */
+  font-family:var(--fb); font-variant-numeric:tabular-nums;
+  font-size:.8em; font-weight:500; letter-spacing:normal;
 }
 
-/* it belongs to beat 1 only; the other three states clip it away outright */
-.wfsc:not([data-step="1"]) .wfo--post{
-  clip-path:inset(calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed))
-                  calc(100% + var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed)));
+.wfo__replyav{
+  display:grid; place-items:center; flex:none;
+  width:1.55em; height:1.55em; border-radius:var(--r-pill); overflow:hidden;
 }
 
-.wfsc[data-step="1"] .wfo--ask.is-away{
-  opacity:0; transform:translate(-4cqw, -6cqh) rotate(-1.1deg);
+.wfo__replyav img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.wfo__replyhd b{ font-weight:600; color:var(--ink-soft); }
+
+/* THE BADGE IS THE POINT: it is the one element that says a member of this
+   conversation is software. Same idiom as the channel's `.slk__badge`. */
+.wfo__replybadge{
+  flex:none; font-style:normal;
+  padding:.18em .38em; border-radius:.28em; line-height:1;
+  background:var(--tile);
+  font-size:.85em; letter-spacing:.06em;
+  color:var(--ink-mute);
+}
+
+/* INLINE, like the ask's caption above it. Pushed to the far right with
+   `margin-left:auto` it made one caption a row and the other a line — two
+   rules for the same element, one card apart. */
+.wfo__replyhd time{ margin-left:0; }
+
+.wfo__replysay{
+  margin:0;
+  color:var(--ink); font-size:.88em; line-height:1.5;
 }
 
 
 /* 1 · the ask ─────────────────────────────────────────────────────── */
+/* CENTRED AS A PAIR. Tong: *"把这些展示的图居中，现在有点偏左了"*. There were
+   three objects and the two small ones were both on the left, so the group's
+   mass sat left-of-centre with the top-right empty. Merged, there are two, and
+   they are placed so the group's bounding box is symmetric: this card runs
+   5→45cqw and the run card 48→94, which is 5 of margin on the left and 6 on
+   the right — the residue is the run card's rotation, not an offset.
+   Vertically 26→73 against 26→74. */
 .wfo--ask{
-  left:12cqw; top:19cqh; width:min(44cqw, 30rem);
+  left:5cqw; top:26cqh; width:min(40cqw, 26rem);
   padding:1.15em 1.3em;
   transform:translateY(1.4em) rotate(-1.1deg);
 }
@@ -3770,8 +3906,11 @@ h3{ font-family:var(--fd); }
 
 .wfo--ask figcaption{
   display:flex; align-items:center; gap:.55em;
-  margin-top:.85em; color:var(--ink-mute);
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
+  /* it is above the question now (F-05), so its air is underneath it */
+  margin-bottom:.7em; color:var(--ink-soft);
+  /* WHO SPOKE IS PROSE (RULES S20) */
+  font-family:var(--fb); font-size:.8em; font-weight:500; letter-spacing:normal;
+  font-variant-numeric:tabular-nums;
 }
 
 .wfo--ask figcaption img{ border-radius:var(--r-pill); }
@@ -3789,19 +3928,27 @@ h3{ font-family:var(--fd); }
    came out 8/27 — every eye reads that as "the picture slid left". A
    subject that is centred can only stay centred if what recedes recedes
    along the same axis. */
+/* Re-measured against the new origin: from 19cqh a -18cqh recede left it
+   just off the top edge, from 6cqh the same number puts it 65px past it and
+   the fade has nothing left to do. */
+/* Re-measured against the new origin, and against the card's new height: it
+   carries two messages now, so it recedes further to clear the run card. */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.3; transform:translate(11cqw, -18cqh) rotate(-1.1deg);
+  opacity:.3; transform:translate(10cqw, -27cqh) rotate(-1.1deg);
 }
 
 .wfsc[data-step="3"] .wfo--ask,
 .wfsc[data-step="4"] .wfo--ask{
-  opacity:0; transform:translate(11cqw, -37cqh) rotate(-1.1deg);
+  opacity:0; transform:translate(10cqw, -46cqh) rotate(-1.1deg);
 }
 
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
+/* MOVED +12cqw / −6cqh so the pair is centred (see `.wfo--ask`). Beats 2, 3
+   and 4 are the SAME absolute destinations as before — each of their
+   translates takes the same delta back out, so nothing downstream moved. */
 .wfo--run{
-  left:36cqw; top:36cqh; width:min(46cqw, 32rem);
+  left:48cqw; top:30cqh; width:min(46cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 
@@ -3810,7 +3957,7 @@ h3{ font-family:var(--fd); }
 /* THE PIVOT: it lifts, straightens and settles into the middle as the
    thing the team keeps, rather than a thing that happened once */
 .wfsc[data-step="2"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -11cqh) rotate(0deg);
+  opacity:1; transform:translate(-21cqw, -5cqh) rotate(0deg);
 }
 
 /* Step 3 holds THREE things — the card, the team and the line. The card
@@ -3819,12 +3966,12 @@ h3{ font-family:var(--fd); }
    That lap is the point: the people are on the workflow, not filed
    under it. Every other pair in this scene has to clear. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -18cqh) rotate(-.6deg);
+  opacity:1; transform:translate(-21cqw, -12cqh) rotate(-.6deg);
 }
 
 .wfsc[data-step="4"] .wfo--run{
   opacity:1; width:min(40cqw, 28rem);
-  transform:translate(-29cqw, -11cqh) rotate(-1.2deg);
+  transform:translate(-41cqw, -5cqh) rotate(-1.2deg);
 }
 
 /* A GRID, not a flex row with an absolutely-placed tag. The tag sat at
@@ -4039,7 +4186,8 @@ h3{ font-family:var(--fd); }
   padding:.35em .75em; border-radius:var(--r-pill);
   transform:translateY(-50%);
   background:var(--wash-2); color:var(--ink-soft);
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.08em; text-transform:uppercase;
+  /* A COUNT IS A VALUE, not a state (RULES S20) */
+  font-family:var(--fb); font-variant-numeric:tabular-nums; font-size:.76em; letter-spacing:normal;
   transition:opacity var(--t-state) var(--e-out), transform var(--t-state) var(--e-spring);
 }
 
@@ -4155,10 +4303,13 @@ h3{ font-family:var(--fd); }
    they overlapped into "RAN IT RAN IT RAN IT" the moment the canvas got
    small. A label that cannot fit under the thing it labels belongs
    beside the group instead. */
+/* IT IS A SENTENCE. Set mono, uppercase and tracked it was the utility
+   register carrying nine words of prose, which is the register doing the one
+   thing it is worst at (RULES S18, S20). */
 .wfo__ran{
   flex:0 0 100%;
-  font-style:normal; font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--ink-mute); white-space:nowrap;
+  font-style:normal; font-family:var(--fb); font-size:.8em; letter-spacing:normal;
+  color:var(--ink-mute); white-space:nowrap;
 }
 
 .wfsc[data-step="3"] .wfo--team{ opacity:1; }
@@ -4204,8 +4355,9 @@ h3{ font-family:var(--fd); }
    same height regardless of how long the name is. */
 .wfo__sub{
   margin:0; padding:.7em var(--wfo-pad) .1em;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.68em; letter-spacing:.09em;
-  text-transform:uppercase; color:var(--ink-mute);
+  /* a section label inside a card, not a state (RULES S20) */
+  font-family:var(--fb); font-size:.76em; font-weight:500; letter-spacing:normal;
+  color:var(--ink-mute);
 }
 
 .wfo__row{
@@ -4225,7 +4377,8 @@ h3{ font-family:var(--fd); }
 
 .wfo__row em{
   grid-column:2; justify-self:start; white-space:nowrap; font-style:normal;
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:.77em; letter-spacing:.07em; text-transform:uppercase;
+  /* whose automation it is — a name (RULES S20) */
+  font-family:var(--fb); font-size:.8em; letter-spacing:normal;
   color:var(--ink-mute);
 }
 
@@ -4331,136 +4484,130 @@ h3{ font-family:var(--fd); }
    running past it on both sides; matching the column to the card makes
    the three things in it one aligned block. The pair is then centred in
    the section rather than stretched across it. */
+/* TWO PEERS, SIDE BY SIDE. What was here was a three-step auto-player: a
+   left column of collapsed titles with a progress rule under whichever one
+   was playing, and a single frame on the right that swapped pictures on a
+   timer. Tong, on the two claims that are left: *"你看看有什么方式把两段内容
+   展示的更舒适一些，不用非得切tab的方式，感觉没必要"*.
+
+   He is right, and the reason is worth writing down. A stepper earns its
+   cost when there are more states than fit; at three it was already close,
+   and at TWO the machinery costs more than it saves — the reader has to
+   work out that a grey line of text is a button, and the reward is a
+   picture that could simply have been on the page. Two other faults came
+   with it and both are worse here than anywhere else on this page:
+
+   · it was not the same kind of object on each side. Left was a stack of
+     one-line titles with three quarters of its column empty; right was one
+     large picture. A pair that is a table of contents beside a photograph
+     never balances, at any spacing.
+   · it MOVED, and it hid. An auto-advancing player takes the page away from
+     the reader mid-sentence, and it keeps half of what it has to say behind
+     a timer. The subject of this section is trust. A section about control
+     that will not show you everything at once is arguing against itself.
+
+   So: two claims, each with its own picture under it, both on screen, on the
+   same ground, at the same size. Nothing hidden, nothing on a timer, and no
+   control to discover. */
 .ctrl{
-  /* Left column claims, right column shows. The text column is narrower than
-     the frame on purpose: a claim is read once and the frame is looked at for
-     the whole of the beat, so they are not peers. */
-  display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1fr);
-  gap:clamp(28px,4.2vw,68px); align-items:center;
-  margin-top:clamp(30px,3.4vw,50px);
+  display:grid; grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:clamp(22px,3vw,44px);
+  /* STRETCH, so the two figures share one bottom edge. The two pictures have
+     different natural heights — five rows against a card and two lines — and
+     hanging them from the top left the shorter one's ground ending in the
+     middle of the pair. */
+  align-items:stretch;
+  margin-top:clamp(28px,3.2vw,46px);
 }
 
+.cbit{ display:flex; flex-direction:column; min-width:0; }
 
-/* ── the three steps ─────────────────────────────────────────────────
-   The same shutter the workflow ladder uses (RULES N13): the body is a
-   1-track grid opened from 0fr, so a closed step collapses to its title and
-   the rule under it is the row's OWN bottom edge, travelling with it. NO
-   padding on the body — a 0fr track is floored at the padding box of the
-   item inside it, which is what kept closed rows 6px tall the first time
-   this mechanic was built. */
-.ctrl__steps{ list-style:none; margin:0; padding:0; }
-
-.cstep{
-  position:relative;
-  padding:clamp(14px,1.6vw,20px) 0;
-}
-
-/* NO RULE BETWEEN THE STEPS. The first version gave every step a
-   `border-bottom` and let the progress bar sit on top of it, which is three
-   hairlines of furniture to make one of them mean something — and S4 forbids
-   exactly that. The steps separate by space; the only line on screen is the
-   ACTIVE step's track, which is a state and not a divider. It is drawn under
-   the step that is playing and nowhere else, so it also says which one that
-   is without a second marker. */
-.cstep__bar{
-  position:absolute; left:0; right:0; bottom:0; height:1px;
-  background:var(--hairline);
-  opacity:0; transition:opacity var(--t-state) var(--e-out);
-}
-
-.cstep__bar::after{
-  content:""; position:absolute; inset:0;
-  transform-origin:left center; transform:scaleX(var(--p,0));
-  background:var(--accent-solid);
-}
-
-.cstep.is-on .cstep__bar{ opacity:1; }
-
-.cstep__h{ margin:0; font-size:inherit; font-weight:inherit; }
-
-.cstep__t{
-  display:block; width:100%; padding:0; border:0; background:none;
-  text-align:left; cursor:pointer;
+.cbit__t{
+  margin:0;
   font-family:var(--fd); font-weight:500;
-  font-size:var(--wf-title); line-height:1.24;
-  letter-spacing:-.01em;
-  color:var(--ink-mute);
-  transition:color var(--t-state) var(--e-out);
+  font-size:var(--wf-title); line-height:1.24; letter-spacing:-.01em;
+  color:var(--ink);
 }
 
-.cstep.is-on .cstep__t,.cstep__t:hover{ color:var(--ink); }
-
-.cstep__body{
-  display:grid; grid-template-rows:0fr;
-  opacity:0;
-  transition:grid-template-rows var(--t-reveal) var(--e-out),
-             opacity var(--t-state) var(--e-out);
-}
-
-.cstep.is-on .cstep__body{ grid-template-rows:1fr; opacity:1; }
-
-.cstep__body > p{
-  overflow:hidden; min-height:0; margin:0; padding:0;
+.cbit__p{
+  margin:.55em 0 0;
   font-size:var(--t-sm); line-height:1.62; color:var(--ink-soft);
+  /* the claim is a paragraph, not a column: it stops before the figure's
+     width so the two never read as one block of text */
+  max-width:38ch;
 }
 
-/* the air under an open paragraph is CONTENT height, which a 0fr track does
-   collapse — padding is not */
-.cstep__body > p::after{ content:""; display:block; height:.7em; }
-
-
-/* ── the frame: one object, three states ─────────────────────────────
-   ONE HEIGHT for all three panes. A frame that resizes between beats is a
-   section that jumps while it plays itself, and the three panes are a list,
-   a card and a drawing — three natural heights. They share a grid cell. */
-.ctrl__stage{ min-width:0; }
-
-.ctrl__frame{
+/* THE PICTURE'S OWN GROUND, which is what the single frame used to supply.
+   It keeps the tile, the radius and the padding the frame had, so the two
+   product mocks are still sitting on a surface rather than on the card. */
+.cbit__fig{
+  margin-top:clamp(16px,1.8vw,24px);
+  flex:1;
   border-radius:var(--r-lg);
   background:var(--tile);
   padding:clamp(14px,1.5vw,20px);
   display:flex; flex-direction:column; gap:clamp(12px,1.3vw,16px);
+  min-width:0;
 }
 
-/* THE AGENT IS THE CONSTANT. Breadcrumb and tabs are gone (feedback 15) —
-   they explained a screen the reader is not navigating. What is left is who
-   this is, and it stays put across all three states, so the thing that
-   changes is what the agent may do rather than which screen you are on. */
-/* ONE HEIGHT, set by the tallest pane, and the two shorter ones sit in the
-   middle of it rather than hanging from the top. The list is five rows for the
-   same reason: at six it was 761px and the other two beats left 500px of empty
-   ground under themselves. */
-/* TOP-ALIGNED. The identity row is the frame's constant and the pane starts
-   directly under it — centred in the cell, beat 2 opened with 130px of grey
-   between the agent's name and the first thing it said, which reads as two
-   objects rather than one screen. Only the drawing centres: it is a picture,
-   not a list, and a picture hanging from a top edge looks dropped. */
-.ctrl__panes{ display:grid; align-items:start; }
+/* BOTH FIGURES OPEN THE SAME WAY. The identity row is on both, so the pair
+   reads as two views of one agent — its authorization list, and the same
+   agent stopping mid-run — rather than as a screenshot beside a card. It is
+   also what anchors the shorter figure's top edge: the exchange is a third
+   of the height of the five-row list, and centred under nothing it read as
+   an object floating in an empty field. */
+.cbit__fig--ask{ justify-content:flex-start; }
 
-.cpane{
-  grid-area:1 / 1; min-width:0;
-  opacity:0; pointer-events:none;
-  transition:opacity var(--t-state) var(--e-out);
+/* ── ONE RADIUS LADDER, THREE ROLES ────────────────────────────────
+   Feedback F-12, *"圆角和字体可以统一一下"*, and then *"第 12 条你来统一圆角吧"*.
+   Measured, the pair was carrying four values for three jobs: 26 for the
+   ground, 12 for the permission list and the said-bubble, **8** for the
+   permission card, and a stray **10** for the Allowed / Denied chips. Two
+   surfaces at two radii is the thing that reads as untidy; a fourth value on
+   the chips is what makes it countable.
+
+       ground            --r-lg   26   .cbit__fig
+       a surface on it   12            .perms · .cpane__said · .pcard
+       inside a surface   8            .pcard__ic · .pcard__sel · .pcard__go · .state
+
+   THE ONE DEVIATION FROM THE PRODUCT is `.pcard`, which `PermissionActionCard`
+   draws at 8 — the same value it gives its own internals, because there it is a
+   card inside a chat column rather than a surface on a ground. Written at the
+   rule, per P12: on this page it is the middle step of a three-step ladder, and
+   its 8px children keep the product's value. Everything else here already
+   agreed with the product and was left alone. */
+.cbit__fig .pcard,
+.cbit__fig .cpane__said,
+.cbit__fig .perms{ border-radius:12px; }
+
+.cbit__fig .pcard__ic,
+.cbit__fig .pcard__sel,
+.cbit__fig .pcard__go,
+.cbit__fig .state{ border-radius:8px; }
+
+
+/* the exchange takes the space the list takes, and sits in the middle of it */
+.cask{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+  gap:clamp(12px,1.3vw,16px);
+  min-width:0;
 }
 
-/* the pane that is not showing is taken out of the reader's way with `inert`
-   from app.js §16, not with `visibility` — a visibility transition needs a
-   delay to work, and a delay is a duration nobody tokenised */
-.ctrl__frame[data-beat="1"] .cpane[data-pane="1"],
-.ctrl__frame[data-beat="2"] .cpane[data-pane="2"],
-.ctrl__frame[data-beat="3"] .cpane[data-pane="3"]{
-  opacity:1; pointer-events:auto;
-}
+/* AT THE PRODUCT'S OWN WIDTH. `PermissionActionCard` is a card inside a
+   chat column, not a bar across a panel — stretched to the full width of
+   this ground its 88px row came out thin and its two ends stopped being
+   readable as one object. */
+.cask .pcard{ max-width:548px; }
+
+.cask .cpane__said{ max-width:548px; }
 
 
-/* Narrow: one column, and the frame goes first — the picture is the reason
-   to keep reading on a phone, and three collapsed titles are not. */
-@media (max-width:1000px){
-  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(20px,3.4vw,28px); }
+@media (max-width:900px){
+  /* One column. The claim and its picture stay together, which is the whole
+     reason this is two articles rather than two columns of a table. */
+  .ctrl{ grid-template-columns:minmax(0,1fr); gap:clamp(26px,4vw,38px); }
 
-  .ctrl__stage{ order:-1; }
-
-  .cpane--iso img{ max-height:260px; }
+  .cbit__p{ max-width:none; }
 
 }
 .vs,.quote{
@@ -4511,7 +4658,12 @@ h3{ font-family:var(--fd); }
    line it made the third card's mock 60px shallower than its neighbours and
    left a hole under its paragraph. Inside a row the windows are the same
    depth; that was already the rule, the row just changed shape. */
-.versus--three .vs__viz{ height:clamp(214px, 21vw, 276px); }
+/* +26 at every stop, the band's own bottom padding. Without this the
+   symmetric padding shrank the browser mock from 250 to 224 instead of
+   giving it air — which is the fix Tong offered second ("缩小图例内容的
+   比例") rather than the one he offered first. The mock keeps the
+   product's size and the band grows around it. */
+.versus--three .vs__viz{ height:clamp(240px, 23vw, 302px); }
 
 @media (max-width:900px){
   .versus--three .vs{ grid-column:1 / -1; }
@@ -4544,8 +4696,20 @@ h3{ font-family:var(--fd); }
 /* the media band: an oversized crop of a real product surface */
 .vs__viz{
   position:relative;
-  padding:clamp(20px,2vw,26px) 0 0 clamp(20px,2vw,26px);
-  height:clamp(214px, 21vw, 276px);
+  /* THE BAND FRAMES ITS FIGURE EQUALLY. It had padding on the top and the
+     left and none on the bottom, which is invisible on the two figures that
+     bleed past the edge on purpose (the lanes crop 130px, the connector grid
+     14 at both ends) and very visible on the one that does not: `.arti` is
+     `height:100%`, so the browser window filled the box exactly and sat with
+     26px of tint above it and none below. Read as sunk. Tong: "上下空间要
+     一致".
+
+     The height grows by the same amount rather than the figure shrinking, so
+     the mock keeps the product's own size (P2/P9) — and because the height is
+     one shared value, all three cards take it, which is what Tong asked for
+     when he said the other cards have to change too. */
+  padding:clamp(20px,2vw,26px) 0 clamp(20px,2vw,26px) clamp(20px,2vw,26px);
+  height:clamp(234px, 23vw, 302px);
   overflow:hidden;
   background:var(--vs-tint);
   --vs-tint:color-mix(in srgb, var(--vs-hue) 9%, var(--tile));
@@ -4626,33 +4790,151 @@ h3{ font-family:var(--fd); }
    Two copies are what make the wrap invisible: the reset moves the track
    back by exactly one copy's width, onto a frame identical to the one it
    left. */
-.lanes{
-  /* START, not STRETCH. The lanes are meant to be taller than the band and
-     cropped by it — but stretch sized each card to the band instead, so the
-     card's white surface stopped exactly at the crop while its last row went
-     on for another 26px. In light that is invisible; in dark the row's ink
-     landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`.
-     At content height the surface reaches past the crop, so the row that is
-     cut is cut over the card it belongs to. Every lane holds the same eight
-     steps, so they are all the same height and the crop stays a straight
-     edge. */
-  display:flex; align-items:flex-start; gap:14px;
-  width:max-content; height:100%;
-  transform:translate3d(var(--pan,0px),0,0);
+/* NO LEFT INSET ON THIS ONE. The band pads its content 26px from the left,
+   which is right for a device that starts at the edge and wrong for one
+   that is centred: `margin-inline-start:50%` resolves against the CONTENT
+   box, so the padding would push the focused card half of itself to the
+   right of the band's middle. Removing it makes the centring one term
+   instead of two. */
+.vs__viz--parallel{ padding-left:0; }
+
+
+/* THE UNIT IS DERIVED FROM THE BAND, NOT TYPED. The old `flex:0 0 320px`
+   carried its own reasoning — "two lanes and 14 of gap leave a 72px peek of
+   the third" — and that arithmetic needs a 974px band. This band is
+   `clamp(214px, 21vw, 276px)` tall and fluid across 428 / 422 / 363 / 300,
+   so a constant is wrong here at every width but one. 17vw between 196 and
+   250 holds the peek between 40 and 77 across the whole range; the pitch is
+   stated once and everything else reads it.
+
+   ANYTHING THAT CHANGES THE CARD'S WIDTH CHANGES `--lane-w`, never `flex`.
+   The pan is derived from the pitch, so a `flex` override at a breakpoint
+   would move the cards and leave the centring behind — the focused card
+   would sit off-centre by the difference, at that breakpoint only. */
+.vs__viz--parallel{
+  --lane-w:clamp(196px, 17vw, 250px);
+  --lane-gap:12px;
+  --lane-pitch:calc(var(--lane-w) + var(--lane-gap));
 }
 
 
+/* CENTRED ON THE FOCUSED CARD. `margin-inline-start:50%` is half the band
+   (percentage margins resolve against the containing block), and the
+   translate takes the focused card's own centre off that — so the pan is
+   stated as one expression that re-derives itself at every width instead of
+   a px number measured at one.
+
+   START, not STRETCH. The lanes are meant to be taller than the band and
+   cropped by it — but stretch sized each card to the band instead, so the
+   card's white surface stopped exactly at the crop while its last row went
+   on for another 26px. In light that is invisible; in dark the row's ink
+   landed on the band's own ground and axe read 3.12:1 on `.lane__s:nth-child(7)`. */
+.lanes{
+  /* HOW FAR THE SIDE CARDS STAND DOWN, and it is a measured floor rather
+     than a taste value. .42 was the original and nothing passes there —
+     even pure black text blends to 3.26:1 against its own card. Probed
+     against axe in steps: .62 leaves one node (the running row, whose
+     tint narrows the gap before the fade starts), .64 is clean, .66 is
+     clean with a margin. Deeper than .66 and the figure fails the
+     contrast floor; shallower and it stops reading as depth. */
+  --lane-dim:.66;
+  display:flex; align-items:flex-start; gap:var(--lane-gap);
+  width:max-content;
+  margin-inline-start:50%;
+  /* ITS OWN DURATION, not --t-reveal. Tong: "切换动画有点太快了，可以再慢一
+     点". --t-reveal is 640ms and it is the page's entrance timing — every
+     reveal on the page reads it, so slowing the carousel by slowing that
+     would slow eight other things to fix one. The carousel is a LOOP rather
+     than an entrance and a loop is watched repeatedly, which is exactly when
+     640ms starts to feel snatched. Declared here and read back by app.js, so
+     the number lives once: retyping it in both places is how --nav-h-stuck
+     ended up as a stale 54 in an observer earlier this week. */
+  --lane-move:1000ms;
+  transform:translate3d(
+    calc(-1 * (var(--lane-i, 4) * var(--lane-pitch) + var(--lane-w) / 2)), 0, 0);
+  transition:transform var(--lane-move) var(--e-spring);
+}
+
+/* the whole-copy jump: same frame either side, so it must not animate */
+.lanes.is-snap,
+.lanes.is-snap .lane{ transition:none; }
+
+
+/* TALLER THAN THE BAND, AND TALL ENOUGH TO SURVIVE THE STEP DOWN. The band
+   tops out at 276 and insets 26, so 250 is visible; a card stepped to .94
+   about its own centre has to clear that or the two beside the focus would
+   show a bottom edge the focused one does not have — and the crop would
+   read as belonging to the focus rather than to the band. */
 .lane{
-  /* 320 is the product's column. It also sets the composition: two lanes
-     and 14 of gap leave a 72px peek of the third — an avatar, a name and
-     the first word of a task, which is unmistakably a third agent. At the
-     336 a first pass used, the peek was 40px and read as a clipping bug. */
-  flex:0 0 320px;
+  flex:0 0 var(--lane-w);
+  /* `min-width:auto` IS A FLOOR, and on a flex item it resolves to
+     min-content — here the longest unbreakable step row. The basis computed
+     correctly at every width (244.8 / 210.8 / 174.08) and the card rendered
+     247 at all three, because the floor beat the basis and `flex-shrink:0`
+     meant nothing ever pushed back. Same shape as M5: a size on a flex or
+     grid parent is not a ceiling until the child says `min-*:0`. */
+  min-width:0;
+  min-height:300px;
   display:flex; flex-direction:column;
   padding:16px; border-radius:var(--p-r-card) var(--p-r-card) 0 0;
   border:1px solid var(--p-border); border-bottom:0; background:var(--p-card);
   font-family:var(--fb); color:var(--p-fg);
+  /* MIDDLE SOLID, SIDES FADED — the design, kept. I removed the fade to
+     clear 18 serious contrast failures and that was the wrong trade: the
+     fade is what the figure IS, and Tong had to ask for it back.
+
+     It can be kept and still clear the floor, but not at .42. At that depth
+     nothing passes — even pure black text blends to 3.26:1 — so the fade is
+     as deep as the floor allows and the ink is compensated for it: the small
+     grey rows go to the card's own foreground inside a dimmed lane, so the
+     binding constraint stops being a grey that was already light before the
+     fade touched it. Tuned against axe, not guessed: `--lane-dim` is the
+     lowest value with 0 violations. */
+  /* THE CARD STAYS OPAQUE AND THE INK FADES. `opacity` on the card lets the
+     BAND through, and in dark the band is near-black: axe then measures dark
+     ink against a dark backdrop and reads 18 serious failures at any depth
+     down to .85, while the same value is clean in light. Same fade, one
+     mechanism, both themes — mix each ink toward the card's own white and
+     leave the surface alone, so the geometry the floor is measured on is the
+     light one in both. */
+  transform:scale(.9);
+  box-shadow:none;
+  transition:color var(--t-reveal) var(--e-out),
+             transform var(--t-reveal) var(--e-spring),
+             box-shadow var(--t-reveal) var(--e-out);
 }
+
+/* the one being read. Nothing else in the band changes. */
+/* the focus is the one card fully in frame, at full size and lifted; the
+   others are shorter, flat and desaturated. All of the hierarchy is in
+   scale, elevation and saturation — none of it in a value the contrast
+   floor is measured on. */
+.lane.is-focus{ transform:none; box-shadow:var(--e-fig); }
+
+/* ONE declaration per selector: `.lane` already sets the ink, so the mix goes
+   on the dimmed variant rather than a second `color` in the same block. */
+.lane:not(.is-focus){
+  color:color-mix(in srgb, var(--p-fg) calc(var(--lane-dim) * 100%), var(--p-card));
+}
+
+/* every ink in a dimmed lane takes the mix above. The greys have to give up
+   their own value first: they were already light before the fade started, so
+   left alone they are what fails while the ink is still fine. */
+.lane:not(.is-focus) .lane__t,
+.lane:not(.is-focus) .lane__h b,
+.lane:not(.is-focus) .lane__h span,
+.lane:not(.is-focus) .lane__s,
+.lane:not(.is-focus) .lane__s i{ color:inherit; }
+
+/* the pictures and the marks may fade the old way — a contrast floor is
+   about text, and an avatar at 66% is just an avatar at 66% */
+.lane:not(.is-focus) img,
+.lane:not(.is-focus) .vsui__ind,
+.lane:not(.is-focus) .lane__tick{ opacity:var(--lane-dim); }
+
+/* the running row's tint goes with them, or a dimmed card keeps one bright
+   band across it and the eye reads that as the focus */
+.lane:not(.is-focus) .lane__s--now{ background:transparent; }
 
 
 /* THE RUN IS LONGER THAN THE CARD, and that is the whole picture: a lane
@@ -4664,10 +4946,86 @@ h3{ font-family:var(--fd); }
 .lane > *{ flex:none; }
 
 
-.lane__h{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+/* COMPACT. At 30px with a 12px gap and the timestamp pushed to the far edge,
+   the header took as much vertical room as two step rows and split the card's
+   top into three widely separated things. The card is 196–250 wide now, not
+   320: the seat comes down to 22 and the name sits against it, so the header
+   reads as one object — who — and the task title under it gets the weight. */
+/* ONE ROW, THREE THINGS, TWO EDGES. The seat sits on the card's left inset,
+   the name is against it, and the timestamp is pushed to the right inset by
+   `margin-left:auto` — so every card's avatar starts on the same x and every
+   card's `now` ends on the same x, which is what makes the stack read as a
+   column rather than as four separately arranged headers. `align-items` is
+   centre so the name's line box centres on the seat instead of sitting on
+   its baseline, which rode the text high against a 30px square. */
+.lane__h{ display:flex; align-items:center; gap:9px; margin-bottom:11px; }
 
 
-.lane__h img{ width:32px; height:32px; border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+/* THE OWNER, WITH THE RUNNER BADGED ON IT. B4: an agent is DRAWN and a
+   person is PHOTOGRAPHED, so a photograph alone in a run card's seat says a
+   human is doing the task — the opposite of the sentence under it, which is
+   that Okou splits the work between several agents. B6 wants the agent on a
+   run card's mark, and `#parallel` already puts it on all four of its run
+   cards; this card was simply not in that sweep.
+
+   Neither mark alone carries it. Four photographs read as several and say
+   the wrong thing; four copies of one drawn face say the right thing and
+   read as one thing repeated. The copy has three nouns — one person's
+   know-how, several agents, shared capability — so the seat carries two:
+   the photograph gives the row its plurality, the badge names the runner. */
+/* THE SEAT IS A BOX, NOT A FLEX ROW. As `inline-flex` the photograph was a
+   flex item at `width:100%` and came out 14 of 22 — measured, with only two
+   rules matching it and neither of them explaining it. A seat holding one
+   image and one badge does not need flex layout at all: the photograph fills
+   the box, the badge is positioned on it, and neither can be resized by the
+   other.
+
+   BACK TO 30. 22 was cut to buy header height on a narrower card and it took
+   the face with it — at 22 the person stopped being recognisable, which is
+   the whole reason a photograph is there rather than a mark. The height comes
+   out of the gap and the margin instead. */
+.lane__ava{ position:relative; display:block; flex:none; width:30px; height:30px; }
+
+.lane__ava > img{ position:absolute; inset:0; width:100%; height:100%;
+  border-radius:var(--p-r-item); object-fit:cover; object-position:top; }
+
+/* HALF THE SEAT. The 16px floor the avatar round settled is the size this
+   face reads as a PORTRAIT — a corner badge is not being read as a face, it
+   is being read as a mark, and it has the photograph underneath it for
+   contrast. Held at 14 on a 22px seat it covered most of the person and the
+   pair stopped saying "whose work, run by what". */
+/* `img.lane__bot`, NOT `.lane__bot`. The seat's own `img` rule is (0,1,1) and
+   a bare class is (0,1,0), so the generic one won and the badge rendered at
+   the full 22 — covering 100% of the seat and squeezing the photograph to
+   14 wide. The pair stopped saying "whose work, run by what" and just showed
+   the mark. Same shape as the `#outputs .thing` / `.thing.is-on` trap the
+   conventions already name: a descendant selector out-specifies a class. */
+img.lane__bot{
+  /* ALL FOUR SIDES, because the rule above sets `inset:0` and this one only
+     overrode two of them — `top:0; left:0` survived and won the anchor, so
+     the badge sat over the face's top-left instead of the corner. An inset
+     is one shorthand; overriding half of it leaves the other half in place. */
+  position:absolute; inset:auto -3px -3px auto;
+  width:15px; height:15px; border-radius:5px;
+  box-shadow:0 0 0 1.5px var(--p-card);
+}
+
+
+/* THE COUNT IS NOT PART OF THE CARDS. Anything the same material as the
+   surface behind it reads as a label printed on that surface. Ink fill,
+   light type and the lift shadow make it a different object; anchored into
+   the band's own corner it belongs to the band, and what it covers is the
+   strip the crop was already taking. Fill and shadow, never an outline. */
+.lanes__count{
+  position:absolute; right:0; bottom:0; z-index:2; margin:0;
+  font-family:var(--fm); font-size:var(--t-mono); letter-spacing:.05em;
+  text-transform:uppercase; line-height:1;
+  color:rgb(255 255 255 / .72); background:var(--p-fg);
+  box-shadow:var(--e-lift);
+  padding:8px 12px 9px; border-radius:10px 0 0 0;
+}
+
+.lanes__count b{ color:#FFFFFF; font-weight:500; }
 
 
 /* THE AGENT IS NAMED. Four lanes headed by an avatar and the word "now"
@@ -4682,8 +5040,16 @@ h3{ font-family:var(--fd); }
 
 
 /* the timestamp moves to the right edge, which is where the product puts
-   a row's meta — and it gives the name the whole left side */
-.lane__h span{
+   a row's meta — and it gives the name the whole left side.
+
+   `:not(.lane__ava)`, BECAUSE THE SEAT IS A SPAN TOO. This rule predates the
+   paired avatar, and the moment the seat became `<span class="lane__ava">` it
+   started collecting `margin-left:auto` as well — so the avatar was pushed
+   52px off the card's left edge and every card's header started at a
+   different x, depending on how long the name was. Read as *"头像要做对齐"*.
+   A bare element selector inside a component will find every new element
+   that component grows. */
+.lane__h > span:not(.lane__ava){
   margin-left:auto; padding-left:8px;
   font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:12px; letter-spacing:.02em;
   color:var(--p-mute); white-space:nowrap;
@@ -4786,25 +5152,25 @@ h3{ font-family:var(--fd); }
    an axe run — it is the newest step in the markup, and it has to be that
    whatever class the loop happened to leave behind when it stopped. */
 .lanes:not(.is-live) .lane__s--now,
-.lanes.is-live .lane__s.is-run{ color:var(--p-fg); }
+.lane.is-live .lane__s.is-run{ color:var(--p-fg); }
 
 
 /* the step being worked on is a selected row, which is what the product
    draws and what gives each lane one place for the eye to land */
 .lanes:not(.is-live) .lane__s--now,
-.lanes.is-live .lane__s.is-run{ background:var(--p-tint); }
+.lane.is-live .lane__s.is-run{ background:var(--p-tint); }
 
 
 .lanes:not(.is-live) .lane__s--now .vsui__ind,
-.lanes.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
+.lane.is-live .lane__s.is-run .vsui__ind{ transform:scale(1); }
 
 
 .lanes:not(.is-live) .lane__s--now .lane__tick,
-.lanes.is-live .lane__s.is-run .lane__tick{ transform:scale(0); }
+.lane.is-live .lane__s.is-run .lane__tick{ transform:scale(0); }
 
 
 .lanes:not(.is-live) .lane__s--now i,
-.lanes.is-live .lane__s.is-run i{ clip-path:inset(0 100% 0 0); }
+.lane.is-live .lane__s.is-run i{ clip-path:inset(0 100% 0 0); }
 
 
 /* only the live row's ring animates. Three rows per lane carry an
@@ -4813,8 +5179,8 @@ h3{ font-family:var(--fd); }
    glyph scaled to nothing. */
 .lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-c,
 .lanes:not(.is-live) .lane__s:not(.lane__s--now) .vsui__ind-r,
-.lanes.is-live .lane__s:not(.is-run) .vsui__ind-c,
-.lanes.is-live .lane__s:not(.is-run) .vsui__ind-r{ animation:none; }
+.lane.is-live .lane__s:not(.is-run) .vsui__ind-c,
+.lane.is-live .lane__s:not(.is-run) .vsui__ind-r{ animation:none; }
 
 
 /* ── the loop ────────────────────────────────────────────────────────
@@ -4822,16 +5188,16 @@ h3{ font-family:var(--fd); }
    frame — no JS, reduced motion, the moments before the observer fires —
    is the whole run, every step present, exactly as it was before this
    was a loop at all. */
-.lanes.is-live .lane__s{ grid-template-rows:0fr; }
+.lane.is-live .lane__s{ grid-template-rows:0fr; }
 
 
-.lanes.is-live .lane__s.is-on{ grid-template-rows:1fr; }
+.lane.is-live .lane__s.is-on{ grid-template-rows:1fr; }
 
 
 /* one painted frame later — see app.js §3b2. The opening state has nine of
    eleven rows already open, and arming the transition in the same frame
    plays the other two sliding shut in front of the reader. */
-.lanes.is-warm .lane__s{ transition:grid-template-rows var(--t-reveal) var(--e-out); }
+.lane.is-warm .lane__s{ transition:grid-template-rows var(--t-reveal) var(--e-out); }
 
 
 
@@ -5740,7 +6106,12 @@ h3{ font-family:var(--fd); }
   padding-top:clamp(64px,5.6vw,96px);
 }
 
-.cta__btns{ display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
+/* CENTRED ON THE COMPONENT, not on the panel that happens to hold it. The
+   band gets it from `.panel > .cta__btns`; the hero's pair is nested inside
+   `.stack`, so it was not a direct child and wrapped flush-left at 390 —
+   two buttons of different widths, left-ragged, under a centred hero. The
+   two asks are the same component and must behave the same at every width. */
+.cta__btns{ display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:clamp(30px,3.4vw,44px); }
 
 
 /* ── the footer panel ────────────────────────────────────────────────
@@ -6231,13 +6602,6 @@ h3{ font-family:var(--fd); }
 
   .versus{ grid-template-columns:1fr; }
 
-  /* 76vw, not the 320px the wide layout uses: at 390 the band is 342
-     wide, so a 320px lane leaves an eight-pixel sliver of the next one —
-     the same non-peek the desktop width was fixed for. 76vw keeps a 68px
-     peek at every phone size, and the track's arithmetic is measured
-     rather than assumed, so it follows the narrower lane on its own. */
-  .lane{ flex:0 0 min(320px,76vw); }
-
   .scene.is-on{ grid-template-columns:1fr; }
 
 }
@@ -6580,8 +6944,13 @@ h3{ font-family:var(--fd); }
   --o-pad:var(--tile-pad);                 /* 20/32 · inside a panel     */
   --o-r:var(--r-section);                  /* 16 · every panel's corner  */
   --o-fill:var(--tile);                    /* the reference's panel grey */
-  --o-h:calc(clamp(420px, 40vw, 553px) + var(--o-mh));
-  --o-mh:clamp(30px, 2.9vw, 42px);         /* the outcome strip          */
+  /* THE STAGE'S HEIGHT, which is now the frame's height and nothing else:
+     it used to be a window height PLUS `--o-mh` for the strip underneath.
+     Nudged up from 553 rather than left alone, because the point of the two
+     deletions was to make the interface bigger, not the section shorter —
+     it still comes out 21px under where it was, and the windows inside come
+     out 36px (+7%) taller. */
+  --o-h:clamp(440px, 41.5vw, 574px);
   --o-ava:clamp(38px, 3.4vw, 48px);        /* 48 · an avatar             */
   /* the frame's own measurements */
   --o-fpad:clamp(16px, 1.9vw, 28px);       /* air inside the frame       */
@@ -6600,13 +6969,22 @@ h3{ font-family:var(--fd); }
      21 at 1440 is the midpoint of the 15 and 27.36 it replaces, so the
      frame keeps its height and the windows keep theirs. */
   --o-mgap:clamp(13px, 1.5vw, 21px);       /* above and below the strip  */
-  --o-cw:clamp(176px, 16.4vw, 236px);      /* a connector card           */
+  /* A CONNECTOR CARD. 12px wider than it was: the rail freed 44 and the
+     window keeps 32 of them, which is still the enlargement that deletion
+     was for. */
+  --o-cw:clamp(184px, 17.2vw, 248px);
   /* HOW FAR A CARD SITS ON THE WINDOW. Small on purpose: at 26px it ate
      the first 26px of whichever sidebar was behind it — Okou's thread
      names lost their initials, Slack's workspace tile was cut in half. The
      window answers by insetting its own sidebar by the same amount (see
-     `.okw__side` and `.slk__rail`), so the strip a card covers is empty. */
+     rows in both windows), so the strip a card covers is empty. */
   --o-lap:clamp(11px, 1.2vw, 17px);
+  /* THE SECOND CARD LAPS DEEPER. Two cards resting the same distance onto
+     the same edge read as one bracket drawn twice; two different distances
+     read as two objects that happen to be lying there, which is what these
+     are. The window insets by the LARGER of the two, so neither card is ever
+     over anything a reader needs. */
+  --o-lap2:calc(var(--o-lap) + clamp(8px, .9vw, 14px));
   margin-top:clamp(28px, 3.2vw, 44px);
   /* HOW THE ROW DIVIDES, as a share of the frame's inner width. The app
      unit leads because it is where the work happens; the artifact is the
@@ -6665,8 +7043,11 @@ h3{ font-family:var(--fd); }
      frame padding. Handing the padding to the windows makes the strip read as
      a footer on the frame rather than a row floating in a gap, and gives the
      conversation 35px it can use for the whole cycle rather than only at the
-     end. */
-  padding:var(--o-fpad) var(--o-fpad) 0;
+     end.
+     ITS OWN FLOOR AGAIN now the strip is gone — with `0` the windows sat on
+     the frame's bottom edge. Even on all four sides, which is what a frame
+     with one row in it should be. */
+  padding:var(--o-fpad);
   border-radius:var(--r-lg);
   background:
     radial-gradient(118% 132% at 4% 0%,
@@ -6684,9 +7065,8 @@ h3{ font-family:var(--fd); }
      grew 62px and its last message crossed the composer — at every width,
      which is what says it is a sizing fault and not an arithmetic one. The
      stage sets the height; the window's job is to take it and clip.
-     The second track is the outcome strip and takes only what it needs. */
-  grid-template-rows:minmax(0,1fr) auto;
-  row-gap:var(--o-mgap);
+     There is one track now: the strip that was the second one is gone. */
+  grid-template-rows:minmax(0,1fr);
   align-items:stretch;
   min-width:0;
 }
@@ -6728,99 +7108,17 @@ h3{ font-family:var(--fd); }
 }
 
 
-/* ── what the run produced ─────────────────────────────────────────
-   Tong: *"如果下边的data和每个tab是有联系的，那这几个数据你觉得应该怎么放？"*
-
-   ON THE FRAME, NOT UNDER IT. They were three grey blocks in a row below
-   the stage, which is the reading feedback 05 called 太多层 — and once the
-   numbers belong to a tab, a strip floating on the page under a frame is
-   saying they belong to the page. Standing them on the frame's own ground
-   makes them part of the run, and the tab switch changes them for free:
-   every scene ships its own, so there is no JS to keep in sync.
-
-   AND THEY LAND WITH THE ARTIFACT. These are what the run produced, so
-   they arrive when it is finished, on the same `.is-landed` cue as the page
-   it shipped — not before it, which would be the answer turning up before
-   the work.
-
-   `clip-path`, not opacity: this is text, on a loop, and it is the fault
-   N3 exists for. */
-.ometrics{
-  display:flex; align-items:baseline;
-  /* CENTRED ON THE FRAME, not parked under the left column. The strip
-     summarises the whole run, so it belongs to the whole frame — Tong:
-     *"data是不是可以在整个frame中间"*. */
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:clamp(14px, 1.8vw, 30px) clamp(24px, 3.2vw, 54px);
-  list-style:none; margin:0;
-  /* its own floor, since the frame no longer keeps one */
-  padding:0 clamp(2px, .6vw, 8px) var(--o-mgap);
-  min-width:0;
-}
-
-/* ONE LINE, NOT A STACKED BLOCK. Number then label, on a shared baseline.
-   The stacked form was 46px tall and the band under the windows could not
-   get smaller than it — and that band sits empty for the five seconds the
-   run takes, which is the *"看起来有点空"*. Inline it is 24px, so the frame
-   loses 22px it was holding for nothing and the strip reads as a footer
-   line under the picture rather than a row parked in a gap. */
-.ometrics li{
-  display:flex; flex-direction:row; align-items:baseline; gap:7px;
-  min-width:0;
-}
-
-.ometrics span{
-  font-family:var(--fm); font-variant-numeric:tabular-nums; font-size:var(--t-mono);
-  letter-spacing:.07em; text-transform:uppercase;
-  color:var(--ink-mute);
-  white-space:nowrap;
-}
-
-.ometrics b{
-  display:flex; align-items:baseline; gap:.18em;
-  /* `<i>` is italic by default and the numeral is in one, so the whole
-     strip rendered oblique — a slanted figure under an upright picture. */
-  font-style:normal;
-  font-family:var(--fd);
-  font-weight:500; line-height:1;
-  letter-spacing:-.03em;
-  font-variant-numeric:tabular-nums;
-  color:var(--ink);
-  font-size:var(--t-h);
-}
-
-.ometrics i,.ometrics em{ font-style:normal; }
-
-.ometrics em{
-  font-size:var(--t-sm); font-weight:400; color:var(--ink-soft);
-}
-
-/* ONE SIZE. The lead used to be set at display size, and with only two
-   metrics under a tab that reads as two different type sizes rather than as
-   a hierarchy — *"date字号不一样大？"*. The differentiation the numbers
-   needed is already carried by every tab having its own labels and its own
-   count; doing it in the type as well was one signal too many. The lead
-   keeps a darker label, which is enough to say which one to read first. */
-.ometrics li.is-lead span{ color:var(--ink-soft); }
-
-
-.ostage.is-live .ometrics li{
-  clip-path:inset(0 0 100% 0);
-  transform:translateY(6px);
-  transition:clip-path 460ms var(--e-out), transform 520ms var(--e-out);
-  transition-delay:calc(var(--mi, 0) * 70ms);
-}
-
-.ostage.is-live.is-landed .ometrics li{
-  clip-path:inset(0 0 0 0);
-  transform:none;
-}
-
-.ometrics li:nth-child(2){ --mi:1; }
-
-.ometrics li:nth-child(3){ --mi:2; }
-
+/* ── what the run produced: GONE ──────────────────────────────────
+   Tong: *"去掉侧边栏，和下方的数据"*. The strip was three counters under the
+   picture, and everything they said the picture had already said — the
+   unfurl names the page, the cards name what it touched, the artifact
+   window shows it. What they cost was structural: `--o-mh` (42) plus a
+   `--o-mgap` (21) of air held on EVERY tab for the whole five seconds of
+   the run, taking 63px off the height of the two windows that carry the
+   scene. That height goes to the windows now, which is the *"界面就可以按
+   比例稍微放大一点点"* in the same sentence.
+   `METRICS` in tools/slack-scenes.py is kept — researched, per-scene, and
+   a summary may come back somewhere — but nothing renders it. */
 
 /* ── the opening beat: centred, then the page arrives ──────────────
    Tong: *"用户刚切到一个tab上以后，connector和对话窗口居中，当对话结束后，
@@ -6882,7 +7180,13 @@ h3{ font-family:var(--fd); }
      whatever is left equally above and below, which is the shape the void
      complaint was asking for either way. */
   display:flex; flex-direction:column; justify-content:center;
-  gap:clamp(16px, 2vw, 30px);
+  /* TIGHT. *"左边两张card，你看看怎么排布一下视觉上更舒适？"* — with the rail
+     gone the strip these two sit in is 248 wide and ~520 tall, and at a 30px
+     gap the pair filled 43% of it: two small objects with air between them
+     AND air around them, which is the reading that has nothing holding it
+     together. Halved, the air is all on the outside and the two read as one
+     thing that was put down here. */
+  gap:clamp(9px, 1vw, 15px);
 }
 
 /* Tong: *"connector card 可以活泼一点，像我给你发的图一样。而且我感觉 logo
@@ -6905,8 +7209,8 @@ h3{ font-family:var(--fd); }
      左对齐，icon在text上边」 — and I read the first as "share a vertical axis"
      and built a row. 上下 was the arrangement, not the alignment. */
   display:flex; flex-direction:column; align-items:flex-start;
-  gap:clamp(9px, 1vw, 13px);
-  padding:13px 15px;
+  gap:clamp(11px, 1.2vw, 15px);
+  padding:16px 17px 17px;
   border-radius:var(--r-float);
   background:var(--paper);
   min-width:0;
@@ -6927,9 +7231,19 @@ h3{ font-family:var(--fd); }
    which reads as two card sizes rather than as two cards. Both take the
    column's width; the stagger is vertical and the tilt does the rest, and
    the lap is now one number for both, which is what the rail insets by. */
+/* ONE WIDTH, TWO POSITIONS. The width stays fixed — *"connector的card宽度
+   应该是固定的"* — and the stagger is a shift, not a resize: `width:100%`
+   with a left margin on a stretch item overflows its column to the right by
+   exactly the margin, onto the window, which is where the deeper lap comes
+   from. */
+.ocard{ align-self:flex-start; width:100%; }
+
 .ocard:nth-of-type(1){ rotate:-1.3deg; }
 
-.ocard:nth-of-type(2){ rotate:1.1deg; }
+.ocard:nth-of-type(2){
+  rotate:1.1deg;
+  margin-left:calc(var(--o-lap2) - var(--o-lap));
+}
 
 .ocard .ocard__txt b{ font-size:var(--t-sm); line-height:1.3; }
 
@@ -6942,14 +7256,14 @@ h3{ font-family:var(--fd); }
    this one no matter what it says. */
 .ocard__ic{
   display:grid; place-items:center;
-  width:34px; height:34px;
+  width:40px; height:40px;
   flex:none;
   border-radius:var(--r-tile);
   background:var(--paper);
   box-shadow:inset 0 0 0 .7px rgb(var(--ink-rgb) / .09);
 }
 
-.ocard__ic img{ width:20px; height:20px; object-fit:contain; display:block; }
+.ocard__ic img{ width:23px; height:23px; object-fit:contain; display:block; }
 
 .ocard__txt{ display:block; min-width:0; }
 
@@ -7121,7 +7435,6 @@ h3{ font-family:var(--fd); }
   --slk-link:#1264A3;
   --slk-tint:#F8F8F8;
   --slk-card:#FFFFFF;
-  --slk-rail:#3F0E40;     /* Slack's aubergine */
   display:grid; grid-template-columns:auto 1fr;
   grid-template-rows:minmax(0,1fr);
   padding:0; gap:0;
@@ -7196,7 +7509,8 @@ h3{ font-family:var(--fd); }
   --vm-shadow:0 2px 12px hsl(220 12% 50% / .04),
               0 0 0 .5px hsl(220 12% 50% / .02);   /* --zero-card-shadow */
 
-  display:grid; grid-template-columns:auto minmax(0,1fr);
+  /* ONE COLUMN. It was `auto minmax(0,1fr)` — the rail and the pane. */
+  display:grid; grid-template-columns:minmax(0,1fr);
   /* and the same implicit-row fault as the stage, one level down: the pane
      was sized by its content, so the list ran 4px past the window and the
      composer 62px past it, off the bottom entirely */
@@ -7211,67 +7525,37 @@ h3{ font-family:var(--fd); }
 .ochat--okou::before,.ochat--okou::after{ content:none; }
 
 
-/* ── the rail, 1:1 with sidebar.tsx's `labeled-nav-rail` ────────────
-   `w-[68px] … border-r-[0.7px] border-sidebar-border bg-gray-50 px-1.5
-   pb-2 pt-3`, items `gap-3`. The first pass invented a 148px thread list
-   instead, which is not a thing the product has at this width — when the
-   chat list is hidden the product shows exactly this rail. It is also 80px
-   narrower, which the conversation gets back. */
-.okw__rail{
-  display:flex; flex-direction:column; align-items:center; gap:12px;
-  width:calc(68px + var(--o-lap));
-  padding:12px 6px 8px;
-  padding-left:calc(6px + var(--o-lap));   /* the strip a card lies across */
-  background:var(--vm-sidebar);
-  border-right:.7px solid var(--vm-border);
-}
+/* ── the rail: GONE ────────────────────────────────────────────────
+   Tong: *"我们产品的侧边栏也要去掉和slack界面一样"*. It was a faithful copy of
+   `labeled-nav-rail` — 68px, the org switcher, five labelled nav items — and
+   being faithful was not the question. Slack's rail went because a block of
+   colour with no information in it stood in front of the only thing anyone
+   reads; this one is the same shape of mistake with better content. F-07
+   dimmed it, which was the half measure: navigation the reader is not
+   navigating does not become the subject by being quiet, it just takes 68px
+   plus the connector card's lap off the conversation.
 
-/* the org switcher above the nav */
-.okw__org{
-  display:grid; place-items:center; flex:none;
-  width:32px; height:32px; border-radius:var(--vm-r-lg);
-  background:var(--vm-card);
-  box-shadow:var(--vm-shadow);
-  margin-bottom:0;
-}
+   What still says this is Okou's app and not a generic chat widget: the title
+   bar with `ChatThreadHeader`'s own three controls, the assistant's avatar,
+   the artifact card, and the composer's real placeholder — all product, none
+   of it chrome (RULES P17).
 
-.okw__org img{ width:18px; height:18px; }
-
-
-/* one nav item: a 32×36 rounded-lg tile, then a 9px caption */
-.okw__nav{
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  width:100%; flex:none;
-}
-
-.okw__nav i{
-  display:grid; place-items:center;
-  width:36px; height:32px; border-radius:var(--vm-r-lg);
-  color:var(--vm-gray-950);
-}
-
-.okw__nav i svg{ width:19px; height:19px; opacity:.7; }
-
-.okw__nav em{
-  font-style:normal;
-  font-size:9px; font-weight:500; line-height:14px;
-  color:rgb(20 23 29 / .6);
-  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-
-/* selected uses the ladder's own step, not a hand-picked grey */
-.okw__nav.is-here i{ background:var(--vm-state-selected); }
-
-.okw__nav.is-here em{ color:var(--vm-gray-950); }
-
+   The strip a connector card lies across is kept clear by the ROWS now, the
+   same way the Slack pane does it — never by the pane, which moves the
+   window's own fills with it. */
 
 .okw__pane{ display:flex; flex-direction:column; min-width:0; min-height:0; }
 
 
+/* THE STRIP A CONNECTOR CARD LIES ACROSS. On the pane it would move the title
+   bar's fill and push the composer off centre inside its own window — the
+   fault already recorded on `.slk__pane` (RULES F53). So it goes on the two
+   things a card can reach, and not on the composer. */
+
 /* the thread's title bar */
 .okw__bar{
   display:flex; align-items:center; gap:10px; flex:none;
-  margin:0; padding:12px 18px 8px;
+  margin:0; padding:12px 18px 8px;   /* and the lap, restated above */
 }
 
 .okw__bar b{
@@ -7281,16 +7565,26 @@ h3{ font-family:var(--fd); }
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-/* the run's state, in the product's muted pill rather than orange caps —
-   the reference's `RUNNING` is this site's workflow-card idiom, and the
-   product's own labels are sentence case with no all-caps */
-.okw__state{
+/* THE HEADER'S RIGHT-HAND CONTROLS. This was a `Done` pill, and the product
+   has no such thing beside a thread title — feedback F-08, *"好像没有这个
+   done"*. Checked against `ChatThreadHeader` in chat-thread-page.tsx: the row
+   is [emoji][title] on the left and three `variant="quiet" size="icon-sm"`
+   buttons on the right — AutomationMenuButton (Clock), BrowserMenuButton
+   (Globe), ArtifactsButton (Package), 18px each. "Done" does exist in the app
+   (`$.chat.run.done.default`) but as a `RunSectionDivider` label inside the
+   conversation, which is a different element in a different place.
+   Quiet means no fill until hover, so at rest these are muted glyphs — which
+   is also what keeps them from competing with the conversation (RULES P1). */
+.okw__acts{
   margin-left:auto; flex:none;
-  display:inline-flex; align-items:center; height:22px; padding:0 8px;
-  border-radius:var(--vm-r-lg);
-  background:var(--vm-gray-100);
-  font-style:normal; font-size:12px; font-weight:500; line-height:16px;
+  display:inline-flex; align-items:center; gap:2px;
+}
+
+.okw__acts svg{
+  width:18px; height:18px;
+  display:block; margin:7px;
   color:var(--vm-muted-fg);
+  opacity:.75;
 }
 
 
@@ -7301,14 +7595,27 @@ h3{ font-family:var(--fd); }
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
   gap:14px;
-  /* NO FLOOR PADDING. The conversation comes off the top edge of the
-     composer, with nothing between them — 4px here plus the composer's own
-     10px top margin was a 14px strip of ground under the newest message,
-     which reads as the message being unfinished rather than as air. */
-  padding:0 18px 0;
+  /* A FLOOR, AND IT HAS TO BEAT THE ROW GAP. 4px was tried and read as the
+     message being unfinished — because 4 is *less* than the 14px between two
+     messages, and a gap smaller than the one inside the conversation says
+     "this is still the conversation". The answer was not to delete it: with
+     no floor at all the newest message's last pixel and the composer's first
+     are the same pixel, and an artifact ends by running into a control.
+     18px is the list's own inset, so the newest object clears the composer
+     by exactly what it clears the window's sides by. */
+  padding:0 18px 18px;   /* padding-left is restated above, with the lap */
 }
 
 .okw__list > *{ flex:none; }
+
+
+/* THE STRIP A CONNECTOR CARD LIES ACROSS, on the two things a card can reach
+   and not on the pane — on the pane it moves the window's own fills and pushes
+   the composer off centre inside its own window (RULES F53). Declared AFTER
+   both, because each of them sets the `padding` shorthand and a shorthand
+   later in the file wins whatever the specificity says. The composer is left
+   alone: nothing lies across it. */
+.okw__bar,.okw__list{ padding-left:calc(18px + var(--o-lap2)); }
 
 
 /* ── the composer, 1:1 with `.zero-composer` ───────────────────────
@@ -7345,11 +7652,18 @@ h3{ font-family:var(--fd); }
 
 .okw__clip svg{ width:18px; height:18px; }
 
-/* and the default variant: bg-primary, rounded-lg, a 16px glyph */
+/* THE COMPOSER IS THE ROOM TOO. Feedback F-10, *"这里可以弱化下"*: a solid
+   `--vm-primary` button is the only saturated object in the picture, and it
+   sat at the bottom of a scene whose subject is what came OUT of the run.
+   The product draws it filled because there it is the thing you press; here
+   nobody presses it. It keeps the shape and the glyph and gives up the fill —
+   the product's own `quiet` treatment, one row down.
+   The page's real primary action stays the nav's Get started and the closing
+   band (K8); an orange square inside a screenshot was a third one. */
 .okw__send{
   display:grid; place-items:center; flex:none;
   width:32px; height:32px; border-radius:var(--vm-r-lg);
-  background:var(--vm-primary); color:#FFFFFF;
+  background:var(--vm-gray-100); color:var(--vm-muted-fg);
 }
 
 .okw__send svg{ width:16px; height:16px; }
@@ -7397,20 +7711,16 @@ h3{ font-family:var(--fd); }
   overflow:hidden; background:var(--vm-card);
 }
 
-/* THE ASK HAS TO SURVIVE. The list hangs from the bottom and clips, so an
-   artifact at its natural height (300px in a 373px list) pushed the user's
-   own message up under the title bar and left a sliver of grey — which
-   reads as a rendering fault, not as scrollback. Capped and cropped from
-   the TOP, so what is lost is the tail of the page rather than its
-   headline (the crop-through-the-headline fault from the tab windows). */
-.ochat--okou .oresult img{
-  /* 144 left the Spec Writing thread one pixel over its list, so the user's
-     own prompt was sliced through its first line by the title bar. Sized for
-     HEADROOM rather than for a fit: ~34px of slack, checked on all three. */
-  max-height:clamp(76px, 8vw, 110px);
-  object-fit:cover; object-position:top center;
-}
-
+/* THE ARTIFACT IS NOT CROPPED TO FIT ITS WINDOW. It was capped at
+   `clamp(76px, 8vw, 110px)` with `object-fit:cover`, so that the user's own
+   message would survive at the top of the list. Measured, that cap was
+   taking 72px off a 180px preview — 40% of the one object the whole panel
+   exists to deliver — to protect scrollback the window is built to lose.
+   Tong: *"你为了让 artifacts 可以放到这个界面里，强行把 artifacts 的高低改矮，
+   没有必要，如果 artifacts 放不下，那就在对话过程中把上边的对话顶出去也没问题"*.
+   The list already hangs from the bottom and clips; an old line going off
+   the top is what a chat window does, and a bisected deliverable is not.
+   Natural height, from `.oresult img`. */
 
 /* the assistant's mark, in the rail's own tile shape */
 .ochat__ava--agent{
@@ -7439,14 +7749,6 @@ h3{ font-family:var(--fd); }
                 0 0 0 .5px hsl(215 100% 19% / .018);
   }
 
-  html:not([data-theme="light"]) .okw__nav em{ color:rgb(232 233 237 / .6); }
-
-  /* the CURRENT item keeps its full strength. The dark rule above carries a
-     theme selector and therefore out-specifies `.okw__nav.is-here em`, so
-     without this line the nav's active row was the same 60% as the four
-     inactive ones and the state simply disappeared in dark mode. */
-  html:not([data-theme="light"]) .okw__nav.is-here em{ color:rgb(232 233 237); }
-
 }
 
 html[data-theme="dark"] .ochat--okou{
@@ -7462,48 +7764,37 @@ html[data-theme="dark"] .ochat--okou{
               0 0 0 .5px hsl(215 100% 19% / .018);
 }
 
-html[data-theme="dark"] .okw__nav em{ color:rgb(232 233 237 / .6); }
 
-html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
+/* ── the rail: GONE ────────────────────────────────────────────────
+   It was 44px of Slack aubergine carrying four grey placeholder squares,
+   and the argument for it was that "a 44px column of aubergine cannot
+   blend into the page". True, and the frame's gradient ground now does
+   that job — which left a block of saturated colour holding no information
+   in front of the one thing in the picture anyone reads. Tong: *"去掉侧边
+   栏"*. The pane takes the width.
+   Okou's own rail followed it one round later, for the same reason with
+   better content — see `.ochat--okou` above. */
 
-
-/* ── the rail ────────────────────────────────────────────────────────
-   Slack's single most recognisable feature is its dark sidebar, and it
-   is also the cheapest possible answer to "the panel blends into the
-   page": a 44px column of aubergine cannot blend into anything. Icon
-   width only, which is what Slack's own collapsed workspace rail is. */
-.slk__rail{
-  display:flex; flex-direction:column; align-items:center; gap:9px;
-  /* 44 of aubergine, PLUS the strip a connector card lies across — the
-     icons centre in the 44 that stays visible rather than in the whole
-     column, where the card cut the workspace tile in half */
-  width:calc(44px + var(--o-lap));
-  padding:12px 0 12px var(--o-lap);
-  background:var(--slk-rail);
-}
-
-
-.slk__ws{
-  display:grid; place-items:center;
-  width:26px; height:26px; border-radius:8px;
-  background:var(--slk-card);
-}
-
-
-.slk__ws img{ width:17px; height:17px; }
-
-
-.slk__rail i{
-  width:22px; height:22px; border-radius:7px; flex:none;
-  background:rgb(255 255 255 / .13);
-}
-
-
-.slk__rail i.is-here{ background:rgb(255 255 255 / .30); }
-
-
-/* everything that was the panel is now the panel's second column */
+/* THE PANEL IS THE WHOLE WINDOW NOW, and it keeps the strip the connector
+   card lies across clear by insetting itself — the same `--o-lap2`, the same
+   reason the rail used to pad by it, so nothing a reader needs is ever under
+   a card. `padding-left` rather than a margin: the bar's own fill has to run
+   to the window's edge or the card floats over a notch of grey. */
 .slk__pane{ display:flex; flex-direction:column; min-width:0; min-height:0; }
+
+
+/* THE STRIP A CONNECTOR CARD LIES ACROSS, kept clear the way the rail used
+   to keep it clear — by insetting what is under it, not by insetting the
+   whole pane. On the pane it moved the window's own fills too: the channel
+   bar's rule stopped 31px short of the left edge, and the composer ended up
+   75px from one side of its window and 30 from the other.
+   The bar and the messages take it (they share a left edge — Slack aligns
+   the channel name with the avatar column, and a card can reach either);
+   the composer does not, because nothing lies across it and it is the one
+   element in here that has to read as centred in its own window. */
+.slk__bar,.slk__msg,.slk__react,.slk__ghost{
+  --slk-inset:calc(clamp(14px, 1.4vw, 18px) + var(--o-lap2));
+}
 
 
 /* the painting, and the veil that went with it, are gone */
@@ -7533,7 +7824,12 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 .slk__list{
   flex:1; min-height:0; overflow:hidden;
   display:flex; flex-direction:column; justify-content:flex-end;
-  padding-bottom:0;
+  /* THE SAME FLOOR AS THE OKOU WINDOW, stated in this mock's own inset so
+     each window clears its composer by what it clears its sides by. It was
+     0 here and 0 there, and four of the seven tabs would otherwise keep a
+     conversation that ends on its composer while three got air — the tab
+     strip changing the spacing rule as you move along it. */
+  padding-bottom:clamp(14px, 1.4vw, 18px);
 }
 
 .slk__list > *{ flex:none; }
@@ -7541,7 +7837,7 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 
 .slk__bar{
   display:flex; align-items:center; gap:10px; flex:none;
-  margin:0; padding:13px clamp(14px,1.4vw,18px);
+  margin:0; padding:13px clamp(14px,1.4vw,18px) 13px var(--slk-inset);
   border-bottom:1px solid var(--slk-line);
   background:var(--slk-card);
 }
@@ -7580,7 +7876,7 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
    right edge rather than in a bubble. */
 .slk__msg,.slk__react{
   display:flex; align-items:flex-start; gap:9px;
-  padding:3px clamp(14px,1.4vw,18px);
+  padding:3px clamp(14px,1.4vw,18px) 3px var(--slk-inset);
 }
 
 
@@ -7809,7 +8105,7 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
 .slk__ghost{
   display:flex; align-items:center; gap:6px; flex:none;
   height:0; overflow:hidden;
-  margin:0 clamp(14px,1.4vw,18px) 0;
+  margin:0 clamp(14px,1.4vw,18px) 0 var(--slk-inset);
   font-size:var(--t-meta); color:var(--slk-mute);
   /* Clipped, never faded: it carries a sentence (RULES N3).
 
@@ -8223,23 +8519,18 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
     /* NOTHING LIES ON ANYTHING HERE. Below the frame's own width the cards
        go back into the flow underneath the window, and the two sidebars
        read this to drop the inset they were keeping clear for them — one
-       token, so the offset can never be left behind on one of them. */
+       token, so the offset can never be left behind on one of them. BOTH
+       laps: `--o-lap2` is a calc off `--o-lap`, so zeroing only the first
+       left 8px of it behind — which showed up as the second connector card
+       sitting 8px right of the first in a stacked column. */
     --o-lap:0px;
+    --o-lap2:0px;
   }
 
   .ostage__frame{
     display:block;
-    /* NO BOTTOM PADDING HERE EITHER. `display:block` throws away the grid's
-       `row-gap`, so the strip had nothing above it and the frame's padding
-       plus its own underneath — 2px over and 35px under, four times worse
-       than the desktop imbalance this token was added to fix. The strip
-       carries the air on both sides instead, exactly as it does above
-       1080. */
     padding:clamp(12px, 2.4vw, 18px);
-    padding-bottom:0;
   }
-
-  .ometrics{ margin-top:var(--o-mgap); }
 
   /* THE ROW BECOMES A COLUMN, and with it the whole opening beat stands
      down: centring a 62% unit inside a full-width column is a translate to
@@ -8292,21 +8583,20 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237); }
   .tplwin{ order:3; }
 
 
-  /* THE RAIL DROPS ITS CAPTIONS, which is what the product's own collapsed
-     rail does (`w-16`, icons only). At 390 the labelled rail is 68 of a 305px
-     window and the captions truncate to three letters each, which is worse
-     than not having them. */
-  .okw__rail{
-    width:48px;
-    padding:10px 6px 8px;
-    gap:8px;
-  }
-
-  .okw__nav em{ display:none; }
-
-  .okw__nav i{ width:34px; height:30px; }
-
   .okw__bar,.okw__list{ padding-inline:13px; }
+   /* --o-lap2 is 0 here */
+  /* THE FLOOR IS THE INSET, so it narrows with it. Stated as a relationship
+     ("the newest object clears the composer by what it clears the sides
+     by"), an 18px floor left behind at a 13px inset is the relationship
+     holding at one width only.
+
+     AND THE RHYTHM NARROWS WITH THEM. This block tightens every inset in the
+     window to 13 and left the 14px between two messages alone, so the floor
+     came out UNDER the gap — which is the exact reading M8 exists to stop:
+     air at the end that is smaller than air in the middle says "this is
+     still the conversation". 10px is derived, not picked: the wide window is
+     a 14px gap under an 18px floor, and 13 × 14/18 = 10.1. */
+  .okw__list{ padding-bottom:13px; gap:10px; }
 
   .okw__composer{ margin-inline:13px; }
 
