@@ -501,17 +501,38 @@ body.opts{ background:var(--wash); }
    already takes, and it is gated on `.is-in` like the rail (N8).
    ══════════════════════════════════════════════════════════════════ */
 .wall{ position:absolute; inset:-6px -6px 0; overflow:hidden; }
-/* a chip in the wall is TEXTURE, not an object: five rows of ringed white
-   boxes read as sixty things to look at, which is the opposite of wallpaper.
+/* a chip in the wall is TEXTURE, not an object: rows of ringed white boxes
+   read as sixty things to look at, which is the opposite of wallpaper.
    Fill only, no ring, and the row carries the opacity. */
 .wall .wchip{ box-shadow:none; background:rgb(255 255 255 / .66); }
-.wall__row{
-  display:flex; align-items:center; gap:8px;
-  width:max-content;
-  margin-bottom:9px;
-  opacity:.62;
-  animation:wallSlide var(--dur, 46s) linear infinite paused;
+/* FOUR ROWS, NOT FIVE, so each tag can be bigger — Tong: *"改成四行的wall，
+   那么每个tag可能就需要稍微放大一点点"*. At five rows the chips had to stay at
+   9px/25px to fit the 156px of band above the sentence card; at four they take
+   10.5px on a 30px chip, which is the size the labels want to be read at
+   rather than merely counted. */
+.wall .wchip{
+  height:30px; padding:0 13px;
+  font-size:10.5px; letter-spacing:.085em;
 }
+.wall__row{
+  display:flex; align-items:center;
+  width:max-content;
+  margin-bottom:10px;
+  opacity:.62;
+  animation:wallSlide var(--dur, 78s) linear infinite paused;
+}
+/* THE JUDDER, AND WHY IT WAS THERE. Tong: *"有时候滚动一会儿，还会抖动一下"*.
+   The row is doubled and travels -50%, which is seamless only if the second
+   copy starts exactly one copy-width along. It did not: `gap` on the ROW also
+   puts a gap BETWEEN the two copies, so the full width is 2·copy + one extra
+   gap and -50% lands half a gap short. Every wrap jumped 4px — not a dropped
+   frame, an arithmetic error that only shows once per cycle, which is exactly
+   why it read as intermittent.
+
+   The gap belongs to the chip now, as a trailing margin, so a copy is
+   self-contained and two of them tile exactly. Same fix as N14, one level
+   down: the track has to be built out of whole tiles. */
+.wall .wchip{ margin-right:10px; }
 .wall__row:nth-child(even){ animation-direction:reverse; }
 .vs.is-in .wall__row{ animation-play-state:running; }
 /* N14: a track that travels from 0 leaves its own start strip empty at the
@@ -621,4 +642,53 @@ body.opts{ background:var(--wash); }
 }
 @media (prefers-reduced-motion:reduce){
   .fold__row{ animation:none; opacity:.24; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   B1's SENTENCE PLAYS ONCE
+   Tong: *"可以让图一的内容一次性动画出现，然后打字的竖线一直闪烁，不用循环
+   播放"*. A loop asks to be watched; this card's job is to be read. So the
+   reveal is an ENTRANCE — it plays when the card arrives on screen and then
+   the card is simply a card, with the caret left blinking because a composer
+   with a cursor in it is waiting for you, not performing.
+
+   `animation-delay` is safe here and it was not in the loop version: a delay
+   phase-shifts a repeating timeline forever, but on a single pass it only
+   says when that pass starts. The stagger is back for that reason.
+
+   It starts on `.vs.is-in`, not on load (N24): the beat is spent before
+   anyone has scrolled to it otherwise, and the card is already finished by
+   the time it is looked at. */
+.sayc--once .sayc__l{
+  animation:sayOnce .82s var(--e-out) both paused;
+}
+.sayc--once .sayc__l:nth-child(2){ animation-delay:.62s; }
+@keyframes sayOnce{
+  from{ clip-path:inset(0 100% 0 0); }
+  to  { clip-path:inset(0 0 0 0); }
+}
+.sayc--once .sayc__f img,
+.sayc--once .sayc__f em{
+  animation:sayOnceMark .42s var(--e-out) both paused;
+}
+.sayc--once .sayc__f img:nth-of-type(1){ animation-delay:1.62s; }
+.sayc--once .sayc__f img:nth-of-type(2){ animation-delay:1.74s; }
+.sayc--once .sayc__f img:nth-of-type(3){ animation-delay:1.86s; }
+.sayc--once .sayc__f em{ animation-delay:1.98s; }
+@keyframes sayOnceMark{
+  from{ opacity:0; transform:translateY(3px); }
+  to  { opacity:1; transform:none; }
+}
+/* the caret is the one thing that keeps going, and it is inside the second
+   line's clip so it cannot appear before the sentence it belongs to */
+.sayc--once .sayc__c{ animation:sayCaret 1.05s steps(1) infinite paused; }
+.vs.is-in .sayc--once .sayc__l,
+.vs.is-in .sayc--once .sayc__c,
+.vs.is-in .sayc--once .sayc__f img,
+.vs.is-in .sayc--once .sayc__f em{ animation-play-state:running; }
+@media (prefers-reduced-motion:reduce){
+  .sayc--once .sayc__l{ animation:none; clip-path:none; }
+  .sayc--once .sayc__c{ animation:none; opacity:1; }
+  .sayc--once .sayc__f img,.sayc--once .sayc__f em{ animation:none; opacity:1; transform:none; }
 }

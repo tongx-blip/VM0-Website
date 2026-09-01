@@ -4,6 +4,33 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · B1 chosen, and the marquee judder was arithmetic (not merged)
+
+Tong: *"Option1挺不错的。可以让图一的内容一次性动画出现，然后打字的竖线一直闪烁，
+不用循环播放 … 上边的滚动墙，速度可以再稍微慢点。有时候滚动一会儿，还会抖动一下，
+检查一下是怎么回事。改成四行的wall，那么每个tag可能就需要稍微放大一点点"*.
+
+**The sentence plays once.** It arrives as an entrance — line, line, then the
+three tools — and after that only the caret blinks. A loop asks to be watched;
+this card is meant to be read, and it sits in a row with two other cards that
+are also moving. `animation-delay` comes back for the stagger, which is safe on
+a single pass and was not on a loop (that is what desynchronised the two lines
+last round). It starts on `.is-in`, not on load (N24).
+
+**The judder was arithmetic, not a dropped frame.** The row is doubled and
+travels −50%, which tiles only if the second copy starts exactly one copy-width
+along. It did not: `gap` on the row also puts a gap *between* the two copies, so
+the full width is 2·copy + one extra gap and −50% lands **half a gap short**.
+Every wrap jumped 4px — once per 44–58s cycle, which is exactly why it read as
+intermittent. The gap belongs to the chip now, as a trailing margin, so a copy
+is self-contained. Measured after: half the row width and one copy's advance
+differ by 0.0002px, and the rendered frame at t−1ms and t+1ms across the wrap
+are pixel-identical.
+
+**Four rows, slower, bigger tags.** 76/92/68/100s instead of 38–58s, and at four
+rows each chip can take 10.5px on a 30px box rather than 9px on 25px — the size
+a label wants to be read at rather than merely counted.
+
 ## 2026-09-01 · B, three ways — fuller, and it moves (not merged)
 
 Tong on round 1: *"B的方向可以，但是和其他两个cards比，这个第三张card不够饱满，

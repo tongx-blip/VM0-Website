@@ -191,11 +191,17 @@ FIELDS = [
 ]
 
 
-def sayc():
-    """the sentence card — one component, all three variants"""
+def sayc(once=False):
+    """the sentence card — one component, all three variants.
+
+    `once=True` plays the reveal as an ENTRANCE and stops. Tong, on B1:
+    *"可以让图一的内容一次性动画出现，然后打字的竖线一直闪烁，不用循环播放"* —
+    a loop asks to be watched and this card's job is to be read. The looping
+    version stays on B2 and B3, whose whole argument IS the repetition.
+    """
     marks = ''.join('<img src="assets/connectors/%s" alt="" width="19" height="19">' % c
                     for c in CONNECTORS)
-    return ('<div class="sayc">'
+    return ('<div class="sayc%s">' % (' sayc--once' if once else '') +
             '<p class="sayc__p">'
             '<span class="sayc__l">%s</span>'
             '<span class="sayc__l">%s<i class="sayc__c"></i></span>'
@@ -212,13 +218,17 @@ def chips(names, join=False):
 def fig_wall():
     """B1 — their language as the ground, drifting behind ours"""
     rows = []
-    # each row is DOUBLED and travels exactly one copy (N14): a track that
-    # starts at 0 leaves its own first item's worth of space empty at the reset
-    for i, dur in enumerate(('44s', '52s', '38s', '58s', '48s')):
-        order = STEPS[i * 2:] + STEPS[:i * 2]
+    # FOUR rows, and slower — Tong: *"上边的滚动墙，速度可以再稍微慢点"* and
+    # *"改成四行的wall"*. The four durations stay mutually prime-ish so the rows
+    # do not fall into step with each other and start reading as one object.
+    #
+    # Each row is DOUBLED and travels exactly one copy (N14): a track that
+    # starts at 0 leaves its own first item's worth of space empty at the reset.
+    for i, dur in enumerate(('76s', '92s', '68s', '100s')):
+        order = STEPS[i * 3:] + STEPS[:i * 3]
         rows.append('<div class="wall__row" style="--dur:%s">%s%s</div>'
                     % (dur, chips(order), chips(order)))
-    return '<div class="wall">%s</div>%s' % (''.join(rows), sayc())
+    return '<div class="wall">%s</div>%s' % (''.join(rows), sayc(once=True))
 
 
 def fig_split():
@@ -253,13 +263,21 @@ OPTIONS = [
      'theirs, and nothing on it moves.',
      'chain', fig_b),
     ('B1', 'The wall',
-     'their language as the ground · marquee + typing',
-     'Their steps become <b>wallpaper</b> — five rows running off all four '
+     'chosen · four rows · the sentence plays once',
+     'Their steps become <b>wallpaper</b> — four rows running off all four '
      'edges, drifting in alternate directions, dense enough that you stop '
-     'reading them. Our sentence is the one object on the card that is not '
-     'part of it, on a real surface cropped by the band like its neighbours. '
-     'The fullest of the three, and the one where the alternative is scenery '
-     'rather than an opponent.',
+     'reading them. Our sentence is the one object on the card that is not part '
+     'of it, on a real surface cropped by the band like its neighbours.<br><br>'
+     '<b>Round 3, from your notes:</b> the sentence now arrives <b>once</b>, as '
+     'an entrance, and only the caret keeps blinking — a loop asks to be '
+     'watched, and this card is meant to be read. The wall is roughly <b>40% '
+     'slower</b>. It is four rows instead of five, so each tag is bigger '
+     '(10.5px on a 30px chip rather than 9px on 25px). And the judder is gone: '
+     'the row is doubled and travels −50%, which only tiles if the two copies '
+     'are exactly one width apart — `gap` on the row also inserted a gap '
+     '<i>between</i> the copies, so every wrap jumped half a gap, 4px, once per '
+     'cycle. The gap belongs to the chip now. Measured: the frame before the '
+     'wrap and the frame after it are pixel-identical.',
      'wall', fig_wall),
     ('B2', 'The split',
      'a column that never ends · scroll + typing',
