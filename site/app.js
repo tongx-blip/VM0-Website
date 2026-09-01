@@ -808,7 +808,10 @@
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var chainAt = 0, chainTimer = null, handAt = 0, handTimer = null;
 
-  var postCard = doc.querySelector('.wfo--post');
+  /* THE REPLY IS INSIDE THE ASK NOW, so the class goes on the card and the
+     shutter under it opens. One element, one class — the two-object version
+     needed the ask to leave for the reply to have somewhere to be. */
+  var askCard = doc.querySelector('.wfo--ask');
 
   function chainTo(i) {
     if (!runner || !runSteps.length) return;
@@ -820,7 +823,7 @@
        在之后消失了变成了一个slack里agent的反馈. Both are on the canvas at
        once now, which is also what happens in the channel. */
     var landed = chainAt === runSteps.length - 1;
-    if (postCard) postCard.classList.toggle('is-in', landed);
+    if (askCard) askCard.classList.toggle('is-in', landed);
     runSteps.forEach(function (li, n) {
       li.classList.toggle('is-live', n === chainAt);
       li.classList.toggle('is-done', n < chainAt);
@@ -842,7 +845,7 @@
          row hides its own connector mark, so the Gmail step simply vanished
          on every beat after the first. */
       runSteps.forEach(function (li) { li.classList.remove('is-live', 'is-done'); });
-      if (postCard) postCard.classList.remove('is-in');
+      if (askCard) askCard.classList.remove('is-in');
       return;
     }
     if (reduced) { chainTo(runSteps.length - 1); return; }

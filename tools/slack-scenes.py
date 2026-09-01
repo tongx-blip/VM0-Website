@@ -211,27 +211,6 @@ def lucide(*paths):
             'aria-hidden="true">%s</svg>' % ''.join(paths))
 
 
-# MANAGE_NAV + FOOTER_NAV from sidebar.tsx, in the product's order.
-RAIL = [
-    ('New', lucide('<path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>',
-                   '<path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505'
-                   'l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>')),
-    ('Agents', lucide('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>',
-                      '<circle cx="9" cy="7" r="4"/>',
-                      '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
-                      '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>')),
-    ('Workflows', lucide('<circle cx="6" cy="19" r="3"/>',
-                         '<path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/>',
-                         '<circle cx="18" cy="5" r="3"/>')),
-    ('Connectors', lucide('<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/>',
-                          '<path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9'
-                          'a1 1 0 0 1 1-1z"/>')),
-    ('Artifacts', lucide('<path d="m7.5 4.27 9 5.15"/>',
-                         '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8'
-                         'v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>',
-                         '<path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>')),
-]
-
 CLIP = lucide('<path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0'
               '-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>')
 
@@ -248,15 +227,13 @@ def okou_window(key, rows):
     """Wrap this scene's existing rows in Okou's own app chrome."""
     sc = OKOU[key]
 
-    items = ''
-    for i, (label, glyph) in enumerate(RAIL):
-        items += ('<span class="okw__nav%s"><i>%s</i><em>%s</em></span>'
-                  % (' is-here' if i == 0 else '', glyph, label))
-    # the org switcher, which is what sits above the nav in the real rail
-    rail = ('\n              <div class="okw__rail" aria-hidden="true">'
-            '<span class="okw__org">'
-            '<img src="assets/okou-icon.svg" alt="" width="18" height="18">'
-            '</span>%s</div>' % items)
+    # NO NAV RAIL, for the same reason Slack lost its workspace rail. Tong:
+    # *"我们产品的侧边栏也要去掉和slack界面一样"*. It was a faithful copy of
+    # `labeled-nav-rail` and it was still a column of navigation in front of a
+    # picture about what a run produced — F-07 dimmed it, which was the half
+    # measure. The window is the conversation and its composer; the title bar's
+    # own controls are what still say this is Okou's app and not a chat widget.
+    # The 68px + the lap go to the conversation.
 
     # THE HEADER'S RIGHT-HAND CONTROLS, 1:1 with `ChatThreadHeader`:
     # AutomationMenuButton (Clock), BrowserMenuButton (Globe), ArtifactsButton
@@ -288,7 +265,7 @@ def okou_window(key, rows):
 
     return ('<div class="ochat ochat--okou" role="group"\n'
             '                 aria-label="The conversation that produced this">'
-            + rail + '\n              <div class="okw__pane">'
+            + '\n              <div class="okw__pane">'
             + bar + '\n              <div class="okw__list">'
             + ''.join('\n                ' + r for r in rows)
             + '\n              </div>' + composer

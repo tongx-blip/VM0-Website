@@ -4,6 +4,90 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-01 · the second rail, one thread instead of two cards, and a left edge
+
+Three notes in one round, all on things the board's part one had left half done.
+
+### The Okou window loses its rail too
+
+*"我们产品的侧边栏也要去掉和slack界面一样"*. F-07 had dimmed it — glyphs and
+labels to .34, the selected tile's fill removed — and that was the half measure.
+Navigation the reader is not navigating does not become the subject by being
+quiet; it just takes 68px plus the connector card's lap off the conversation.
+
+Gone the same way Slack's went: out of `tools/slack-scenes.py`, so it cannot come
+back on the next regeneration; `.ochat--okou` drops to one grid column; the lap
+inset moves onto `.okw__bar` and `.okw__list` rather than the pane, which is the
+fault already recorded as RULES F53. The window goes 457 → **543px** wide, and at
+rest the conversation now fits it with zero overflow on all three tabs (measured,
+`scrollHeight − clientHeight === 0`).
+
+One ordering trap: both `.okw__bar` and `.okw__list` set the `padding` shorthand,
+so the restated `padding-left` has to be declared **after** them. Equal
+specificity, later wins — the same class of bug `audit.js` §9 exists for.
+
+What still says this is Okou's app and not a generic chat widget: the title bar
+with `ChatThreadHeader`'s own three controls, the assistant's avatar, the artifact
+card and the composer's real placeholder. All product, no chrome — **RULES P17**.
+
+### The ask and the reply are one card
+
+*"可不可以把用户的任务和agent给的结果放到一起，在agent出现的时候做一个展开动画"*.
+
+They were two absolutely positioned objects on opposite sides of the canvas. One
+question and its answer are one conversation, so `.wfo--post` is deleted as an
+object and its content is a block inside `.wfo--ask`; the arrival is the card
+**growing by a message**.
+
+The reveal is the shutter, not a fade — a 1-track grid opened from `0fr`, so the
+closed state has literally zero height and the card's own box is what animates
+(N13). Text never sits at partial alpha, which is the fault that put two nodes of
+this scene on the contrast gate twice (N3). Resting — no JS, reduced motion, any
+beat that is not this one — the reply is simply there (N2).
+
+All the `--slk-*` overrides, the `--slk-bleed` / `--slk-drop` clip arithmetic and
+the `is-in`-on-a-second-card wiring go with it.
+
+### And the pair is centred
+
+*"把这些展示的图居中，现在有点偏左了"*. With three objects, two of the small ones
+were on the left and the group's mass sat left of centre with the top-right
+empty. With two, it is arithmetic. The run card moved **+12cqw / −6cqh** and each
+of its beat-2/3/4 translates took the same delta back out, so those three beats
+land exactly where they did before:
+
+| | x | y | w | h |
+|---|---|---|---|---|
+| thread | 4.7 | 25.5 | 40.5 | 38.9 |
+| run | 47.8 | 29.6 | 46.4 | 43.6 |
+| **bbox** | 4.7 → 94.2 | 25.5 → 73.2 | margins **4.7 / 5.8** | **25.5 / 26.8** |
+
+The residue on the right is the run card's own rotation, not an offset.
+
+### `#control`'s heading moves to the left edge
+
+*"这里的section title text都左对齐"*. §9's centred stack is still the page's one
+composition rule; this is the written exception, and the test for it is under the
+heading rather than in it — `#control` is two left-aligned text columns starting
+at the section's left edge, so a centred title above them has no edge to agree
+with and hangs between the columns.
+
+Heading and lede move **together**: aligning one and not the other gives a section
+two axes. Scoped as `.panel--lead-left`, not by id, so the next section that wants
+it says so in its class list — and so flipping the whole page is one line if that
+is what we decide. Measured: heading, lede and both columns all start at 69px.
+
+The rule has to be declared after `.panel > .section-body`, which sets
+`margin-inline:auto` at equal specificity. First attempt put it before, and the
+heading moved while the lede stayed centred — visible in one screenshot, invisible
+in the diff.
+
+### Gate
+
+`tokens` 0 · `check-html` balanced · `scopes` 0 · `rules` 179/78/11 resolve ·
+`audit.js` §1 §3 §5 §6 §7 §9 §10 §11 pass (§3 now reports `control → left 69/840`)
+· axe 0 violations in both themes, whole page walked · 1440 light + dark, 390.
+
 ## 2026-09-01 · the annotated design board, part one — the eight that needed no decision
 
 Source: **https://okou-home-design-feedback.sites.vm0.io/** — 14 items from 11

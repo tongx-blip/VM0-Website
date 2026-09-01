@@ -1313,6 +1313,26 @@ h3{ font-family:var(--fd); }
 .panel > .note,.panel > .footnote{ max-width:58ch; margin-inline:auto; }
 .panel > .cta__btns{ display:flex; justify-content:center; }
 
+/* ── A SECTION WHOSE FIGURE IS A LEFT-ALIGNED GRID ──────────────────
+   Tong, on `#control`: *"这里的section title text都左对齐"*. §9's centred stack
+   is still the page's one composition rule; this is the written exception, and
+   the test for it is under the heading, not in the heading. `#control` is two
+   left-aligned text columns starting at the section's left edge, so a centred
+   title above them has no edge to agree with — it hangs between the columns.
+   Both the heading and the lede move, together: aligning one and not the other
+   is how a section ends up with two axes instead of one.
+   Scoped by a modifier rather than by id, so the next section that needs it
+   says so in its class list — and so flipping the whole page is one line here
+   if that is what we decide. */
+.panel--lead-left > .display,
+.panel--lead-left > .section-body{
+  justify-self:start;
+  text-align:left;
+  margin-inline:0;
+}
+/* the lede keeps its measure; it just measures from the left now */
+.panel--lead-left > .section-body{ max-width:56ch; }
+
 /* the rail head: an accent tick, the section number, and a spine
    that fills with how far into the section you have read */
 /* ── TRACKED LABELS SIT OFF-CENTRE, AND IT IS NOT AN ILLUSION ───────
@@ -2928,90 +2948,73 @@ h3{ font-family:var(--fd); }
   box-shadow:var(--e-fig);
 }
 
-/* ── where the run lands ─────────────────────────────────────────────
-   IT USED TO TAKE THE ASK'S PLACE — same `left`, same `top`, one card
-   swapping for the other at the end of the chain. Tong: *"这个动画会给用误
-   解，为什么一开始的chat，在之后消失了变成了一个slack里agent的反馈"*, and he
-   is describing what the animation literally said: the question turned into
-   the answer. In the product nothing of the sort happens — the ask stays in
-   the channel and the reply arrives under it. A loop that removes its own
-   premise cannot be read as a sequence; it reads as a substitution.
+/* ── where the run lands: INSIDE THE ASK ────────────────────────────
+   It was its own absolutely positioned card. Tong: *"可不可以把用户的任务和
+   agent给的结果放到一起，在agent出现的时候做一个展开动画"*. Two cards on
+   opposite sides of a canvas are two objects; one question and its answer are
+   one conversation. So the reply is a block inside `.wfo--ask` and the arrival
+   is the card growing by a message.
 
-   So the two coexist, and the post is re-scaled to something that CAN
-   coexist: 30cqw instead of 44, which is a notification rather than a
-   second subject. The three objects now clear each other outright
-   (RULES F9) — ask up at the top, the run through the middle, the message
-   posted back at the bottom left — and the beat reads as one arc instead of
-   a swap. Slack's own tokens, so the message reads as Slack and not as one
-   of our surfaces (RULES P1). */
-.wfo--post{
-  left:3cqw; top:63cqh; width:min(30cqw, 20rem); z-index:3;
-  overflow:hidden;
-  background:var(--slk-card);
-  border-radius:var(--r-card);
-  box-shadow:var(--e-lift);
-  --slk-line:#E4E6E9;
-  --slk-ink:#1D1C1D;
-  --slk-mute:#616061;
-  --slk-tint:#F8F8F8;
-  --slk-card:#FFFFFF;
-  /* IT WIPES, IT DOES NOT FADE. Every other object in this scene settles
-     once per beat; this one replays on a loop, so the odds of catching its
-     text at partial alpha are high — and axe composites an inherited
-     opacity, which is why two nodes here failed contrast on two runs in
-     three while measuring 16:1 and 5.6:1 at rest. Entrances of text use
-     clip-path (QA §1). */
-  /* THE CLIP HAS TO CONTAIN THE SHADOW. `inset()` resolves against the
-     BORDER box, and a box-shadow is painted outside it — so `inset(0)`,
-     which reads as "clip to nothing", deletes the drop shadow and leaves a
-     white card with four hard edges sitting on the mat. Every other surface
-     in the scene had one and this one did not, which is what "阴影被截断了"
-     was pointing at.
+   THE SHUTTER, not a fade (RULES N13, N3): a 1-track grid opened from 0fr, so
+   the closed state has literally zero height and the card's own box is what
+   animates. Text never sits at partial alpha, which is the fault that put two
+   nodes of this scene on the contrast gate twice. The inner box carries the
+   air, because a 0fr track is floored at the padding box of the item in it. */
+.wfo__reply{
+  display:grid; grid-template-rows:0fr;
+  transition:grid-template-rows var(--t-reveal) var(--e-out);
+}
+.wfo__replyin{ overflow:hidden; min-height:0; }
+/* RESTING IS THE FINISHED CONVERSATION (N2). With no JS, with reduced motion,
+   and on any beat that is not this one, the reply is simply there — `.is-in`
+   is what JS adds at the cue, and its absence must never mean "missing". */
+.wfsc:not([data-step="1"]) .wfo__reply,
+.wfo--ask.is-in .wfo__reply{ grid-template-rows:1fr; }
+.wfsc[data-step="1"] .wfo--ask:not(.is-in) .wfo__reply{ grid-template-rows:0fr; }
 
-     The bleed is read off the shadow rather than guessed. Sideways and up,
-     `0 2px 10px` reaches five pixels; down, `0 26px 50px -26px` reaches
-     26 − 26 + 25 = 25. Rounded up to 10 and 34 so a change to the shadow
-     does not silently start clipping it again. The closed state keeps the
-     same bleed on three sides and collapses to zero height AT THE TOP EDGE,
-     so the wipe still starts from nothing. */
-  --slk-bleed:10px;
-  --slk-drop:34px;
-  opacity:1;
-  clip-path:inset(calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed))
-                  calc(100% + var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed)));
-  transform:translate(-2cqw, 3cqh) scale(.94);
-  transition:clip-path var(--t-reveal) var(--e-out),
-             transform var(--t-reveal) var(--e-out);
+/* the air is the inner box's, so it collapses with the track */
+.wfo__replyin{ padding-top:1.05em; }
+.wfo__replyhd{
+  display:flex; align-items:center; gap:.5em;
+  margin:0 0 .35em;
+  color:var(--ink-mute);
+  font-family:var(--fm); font-variant-numeric:tabular-nums;
+  font-size:.68em; letter-spacing:.07em; text-transform:uppercase;
 }
-.wfo--post .slk__bar{ padding:9px 13px; }
-.wfo--post .slk__msg{ padding:9px 13px 13px; }
-.wfo--post .slk__say{ color:var(--slk-ink); }
-/* it arrives when the runner reaches the last step — and NOTHING leaves to
-   make room for it, which is the whole correction */
-.wfsc[data-step="1"] .wfo--run.is-delivered ~ .wfo--post,
-.wfsc[data-step="1"] .wfo--post.is-in{
-  clip-path:inset(calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-drop))
-                  calc(-1 * var(--slk-bleed)));
-  transform:none;
+.wfo__replyav{
+  display:grid; place-items:center; flex:none;
+  width:1.55em; height:1.55em; border-radius:var(--r-pill); overflow:hidden;
 }
-/* it belongs to beat 1 only; the other three states clip it away outright */
-.wfsc:not([data-step="1"]) .wfo--post{
-  clip-path:inset(calc(-1 * var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed))
-                  calc(100% + var(--slk-bleed))
-                  calc(-1 * var(--slk-bleed)));
+.wfo__replyav img{ width:100%; height:100%; object-fit:cover; display:block; }
+.wfo__replyhd b{ font-weight:600; color:var(--ink-soft); }
+/* THE BADGE IS THE POINT: it is the one element that says a member of this
+   conversation is software. Same idiom as the channel's `.slk__badge`. */
+.wfo__replybadge{
+  flex:none; font-style:normal;
+  padding:.18em .38em; border-radius:.28em; line-height:1;
+  background:var(--tile);
+  font-size:.85em; letter-spacing:.06em;
+  color:var(--ink-mute);
 }
+/* INLINE, like the ask's caption above it. Pushed to the far right with
+   `margin-left:auto` it made one caption a row and the other a line — two
+   rules for the same element, one card apart. */
+.wfo__replyhd time{ margin-left:0; }
+.wfo__replysay{
+  margin:0;
+  color:var(--ink); font-size:.88em; line-height:1.5;
+}
+
 /* 1 · the ask ─────────────────────────────────────────────────────── */
-/* UP AND NARROWER, because it now has to share the canvas with the reply
-   instead of handing its box over to it. At 44cqw and 19cqh it sat exactly
-   where the post lands and grazed the run card's header; at 40 and 6 the
-   three objects each have their own ground. */
+/* CENTRED AS A PAIR. Tong: *"把这些展示的图居中，现在有点偏左了"*. There were
+   three objects and the two small ones were both on the left, so the group's
+   mass sat left-of-centre with the top-right empty. Merged, there are two, and
+   they are placed so the group's bounding box is symmetric: this card runs
+   5→45cqw and the run card 48→94, which is 5 of margin on the left and 6 on
+   the right — the residue is the run card's rotation, not an offset.
+   Vertically 26→73 against 26→74. */
 .wfo--ask{
-  left:6cqw; top:6cqh; width:min(40cqw, 26rem);
+  left:5cqw; top:26cqh; width:min(40cqw, 26rem);
   padding:1.15em 1.3em;
   transform:translateY(1.4em) rotate(-1.1deg);
 }
@@ -3038,24 +3041,29 @@ h3{ font-family:var(--fd); }
 /* Re-measured against the new origin: from 19cqh a -18cqh recede left it
    just off the top edge, from 6cqh the same number puts it 65px past it and
    the fade has nothing left to do. */
+/* Re-measured against the new origin, and against the card's new height: it
+   carries two messages now, so it recedes further to clear the run card. */
 .wfsc[data-step="2"] .wfo--ask{
-  opacity:.3; transform:translate(10cqw, -7cqh) rotate(-1.1deg);
+  opacity:.3; transform:translate(10cqw, -27cqh) rotate(-1.1deg);
 }
 .wfsc[data-step="3"] .wfo--ask,
 .wfsc[data-step="4"] .wfo--ask{
-  opacity:0; transform:translate(10cqw, -24cqh) rotate(-1.1deg);
+  opacity:0; transform:translate(10cqw, -46cqh) rotate(-1.1deg);
 }
 
 /* 1→2 · the run, which becomes the workflow ───────────────────────── */
+/* MOVED +12cqw / −6cqh so the pair is centred (see `.wfo--ask`). Beats 2, 3
+   and 4 are the SAME absolute destinations as before — each of their
+   translates takes the same delta back out, so nothing downstream moved. */
 .wfo--run{
-  left:36cqw; top:36cqh; width:min(46cqw, 32rem);
+  left:48cqw; top:30cqh; width:min(46cqw, 32rem);
   transform:translateY(1.6em) rotate(.7deg);
 }
 .wfsc[data-step="1"] .wfo--run{ opacity:1; transform:rotate(.7deg); }
 /* THE PIVOT: it lifts, straightens and settles into the middle as the
    thing the team keeps, rather than a thing that happened once */
 .wfsc[data-step="2"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -11cqh) rotate(0deg);
+  opacity:1; transform:translate(-21cqw, -5cqh) rotate(0deg);
 }
 /* Step 3 holds THREE things — the card, the team and the line. The card
    lifts so the other two have somewhere to be; it does not shrink, and
@@ -3063,11 +3071,11 @@ h3{ font-family:var(--fd); }
    That lap is the point: the people are on the workflow, not filed
    under it. Every other pair in this scene has to clear. */
 .wfsc[data-step="3"] .wfo--run{
-  opacity:1; transform:translate(-9cqw, -18cqh) rotate(-.6deg);
+  opacity:1; transform:translate(-21cqw, -12cqh) rotate(-.6deg);
 }
 .wfsc[data-step="4"] .wfo--run{
   opacity:1; width:min(40cqw, 28rem);
-  transform:translate(-29cqw, -11cqh) rotate(-1.2deg);
+  transform:translate(-41cqw, -5cqh) rotate(-1.2deg);
 }
 /* A GRID, not a flex row with an absolutely-placed tag. The tag sat at
    `right:1.1em` against a 1em left padding — a 0.1em asymmetry you can
@@ -6249,7 +6257,7 @@ img.lane__bot{
      the first 26px of whichever sidebar was behind it — Okou's thread
      names lost their initials, Slack's workspace tile was cut in half. The
      window answers by insetting its own sidebar by the same amount (see
-     `.okw__rail` and the Slack rows), so the strip a card covers is empty. */
+     rows in both windows), so the strip a card covers is empty. */
   --o-lap:clamp(11px, 1.2vw, 17px);
   /* THE SECOND CARD LAPS DEEPER. Two cards resting the same distance onto
      the same edge read as one bracket drawn twice; two different distances
@@ -6869,7 +6877,8 @@ img.lane__bot{
   --vm-shadow:0 2px 12px hsl(220 12% 50% / .04),
               0 0 0 .5px hsl(220 12% 50% / .02);   /* --zero-card-shadow */
 
-  display:grid; grid-template-columns:auto minmax(0,1fr);
+  /* ONE COLUMN. It was `auto minmax(0,1fr)` — the rail and the pane. */
+  display:grid; grid-template-columns:minmax(0,1fr);
   /* and the same implicit-row fault as the stage, one level down: the pane
      was sized by its content, so the list ran 4px past the window and the
      composer 62px past it, off the bottom entirely */
@@ -6882,67 +6891,36 @@ img.lane__bot{
 }
 .ochat--okou::before,.ochat--okou::after{ content:none; }
 
-/* ── the rail, 1:1 with sidebar.tsx's `labeled-nav-rail` ────────────
-   `w-[68px] … border-r-[0.7px] border-sidebar-border bg-gray-50 px-1.5
-   pb-2 pt-3`, items `gap-3`. The first pass invented a 148px thread list
-   instead, which is not a thing the product has at this width — when the
-   chat list is hidden the product shows exactly this rail. It is also 80px
-   narrower, which the conversation gets back. */
-.okw__rail{
-  display:flex; flex-direction:column; align-items:center; gap:12px;
-  width:calc(68px + var(--o-lap2));
-  padding:12px 6px 8px;
-  padding-left:calc(6px + var(--o-lap2)); /* the strip a card lies across */
-  background:var(--vm-sidebar);
-  border-right:.7px solid var(--vm-border);
-}
-/* the org switcher above the nav */
-.okw__org{
-  display:grid; place-items:center; flex:none;
-  width:32px; height:32px; border-radius:var(--vm-r-lg);
-  background:var(--vm-card);
-  box-shadow:var(--vm-shadow);
-  margin-bottom:0;
-}
-.okw__org img{ width:18px; height:18px; }
+/* ── the rail: GONE ────────────────────────────────────────────────
+   Tong: *"我们产品的侧边栏也要去掉和slack界面一样"*. It was a faithful copy of
+   `labeled-nav-rail` — 68px, the org switcher, five labelled nav items — and
+   being faithful was not the question. Slack's rail went because a block of
+   colour with no information in it stood in front of the only thing anyone
+   reads; this one is the same shape of mistake with better content. F-07
+   dimmed it, which was the half measure: navigation the reader is not
+   navigating does not become the subject by being quiet, it just takes 68px
+   plus the connector card's lap off the conversation.
 
-/* one nav item: a 32×36 rounded-lg tile, then a 9px caption */
-.okw__nav{
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  width:100%; flex:none;
-}
-.okw__nav i{
-  display:grid; place-items:center;
-  width:36px; height:32px; border-radius:var(--vm-r-lg);
-  color:var(--vm-gray-950);
-}
-/* IT IS THE ROOM, NOT THE SUBJECT. Feedback F-07, *"这里可以弱化下"*: the
-   nav's ink was `--vm-gray-950` at .7 and its labels at .6 — the same weight
-   as the conversation beside it, so the eye landed on a navigation bar the
-   scene is not about. Glyphs and labels drop a step, and the selected tile's
-   fill comes off: the rail keeps the product's structure (P1) and gives up
-   only its contrast, which is a marketing decision about focus and is scoped
-   to this mock. The rail is `aria-hidden`, so the AA floor does not apply to
-   labels nobody can read out (§12). */
-.okw__nav i svg{ width:19px; height:19px; opacity:.34; }
-.okw__nav em{
-  font-style:normal;
-  font-size:9px; font-weight:500; line-height:14px;
-  color:rgb(20 23 29 / .34);
-  max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-}
-/* the selected item is still the selected item — it is one step less faded,
-   not a filled tile. A highlight block is the loudest thing in a column that
-   has just been told to be quiet. */
-.okw__nav.is-here i svg{ opacity:.55; }
-.okw__nav.is-here em{ color:rgb(20 23 29 / .55); }
+   What still says this is Okou's app and not a generic chat widget: the title
+   bar with `ChatThreadHeader`'s own three controls, the assistant's avatar,
+   the artifact card, and the composer's real placeholder — all product, none
+   of it chrome (RULES P17).
+
+   The strip a connector card lies across is kept clear by the ROWS now, the
+   same way the Slack pane does it — never by the pane, which moves the
+   window's own fills with it. */
 
 .okw__pane{ display:flex; flex-direction:column; min-width:0; min-height:0; }
+
+/* THE STRIP A CONNECTOR CARD LIES ACROSS. On the pane it would move the title
+   bar's fill and push the composer off centre inside its own window — the
+   fault already recorded on `.slk__pane` (RULES F53). So it goes on the two
+   things a card can reach, and not on the composer. */
 
 /* the thread's title bar */
 .okw__bar{
   display:flex; align-items:center; gap:10px; flex:none;
-  margin:0; padding:12px 18px 8px;
+  margin:0; padding:12px 18px 8px;   /* and the lap, restated above */
 }
 .okw__bar b{
   font-size:15px; font-weight:600; line-height:20px;
@@ -6986,9 +6964,17 @@ img.lane__bot{
      are the same pixel, and an artifact ends by running into a control.
      18px is the list's own inset, so the newest object clears the composer
      by exactly what it clears the window's sides by. */
-  padding:0 18px 18px;
+  padding:0 18px 18px;   /* padding-left is restated above, with the lap */
 }
 .okw__list > *{ flex:none; }
+
+/* THE STRIP A CONNECTOR CARD LIES ACROSS, on the two things a card can reach
+   and not on the pane — on the pane it moves the window's own fills and pushes
+   the composer off centre inside its own window (RULES F53). Declared AFTER
+   both, because each of them sets the `padding` shorthand and a shorthand
+   later in the file wins whatever the specificity says. The composer is left
+   alone: nothing lies across it. */
+.okw__bar,.okw__list{ padding-left:calc(18px + var(--o-lap2)); }
 
 /* ── the composer, 1:1 with `.zero-composer` ───────────────────────
    white, a 0.7px gray-400 hairline, 1.5rem, and the cool card shadow. */
@@ -7107,12 +7093,6 @@ img.lane__bot{
     --vm-shadow:0 2px 12px hsl(215 100% 19% / .035),
                 0 0 0 .5px hsl(215 100% 19% / .018);
   }
-  html:not([data-theme="light"]) .okw__nav em{ color:rgb(232 233 237 / .6); }
-  /* the CURRENT item keeps its full strength. The dark rule above carries a
-     theme selector and therefore out-specifies `.okw__nav.is-here em`, so
-     without this line the nav's active row was the same 60% as the four
-     inactive ones and the state simply disappeared in dark mode. */
-  html:not([data-theme="light"]) .okw__nav.is-here em{ color:rgb(232 233 237); }
 }
 html[data-theme="dark"] .ochat--okou{
   --vm-gray-0:#111113;   --vm-gray-50:#19191B;  --vm-gray-100:#252527;
@@ -7126,10 +7106,6 @@ html[data-theme="dark"] .ochat--okou{
   --vm-shadow:0 2px 12px hsl(215 100% 19% / .035),
               0 0 0 .5px hsl(215 100% 19% / .018);
 }
-/* the same two steps as light (F-07): the rail recedes, and the selected item
-   is one step less faded rather than full ink */
-html[data-theme="dark"] .okw__nav em{ color:rgb(232 233 237 / .34); }
-html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237 / .55); }
 
 /* ── the rail: GONE ────────────────────────────────────────────────
    It was 44px of Slack aubergine carrying four grey placeholder squares,
@@ -7138,8 +7114,8 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237 / .55); }
    that job — which left a block of saturated colour holding no information
    in front of the one thing in the picture anyone reads. Tong: *"去掉侧边
    栏"*. The pane takes the width.
-   Okou's own window keeps `.okw__rail`: those labels are the product's real
-   navigation, not placeholders, and this page is the product (RULES P1). */
+   Okou's own rail followed it one round later, for the same reason with
+   better content — see `.ochat--okou` above. */
 
 /* THE PANEL IS THE WHOLE WINDOW NOW, and it keeps the strip the connector
    card lies across clear by insetting itself — the same `--o-lap2`, the same
@@ -7898,18 +7874,7 @@ html[data-theme="dark"] .okw__nav.is-here em{ color:rgb(232 233 237 / .55); }
   .ochat{ order:1; min-height:clamp(360px, 62vw, 470px); }
   .tplwin{ order:3; }
 
-  /* THE RAIL DROPS ITS CAPTIONS, which is what the product's own collapsed
-     rail does (`w-16`, icons only). At 390 the labelled rail is 68 of a 305px
-     window and the captions truncate to three letters each, which is worse
-     than not having them. */
-  .okw__rail{
-    width:48px;
-    padding:10px 6px 8px;
-    gap:8px;
-  }
-  .okw__nav em{ display:none; }
-  .okw__nav i{ width:34px; height:30px; }
-  .okw__bar,.okw__list{ padding-inline:13px; }
+  .okw__bar,.okw__list{ padding-inline:13px; }   /* --o-lap2 is 0 here */
   /* THE FLOOR IS THE INSET, so it narrows with it. Stated as a relationship
      ("the newest object clears the composer by what it clears the sides
      by"), an 18px floor left behind at a 13px inset is the relationship
