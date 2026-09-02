@@ -71,10 +71,11 @@ def unfurl(service, title, url):
     return ('<div class="slk__unfurl">'
             '<p class="slk__unfurl-h">'
             # the agent's face, not the brand cube — the line is attributed to
-            # the teammate who posted it. 18px in a circle: the avatar is a
-            # painted square, so at Slack's 14px unrounded it read as a chip.
+            # the teammate who posted it. 20px in a circle: the avatar is a
+            # painted square, so at Slack's 14px unrounded it read as a chip,
+            # and at 18 it was a third size for one face (36 · 32 · 18).
             '<span class="slk__unfurl-ic"><img src="assets/avatars/agent-okou.png" '
-            'alt="" width="18" height="18"></span>%s</p>'
+            'alt="" width="20" height="20"></span>%s</p>'
             '<p class="slk__unfurl-t">%s</p>'
             '<p class="slk__unfurl-u">%s</p></div>' % (service, title, url))
 
@@ -229,7 +230,7 @@ ARROW = lucide('<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>')
 # carried the avatar here for a while; this generator had not caught up, so
 # re-running it would have put 32 cubes back on the page.
 AGENT_AVA = ('<span class="ochat__ava ochat__ava--agent">'
-             '<img src="assets/avatars/agent-okou.png" alt="" width="28" height="28">'
+             '<img src="assets/avatars/agent-okou.png" alt="" width="36" height="36">'
              '</span>')
 
 

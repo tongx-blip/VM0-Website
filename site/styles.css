@@ -7816,9 +7816,29 @@ img.lane__bot{
    Natural height, from `.oresult img`. */
 
 /* the assistant's mark, in the rail's own tile shape */
+/* ONE AGENT, ONE AVATAR, ACROSS ALL SEVEN TABS. Tong: *"不同tab下 头像为什么
+   不一样大？"* — four of the scenes draw Slack, where the agent sits at 36px in
+   a circle because that is the avatar Maya and Dan have in the same panel, and
+   three draw the product's own chat, where this held 28px in a `rounded-lg`
+   tile. Both were their host's spec, and both were defensible on their own; the
+   reader sees one character at two sizes and two shapes and reads it as
+   sloppiness, which is the only reading that matters.
+
+   Ours moves, not Slack's — the agent may not stop matching the humans beside
+   it. And the tile was inherited from when this frame held the brand CUBE: a
+   logo goes in the product's container shape, a FACE is an avatar, and every
+   avatar on this page is a circle. And it is Slack's 36, not a compromise 32:
+   the question was why the same face is two sizes, and 32 would still have
+   been two sizes — a number nobody can defend at a glance beats one that is
+   four pixels closer to defensible.
+
+   This is a deliberate step off the product's own value (P1) and it is written
+   down as the exception rather than left as drift. The product draws 28 in a
+   `rounded-lg` tile; the page draws one agent, at one size, in the shape every
+   other avatar here takes. */
 .ochat__ava--agent{
-  width:28px; height:28px; flex:none;
-  border-radius:var(--vm-r-lg);
+  width:36px; height:36px; flex:none;
+  border-radius:50%;
   overflow:hidden;
 }
 
@@ -8092,7 +8112,10 @@ html[data-theme="dark"] .ochat--okou{
    was a blob. 18px in a circle is the smallest size the drawing survives. */
 .slk__unfurl-ic{
   display:grid; place-items:center; flex:none;
-  width:18px; height:18px;
+  /* 20, not 18: with the app's avatar at 32 and Slack's at 36, an 18 here was
+     a THIRD size for one face. Two sizes is a rule (a message, and a mark on a
+     link); three is an accident. */
+  width:20px; height:20px;
   border-radius:50%; overflow:hidden;
 }
 

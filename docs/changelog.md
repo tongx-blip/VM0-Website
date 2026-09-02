@@ -4,6 +4,34 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-02 · one agent, one avatar, all seven tabs
+
+Tong: *"不同tab下 头像为什么不一样大？"*
+
+Measured: four of the seven scenes draw **Slack** (the agent at 36px in a
+circle, the avatar Maya and Dan have in the same panel) and three draw the
+**product's own chat** (28px in an 8px `rounded-lg` tile). Both were their
+host's spec and both were defensible on their own — `assets/product/chat-artifact.png`,
+a real screenshot that ships on this page, shows the tile. But the reader sees
+one character at two sizes and two shapes, and that is the only reading that
+matters.
+
+**Ours moved, not Slack's.** The agent may not stop matching the humans beside
+it, and the tile was inherited from when that frame held the brand **cube** — a
+logo goes in the product's container shape, a face is an avatar, and every
+avatar on this page is a circle. So `.ochat__ava--agent` is 36px at 50%, the
+same object in all seven tabs. It is a deliberate step off a P1-pinned product
+value, written at the rule rather than left as drift.
+
+The unfurl's mark went 18 → **20px** in the same pass: with 36 and 32 in play it
+was a third size for one face. Two sizes is a rule — a speaker, and a mark on a
+link; three is an accident.
+
+`tools/slack-scenes.py` updated with it (P18).
+
+Gate: tokens/check-html/scopes/rules 0, `audit.js` §1 §6 §8 §9 §10 §11 PASS,
+axe 0 violations in both themes, checked at 390.
+
 ## 2026-09-02 · the section was already clean; the link was not
 
 Tong: *"检查一下，Achieve more with the team you already have. 这个section所有
