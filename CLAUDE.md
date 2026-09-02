@@ -34,7 +34,28 @@ and every rule in it comes from a decision that has already been argued once.
 
 ## Hard rules
 
-- **There is exactly one review URL and it is
+> **THE SITE MOVED, 2026-09-02.** The Okou homepage now lives in
+> **`vm0-ai/vm0-marketing`** at `vite-ssr/app/_okou-home/` (Vite SSR + Hono on
+> Cloudflare) and is served at **https://www.okou.ai/**. It was ported from this
+> repo at `27bf9870`, comments and all. Tong: *"之前那个 git 里边的规则，不要放
+> 过来，但是每次你设计的时候可以去之前 git 看"* — so:
+>
+> - **This repo is the rule book, not the site.** `docs/` and `tools/` stay here
+>   and are read before every design change. `site/` and `src/css/` are FROZEN —
+>   they no longer ship anywhere, and the live CSS is
+>   `vite-ssr/app/_okou-home/okou-homepage.css` in the other repo. Do not read
+>   `src/css/*` as a description of what is live.
+> - **Do not copy any of this into `vm0-marketing`.** That was the instruction.
+> - **The checks still run, from here.** `python3 tools/gate-migrated.py` points
+>   the file-level gates at the migrated stylesheet (it restores the
+>   base/system seam first, or they report the architecture as a fault).
+>   `tools/audit.js` and axe need nothing — they run against a URL; verified
+>   against https://www.okou.ai/ on 2026-09-02, §1 §3 §5 §6 §7 §9 §10 §11 pass
+>   and axe is 0 in both themes.
+> - **Changes there are branch + PR**, never a push to main, and the review URL
+>   is that PR's Cloudflare preview (`https://pr-<n>-www.omby.ai`).
+
+- **The old review URL, for history only:
   https://tongx-blip.github.io/VM0-Website/.** Before answering any visual
   feedback, check the reviewer is on it — `document.documentElement.dataset.build`
   in their console, or `curl <url> | grep data-build`, against
