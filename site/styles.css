@@ -674,6 +674,15 @@ ul,ol{ margin:0; padding:0; list-style:none; }
 
 .pcard__sel svg{ width:14px; height:14px; flex:none; stroke:var(--ink-mute); }
 
+/* THE OPEN DURATION MENU WAS BUILT HERE AND TAKEN OUT AGAIN. It was the right
+   idea and it does not fit: the status line under the card is 357px of mono
+   and the popover is 128px wide in a 549px surface, so the two cannot share a
+   row; separating them vertically needs ~150px more height, which makes this
+   figure taller than the permission list beside it and moves the empty half to
+   the other column. The four options are real
+   (`ALLOW_DURATION_MENU_OPTIONS` = 1h · 24h · 7d · always) if it ever comes
+   back with more room. See docs/changelog.md 2026-09-02. */
+
 .pcard__go{
   display:inline-flex; align-items:center; justify-content:center;
   height:36px; padding:0 12px;
@@ -4636,20 +4645,39 @@ h3{ font-family:var(--fd); }
 .cbit__fig .state{ border-radius:8px; }
 
 
-/* the exchange takes the space the list takes, and sits in the middle of it */
+/* THE EXCHANGE GETS A SURFACE, like the list beside it. Tong: *"右边这个配图
+   有点不够饱满"* — and the diagnosis was not height. The left figure is one
+   large white list filling its tile; the right one was two small cards floating
+   on the tile's grey, so one read as a block and the other as objects dropped
+   in an empty field. Same surface, same corner, same elevation, filling the
+   same way.
+
+   And it starts at the top rather than centring: with the menu open there is
+   nothing left to centre, and a conversation reads downward from where it
+   began (the same reason `.ochat` is top-anchored). */
 .cask{
-  flex:1; display:flex; flex-direction:column; justify-content:center;
+  flex:1; display:flex; flex-direction:column; justify-content:flex-start;
   gap:clamp(12px,1.3vw,16px);
   min-width:0;
+  border-radius:var(--r-card);
+  background:var(--paper);
+  padding:clamp(14px,1.5vw,20px);
+  box-shadow:var(--e-fig);
 }
 
+/* the said-bubble sat on the tile's grey and now sits on white, so it takes
+   the tile's own fill to stay a surface rather than a rectangle of nothing */
+.cask .cpane__said{ background:var(--tile); border-radius:var(--r-tile); }
+
+/* THE EXCHANGE SITS AT THE TOP OF ITS SURFACE and the air falls below it.
+   Pinned to the bottom with `margin-top:auto` the status line left a hole in
+   the middle of the panel; at the top the panel reads as a panel with room
+   under it, which is what every chat surface looks like before the next
+   message. */
 /* AT THE PRODUCT'S OWN WIDTH. `PermissionActionCard` is a card inside a
    chat column, not a bar across a panel — stretched to the full width of
    this ground its 88px row came out thin and its two ends stopped being
    readable as one object. */
-.cask .pcard{ max-width:548px; }
-
-.cask .cpane__said{ max-width:548px; }
 
 
 @media (max-width:900px){

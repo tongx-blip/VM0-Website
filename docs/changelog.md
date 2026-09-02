@@ -60,6 +60,72 @@ showing the work as it was the day you sent the link. Production
 (`okou-ai-teammate-swiss`) cannot be published to from this thread and is still
 14 cubes behind; it needs whoever owns it.
 
+## 2026-09-02 · the right figure gets a surface, and the open menu did not survive
+
+Tong: *"右边这个配图有点不够饱满"*, with two directions offered — shorten the left,
+or fill the right.
+
+### The diagnosis was not height
+
+The left figure is **one white list filling its tile**; the right was a bubble
+and a card floating on the tile's grey. One reads as a block, the other as
+objects dropped in an empty field, and no amount of spacing fixes that because
+they are not the same *kind* of object. Giving the exchange the same surface —
+same fill, same corner, same elevation — closes it with **no content change**,
+both tiles at 418px. RULES **S25**.
+
+### The row I first proposed cutting was the wrong one
+
+Option A was "drop a row from the left". I picked GitHub, on the grounds that
+this section is for non-technical readers. Tong: *"左边降到一个量级，会不会左边
+表达的内容有太少了？"* — right, and my pick was worse than the question implies.
+Each row is doing a job:
+
+| row | carries |
+|---|---|
+| Drive · Read · **Allowed** | a normal granted row, a second connector |
+| Gmail · Save a draft · **Allowed** | ↓ the same connector, twice |
+| Gmail · Send mail · **Denied** | ↑ two actions, two answers — the heading, and the sentence in the lede |
+| Slack · Post · **Allowed** | a third connector, but the **third** Allowed |
+| GitHub · Open a PR · **Not granted** | the **third state** — denied ≠ never asked |
+
+GitHub is the only carrier of the third state. Slack is the only genuinely
+redundant row. Nothing was cut in the end, but the corrected option A′ is on
+record.
+
+### The open duration menu: built, measured, removed
+
+`ALLOW_DURATION_MENU_OPTIONS` is exactly `1h · 24h · 7d · always`, labels from
+`authorization.permission.durationOptions`, drawn 1:1 with `SelectContent` —
+12px corner, 0.7px gray-400 border, `flex flex-col gap-1 p-1`, rows at
+`rounded-lg py-1.5 pl-2 pr-8 text-sm`, Check on the right. It was the right
+idea and it does not fit:
+
+- **In the flow** it made the right figure **493px against the list's 418**, so
+  `align-items:stretch` handed the hole to the *left* column. Adding content to
+  the short column does not fix a pair, it swaps which one is empty.
+- **Floated** under its own trigger it stopped driving the height — and ran
+  across the status line. Measured as ink rather than boxes: the line is
+  **357px** of mono ending at 1139, the popover starts at **1112**. A 128px
+  panel and a 357px line cannot share a row in a 549px surface, and separating
+  them needs ~150px more height, which is fault one again.
+
+I recommended it and it did not survive being built. The four options and the
+geometry are kept in a note at `.pcard__go` in case it comes back with room.
+
+### What shipped
+
+The surface, and the exchange sitting at the **top** of it. Pinned to the
+bottom the status line left a hole in the middle of the panel; at the top the
+air falls below the content, which is what a chat surface looks like before the
+next message.
+
+### Gate
+
+`tokens` 0 · `check-html` balanced · `scopes` 0 · `rules` 190/84/11 resolve ·
+`audit.js` §1 §5 §6 §7 §9 §10 §11 pass (`control` unchanged at 1.15 screens) ·
+axe 0 violations in both themes · 1440 light + dark, 390.
+
 ## 2026-09-01 · the agent is a face everywhere the agent speaks
 
 Tong, on the Slack scene: *"检查 把这些老的logo 都换成agent avatar"*.

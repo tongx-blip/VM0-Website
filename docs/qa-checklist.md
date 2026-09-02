@@ -2487,6 +2487,43 @@ agent-browser --color-scheme dark open http://localhost:8898/
 The **page** keeps both themes; this is only for the review surfaces, and the
 figures themselves still have to be checked in both before anything merges.
 
+## 4at. Two figures in a row: check the kind, then the height
+
+When one of a pair reads as empty, ask these in order.
+
+**1. Are they the same kind of object?** A filled panel beside loose cards on a
+ground is not a pair, at any spacing. Measure what fraction of each tile is
+covered by a *surface*, not by content:
+
+```js
+[...document.querySelectorAll('#control .cbit__fig')].map(f => {
+  const inner = [...f.children].filter(e => getComputedStyle(e).backgroundColor !== 'rgba(0, 0, 0, 0)');
+  const area = inner.reduce((a, e) => a + e.getBoundingClientRect().height, 0);
+  return Math.round(100 * area / f.getBoundingClientRect().height) + '%';
+});
+```
+
+**2. Only then, height.** `align-items:stretch` means the tall one sets the
+height and the short one gets the hole — so **adding content to the short
+column does not fix it, it swaps which column is empty.** This was tested, not
+reasoned: an open duration menu was built into the right figure, made it 493px
+against the list's 418, and the left tile became the empty one.
+
+**3. A popover in a still picture has to clear the text under it.** The same
+menu, floated so it stopped driving the height, then ran across the status line
+— 357px of mono against a 128px popover in a 549px surface cannot share a row.
+Measure the *ink*, not the box:
+
+```js
+const r = document.createRange();
+r.selectNodeContents(document.querySelector('.cask .cpane__wait'));
+r.getBoundingClientRect().right   // 1139 — the menu starts at 1112
+```
+
+The fix that shipped changed no content at all: the exchange got the surface
+(RULES S25) and sits at the top of it, so the air falls below the panel's
+content instead of into a hole in the middle of it.
+
 ## 4aj. Every control answers, and none of them shouts
 
 Two failures, one sweep. Both were shipped and neither was visible in a
