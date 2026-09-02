@@ -57,6 +57,13 @@ and every rule in it comes from a decision that has already been argued once.
   for showing work mid-session; the acceptance link is the Pages URL above, and
   it is only current if you **pushed**.
 
+  **And a slug you have handed out is a slug you now have to keep.** Publish it
+  again in the same breath as every push, or it goes on showing the work as it
+  was the day you sent the link. It cost a whole round: the avatar swap was live
+  on Pages with 0 cubes while `okou-ai-teammate-swiss-draft-opx8` — the link
+  handed out four rounds earlier in the same thread — still served 24 of them,
+  and the feedback that came back was about those.
+
 - **Never edit the production slug** (`okou-ai-teammate-swiss`). Clone it with
   `okou host clone` if you need to see what is live.
 - **Never rewrite copy** while doing design work. Layout, order, type, colour and

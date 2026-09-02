@@ -4,6 +4,34 @@ Newest first, dated. No version numbers: this page gets revised continuously and
 a counter would only ever grow. Each entry records what changed **and what was
 wrong**, because the failure modes are the useful part.
 
+## 2026-09-02 · the section was already clean; the link was not
+
+Tong: *"检查一下，Achieve more with the team you already have. 这个section所有
+tab里还在用旧的logo的地方，全都换成agent头像"*, with a screenshot of the Slack
+panel showing the orange cube.
+
+**Checked, and on the review URL there is nothing to change.** All seven tabs of
+`#outputs` carry **22 `agent-okou.png` and zero cubes**; the page as a whole has
+47 faces and no `okou-icon.svg` at all — the file is unreferenced and the
+favicon is the brand mark. Verified three ways: the markup, the live DOM per
+scene, and a sweep for a cube drawn any other way (inline `<svg>` path,
+`background-image`, or baked into an artifact JPG). None.
+
+**The screenshot was of a stale slug**, and it was one I handed out myself:
+
+| | build | cubes |
+|---|---|---|
+| `tongx-blip.github.io/VM0-Website` | `33aa75ee · 2026-09-01` | **0** |
+| `okou-ai-teammate-swiss-draft-opx8` | *(pre-stamp)* | **24** |
+| `okou-ai-teammate-swiss` (production) | *(pre-stamp)* | **14** |
+
+The draft slug is republished at v44 and now reports the same build hash as
+Pages. The lesson is in CLAUDE.md's hard rules: **a slug you have handed out is
+a slug you have to keep** — publish it again with every push, or it goes on
+showing the work as it was the day you sent the link. Production
+(`okou-ai-teammate-swiss`) cannot be published to from this thread and is still
+14 cubes behind; it needs whoever owns it.
+
 ## 2026-09-01 · the agent is a face everywhere the agent speaks
 
 Tong, on the Slack scene: *"检查 把这些老的logo 都换成agent avatar"*.
